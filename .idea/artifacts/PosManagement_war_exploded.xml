@@ -11,6 +11,15 @@
           <element id="library" level="application" name="Struts 2-2.3.20.1" />
         </element>
       </element>
+      <element id="directory" name="images">
+        <element id="dir-copy" path="$PROJECT_DIR$/web/images" />
+      </element>
+      <element id="directory" name="css">
+        <element id="dir-copy" path="$PROJECT_DIR$/web/css" />
+      </element>
+      <element id="directory" name="js">
+        <element id="dir-copy" path="$PROJECT_DIR$/web/js" />
+      </element>
     </root>
   </artifact>
 </component>

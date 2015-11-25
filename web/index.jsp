@@ -19,7 +19,7 @@
     <div id = "loginForm" class="lg" style="top:250px">
       <table  align="center" cellspacing="0"  border="0">
         <tr>
-          <td align="center" ><img src="images/indexLogo.jpg" width="123" height="123"></td>
+          <td align="center" ><img src="images/indexLogo.png" width="123" height="123"></td>
         </tr>
         <tr>
           <td align="center" width="350"  align="left"><h1>卡务管理系统</h1></td>

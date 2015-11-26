@@ -8,7 +8,7 @@
           <element id="module-output" name="PosManagement" />
         </element>
         <element id="directory" name="lib">
-          <element id="library" level="application" name="Struts 2-2.3.20.1" />
+          <element id="library" level="project" name="Struts 2-2.3.20.1" />
         </element>
       </element>
       <element id="directory" name="images">

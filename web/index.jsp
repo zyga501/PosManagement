@@ -25,7 +25,7 @@
           <td align="center" width="350"  align="left"><h1>卡务管理系统</h1></td>
         </tr>
       </table>
-      <form class="form form-horizontal" method="post">
+      <form class="form form-horizontal" action="User!Login" method="post">
         <div class="row cl">
           <div class="formControls col-8 col-offset-3">
             <input id="userName" name="userName" type="text" placeholder="账号" class="input-text size-L">

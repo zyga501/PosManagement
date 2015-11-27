@@ -24,6 +24,9 @@
 <aside class="Hui-aside">
     <input runat="server" id="divScrollValue" type="hidden" value="" />
     <div class="menu_dropdown bk_2">
+        <ul>
+            <li><a href="Hui-overview.shtml">&nbsp;&nbsp;&nbsp;&nbsp;我的桌面</a></li>
+        </ul>
     </div>
 </aside>
 <div class="dislpayArrow"><a class="pngfix" href="javascript:void(0);" onClick="displaynavbar(this)"></a></div>

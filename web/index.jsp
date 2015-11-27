@@ -13,6 +13,17 @@
     <link href="css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
     <link href="css/index.css" rel="stylesheet" type="text/css" />
     <title>卡务管理系统</title>
+    <script type="text/javascript" src="js\jquery\1.9.1\jquery.js"></script>
+    <script type="text/javascript" >
+      function refreshVerifyCode()
+      {
+        var src = $("#verifyCodeImage").attr("src");
+        if (src.indexOf("?") <= 0)
+          $("#verifyCodeImage").attr("src"," Auth!GenerateVerifyCode?");
+        else
+          $("#verifyCodeImage").attr("src"," Auth!GenerateVerifyCode");
+      }
+    </script>
   </head>
   <body scroll="no">
   <div class="loginWraper">
@@ -39,6 +50,7 @@
         <div class="row cl">
           <div class="formControls col-8 col-offset-3">
             <input id="verifyCode" name="verifyCode" class="input-text size-L" type="text" placeholder="验证码" style="width:150px;">
+            <img id="verifyCodeImage" src="Auth!GenerateVerifyCode" alt="点击刷新" onclick="refreshVerifyCode()" >
           </div>
         </div>
         <div class="row">

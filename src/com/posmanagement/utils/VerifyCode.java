@@ -83,7 +83,7 @@ public class VerifyCode {
         Random rand = new Random(System.currentTimeMillis());
         StringBuilder randomString = new StringBuilder(codeLenth_);
         for(int i = 0; i < codeLenth_; i++){
-            randomString.append(VERIFY_CODES.charAt(rand.nextInt(codeLenth_ - 1)));
+            randomString.append(VERIFY_CODES.charAt(rand.nextInt(VERIFY_CODES.length() - 1)));
         }
         return randomString.toString();
     }

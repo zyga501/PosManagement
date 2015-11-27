@@ -1,7 +1,7 @@
 package com.posmanagement.action;
 
-import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionSupport;
 import com.posmanagement.utils.VerifyCode;
 import org.apache.struts2.ServletActionContext;
 
@@ -9,11 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-public class AuthAction implements Action {
-    public String execute() throws Exception {
-        return null;
-    }
-
+public class AuthAction extends ActionSupport {
     public void GenerateVerifyCode() throws Exception {
         ActionContext ctx = ActionContext.getContext();
         HttpServletRequest request = (HttpServletRequest)ctx.get(ServletActionContext.HTTP_REQUEST);

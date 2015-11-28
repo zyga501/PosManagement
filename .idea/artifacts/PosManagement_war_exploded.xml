@@ -1,5 +1,5 @@
 <component name="ArtifactManager">
-  <artifact type="exploded-war" name="PosManagement:war exploded">
+  <artifact type="exploded-war" build-on-make="true" name="PosManagement:war exploded">
     <output-path>$PROJECT_DIR$/out/artifacts/PosManagement_war_exploded</output-path>
     <root id="root">
       <element id="javaee-facet-resources" facet="PosManagement/web/Web" />
@@ -9,6 +9,8 @@
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="Struts 2-2.3.20.1" />
+          <element id="library" level="project" name="exceljar-jxl" />
+          <element id="library" level="project" name="mysql-connector-java-5.1.10-bin" />
         </element>
       </element>
       <element id="directory" name="images">

@@ -8,6 +8,7 @@
     <package name="defualt" extends="struts-default">
         <action name="User!*" class="com.posmanagement.action.UserAction" method="{1}">
             <result name="loginSuccess" type="redirect">/main.jsp</result>
+            <result name="loginFailure" type="redirect">/index.jsp</result>
         </action>
         <action name="Auth!*" class="com.posmanagement.action.AuthAction" method="{1}">
         </action>

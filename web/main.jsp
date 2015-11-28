@@ -26,6 +26,9 @@
         </ul>
         </li>
     </ul>
+    <div class="formControls col-8 col-offset-3">
+        <%=request.getSession().getAttribute("userLastLoginInfo")%>
+    </div>
     <a aria-hidden="false" class="Hui-nav-toggle" href="#"></a>
 </header>
 <aside class="Hui-aside">

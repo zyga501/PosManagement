@@ -3,11 +3,13 @@ package com.posmanagement.action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.posmanagement.utils.DbManager;
+import com.posmanagement.utils.LogManager;
 import org.apache.struts2.ServletActionContext;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,10 +45,6 @@ public class UserAction extends ActionSupport{
         this.verifyCode = verifyCode;
     }
 
-    /*20151123
-         *首先判断是否管理者
-         *接着判断业务员表，最后才判断柜员表
-        */
     public String Login() throws Exception {
         ActionContext ctx = ActionContext.getContext();
         HttpServletRequest request = (HttpServletRequest) ctx
@@ -59,15 +57,27 @@ public class UserAction extends ActionSupport{
         try {
             DbManager db = new DbManager();
             Map para = new HashMap();
-            ArrayList<HashMap<String, Object>> rtal  = null;
+            ArrayList<HashMap<String, Object>> dbRet  = null;
             para.put(1,userName);
             para.put(2,userPwd);
-            rtal = db.executeSql("select  * from manager where uname=? and upwd=?", (HashMap<Integer, Object>) para);
-            if (null==rtal || rtal.size()<1){
+            dbRet = db.executeSql("select * from userinfo where uname=? and upwd=?", (HashMap<Integer, Object>) para);
+            if (null == dbRet || dbRet.size() < 1){
                 return LOGINFAILURE;
             }
-            session.setAttribute("userName",rtal.get(0).get("UNAME"));
-            session.setAttribute("USERTYPE",999);//manager
+            session.setAttribute("userName", dbRet.get(0).get("UNICK"));
+            session.setAttribute("userLastLoginInfo", String.format("Last Login at:%s Timer:%s",
+                    dbRet.get(0).get("LASTLOCATION"), dbRet.get(0).get("LASTTIME")));
+            session.setAttribute("userType", 0);
+            String location = request.getRemoteAddr();
+            para.clear();
+            Date now = new Date();
+            para.put(1, request.getRemoteAddr());
+            para.put(2, new java.sql.Timestamp((now.getTime())));
+            para.put(3,userName);
+            para.put(4,userPwd);
+            if (!db.executeUpdate("update userinfo set lastlocation=?,lasttime=? where uname=? and upwd=?", (HashMap<Integer, Object>) para))
+                throw new RuntimeException();
+            LogManager.getInstance().writeLoginTrack(Integer.parseInt(dbRet.get(0).get("UID").toString()), location, now.toString());
         }
         catch (Exception e){
             return LOGINFAILURE;

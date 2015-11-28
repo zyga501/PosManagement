@@ -1,17 +1,6 @@
 package com.posmanagement.utils;
 
-/**
- * Created by hammer on 2015-11-28.
- */
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Types;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -276,47 +265,50 @@ public class DbManager {
     /**
      * 设置Sql 指令参数
      */
-    private PreparedStatement setParamet(PreparedStatement p_stmt,
-                                         HashMap<Integer, Object> pramets) throws ClassNotFoundException,
-            SQLException {
+    private PreparedStatement setParamet(PreparedStatement pStatement, HashMap<Integer, Object> paramets)
+            throws ClassNotFoundException, SQLException {
         // 如果参数为空
-        if (null != pramets) {
+        if (null != paramets) {
             // 如果参数个数为0
-            if (0 <= pramets.size()) {
-                for (int i = 1; i <= pramets.size(); i++) {
+            if (0 <= paramets.size()) {
+                for (int i = 1; i <= paramets.size(); i++) {
                     try {
                         // 字符类型 String
-                        if (pramets.get(i).getClass() == Class
-                                .forName("java.lang.String")) {
-                            p_stmt.setString(i, pramets.get(i).toString());
+                        if (paramets.get(i).getClass() == Class.forName("java.lang.String")) {
+                            pStatement.setString(i, paramets.get(i).toString());
+                            continue;
                         }
                         // 日期类型 Date
-                        if (pramets.get(i).getClass() == Class
-                                .forName("java.sql.Date")) {
-                            p_stmt.setDate(i, java.sql.Date.valueOf(pramets
+                        if (paramets.get(i).getClass() == Class.forName("java.sql.Date")) {
+                            pStatement.setDate(i, java.sql.Date.valueOf(paramets
                                     .get(i).toString()));
+                            continue;
+                        }
+                        //
+                        if (paramets.get(i).getClass() == Class.forName("java.sql.Timestamp")) {
+                            pStatement.setTimestamp(i, java.sql.Timestamp.valueOf(paramets.get(i).toString()));
+                            continue;
                         }
                         // 布尔类型 Boolean
-                        if (pramets.get(i).getClass() == Class
-                                .forName("java.lang.Boolean")) {
-                            p_stmt.setBoolean(i, (Boolean) (pramets.get(i)));
+                        if (paramets.get(i).getClass() == Class.forName("java.lang.Boolean")) {
+                            pStatement.setBoolean(i, (Boolean) (paramets.get(i)));
+                            continue;
                         }
                         // 整型 int
-                        if (pramets.get(i).getClass() == Class
-                                .forName("java.lang.Integer")) {
-                            p_stmt.setInt(i, (Integer) pramets.get(i));
+                        if (paramets.get(i).getClass() == Class.forName("java.lang.Integer")) {
+                            pStatement.setInt(i, (Integer) paramets.get(i));
+                            continue;
                         }
                         // 浮点 float
-                        if (pramets.get(i).getClass() == Class
-                                .forName("java.lang.Float")) {
-                            p_stmt.setFloat(i, (Float) pramets.get(i));
+                        if (paramets.get(i).getClass() == Class.forName("java.lang.Float")) {
+                            pStatement.setFloat(i, (Float) paramets.get(i));
+                            continue;
                         }
                         // 双精度型 double
-                        if (pramets.get(i).getClass() == Class
-                                .forName("java.lang.Double")) {
-                            p_stmt.setDouble(i, (Double) pramets.get(i));
+                        if (paramets.get(i).getClass() == Class.forName("java.lang.Double")) {
+                            pStatement.setDouble(i, (Double) paramets.get(i));
+                            continue;
                         }
-
                     } catch (ClassNotFoundException ex) {
                         throw ex;
                     } catch (SQLException ex) {
@@ -325,7 +317,7 @@ public class DbManager {
                 }
             }
         }
-        return p_stmt;
+        return pStatement;
     }
 
     /**

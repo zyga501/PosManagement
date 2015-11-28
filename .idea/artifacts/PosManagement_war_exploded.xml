@@ -9,8 +9,8 @@
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="Struts 2-2.3.20.1" />
-          <element id="library" level="project" name="exceljar-jxl" />
           <element id="library" level="project" name="mysql-connector-java-5.1.10-bin" />
+          <element id="library" level="project" name="jxl-2.6.9" />
         </element>
       </element>
       <element id="directory" name="images">

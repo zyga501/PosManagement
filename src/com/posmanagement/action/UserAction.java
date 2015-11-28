@@ -75,13 +75,4 @@ public class UserAction extends ActionSupport{
 
         return LOGINSUCCESS;
     }
-
-    public void validLogin() {
-
-        ActionContext ctx = ActionContext.getContext();
-        HttpServletRequest request = (HttpServletRequest) ctx
-                .get(ServletActionContext.HTTP_REQUEST);
-        HttpSession session = request.getSession(false);
-        session.invalidate();
-    }
 }

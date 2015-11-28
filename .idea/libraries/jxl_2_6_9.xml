@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="exceljar-jxl">
+  <library name="jxl-2.6.9">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/web/WEB-INF/lib/jxl.jar!/" />
+      <root url="jar://$PROJECT_DIR$/web/WEB-INF/lib/jxl-2.6.9.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

@@ -3,46 +3,21 @@ package com.posmanagement.utils;
 /**
  * Created by hammer on 2015-11-28.
  */
-        import java.sql.CallableStatement;
-        import java.sql.Connection;
-        import java.sql.DriverManager;
-        import java.sql.PreparedStatement;
-        import java.sql.ResultSet;
-        import java.sql.ResultSetMetaData;
-        import java.sql.SQLException;
-        import java.sql.Statement;
-        import java.sql.Types;
-        import java.util.ArrayList;
-        import java.util.HashMap;
-        import java.util.Iterator;
-        import java.util.LinkedHashMap;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 
 public class DbManager {
-
-    // 数据库连接对象
-    private Connection con;
-    // SQL语句对象
-    private Statement stmt;
-    // 带参数的Sql语句对象
-    private PreparedStatement pstmt;
-    // 记录集对象
-    private ResultSet rs;
-    // 数据连接管理（连接池对象）
-    //private DBConnectionManager dcm = null;
-
-    /** ***********************手动设置的连接参数********************************* */
-    @SuppressWarnings("unused")
-    private static String _DRIVER = "com.mysql.jdbc.Driver";
-    @SuppressWarnings("unused")
-    private static String _URL = "jdbc:mysql://localhost:3306/posmanagement?autoReconnect=true&useUnicode=true&characterEncoding=utf8";
-    @SuppressWarnings("unused")
-    private static String _USER_NA = "root";
-    @SuppressWarnings("unused")
-    private static String _PASSWORD = "";
-
-    /** **********************************************************************
-     * @throws Exception */
-
     // 默认构造
     public DbManager() throws Exception {
         getDefConnection("");
@@ -50,7 +25,6 @@ public class DbManager {
     public DbManager(String urls) throws Exception {
         getDefConnection(urls);
     }
-
 
     public void getDefConnection(String urls) throws Exception {
         try {
@@ -459,28 +433,44 @@ public class DbManager {
         return 0;
     }
 
+    // 数据库连接对象
+    private Connection con;
+    // SQL语句对象
+    private Statement stmt;
+    // 带参数的Sql语句对象
+    private PreparedStatement pstmt;
+    // 记录集对象
+    private ResultSet rs;
+    // 数据连接管理（连接池对象）
+    //private DBConnectionManager dcm = null;
+
+    /** ***********************手动设置的连接参数********************************* */
+    @SuppressWarnings("unused")
+    private static String _DRIVER = "com.mysql.jdbc.Driver";
+    @SuppressWarnings("unused")
+    private static String _URL = "jdbc:mysql://localhost:3306/posmanagement?autoReconnect=true&useUnicode=true&characterEncoding=utf8";
+    @SuppressWarnings("unused")
+    private static String _USER_NA = "root";
+    @SuppressWarnings("unused")
+    private static String _PASSWORD = "";
     // 设置驱动路径
     @SuppressWarnings("static-access")
     public void set_DRIVER(String _DRIVER) {
         this._DRIVER = _DRIVER;
     }
-
     // 设置数据库密码
     @SuppressWarnings("static-access")
     public void set_PASSWORD(String _PASSWORD) {
         this._PASSWORD = _PASSWORD;
     }
-
     // 设置数据库连接字符串
     @SuppressWarnings("static-access")
     public void set_URL(String _URL) {
         this._URL = _URL;
     }
-
     // 设置数据库用户名
     @SuppressWarnings("static-access")
     public void set_USER_NA(String _USER_NA) {
         this._USER_NA = _USER_NA;
     }
-
 }

@@ -15,9 +15,16 @@
     <title>卡务管理系统</title>
 </head>
 <body onselectstart="return false ">
-<header class="Hui-header cl"> <a class="Hui-logo l" href="">卡务管理系统平台</a>
+<header class="Hui-header cl" style="background-color: #0e90d2"> <a class="Hui-logo l" href="./index.jsp">卡务管理系统平台</a>
     <ul class="Hui-userbar">
-        <li>Hello,Ghost!</li>
+        <li>Hello,</li>
+        <li class="dropDown dropDown_hover">
+            <a href="#" class="dropDown_A"><%=request.getSession().getAttribute("userName")%> <i class="Hui-iconfont">&#xe6d5;</i></a>
+        <ul class="dropDown-menu radius box-shadow">
+            <li><a href="javascript:void(0);">个人信息</a></li>
+            <li><a href="javascript:window.location.href='validLogin';window.close();window.location.href='about:blank';">退出</a></li>
+        </ul>
+        </li>
     </ul>
     <a aria-hidden="false" class="Hui-nav-toggle" href="#"></a>
 </header>
@@ -49,8 +56,8 @@
         </div>
     </div>
 </section>
-<script type="text/javascript" src="lib/jquery/1.9.1/jquery.min.js"></script>
-<script type="text/javascript" src="lib/layer/1.9.3/layer.js"></script>
+<script type="text/javascript" src="js/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="js/layer/1.9.3/layer.js"></script>
 <script type="text/javascript" src="js/H-ui.js"></script>
 <script type="text/javascript" src="js/H-ui.admin.js"></script>
 <script type="text/javascript">

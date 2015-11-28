@@ -19,7 +19,7 @@ public class AuthAction extends ActionSupport {
         response.setDateHeader("Expires", 0);
         response.setContentType("image/jpeg");
         HttpSession session = request.getSession(true);
-        int defaultWidth = 80, defaultHeight = 40;
+        int defaultWidth = 100, defaultHeight = 40;
         VerifyCode verifyCode = new VerifyCode(4);
         session.setAttribute("verifyCode", verifyCode.generateImage(defaultWidth, defaultHeight, response.getOutputStream()));
     }

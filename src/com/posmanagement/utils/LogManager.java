@@ -1,6 +1,6 @@
 package com.posmanagement.utils;
 
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,14 +18,17 @@ public class LogManager {
     }
 
     public void writeLoginTrack(int userID, String location, String datatime) throws Exception {
-        Map para = new HashMap();
-        para.put(1, userID);
-        para.put(2, LogType.LOGONIN.ordinal());
-        para.put(3, String.format("User:%d Login at:%s DateTime:%s", userID, location, datatime));
-        ArrayList<HashMap<String, Object>> dbRet  = null;
+        Map parametsMap = new HashMap();
+        parametsMap.put(1, userID);
+        parametsMap.put(2, LogType.LOGONIN.ordinal());
+        parametsMap.put(3, String.format("User:%d Login at:%s DateTime:%s", userID, location, datatime));
+        writeToDB(parametsMap);
+    }
+
+    private void writeToDB(Map parametsMap) throws Exception {
         if (!dbManager.executeUpdate("insert into usertrack(uid,ttype,tinfo) values(?,?,?)",
-                (HashMap<Integer, Object>) para))
-            throw new RuntimeException();
+                (HashMap<Integer, Object>) parametsMap))
+            throw new SQLException();
     }
 
     private LogManager() throws Exception {

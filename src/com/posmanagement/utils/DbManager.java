@@ -7,22 +7,22 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 
 public class DbManager {
-    // 默认构造
     public DbManager() throws Exception {
-        getDefConnection("");
+        initConnection("");
     }
+    
     public DbManager(String urls) throws Exception {
-        getDefConnection(urls);
+        initConnection(urls);
     }
 
-    public void getDefConnection(String urls) throws Exception {
+    public void initConnection(String urls) throws Exception {
         try {
             Class.forName(_DRIVER);
             if (urls.equals(""))
-                con = DriverManager.getConnection(_URL, _USER_NA, _PASSWORD);
+                connection_ = DriverManager.getConnection(_URL, _USER_NA, _PASSWORD);
             else
-                con = DriverManager.getConnection("jdbc:mysql://localhost:3306/"+urls+"?autoReconnect=true&useUnicode=true&characterEncoding=utf8", _USER_NA, _PASSWORD);
-            con.setAutoCommit(false);
+                connection_ = DriverManager.getConnection("jdbc:mysql://localhost:3306/"+urls+"?autoReconnect=true&useUnicode=true&characterEncoding=utf8", _USER_NA, _PASSWORD);
+            connection_.setAutoCommit(false);
         } catch (ClassNotFoundException ex) {
             throw ex;
         } catch (SQLException ex) {
@@ -36,15 +36,15 @@ public class DbManager {
     public boolean executeUpdate(String strSql) throws SQLException {
         // getConnection(_DRIVER,_URL,_USER_NA,_PASSWORD);
         boolean flag = false;
-        stmt = con.createStatement();
+        statement_ = connection_.createStatement();
         try {
-            if (0 < stmt.executeUpdate(strSql)) {
+            if (0 < statement_.executeUpdate(strSql)) {
                 flag = true;
-                con.commit();
+                connection_.commit();
             }
         } catch (SQLException ex) {
             flag = false;
-            con.rollback();
+            connection_.rollback();
             throw ex;
         }
         return flag;
@@ -59,18 +59,18 @@ public class DbManager {
         // getConnection(_DRIVER,_URL,_USER_NA,_PASSWORD);
         boolean flag = false;
         try {
-            pstmt = con.prepareStatement(strSql);
-            setParamet(pstmt, prams);
-            if (0 < pstmt.executeUpdate()) {
+            preparedStatement_ = connection_.prepareStatement(strSql);
+            setParamets(preparedStatement_, prams);
+            if (0 < preparedStatement_.executeUpdate()) {
                 flag = true;
-                con.commit();
+                connection_.commit();
             }
         } catch (SQLException ex) {
             flag = false;
-            con.rollback();
+            connection_.rollback();
             throw ex;
         } catch (ClassNotFoundException ex) {
-            con.rollback();
+            connection_.rollback();
             throw ex;
         }
         return flag;
@@ -83,11 +83,11 @@ public class DbManager {
      */
     public ArrayList<HashMap<String, Object>> executeSql(String strSql)
             throws Exception {
-        stmt = con.createStatement();
-        rs = stmt.executeQuery(strSql);
-        con.commit();
-        if (null != rs) {
-            return convertResultSetToArrayList(rs);
+        statement_ = connection_.createStatement();
+        resultSet_ = statement_.executeQuery(strSql);
+        connection_.commit();
+        if (null != resultSet_) {
+            return convertResultSetToArrayList(resultSet_);
         }
         return null;
     }
@@ -99,12 +99,12 @@ public class DbManager {
      */
     public ArrayList<HashMap<String, Object>> executeSql(String strSql,
                                                          HashMap<Integer, Object> prams) throws Exception {
-        pstmt = con.prepareStatement(strSql);
-        setParamet(pstmt, prams);
-        rs = pstmt.executeQuery();
-        con.commit();
-        if (null != rs) {
-            return convertResultSetToArrayList(rs);
+        preparedStatement_ = connection_.prepareStatement(strSql);
+        setParamets(preparedStatement_, prams);
+        resultSet_ = preparedStatement_.executeQuery();
+        connection_.commit();
+        if (null != resultSet_) {
+            return convertResultSetToArrayList(resultSet_);
         }
         return null;
     }
@@ -117,11 +117,11 @@ public class DbManager {
     public ArrayList<HashMap<String, Object>> executeProcedureQuery(
             String procName) throws Exception {
         String callStr = "{call " + procName + "}";// 构造执行存储过程的sql指令
-        CallableStatement cs = con.prepareCall(callStr);
-        rs = cs.executeQuery();
-        con.commit();
+        CallableStatement cs = connection_.prepareCall(callStr);
+        resultSet_ = cs.executeQuery();
+        connection_.commit();
         cs.close();
-        return convertResultSetToArrayList(rs);
+        return convertResultSetToArrayList(resultSet_);
     }
 
     /**
@@ -144,7 +144,7 @@ public class DbManager {
         // 获取连接对象
         //getConnection();
         // 初始化 存储过程 执行对象
-        CallableStatement cs = con.prepareCall(procedureCallName);
+        CallableStatement cs = connection_.prepareCall(procedureCallName);
         // 参数下标变量
         int index = 0;
         // 获取 存储过程信息列表集合的 迭代器 对象
@@ -163,9 +163,9 @@ public class DbManager {
         }
         // 释放这个对象,做为第二次使用
         procedureInfo = null;
-        rs = cs.executeQuery();
-        con.commit();
-        procedureInfo = convertResultSetToArrayList(rs);
+        resultSet_ = cs.executeQuery();
+        connection_.commit();
+        procedureInfo = convertResultSetToArrayList(resultSet_);
         cs.close();
         return procedureInfo;
 
@@ -188,7 +188,7 @@ public class DbManager {
             //获取连接
             // getConnection();
             //创建 存储过程 执行对象
-            cs = con.prepareCall(fullPCallName);
+            cs = connection_.prepareCall(fullPCallName);
             //数组下标
             int index = 1;
             //输出参数下标 纪录
@@ -218,10 +218,10 @@ public class DbManager {
                 {
                     returnVal[i] = cs.getObject(outPutIndexList.get(i));
                 }
-                con.commit();//提交
+                connection_.commit();//提交
             }
         } catch (Exception e) {
-            con.rollback();
+            connection_.rollback();
             throw e;
         }
         return returnVal;
@@ -231,30 +231,30 @@ public class DbManager {
      * 关闭数据对象
      */
     public void close_DB_Object() {
-        if (null != rs) {
+        if (null != resultSet_) {
             try {
-                rs.close();
+                resultSet_.close();
             } catch (SQLException ex) {
-                rs = null;
+                resultSet_ = null;
             }
         }
-        if (null != stmt) {
+        if (null != statement_) {
             try {
-                stmt.close();
+                statement_.close();
             } catch (SQLException ex) {
-                stmt = null;
+                statement_ = null;
             }
         }
-        if (null != pstmt) {
+        if (null != preparedStatement_) {
             try {
-                pstmt.close();
+                preparedStatement_.close();
             } catch (SQLException ex) {
-                pstmt = null;
+                preparedStatement_ = null;
             }
         }
-        if (con != null) {
+        if (connection_ != null) {
             try {
-                con.close();
+                connection_.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -265,7 +265,7 @@ public class DbManager {
     /**
      * 设置Sql 指令参数
      */
-    private PreparedStatement setParamet(PreparedStatement pStatement, HashMap<Integer, Object> paramets)
+    private PreparedStatement setParamets(PreparedStatement pStatement, HashMap<Integer, Object> paramets)
             throws ClassNotFoundException, SQLException {
         // 如果参数为空
         if (null != paramets) {
@@ -426,15 +426,13 @@ public class DbManager {
     }
 
     // 数据库连接对象
-    private Connection con;
+    private Connection connection_;
     // SQL语句对象
-    private Statement stmt;
+    private Statement statement_;
     // 带参数的Sql语句对象
-    private PreparedStatement pstmt;
+    private PreparedStatement preparedStatement_;
     // 记录集对象
-    private ResultSet rs;
-    // 数据连接管理（连接池对象）
-    //private DBConnectionManager dcm = null;
+    private ResultSet resultSet_;
 
     /** ***********************手动设置的连接参数********************************* */
     @SuppressWarnings("unused")

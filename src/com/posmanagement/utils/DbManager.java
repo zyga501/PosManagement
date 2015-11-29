@@ -14,11 +14,7 @@ public class DbManager {
         return dbManagerMap.get(url);
     }
 
-    /**
-     * 执行SQL语句操作(更新数据 无参数)
-     */
     public boolean executeUpdate(String strSql) throws SQLException {
-        // getConnection(_DRIVER,_URL,_USER_NA,_PASSWORD);
         boolean flag = false;
         statement_ = connection_.createStatement();
         try {
@@ -35,16 +31,12 @@ public class DbManager {
 
     }
 
-    /**
-     * 执行SQL语句操作(更新数据 有参数)
-     */
     public boolean executeUpdate(String strSql, HashMap<Integer, Object> prams)
             throws SQLException, ClassNotFoundException {
-        // getConnection(_DRIVER,_URL,_USER_NA,_PASSWORD);
         boolean flag = false;
         try {
             preparedStatement_ = connection_.prepareStatement(strSql);
-            setParamets(preparedStatement_, prams);
+            fillSqlParamets(preparedStatement_, prams);
             if (0 < preparedStatement_.executeUpdate()) {
                 flag = true;
                 connection_.commit();
@@ -61,10 +53,6 @@ public class DbManager {
 
     }
 
-    /**
-     * 执行SQL语句操作(查询数据 无参数)
-     *
-     */
     public ArrayList<HashMap<String, Object>> executeSql(String strSql)
             throws Exception {
         statement_ = connection_.createStatement();
@@ -76,15 +64,10 @@ public class DbManager {
         return null;
     }
 
-    /**
-     * 执行SQL语句操作(查询数据 有参数)
-     *
-     * @throws Exception
-     */
     public ArrayList<HashMap<String, Object>> executeSql(String strSql,
                                                          HashMap<Integer, Object> prams) throws Exception {
         preparedStatement_ = connection_.prepareStatement(strSql);
-        setParamets(preparedStatement_, prams);
+        fillSqlParamets(preparedStatement_, prams);
         resultSet_ = preparedStatement_.executeQuery();
         connection_.commit();
         if (null != resultSet_) {
@@ -93,11 +76,6 @@ public class DbManager {
         return null;
     }
 
-    /**
-     * 执行存储过程(查询数据 无参数)
-     *
-     * @throws Exception
-     */
     public ArrayList<HashMap<String, Object>> executeProcedureQuery(
             String procName) throws Exception {
         String callStr = "{call " + procName + "}";// 构造执行存储过程的sql指令
@@ -108,16 +86,6 @@ public class DbManager {
         return convertResultSetToArrayList(resultSet_);
     }
 
-    /**
-     * 执行存储过程(查询数据,带参数)返回结果集合
-     *
-     * @param procName
-     *            存储过程名称
-     * @param parameters
-     *            参数对象数组
-     * @return 数组列表对象
-     * @throws Exception
-     */
     public ArrayList<HashMap<String, Object>> executeProcedureQuery(
             String procName, Object[] parameters) throws Exception {
         int parameterPoint = 0;
@@ -125,8 +93,6 @@ public class DbManager {
         ArrayList<HashMap<String, Object>> procedureInfo = getProcedureInfo(procName);
         // 获取存储过程的完全名称
         String procedureCallName = getProcedureCallName(procName,parameters.length);
-        // 获取连接对象
-        //getConnection();
         // 初始化 存储过程 执行对象
         CallableStatement cs = connection_.prepareCall(procedureCallName);
         // 参数下标变量
@@ -155,11 +121,6 @@ public class DbManager {
 
     }
 
-    /**
-     * 执行存储过程(更新，查询数据[简单查询、非纪录集]，返回输出参数[非纪录集])
-     *
-     * @throws Exception
-     */
     public Object[] executeProcedureUpdate(String procName, Object[] parameters)
             throws Exception {
         CallableStatement cs = null;
@@ -169,8 +130,6 @@ public class DbManager {
             String fullPCallName = getProcedureCallName(procName,parameters.length);
             //获取存储过程参数信息
             ArrayList<HashMap<String, Object>> p_Call_Info_List = getProcedureInfo(procName);
-            //获取连接
-            // getConnection();
             //创建 存储过程 执行对象
             cs = connection_.prepareCall(fullPCallName);
             //数组下标
@@ -212,13 +171,10 @@ public class DbManager {
     }
 
     protected void finalize( ) {
-        close_DB_Object();
+        closeDbConnection();
     }
 
-    /**
-     * 关闭数据对象
-     */
-    private void close_DB_Object() {
+    private void closeDbConnection() {
         if (null != resultSet_) {
             try {
                 resultSet_.close();
@@ -268,49 +224,37 @@ public class DbManager {
         }
     }
 
-    /**
-     * 设置Sql 指令参数
-     */
-    private PreparedStatement setParamets(PreparedStatement pStatement, HashMap<Integer, Object> paramets)
+    private PreparedStatement fillSqlParamets(PreparedStatement pStatement, HashMap<Integer, Object> paramets)
             throws ClassNotFoundException, SQLException {
-        // 如果参数为空
         if (null != paramets) {
-            // 如果参数个数为0
             if (0 <= paramets.size()) {
                 for (int i = 1; i <= paramets.size(); i++) {
                     try {
-                        // 字符类型 String
                         if (paramets.get(i).getClass() == Class.forName("java.lang.String")) {
                             pStatement.setString(i, paramets.get(i).toString());
                             continue;
                         }
-                        // 日期类型 Date
                         if (paramets.get(i).getClass() == Class.forName("java.sql.Date")) {
                             pStatement.setDate(i, java.sql.Date.valueOf(paramets
                                     .get(i).toString()));
                             continue;
                         }
-                        //
                         if (paramets.get(i).getClass() == Class.forName("java.sql.Timestamp")) {
                             pStatement.setTimestamp(i, java.sql.Timestamp.valueOf(paramets.get(i).toString()));
                             continue;
                         }
-                        // 布尔类型 Boolean
                         if (paramets.get(i).getClass() == Class.forName("java.lang.Boolean")) {
                             pStatement.setBoolean(i, (Boolean) (paramets.get(i)));
                             continue;
                         }
-                        // 整型 int
                         if (paramets.get(i).getClass() == Class.forName("java.lang.Integer")) {
                             pStatement.setInt(i, (Integer) paramets.get(i));
                             continue;
                         }
-                        // 浮点 float
                         if (paramets.get(i).getClass() == Class.forName("java.lang.Float")) {
                             pStatement.setFloat(i, (Float) paramets.get(i));
                             continue;
                         }
-                        // 双精度型 double
                         if (paramets.get(i).getClass() == Class.forName("java.lang.Double")) {
                             pStatement.setDouble(i, (Double) paramets.get(i));
                             continue;
@@ -326,16 +270,7 @@ public class DbManager {
         return pStatement;
     }
 
-    /**
-     * 转换记录集对象为数组列表对象
-     *
-     * @param rs
-     *            纪录集合对象
-     * @return 数组列表对象
-     * @throws Exception
-     */
-    private ArrayList<HashMap<String, Object>> convertResultSetToArrayList(
-            ResultSet rs) throws Exception {
+    private ArrayList<HashMap<String, Object>> convertResultSetToArrayList(ResultSet rs) throws Exception {
         // 获取rs 集合信息对象
         ResultSetMetaData rsmd = rs.getMetaData();
         // 创建数组列表集合对象
@@ -356,29 +291,12 @@ public class DbManager {
         return tempList;// 返回填充完毕的数组列表集合对象
     }
 
-    /**
-     * 从数据库得到存储过程信息
-     *
-     * @param procName
-     *            存储过程名称
-     * @return 数组列表对象
-     * @throws Exception
-     */
     private ArrayList<HashMap<String, Object>> getProcedureInfo(String procName)
             throws Exception {
         return this.executeSql("select Syscolumns.isoutparam as Way,systypes.name as TypeName from sysobjects,syscolumns,systypes where systypes.xtype=syscolumns.xtype and syscolumns.id=sysobjects.id and sysobjects.name='"
                 + procName + "' order by Syscolumns.isoutparam");
     }
 
-    /**
-     * 从数据库得到存储过程参数个数
-     *
-     * @param procName
-     *            存储过程名称
-     * @return 数组列表对象
-     * @throws Exception
-     */
-    @SuppressWarnings("unused")
     private int getParametersCount(String procName) throws Exception {
         int returnVal = 0;
         for (HashMap<String, Object> tempHas : this
@@ -389,14 +307,6 @@ public class DbManager {
         return returnVal;
     }
 
-    /**
-     * 得到调用存储过程的全名
-     *
-     * @param procName
-     *            存储过程名称
-     * @return 调用存储过程的全名
-     * @throws Exception
-     */
     private String getProcedureCallName(String procName, int prametCount)
             throws Exception {
         String procedureCallName = "{call " + procName;
@@ -412,13 +322,6 @@ public class DbManager {
         return procedureCallName;
     }
 
-    /**
-     * 得到数据类型的整型值
-     *
-     * @param typeName
-     *            类型名称
-     * @return 数据类型的整型值
-     */
     private int convertToSqlType(String typeName) {
         if (typeName.equals("varchar"))
             return Types.VARCHAR;

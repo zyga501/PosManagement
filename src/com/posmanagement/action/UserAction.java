@@ -4,6 +4,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.posmanagement.utils.DbManager;
 import com.posmanagement.utils.LogManager;
+import com.posmanagement.webui.UserMenu;
 import org.apache.struts2.ServletActionContext;
 
 import javax.servlet.http.HttpServletRequest;
@@ -59,13 +60,15 @@ public class UserAction extends ActionSupport{
                 loginErrorMessage = "账号或密码错误";
                 return LOGINFAILURE;
             }
+
+            int userID = Integer.parseInt(dbRet.get(0).get("UID").toString());
             session.setAttribute("userName", dbRet.get(0).get("UNICK"));
             session.setAttribute("userLastLoginInfo", String.format("Last Login at:%s Timer:%s",
                     dbRet.get(0).get("LASTLOCATION"), dbRet.get(0).get("LASTTIME")));
             session.setAttribute("userType", 0);
-            session.setAttribute("userMenu", new String("我的桌面"));
+            session.setAttribute("userMenu", new UserMenu(userID).generateHTMLString());
 
-            logLoginTrack(Integer.parseInt(dbRet.get(0).get("UID").toString()), request.getRemoteAddr() );
+            logLoginTrack(userID, request.getRemoteAddr() );
         }
         catch (Exception e){
             return LOGINFAILURE;

@@ -22,6 +22,9 @@
       <element id="directory" name="js">
         <element id="dir-copy" path="$PROJECT_DIR$/web/js" />
       </element>
+      <element id="directory" name="skin">
+        <element id="dir-copy" path="$PROJECT_DIR$/web/skin" />
+      </element>
     </root>
   </artifact>
 </component>

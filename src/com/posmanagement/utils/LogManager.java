@@ -26,15 +26,10 @@ public class LogManager {
     }
 
     private void writeToDB(Map parametsMap) throws Exception {
-        if (!dbManager.executeUpdate("insert into usertrack(uid,ttype,tinfo) values(?,?,?)",
+        if (!DbManager.getDbManager("").executeUpdate("insert into usertrack(uid,ttype,tinfo) values(?,?,?)",
                 (HashMap<Integer, Object>) parametsMap))
             throw new SQLException();
     }
 
-    private LogManager() throws Exception {
-        dbManager = new DbManager();
-    }
-
-    private DbManager dbManager;
     private static LogManager instance = null;
 }

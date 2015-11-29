@@ -55,6 +55,13 @@
         </div>
         <div class="row">
           <div class="formControls col-8 col-offset-3">
+            <div style="color:#ff0000;font-size: 12px;">
+              <s:property value="loginErrorMessage"/>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="formControls col-8 col-offset-3">
             <input name="" type="submit" class="btn btn-success radius size-L" value="&nbsp;登&nbsp;&nbsp;&nbsp;&nbsp;录&nbsp;">
             <input name="" type="reset" class="btn btn-default radius size-L" value="&nbsp;取&nbsp;&nbsp;&nbsp;&nbsp;消&nbsp;">
           </div>

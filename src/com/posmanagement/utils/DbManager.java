@@ -7,27 +7,11 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 
 public class DbManager {
-    public DbManager() throws Exception {
-        initConnection("");
-    }
-    
-    public DbManager(String urls) throws Exception {
-        initConnection(urls);
-    }
-
-    public void initConnection(String urls) throws Exception {
-        try {
-            Class.forName(_DRIVER);
-            if (urls.equals(""))
-                connection_ = DriverManager.getConnection(_URL, _USER_NA, _PASSWORD);
-            else
-                connection_ = DriverManager.getConnection("jdbc:mysql://localhost:3306/"+urls+"?autoReconnect=true&useUnicode=true&characterEncoding=utf8", _USER_NA, _PASSWORD);
-            connection_.setAutoCommit(false);
-        } catch (ClassNotFoundException ex) {
-            throw ex;
-        } catch (SQLException ex) {
-            throw ex;
+    public static synchronized DbManager getDbManager(String url) throws Exception{
+        if (!dbManagerMap.containsKey(url)) {
+            dbManagerMap.put(url, new DbManager(url));
         }
+        return dbManagerMap.get(url);
     }
 
     /**
@@ -203,7 +187,7 @@ public class DbManager {
                 else
                 {
                     //注册输出参数
-                    cs.registerOutParameter(index, getDataType(tempHash.get("TYPENAME").toString()));
+                    cs.registerOutParameter(index, convertToSqlType(tempHash.get("TYPENAME").toString()));
                     //纪录输出参数的下标
                     outPutIndexList.add(index);
                 }
@@ -227,10 +211,14 @@ public class DbManager {
         return returnVal;
     }
 
+    protected void finalize( ) {
+        close_DB_Object();
+    }
+
     /**
      * 关闭数据对象
      */
-    public void close_DB_Object() {
+    private void close_DB_Object() {
         if (null != resultSet_) {
             try {
                 resultSet_.close();
@@ -261,6 +249,24 @@ public class DbManager {
         }
     }
 
+    private DbManager(String urls) throws Exception {
+        initConnection(urls);
+    }
+
+    private void initConnection(String url) throws Exception {
+        try {
+            Class.forName(_DRIVER);
+            if (url.equals(""))
+                connection_ = DriverManager.getConnection(_URL, _USER_NA, _PASSWORD);
+            else
+                connection_ = DriverManager.getConnection(url);
+            connection_.setAutoCommit(false);
+        } catch (ClassNotFoundException ex) {
+            throw ex;
+        } catch (SQLException ex) {
+            throw ex;
+        }
+    }
 
     /**
      * 设置Sql 指令参数
@@ -413,7 +419,7 @@ public class DbManager {
      *            类型名称
      * @return 数据类型的整型值
      */
-    private int getDataType(String typeName) {
+    private int convertToSqlType(String typeName) {
         if (typeName.equals("varchar"))
             return Types.VARCHAR;
         if (typeName.equals("int"))
@@ -435,32 +441,10 @@ public class DbManager {
     private ResultSet resultSet_;
 
     /** ***********************手动设置的连接参数********************************* */
-    @SuppressWarnings("unused")
     private static String _DRIVER = "com.mysql.jdbc.Driver";
-    @SuppressWarnings("unused")
     private static String _URL = "jdbc:mysql://localhost:3306/posmanagement?autoReconnect=true&useUnicode=true&characterEncoding=utf8";
-    @SuppressWarnings("unused")
     private static String _USER_NA = "root";
-    @SuppressWarnings("unused")
     private static String _PASSWORD = "";
-    // 设置驱动路径
-    @SuppressWarnings("static-access")
-    public void set_DRIVER(String _DRIVER) {
-        this._DRIVER = _DRIVER;
-    }
-    // 设置数据库密码
-    @SuppressWarnings("static-access")
-    public void set_PASSWORD(String _PASSWORD) {
-        this._PASSWORD = _PASSWORD;
-    }
-    // 设置数据库连接字符串
-    @SuppressWarnings("static-access")
-    public void set_URL(String _URL) {
-        this._URL = _URL;
-    }
-    // 设置数据库用户名
-    @SuppressWarnings("static-access")
-    public void set_USER_NA(String _USER_NA) {
-        this._USER_NA = _USER_NA;
-    }
+
+    private static HashMap<String, DbManager> dbManagerMap = new HashMap<String, DbManager>();
 }

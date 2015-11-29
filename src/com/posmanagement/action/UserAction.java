@@ -20,29 +20,23 @@ public class UserAction extends ActionSupport{
     private String userName ;
     private String userPwd;
     private String verifyCode;
-
-    public String getUserName() {
-        return userName;
-    }
+    private String loginErrorMessage;
+    private String userMenu;
 
     public void setUserName(String userName) {
         this.userName = userName;
-    }
-
-    public String getUserPwd() {
-        return userPwd;
     }
 
     public void setUserPwd(String userPwd) {
         this.userPwd = userPwd;
     }
 
-    public String getVerifyCode() {
-        return verifyCode;
-    }
-
     public void setVerifyCode(String verifyCode) {
         this.verifyCode = verifyCode;
+    }
+
+    public String getLoginErrorMessage() {
+        return loginErrorMessage;
     }
 
     public String Login() throws Exception {
@@ -52,37 +46,43 @@ public class UserAction extends ActionSupport{
         HttpSession session = request.getSession(true);
 
         if (!verifyCode.toUpperCase().equals(session.getAttribute("verifyCode"))) {
+            loginErrorMessage = "验证码错误";
             return LOGINFAILURE;
         }
         try {
-            DbManager db = new DbManager();
-            Map para = new HashMap();
+            Map parametMap = new HashMap();
             ArrayList<HashMap<String, Object>> dbRet  = null;
-            para.put(1,userName);
-            para.put(2,userPwd);
-            dbRet = db.executeSql("select * from userinfo where uname=? and upwd=?", (HashMap<Integer, Object>) para);
+            parametMap.put(1,userName);
+            parametMap.put(2,userPwd);
+            dbRet = DbManager.getDbManager("").executeSql("select * from userinfo where uname=? and upwd=?", (HashMap<Integer, Object>) parametMap);
             if (null == dbRet || dbRet.size() < 1){
+                loginErrorMessage = "账号或密码错误";
                 return LOGINFAILURE;
             }
             session.setAttribute("userName", dbRet.get(0).get("UNICK"));
             session.setAttribute("userLastLoginInfo", String.format("Last Login at:%s Timer:%s",
                     dbRet.get(0).get("LASTLOCATION"), dbRet.get(0).get("LASTTIME")));
             session.setAttribute("userType", 0);
-            String location = request.getRemoteAddr();
-            para.clear();
-            Date now = new Date();
-            para.put(1, request.getRemoteAddr());
-            para.put(2, new java.sql.Timestamp((now.getTime())));
-            para.put(3,userName);
-            para.put(4,userPwd);
-            if (!db.executeUpdate("update userinfo set lastlocation=?,lasttime=? where uname=? and upwd=?", (HashMap<Integer, Object>) para))
-                throw new RuntimeException();
-            LogManager.getInstance().writeLoginTrack(Integer.parseInt(dbRet.get(0).get("UID").toString()), location, now.toString());
+            session.setAttribute("userMenu", new String("我的桌面"));
+
+            logLoginTrack(Integer.parseInt(dbRet.get(0).get("UID").toString()), request.getRemoteAddr() );
         }
         catch (Exception e){
             return LOGINFAILURE;
         }
 
         return LOGINSUCCESS;
+    }
+
+    private void logLoginTrack(int userID, String location) throws Exception {
+        Map parametMap = new HashMap();
+        Date now = new Date();
+        parametMap.put(1, location);
+        parametMap.put(2, new java.sql.Timestamp((now.getTime())));
+        parametMap.put(3,userName);
+        parametMap.put(4,userPwd);
+        if (!DbManager.getDbManager("").executeUpdate("update userinfo set lastlocation=?,lasttime=? where uname=? and upwd=?", (HashMap<Integer, Object>) parametMap))
+            throw new RuntimeException();
+        LogManager.getInstance().writeLoginTrack(userID, location, now.toString());
     }
 }

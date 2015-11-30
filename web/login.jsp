@@ -12,7 +12,7 @@
     <link href="css/H-ui.login.css" rel="stylesheet" type="text/css" />
     <link href="css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
     <link href="css/index.css" rel="stylesheet" type="text/css" />
-    <title>卡务管理系统</title>
+    <title><s:text name="login.title" /></title>
     <script type="text/javascript" src="js\jquery\1.9.1\jquery.js"></script>
     <script type="text/javascript" >
       function refreshVerifyCode()
@@ -33,24 +33,24 @@
           <td align="center" ><img src="images/indexLogo.png" width="123" height="123"></td>
         </tr>
         <tr>
-          <td align="center" width="350"  align="left"><h1>卡务管理系统</h1></td>
+          <td align="center" width="350"  align="left"><h1><s:text name="login.title" /></h1></td>
         </tr>
       </table>
       <form class="form form-horizontal" action="User!Login" method="post">
         <div class="row cl">
           <div class="formControls col-8 col-offset-3">
-            <input id="userName" name="userName" type="text" placeholder="账号" class="input-text size-L">
+            <input id="userName" name="userName" type="text" placeholder="<s:text name="login.userName" />" class="input-text size-L">
           </div>
         </div>
         <div class="row cl">
           <div class="formControls col-8 col-offset-3">
-            <input id="userPwd" name="userPwd" type="password" placeholder="密码" class="input-text size-L">
+            <input id="userPwd" name="userPwd" type="password" placeholder="<s:text name="login.userPwd" />" class="input-text size-L">
           </div>
         </div>
         <div class="row cl">
           <div class="formControls col-8 col-offset-3">
-            <input id="verifyCode" name="verifyCode" class="input-text size-L" type="text" placeholder="验证码" style="width:150px;">
-            <img id="verifyCodeImage" src="Auth!GenerateVerifyCode" alt="点击刷新" onclick="refreshVerifyCode()" >
+            <input id="verifyCode" name="verifyCode" class="input-text size-L" type="text" placeholder="<s:text name="login.verifyCode" />" style="width:150px;">
+            <img id="verifyCodeImage" src="Auth!GenerateVerifyCode" alt="<s:text name="login.verifyCode" />" onclick="refreshVerifyCode()" >
           </div>
         </div>
         <div class="row">
@@ -62,8 +62,7 @@
         </div>
         <div class="row">
           <div class="formControls col-8 col-offset-3">
-            <input name="" type="submit" class="btn btn-success radius size-L" value="&nbsp;登&nbsp;&nbsp;&nbsp;&nbsp;录&nbsp;">
-            <input name="" type="reset" class="btn btn-default radius size-L" value="&nbsp;取&nbsp;&nbsp;&nbsp;&nbsp;消&nbsp;">
+            <input name="" type="submit" class="btn btn-success radius size-L" value="<s:text name="login.login" />">
           </div>
         </div>
       </form>

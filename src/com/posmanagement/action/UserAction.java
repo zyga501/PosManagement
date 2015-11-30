@@ -47,7 +47,7 @@ public class UserAction extends ActionSupport{
         HttpSession session = request.getSession(true);
 
         if (!verifyCode.toUpperCase().equals(session.getAttribute("verifyCode"))) {
-            loginErrorMessage = "验证码错误";
+            loginErrorMessage = getText("UserAction.verifyCodeError");
             return LOGINFAILURE;
         }
         try {
@@ -57,13 +57,13 @@ public class UserAction extends ActionSupport{
             parametMap.put(2,userPwd);
             dbRet = DbManager.getDbManager("").executeSql("select * from userinfo where uname=? and upwd=?", (HashMap<Integer, Object>) parametMap);
             if (null == dbRet || dbRet.size() < 1){
-                loginErrorMessage = "账号或密码错误";
+                loginErrorMessage = getText("UserAction.loginError");
                 return LOGINFAILURE;
             }
 
             int userID = Integer.parseInt(dbRet.get(0).get("UID").toString());
             session.setAttribute("userName", dbRet.get(0).get("UNICK"));
-            session.setAttribute("userLastLoginInfo", String.format("Last Login at:%s Timer:%s",
+            session.setAttribute("userLastLoginInfo", String.format(getText("UserAction.lastLoginInfoFormat"),
                     dbRet.get(0).get("LASTLOCATION"), dbRet.get(0).get("LASTTIME")));
             session.setAttribute("userType", 0);
             session.setAttribute("userMenu", new UserMenu(userID).generateHTMLString());

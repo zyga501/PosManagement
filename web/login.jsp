@@ -62,7 +62,7 @@
         </div>
         <div class="row">
           <div class="formControls col-8 col-offset-3">
-            <input name="" type="submit" class="btn btn-success radius size-L" value="<s:text name="login.login" />">
+            <input name="" type="submit" class="btn btn-success radius size-L" value="<s:text name="login.submit" />">
           </div>
         </div>
       </form>

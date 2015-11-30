@@ -12,27 +12,17 @@
     <link href="css/H-ui.admin.css" rel="stylesheet" type="text/css" />
     <link href="css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
     <link href="skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
-    <title>卡务管理系统</title>
+    <title><s:text name="main.title" /></title>
 </head>
 <body onselectstart="return false ">
-<header class="Hui-header cl" style="background-color: #0e90d2"> <a class="Hui-logo l" href="./index.jsp">卡务管理系统平台</a>
+<header class="Hui-header cl" style="background-color: #0e90d2"> <a class="Hui-logo l" href="./login.jsp"><s:text name="main.title" /></a>
     <ul class="Hui-userbar">
         <li>Hello,</li>
         <li class="dropDown dropDown_hover">
             <a href="#" class="dropDown_A"><%=request.getSession().getAttribute("userName")%> <i class="Hui-iconfont">&#xe6d5;</i></a>
             <ul class="dropDown-menu radius box-shadow">
-                <li><a href="javascript:void(0);">个人信息</a></li>
-                <li><a href="javascript:window.location.href='validLogin';window.close();window.location.href='about:blank';">退出</a></li>
-            </ul>
-        </li>
-        <li id="Hui-skin" class="dropDown right dropDown_hover"><a href="javascript:;" title="换肤"><i class="Hui-iconfont" style="font-size:18px">&#xe62a;</i></a>
-            <ul class="dropDown-menu radius box-shadow">
-                <li><a href="javascript:;" data-val="default" title="默认（黑色）">默认（黑色）</a></li>
-                <li><a href="javascript:;" data-val="blue" title="蓝色">蓝色</a></li>
-                <li><a href="javascript:;" data-val="green" title="绿色">绿色</a></li>
-                <li><a href="javascript:;" data-val="red" title="红色">红色</a></li>
-                <li><a href="javascript:;" data-val="yellow" title="黄色">黄色</a></li>
-                <li><a href="javascript:;" data-val="orange" title="绿色">橙色</a></li>
+                <li><a href="javascript:void(0);"><s:text name="main.userInfo" /></a></li>
+                <li><a href="javascript:window.location.href='validLogin';window.close();window.location.href='about:blank';"><s:text name="main.quite" /></a></li>
             </ul>
         </li>
     </ul>
@@ -53,7 +43,7 @@
         <div class="Hui-tabNav-wp">
             <ul id="min_title_list" class="acrossTab cl">
                 <li class="active">
-                    <span title="我的桌面" data-href="welcome.html">我的桌面</span>
+                    <span title="<s:text name="main.myDesktop" />" data-href="welcome.html"><s:text name="main.myDesktop" /></span>
                     <em></em>
                 </li>
             </ul>

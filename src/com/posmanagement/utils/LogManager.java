@@ -21,7 +21,7 @@ public class LogManager {
         Map parametsMap = new HashMap();
         parametsMap.put(1, userID);
         parametsMap.put(2, LogType.LOGONIN.ordinal());
-        parametsMap.put(3, String.format("User:%d Login at:%s DateTime:%s", userID, location, datatime));
+        parametsMap.put(3, String.format("User:%d Login:%s DateTime:%s", userID, location, datatime));
         writeToDB(parametsMap);
     }
 

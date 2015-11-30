@@ -50,7 +50,7 @@
         <div class="row cl">
           <div class="formControls col-8 col-offset-3">
             <input id="verifyCode" name="verifyCode" class="input-text size-L" type="text" placeholder="<s:text name="login.verifyCode" />" style="width:150px;">
-            <img id="verifyCodeImage" src="Auth!GenerateVerifyCode" alt="<s:text name="login.verifyCode" />" onclick="refreshVerifyCode()" >
+            <img id="verifyCodeImage" src="Auth!GenerateVerifyCode" alt="<s:text name="login.refeshVerifyCode" />" onclick="refreshVerifyCode()" >
           </div>
         </div>
         <div class="row">

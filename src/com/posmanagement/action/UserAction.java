@@ -76,6 +76,7 @@ public class UserAction extends ActionSupport{
             }
 
             int userID = Integer.parseInt(dbRet.get(0).get("UID").toString());
+            session.setAttribute("userID", userID);
             session.setAttribute("userName", userName);
             session.setAttribute("userNick", dbRet.get(0).get("UNICK"));
             session.setAttribute("userLastLoginInfo", String.format(getText("UserAction.userLastLoginInfo"),
@@ -135,7 +136,6 @@ public class UserAction extends ActionSupport{
         response.getWriter().flush();
         response.getWriter().close();
     }
-
 
     private void logLoginTrack(int userID, String location) throws Exception {
         Map parametMap = new HashMap();

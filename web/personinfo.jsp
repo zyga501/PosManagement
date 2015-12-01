@@ -30,17 +30,17 @@
     <table class="table table-border table-bordered" border="1">
         <tr>
             <td><span>账户显示</span></td>
-            <td><input type="text" class="input-text radius" readonly="readonly" value="<s:property value="personInfo[0].UNICK"/>"/></td>
+            <td><input type="text" class="input-text radius" readonly="readonly" value="<s:property value="personInfo.UNICK"/>"/></td>
             <td rowspan="5"><div class="panel panel-default">
                 <div class="panel-header">登录信息</div>
-                <div class="panel-body">本次登录<br>IP：<s:property value="personInfo[0].LASTLOCATION"/> 时间：<s:property value="personInfo[0].LASTTIME"/><br>
+                <div class="panel-body">本次登录<br>IP：<s:property value="personInfo[0].LASTLOCATION"/> 时间：<s:property value="personInfo.LASTTIME"/><br>
                     上次登录<br><s:property value="#session.userLastLoginInfo"/>
                 </div>
             </div></td>
         </tr>
         <tr>
             <td><span>账号</span></td>
-            <td><input type="text" class="input-text radius" name="userName" readonly="readonly" value="<s:property value="personInfo[0].UNAME"/>"/></td>
+            <td><input type="text" class="input-text radius" name="userName" readonly="readonly" value="<s:property value="personInfo.UNAME"/>"/></td>
         </tr>
         <tr>
             <td><span>原密码</span></td>

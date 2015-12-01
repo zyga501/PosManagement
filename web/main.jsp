@@ -13,6 +13,13 @@
     <link href="css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
     <link href="skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
     <title><s:text name="main.title" /></title>
+    <script type="text/javascript">
+    function openPersonInfo(){var index = layer.open({
+                type: 2,
+                title: "个人信息",area: ['810px', '330px'],
+                content: "User!FetchPersonInfo"
+    });}
+    </script>
 </head>
 <body onselectstart="return false ">
 <header class="Hui-header cl" style="background-color: #0e90d2"> <a class="Hui-logo l" href="./login.jsp"><s:text name="main.title" /></a>
@@ -21,14 +28,11 @@
         <li class="dropDown dropDown_hover">
             <a href="#" class="dropDown_A"><%=request.getSession().getAttribute("userName")%> <i class="Hui-iconfont">&#xe6d5;</i></a>
             <ul class="dropDown-menu radius box-shadow">
-                <li><a href="javascript:void(0);"><s:text name="main.userInfo" /></a></li>
+                <li><a href="javascript:openPersonInfo();"><s:text name="main.userInfo" /></a></li>
                 <li><a href="javascript:window.location.href='validLogin';window.close();window.location.href='about:blank';"><s:text name="main.quite" /></a></li>
             </ul>
         </li>
     </ul>
-    <div class="formControls col-8 col-offset-3">
-        <%=request.getSession().getAttribute("userLastLoginInfo")%>
-    </div>
     <a aria-hidden="false" class="Hui-nav-toggle" href="#"></a>
 </header>
 <aside class="Hui-aside">

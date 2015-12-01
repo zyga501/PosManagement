@@ -73,7 +73,6 @@ public class UserMenu {
 
     private ArrayList<HashMap<String, Object>> fetchMenuByPid(int pid) throws Exception {
         Map parametMap = new HashMap();
-        ArrayList<HashMap<String, Object>> dbRet  = null;
         parametMap.put(1,pid);
         return DbManager.getDbManager("").executeSql("select * from menutree where preid=? order by menuorder", (HashMap<Integer, Object>)parametMap);
     }

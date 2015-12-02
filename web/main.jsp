@@ -29,7 +29,7 @@
             <a href="#" class="dropDown_A"><%=request.getSession().getAttribute("userName")%> <i class="Hui-iconfont">&#xe6d5;</i></a>
             <ul class="dropDown-menu radius box-shadow">
                 <li><a href="javascript:openPersonInfo();"><s:text name="main.userInfo" /></a></li>
-                <li><a href="javascript:window.location.href='validLogin';window.close();window.location.href='about:blank';"><s:text name="main.quite" /></a></li>
+                <li><a href="javascript:window.location.href='User!Logout';window.close();"><s:text name="main.quite" /></a></li>
             </ul>
         </li>
     </ul>
@@ -65,38 +65,5 @@
 <script type="text/javascript" src="js/layer/1.9.3/layer.js"></script>
 <script type="text/javascript" src="js/H-ui.js"></script>
 <script type="text/javascript" src="js/H-ui.admin.js"></script>
-<script type="text/javascript">
-    /*资讯-添加*/
-    function article_add(title,url){
-        var index = layer.open({
-            type: 2,
-            title: title,
-            content: url
-        });
-        layer.full(index);
-    }
-    /*图片-添加*/
-    function picture_add(title,url){
-        var index = layer.open({
-            type: 2,
-            title: title,
-            content: url
-        });
-        layer.full(index);
-    }
-    /*产品-添加*/
-    function product_add(title,url){
-        var index = layer.open({
-            type: 2,
-            title: title,
-            content: url
-        });
-        layer.full(index);
-    }
-    /*用户-添加*/
-    function member_add(title,url,w,h){
-        layer_show(title,url,w,h);
-    }
-</script>
 </body>
 </html>

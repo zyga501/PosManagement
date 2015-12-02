@@ -18,6 +18,7 @@ import java.util.Map;
 public class UserAction extends ActionSupport{
     private final static String LOGINSUCCESS = "loginSuccess";
     private final static String LOGINFAILURE = "loginFailure";
+    private final static String USERLIST = "userList";
 
     private String userName ;
     private String userPwd;
@@ -25,6 +26,7 @@ public class UserAction extends ActionSupport{
     private String loginErrorMessage;
     private HashMap<String, Object> personInfo;
     private String userNewPwd;
+    private String userListHtml;
 
     public void setUserName(String userName) {
         this.userName = userName;
@@ -52,6 +54,14 @@ public class UserAction extends ActionSupport{
 
     public HashMap<String, Object> getPersonInfo() {
         return personInfo;
+    }
+
+    public String getUserListHtml() {
+        return userListHtml;
+    }
+
+   public void setUserListHtml(String userListHtml) {
+        this.userListHtml = userListHtml;
     }
 
     public String Login() throws Exception {
@@ -91,6 +101,14 @@ public class UserAction extends ActionSupport{
         }
 
         return LOGINSUCCESS;
+    }
+
+    public void Logout() throws Exception {
+        ActionContext ctx = ActionContext.getContext();
+        HttpServletRequest request = (HttpServletRequest) ctx.get(ServletActionContext.HTTP_REQUEST);
+        HttpSession session = request.getSession(false);
+        if (null!=session)
+            session.invalidate();
     }
 
     public String FetchPersonInfo() throws Exception {
@@ -135,6 +153,35 @@ public class UserAction extends ActionSupport{
         response.getWriter().write(rtMsg);
         response.getWriter().flush();
         response.getWriter().close();
+    }
+
+    public String ListUsers() throws Exception {
+        ActionContext ctx = ActionContext.getContext();
+        HttpServletRequest request = (HttpServletRequest) ctx
+                        .get(ServletActionContext.HTTP_REQUEST);
+        HttpSession session = request.getSession(false);
+        try {
+            ArrayList<HashMap<String, Object>> dbRet = DbManager.getDbManager("").executeSql("select * from userinfo");
+            if (null == dbRet || dbRet.size() < 1){
+                    return LOGINFAILURE;
+                }
+            String inputType = "";
+            if (null!=request.getParameter("type") && request.getParameter("type").equals(1))
+                inputType="checkbox";
+            else
+                inputType="radio";
+            userListHtml = "";
+            for (int index = 0; index < dbRet.size(); ++index) {
+                userListHtml +="<tr class=\"text-c odd\" role=\"row\">"+
+                           "<td><input type=\""+inputType+"\" name=userpick id=pick"+String.valueOf(index)+" value="+dbRet.get(index).get("UID")+"></td>"+
+                           "<td>"+dbRet.get(index).get("UNICK")+"</td>"+
+                           "<td>"+dbRet.get(index).get("UNAME")+"</td></tr>";
+                }
+        }
+        catch (Exception e){
+            return LOGINFAILURE;
+        }
+        return USERLIST;
     }
 
     private void logLoginTrack(int userID, String location) throws Exception {

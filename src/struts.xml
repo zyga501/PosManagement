@@ -15,5 +15,8 @@
         </action>
         <action name="Auth!*" class="com.posmanagement.action.AuthAction" method="{1}">
         </action>
+        <action name="Menu!*" class="com.posmanagement.action.MenuAction" method="{1}">
+            <result name="saleMan">/saleman.jsp</result>
+        </action>
     </package>
 </struts>

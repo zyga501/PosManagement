@@ -65,7 +65,7 @@ public class UserMenu {
             htmlString += "404.jsp";
         else
             htmlString += webPath;
-        htmlString += "\" href=\"javascript:void(0)\">";
+        htmlString += "\">";
         htmlString += menuName;
         htmlString += "</a></li>";
         return htmlString;

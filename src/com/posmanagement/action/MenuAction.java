@@ -1,20 +1,14 @@
 package com.posmanagement.action;
 
-import com.opensymphony.xwork2.ActionContext;
-import org.apache.struts2.ServletActionContext;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 public class MenuAction {
-    private final static String SALEMAN = "saleMan";
+    private final static String SALEMAN = "saleManManager";
+    private final static String BANKMANAGER = "bankManager";
 
-    public String SaleMan() throws Exception {
-        ActionContext ctx = ActionContext.getContext();
-        HttpServletRequest request = (HttpServletRequest) ctx
-                .get(ServletActionContext.HTTP_REQUEST);
-        HttpSession session = request.getSession(false);
-
+    public String ManageSaleMan() throws Exception {
         return SALEMAN;
+    }
+
+    public String ManageBank() throws Exception {
+        return BANKMANAGER;
     }
 }

@@ -15,10 +15,14 @@
             <result name="personInfo">/personinfo.jsp</result>
             <result name="userList">/userlist.jsp</result>
         </action>
+        <action name="Bank!*" class="com.posmanagement.action.BankAction" method="{1}">
+            <result name="bankManager">/bankmanager.jsp</result>
+        </action>
         <action name="Auth!*" class="com.posmanagement.action.AuthAction" method="{1}">
         </action>
         <action name="Menu!*" class="com.posmanagement.action.MenuAction" method="{1}">
-            <result name="saleMan">/saleman.jsp</result>
+            <result name="saleManManager">/saleman.jsp</result>
+            <result name="bankManager" type="redirectAction">Bank!Init</result>
         </action>
     </package>
 </struts>

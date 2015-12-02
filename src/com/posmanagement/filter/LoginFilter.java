@@ -18,19 +18,22 @@ public class LoginFilter implements Filter {
         HttpSession session = servletRequest.getSession();
 
         String path = servletRequest.getRequestURI();
-        if(path.compareTo("/") == 0
-                || path.indexOf("/css") > -1
+        if(path.indexOf("/css") > -1
                 || path.indexOf("/images") > -1
                 || path.indexOf("/js") > -1
-                || path.indexOf("/skin") > -1) {
+                || path.indexOf("/skin") > -1
+                || path.indexOf("/login.jsp") > -1) {
             chain.doFilter(servletRequest, servletResponse);
         }
-
-        if (session.getAttribute("userID") != null) {
+        else  if (session.getAttribute("userID") != null) {
             chain.doFilter(servletRequest, servletResponse);
+        }
+        else {
+            servletResponse.sendRedirect("/login.jsp");
         }
     }
 
     public void destroy() {
+
     }
 }

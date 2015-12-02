@@ -29,7 +29,7 @@
             <a href="#" class="dropDown_A"><%=request.getSession().getAttribute("userName")%> <i class="Hui-iconfont">&#xe6d5;</i></a>
             <ul class="dropDown-menu radius box-shadow">
                 <li><a href="javascript:openPersonInfo();"><s:text name="main.userInfo" /></a></li>
-                <li><a href="javascript:window.location.href='User!Logout';window.close();"><s:text name="main.quite" /></a></li>
+                <li><a href="javascript:window.location.href='User!Logout';"><s:text name="main.quite" /></a></li>
             </ul>
         </li>
     </ul>

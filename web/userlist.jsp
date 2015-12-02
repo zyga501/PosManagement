@@ -32,7 +32,7 @@
             </tr>
             </thead>
             <tbody>
-            <s:property value="userListHtml" escape="false"/>
+            <s:property value="userList" escape="false"/>
             </tbody>
         </table>
     </form>

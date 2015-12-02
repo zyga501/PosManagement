@@ -18,6 +18,7 @@ import java.util.Map;
 public class UserAction extends ActionSupport{
     private final static String LOGINSUCCESS = "loginSuccess";
     private final static String LOGINFAILURE = "loginFailure";
+    private final static String LOGOUT = "logout";
     private final static String USERLIST = "userList";
 
     private String userName ;
@@ -26,7 +27,7 @@ public class UserAction extends ActionSupport{
     private String loginErrorMessage;
     private HashMap<String, Object> personInfo;
     private String userNewPwd;
-    private String userListHtml;
+    private String userList;
 
     public void setUserName(String userName) {
         this.userName = userName;
@@ -56,12 +57,8 @@ public class UserAction extends ActionSupport{
         return personInfo;
     }
 
-    public String getUserListHtml() {
-        return userListHtml;
-    }
-
-   public void setUserListHtml(String userListHtml) {
-        this.userListHtml = userListHtml;
+    public String getUserList() {
+        return userList;
     }
 
     public String Login() throws Exception {
@@ -103,12 +100,13 @@ public class UserAction extends ActionSupport{
         return LOGINSUCCESS;
     }
 
-    public void Logout() throws Exception {
+    public String Logout() throws Exception {
         ActionContext ctx = ActionContext.getContext();
         HttpServletRequest request = (HttpServletRequest) ctx.get(ServletActionContext.HTTP_REQUEST);
         HttpSession session = request.getSession(false);
         if (null!=session)
             session.invalidate();
+        return LOGOUT;
     }
 
     public String FetchPersonInfo() throws Exception {
@@ -170,9 +168,9 @@ public class UserAction extends ActionSupport{
                 inputType="checkbox";
             else
                 inputType="radio";
-            userListHtml = "";
+            userList = "";
             for (int index = 0; index < dbRet.size(); ++index) {
-                userListHtml +="<tr class=\"text-c odd\" role=\"row\">"+
+                userList +="<tr class=\"text-c odd\" role=\"row\">"+
                            "<td><input type=\""+inputType+"\" name=userpick id=pick"+String.valueOf(index)+" value="+dbRet.get(index).get("UID")+"></td>"+
                            "<td>"+dbRet.get(index).get("UNICK")+"</td>"+
                            "<td>"+dbRet.get(index).get("UNAME")+"</td></tr>";

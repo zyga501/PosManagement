@@ -11,7 +11,9 @@
         <action name="User!*" class="com.posmanagement.action.UserAction" method="{1}">
             <result name="loginSuccess" type="redirect">/main.jsp</result>
             <result name="loginFailure">/login.jsp</result>
+            <result name="logout" type="redirect">/login.jsp</result>
             <result name="personInfo">/personinfo.jsp</result>
+            <result name="userList">/userlist.jsp</result>
         </action>
         <action name="Auth!*" class="com.posmanagement.action.AuthAction" method="{1}">
         </action>

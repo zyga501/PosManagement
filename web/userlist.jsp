@@ -18,6 +18,7 @@
             alert("2");
             parent.$('#parentIframe').text("1212");
             parent.layer.close(index);}
+        parent
     </script>
 </head>
 <body>

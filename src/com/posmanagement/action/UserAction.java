@@ -78,6 +78,8 @@ public class UserAction extends ActionSupport{
         HttpServletRequest request = (HttpServletRequest) ctx
                 .get(ServletActionContext.HTTP_REQUEST);
         HttpSession session = request.getSession(true);
+        if (session.getAttribute("userID") == null)
+            return LOGINFAILURE;
         userMenu = new UserMenu(Integer.parseInt(session.getAttribute("userID").toString())).generateHTMLString();
         userNickName = session.getAttribute("userNick").toString();
         return MAGEPAGELOADED;

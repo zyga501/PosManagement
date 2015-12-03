@@ -13,14 +13,36 @@
     <link href="css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
     <link href="skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
     <title><s:text name="bankmanager.title" /></title>
+    <script type="text/javascript">
+        function addbank(){
+            var index = layer.open({
+                type: 2,
+                title: "添加银行",area: ['310px', '230px'],
+                fix: false,
+                content: "addbank.jsp"
+            });}
+    </script>
 </head>
-<body>
-<div class="mt-20">
+<body style="overflow: hidden">
+<div align="center">
     <div class="panel panel-default" style="float: left;width: 44%">
-        <div class="panel-header"><s:text name="bankmanager.panaltitle" /><span style="float:right;" ><a href="javascript:void(0);" onclick=""><s:text name="bankmanager.add" /></a></span></div>
-        <div class="panel-body" id="parentIframe">
-            <s:property value="bankList" escape="false" />
-        </div>
+    <div class="panel-header"><s:text name="bankmanager.panaltitle" /><span style="float:right;" ><a href="javascript:void(0);" onclick="addbank()"><s:text name="bankmanager.add" /></a></span></div>
+    <div class="panel-body" id="parentIframe">
+        <form>
+            <div style="height:80%; overflow:auto;">
+                <table class="table table-border table-bordered table-bg table-hover table-sort">
+                    <thead>
+                    <tr class="text-c">
+                        <th width="80"><s:text name="bankmanager.bankcode" /></th>
+                        <th width="80"><s:text name="bankmanager.bankname" /></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <s:property value="bankList" escape="false" />
+                    </tbody>
+                </table>
+            </div>
+        </form>
     </div>
 </div>
 <script type="text/javascript" src="js/jquery/1.9.1/jquery.min.js"></script>

@@ -34,7 +34,7 @@
             <td rowspan="5"><div class="panel panel-default">
                 <div class="panel-header">登录信息</div>
                 <div class="panel-body">本次登录<br>IP：<s:property value="personInfo.LASTLOCATION"/> 时间：<s:property value="personInfo.LASTTIME"/><br>
-                    上次登录<br><s:property value="#session.userLastLoginInfo"/>
+                    上次登录<br><s:property value="userLastLoginInfo" escape="false"/>
                 </div>
             </div></td>
         </tr>

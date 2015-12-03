@@ -23,6 +23,7 @@ public class UserAction extends ActionSupport{
     private final static String USERLIST = "userList";
 
     private String userName ;
+    private String userNickName;
     private String userPwd;
     private String verifyCode;
     private String loginErrorMessage;
@@ -30,6 +31,7 @@ public class UserAction extends ActionSupport{
     private String userNewPwd;
     private String userList;
     private String userMenu;
+    private String userLastLoginInfo;
 
     public void setUserName(String userName) {
         this.userName = userName;
@@ -47,10 +49,6 @@ public class UserAction extends ActionSupport{
         return loginErrorMessage;
     }
 
-    public String getUserNewPwd() {
-        return userNewPwd;
-    }
-
     public void setUserNewPwd(String userNewPwd) {
         this.userNewPwd = userNewPwd;
     }
@@ -63,16 +61,25 @@ public class UserAction extends ActionSupport{
         return userList;
     }
 
-    public void setUserMenu(String _userMenu) {
-        userMenu = _userMenu;
+    public String getUserNickName() {
+        return userNickName;
     }
 
     public String getUserMenu() {
         return userMenu;
     }
 
+    public String getUserLastLoginInfo() {
+        return userLastLoginInfo;
+    }
+
     public String InitMainPage() throws Exception {
-        userMenu = new UserMenu(0).generateHTMLString();
+        ActionContext ctx = ActionContext.getContext();
+        HttpServletRequest request = (HttpServletRequest) ctx
+                .get(ServletActionContext.HTTP_REQUEST);
+        HttpSession session = request.getSession(true);
+        userMenu = new UserMenu(Integer.parseInt(session.getAttribute("userID").toString())).generateHTMLString();
+        userNickName = session.getAttribute("userNick").toString();
         return MAGEPAGELOADED;
     }
 
@@ -84,6 +91,7 @@ public class UserAction extends ActionSupport{
 
         if (!verifyCode.toUpperCase().equals(session.getAttribute("verifyCode"))) {
             loginErrorMessage = getText("UserAction.verifyCodeError");
+            session.removeAttribute("verifyCode");
             return LOGINFAILURE;
         }
         try {
@@ -101,16 +109,18 @@ public class UserAction extends ActionSupport{
             session.setAttribute("userID", userID);
             session.setAttribute("userName", userName);
             session.setAttribute("userNick", dbRet.get(0).get("UNICK"));
-            session.setAttribute("userLastLoginInfo", String.format(getText("UserAction.userLastLoginInfo"),
-                    dbRet.get(0).get("LASTLOCATION"), dbRet.get(0).get("LASTTIME")));
+            session.setAttribute("lastLocation", dbRet.get(0).get("LASTLOCATION"));
+            session.setAttribute("lastTime", dbRet.get(0).get("LASTTIME"));
             session.setAttribute("userType", 0);
 
             logLoginTrack(userID, request.getRemoteAddr() );
         }
         catch (Exception e){
+            session.removeAttribute("verifyCode");
             return LOGINFAILURE;
         }
 
+        session.removeAttribute("verifyCode");
         return LOGINSUCCESS;
     }
 
@@ -136,6 +146,8 @@ public class UserAction extends ActionSupport{
                 return LOGINFAILURE;
             }
             personInfo = dbRet.get(0);
+            userLastLoginInfo = String.format(getText("UserAction.userLastLoginInfo"),
+                    session.getAttribute("lastLocation").toString(), session.getAttribute("lastTime").toString());
         }
         catch (Exception e){
             return LOGINFAILURE;

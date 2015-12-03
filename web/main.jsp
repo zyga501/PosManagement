@@ -24,7 +24,7 @@
 <body onselectstart="return false ">
 <header class="Hui-header cl" style="background-color: #0e90d2"> <a class="Hui-logo l" href="./login.jsp"><s:text name="main.title" /></a>
     <ul class="Hui-userbar">
-        <li>Hello,</li>
+        <li><s:text name="main.welcomeTitle" /></li>
         <li class="dropDown dropDown_hover">
             <a href="#" class="dropDown_A"><s:property value="userNickName" escape="false" /><i class="Hui-iconfont">&#xe6d5;</i></a>
             <ul class="dropDown-menu radius box-shadow">

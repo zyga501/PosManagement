@@ -40,6 +40,6 @@ public class BankAction extends ActionSupport {
             throw new IllegalArgumentException();
         }
 
-        
+
     }
 }

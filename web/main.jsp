@@ -38,7 +38,7 @@
 <aside class="Hui-aside">
     <input runat="server" id="divScrollValue" type="hidden" value="" />
     <div class="menu_dropdown bk_2">
-        <%=request.getSession().getAttribute("userMenu")%>
+        <s:property value="userMenu" escape="false" />
     </div>
 </aside>
 <div class="dislpayArrow"><a class="pngfix" href="javascript:void(0);" onClick="displaynavbar(this)"></a></div>

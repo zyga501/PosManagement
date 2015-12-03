@@ -9,11 +9,14 @@
 
     <package name="defualt" extends="struts-default">
         <action name="User!*" class="com.posmanagement.action.UserAction" method="{1}">
-            <result name="loginSuccess" type="redirect">/main.jsp</result>
+            <result name="loginSuccess" type="redirectAction">MainPage</result>
             <result name="loginFailure">/login.jsp</result>
             <result name="logout" type="redirect">/login.jsp</result>
             <result name="personInfo">/personinfo.jsp</result>
             <result name="userList">/userlist.jsp</result>
+        </action>
+        <action name="MainPage" class="com.posmanagement.action.UserAction" method="InitMainPage">
+            <result name="mainPageInited">/main.jsp</result>
         </action>
         <action name="Bank!*" class="com.posmanagement.action.BankAction" method="{1}">
             <result name="bankManager">/bankmanager.jsp</result>

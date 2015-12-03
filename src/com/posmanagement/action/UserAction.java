@@ -18,6 +18,7 @@ import java.util.Map;
 public class UserAction extends ActionSupport{
     private final static String LOGINSUCCESS = "loginSuccess";
     private final static String LOGINFAILURE = "loginFailure";
+    private final static String MAGEPAGELOADED = "mainPageInited";
     private final static String LOGOUT = "logout";
     private final static String USERLIST = "userList";
 
@@ -28,6 +29,7 @@ public class UserAction extends ActionSupport{
     private HashMap<String, Object> personInfo;
     private String userNewPwd;
     private String userList;
+    private String userMenu;
 
     public void setUserName(String userName) {
         this.userName = userName;
@@ -61,6 +63,19 @@ public class UserAction extends ActionSupport{
         return userList;
     }
 
+    public void setUserMenu(String _userMenu) {
+        userMenu = _userMenu;
+    }
+
+    public String getUserMenu() {
+        return userMenu;
+    }
+
+    public String InitMainPage() throws Exception {
+        userMenu = new UserMenu(0).generateHTMLString();
+        return MAGEPAGELOADED;
+    }
+
     public String Login() throws Exception {
         ActionContext ctx = ActionContext.getContext();
         HttpServletRequest request = (HttpServletRequest) ctx
@@ -89,7 +104,6 @@ public class UserAction extends ActionSupport{
             session.setAttribute("userLastLoginInfo", String.format(getText("UserAction.userLastLoginInfo"),
                     dbRet.get(0).get("LASTLOCATION"), dbRet.get(0).get("LASTTIME")));
             session.setAttribute("userType", 0);
-            session.setAttribute("userMenu", new UserMenu(userID).generateHTMLString());
 
             logLoginTrack(userID, request.getRemoteAddr() );
         }

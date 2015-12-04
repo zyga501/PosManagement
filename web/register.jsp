@@ -32,7 +32,7 @@
     <table class="table table-border table-bordered" border="1">
         <tr>
             <td><span><s:text name="register.nick" /></span></td>
-            <td><input type="text" class="input-text radius" name="userNick"/></td>
+            <td><input type="text" class="input-text radius" name="userNickName"/></td>
         </tr>
         <tr>
             <td><span><s:text name="register.name" /></span></td>

@@ -43,6 +43,10 @@ public class UserAction extends ActionSupport{
         this.userPwd = userPwd;
     }
 
+    public void setUserNickName(String userNickName) {
+        this.userNickName = userNickName;
+    }
+
     public void setUserType(String userType) {
         this.userType = userType;
     }

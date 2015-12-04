@@ -29,6 +29,7 @@
                     }
                 });
             })}
+
         $().ready(function(){refreshsalemanlist();});
         function register(){
             var index = layer.open({
@@ -38,6 +39,7 @@
                 maxmin: false,
                 content: "/register.jsp?usertype=1"
             });}
+
         function insertteller(param){
             var inpara =$("#uid").val()+','+ param;
             $.ajax({
@@ -52,6 +54,7 @@
                         refreshtellerlist();
                 }
             });}
+
         function refreshtellerlist(){
             $.ajax({
                 type: 'post',
@@ -70,6 +73,7 @@
                     trclick();
                 }
             });}
+
         function callback(params){
             if (params!="undefined" ){
                 insertteller(params);

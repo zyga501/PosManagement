@@ -2,6 +2,10 @@ package com.posmanagement.action;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.posmanagement.webui.BankList;
+import net.sf.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class BankAction extends ActionSupport {
     private final static String BANKMANAGER = "bankManager";
@@ -11,7 +15,7 @@ public class BankAction extends ActionSupport {
     private String bankList;
     private String bankCode;
     private String bankName;
-    private String addBankErrorMessage;
+    private String actionResult;
 
     public String getBankList() {
         return bankList;
@@ -25,8 +29,8 @@ public class BankAction extends ActionSupport {
         bankName = _bankName;
     }
 
-    public String getAddBankErrorMessage() {
-        return addBankErrorMessage;
+    public String getToAddBankResult() {
+        return actionResult;
     }
 
     public String Init() throws Exception {
@@ -34,12 +38,17 @@ public class BankAction extends ActionSupport {
         return BANKMANAGER;
     }
 
-    public void AddBank() {
+    public String AddBank() {
+        Map map = new HashMap();
         if (bankCode.length() == 0 || bankName.length() == 0) {
-            addBankErrorMessage = "银行代码或银行名称不能为空";
-            throw new IllegalArgumentException();
+            map.put("success", false);
+            map.put("addBankErrorMessage", getText("addbank.addBankErrorMessage"));
+            actionResult = JSONObject.fromObject(map).toString();
+            return BANKADDFAILURE;
         }
 
-
+        map.put("addBankErrorMessage", "添加成功");
+        actionResult = JSONObject.fromObject(map).toString();
+        return BANKADDSUCCESS;
     }
 }

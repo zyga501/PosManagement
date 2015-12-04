@@ -20,11 +20,15 @@
             $.ajax({
                 type: 'post',
                 url: 'Bank!AddBank',
+                dataType:"json",
                 data:$("form").serialize(),
                 success: function (data) {
+                    var json = eval("("+data+")");
+                    alert(json.addBankErrorMessage);
                 },
                 error: function (data) {
-                    $("#addBankErrorMessage").css('display','block');
+                    var json = eval("("+data+")");
+                    alert(json.addBankErrorMessage);
                 }
             })
         }
@@ -49,8 +53,8 @@
             </table>
             <div class="row">
                 <div class="formControls col-8 col-offset-3">
-                    <div id="addBankErrorMessage" style="color:#ff0000;font-size: 12px; display: none">
-                        <s:text name="addbank.addBankErrorMessage" />
+                    <div id="addBankErrorMessage" style="color:#ff0000;font-size: 12px;">
+
                     </div>
                 </div>
             </div>

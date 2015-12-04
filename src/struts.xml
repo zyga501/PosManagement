@@ -6,8 +6,31 @@
 
 <struts>
     <constant name="struts.custom.i18n.resources" value="mui/resources"/>
+    <package name="json-default" extends="struts-default">
+        <result-types>
+            <result-type name="json" class="org.apache.struts2.json.JSONResult" />
+        </result-types>
 
-    <package name="defualt" extends="struts-default">
+        <interceptors>
+            <interceptor name="json"
+                         class="org.apache.struts2.json.JSONInterceptor" />
+            <interceptor name="jsonValidation"
+                         class="org.apache.struts2.json.JSONValidationInterceptor" />
+
+            <!-- Sample JSON validation stack -->
+            <interceptor-stack name="jsonValidationWorkflowStack">
+                <interceptor-ref name="basicStack" />
+                <interceptor-ref name="validation">
+                    <param name="excludeMethods">input,back,cancel</param>
+                </interceptor-ref>
+                <interceptor-ref name="jsonValidation" />
+                <interceptor-ref name="workflow" />
+            </interceptor-stack>
+        </interceptors>
+
+    </package>
+
+    <package name="defualt" extends="json-default">
         <action name="User!*" class="com.posmanagement.action.UserAction" method="{1}">
             <result name="loginSuccess" type="redirectAction">MainPage</result>
             <result name="loginFailure">/login.jsp</result>
@@ -20,8 +43,12 @@
         </action>
         <action name="Bank!*" class="com.posmanagement.action.BankAction" method="{1}">
             <result name="bankManager">/bankmanager.jsp</result>
-            <result name="bankAddSuccess">/addbank.jsp</result>
-            <result name="bankAddFailure">/addbank.jsp</result>
+            <result name="bankAddSuccess" type="json">
+                <param name="root">toAddBankResult</param>
+            </result>
+            <result name="bankAddFailure" type="json">
+                <param name="root">toAddBankResult</param>
+            </result>
         </action>
         <action name="Auth!*" class="com.posmanagement.action.AuthAction" method="{1}">
         </action>
@@ -31,4 +58,6 @@
             <result name="bankManager" type="redirectAction">Bank!Init</result>
         </action>
     </package>
+
+    <package name="default" extends="struts-default"/>
 </struts>

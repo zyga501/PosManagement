@@ -18,14 +18,14 @@
         function trclick(obj) {
             $("tr").on("click",function(){
                 var data = $(this).children().first().children().val();
+                alert
                 $.ajax({
                     type: 'post',
-                    url: 'User!SalemanProperty',
+                    url: 'User!TellerProperty',
                     data:{"datas":data},
                     dataType : "text",
                     success: function(data) {
                         $("#propertyIframe").html(data);
-                        refreshtellerlist();
                     }
                 });
             })}
@@ -34,73 +34,33 @@
             var index = layer.open({
                 type: 2,
                 title: "<s:text name="register.reg" />",area: ['310px', '330px'],
-                fix: false,
+                fix: false, //不固定
                 maxmin: false,
-                content: "/register.jsp?usertype=1"
-            });}
-        function insertteller(param){
-            var inpara =$("#uid").val()+','+ param;
-            $.ajax({
-                type: 'post',
-                url: 'User!InsertTeller',
-                data:{"datas":inpara},//"{datas:'"+inpara+"'}",
-                dataType : "text",
-                success: function(data) {
-                    if (data!="undefined")
-                        alert(data)
-                    else
-                        refreshtellerlist();
-                }
-            });}
-        function refreshtellerlist(){
-            $.ajax({
-                type: 'post',
-                url: 'User!ListTeller',
-                data:{datas:$("#uid").val()},
-                success: function(data) {
-                    $("#tellerlistIframe").html(data);
-                }
+                content: "/register.jsp?usertype=2"
             });}
         function refreshsalemanlist(){
             $.ajax({
                 type: 'post',
-                url: 'User!ListSalesman',
+                url: 'User!ListTeller',
                 success: function(data) {
                     $("#parentIframe").html(data);
                     trclick();
                 }
             });}
         function callback(params){
-            if (params!="undefined" ){
-                insertteller(params);
-            }else
-                refreshsalemanlist()
+            refreshsalemanlist()
         }
-        function updatetellerinfo(){
-            if ("undefined"==typeof($("#uid").val())) {alert("<s:text name="salesman.hasuidalert"/>"); return;}
-            var index = layer.open({
-                type: 2,
-                title: "<s:text name="teller.listtitle" />",area: ['310px', '380px'],
-                fix: false,
-                maxmin: false,
-                content: "tellerlist.jsp"
-            });}
     </script>
 </head>
 <body>
 <div class="mt">
     <div class="panel panel-default" style="float: left;width: 44%">
-        <div class="panel-header"><s:text name="salesman.listtitle" /><span style="float:right;" >
-            <a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="register();"><s:text name="salesman.addbutton" /></a></span></div>
+        <div class="panel-header"><s:text name="teller.listtitle" /><span style="float:right;" ><a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="register();"><s:text name="salesman.addbutton" /></a></span></div>
         <div class="panel-body" id="parentIframe" ></div>
     </div>
     <div class="panel panel-default" style="float: right;width: 54%;">
-        <div class="panel-header"><s:text name="salesman.salemanProperty" /><span style="float:right">
-            <input class="btn btn-primary radius size-S " type="button" value="<s:text name="salesman.savebutton" />" onclick="updatesalesmaninfo()"></span></div>
+        <div class="panel-header"><s:text name="teller.tellerProperty" /><span style="float:right"><input class="btn btn-primary radius size-S " type="button" value="<s:text name="salesman.savebutton" />" onclick="updatetellerinfo()"></span></div>
         <div class="panel-body" id="propertyIframe"></div>
-        <div class="panel-header"><s:text name="salesman.listtellertitle" /><span style="float:right">
-            <input class="btn btn-primary radius size-S " type="button" value="<s:text name="salesman.addbutton" />" onclick="updatetellerinfo()"></span></div>
-        <div class="panel-body" id="tellerlistIframe"></div>
     </div>
 </div>
 <script type="text/javascript" src="js/layer/1.9.3/layer.js"></script>

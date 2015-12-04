@@ -11,47 +11,39 @@
     <link href="css/H-ui.admin.css" rel="stylesheet" type="text/css" />
     <link href="css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
     <link href="skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
-    <title><s:text name="main.userInfo"></title>
+    <title></title>
     <script type="text/javascript" src="js/jquery/1.9.1/jquery.min.js"></script>
     <script type="text/javascript">
-        function modifyPassword(){
+        function registerinfo(){
             $.ajax({
                 type: 'post',
-                url: 'User!ModifyPassword',
+                url: 'User!Register',
                 data: $("form").serialize(),
                 success: function(data) {
-                    alert((data));
+                    parent.callback();
+                    parent.layer.close(parent.layer.getFrameIndex(window.name));
                 }
             });}
     </script>
 </head>
 <body>
 <s:form>
+    <input type="hidden" name="userType" value="<%= request.getParameter("usertype")%>">
     <table class="table table-border table-bordered" border="1">
         <tr>
-            <td><span><s:text name="register.nick"/></span></td>
-            <td><input type="text" class="input-text radius" readonly="readonly" value="<s:property value="personInfo.UNICK"/>"/></td>
-            <td rowspan="5"><div class="panel panel-default">
-                <div class="panel-header"><s:text name="personinfo.acountinfo"/></div>
-                <div class="panel-body"><s:text name="personinfo.current"/><br>IP：<s:property value="personInfo.LASTLOCATION"/> <s:text name="personinfo.time"/>：<s:property value="personInfo.LASTTIME"/><br>
-                    <s:text name="personinfo.last"/><br><s:property value="#session.userLastLoginInfo"/>
-                </div>
-            </div></td>
+            <td><span><s:text name="register.nick" /></span></td>
+            <td><input type="text" class="input-text radius" name="userNick"/></td>
         </tr>
         <tr>
             <td><span><s:text name="register.name" /></span></td>
-            <td><input type="text" class="input-text radius" name="userName" readonly="readonly" value="<s:property value="personInfo.UNAME"/>"/></td>
+            <td><input type="text" class="input-text radius" name="userName"/></td>
         </tr>
         <tr>
-            <td><span><s:text name="personinfo.oldpwd" /></span></td>
+            <td><span><s:text name="register.pwd" /></span></td>
             <td><input type="text" class="input-text radius" name="userPwd"/></td>
         </tr>
         <tr>
-            <td><span><s:text name="personinfo.newpwd" /></span></td>
-            <td><input type="text" class="input-text radius" name="userNewPwd" /></td>
-        </tr>
-        <tr>
-            <td colspan="2" style="text-align: center"><input type="button" class="btn btn-primary"  onclick="modifyPassword()" value=" 提  交 "/></td>
+            <td colspan="2" style="text-align: center"><input type="button" class="btn btn-primary"  onclick="registerinfo()" value="<s:text name="register.submit" />"/></td>
         </tr>
     </table>
 </s:form>

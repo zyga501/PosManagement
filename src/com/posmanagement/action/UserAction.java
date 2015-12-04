@@ -4,6 +4,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.posmanagement.utils.DbManager;
 import com.posmanagement.utils.LogManager;
+import com.posmanagement.webui.UserList;
 import com.posmanagement.webui.UserMenu;
 import org.apache.struts2.ServletActionContext;
 
@@ -25,6 +26,7 @@ public class UserAction extends ActionSupport{
     private String userName ;
     private String userNickName;
     private String userPwd;
+    private String userType;
     private String verifyCode;
     private String loginErrorMessage;
     private HashMap<String, Object> personInfo;
@@ -41,16 +43,20 @@ public class UserAction extends ActionSupport{
         this.userPwd = userPwd;
     }
 
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
+
+    public void setUserNewPwd(String userNewPwd) {
+        this.userNewPwd = userNewPwd;
+    }
+
     public void setVerifyCode(String verifyCode) {
         this.verifyCode = verifyCode;
     }
 
     public String getLoginErrorMessage() {
         return loginErrorMessage;
-    }
-
-    public void setUserNewPwd(String userNewPwd) {
-        this.userNewPwd = userNewPwd;
     }
 
     public HashMap<String, Object> getPersonInfo() {
@@ -181,33 +187,211 @@ public class UserAction extends ActionSupport{
         response.getWriter().close();
     }
 
-    public String ListUsers() throws Exception {
+    public void ListSalesman() throws Exception {
         ActionContext ctx = ActionContext.getContext();
         HttpServletRequest request = (HttpServletRequest) ctx
-                        .get(ServletActionContext.HTTP_REQUEST);
+                .get(ServletActionContext.HTTP_REQUEST);
+        HttpServletResponse response = (HttpServletResponse) ctx
+                .get(ServletActionContext.HTTP_RESPONSE);
         HttpSession session = request.getSession(false);
         try {
-            ArrayList<HashMap<String, Object>> dbRet = DbManager.getDbManager("").executeSql("select * from userinfo");
+            ArrayList<HashMap<String, Object>> dbRet = DbManager.getDbManager("").executeSql("select * from userinfo a,salesmantb b where a.uid=b.uid");
             if (null == dbRet || dbRet.size() < 1){
-                    return LOGINFAILURE;
-                }
+                return ;
+            }
             String inputType = "";
-            if (null!=request.getParameter("type") && request.getParameter("type").equals(1))
+            if (null!=request.getParameter("type") && request.getParameter("type").equals("1"))
                 inputType="checkbox";
             else
                 inputType="radio";
-            userList = "";
-            for (int index = 0; index < dbRet.size(); ++index) {
-                userList +="<tr class=\"text-c odd\" role=\"row\">"+
-                           "<td><input type=\""+inputType+"\" name=userpick id=pick"+String.valueOf(index)+" value="+dbRet.get(index).get("UID")+"></td>"+
-                           "<td>"+dbRet.get(index).get("UNICK")+"</td>"+
-                           "<td>"+dbRet.get(index).get("UNAME")+"</td></tr>";
-                }
+            userList = UserList.listToHtml(dbRet,inputType);
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(userList);
+            response.getWriter().flush();
+            response.getWriter().close();
         }
         catch (Exception e){
-            return LOGINFAILURE;
+            return ;
         }
-        return USERLIST;
+        return ;
+    }
+
+    public void ListTeller() throws Exception {
+        ActionContext ctx = ActionContext.getContext();
+        HttpServletRequest request = (HttpServletRequest) ctx
+                .get(ServletActionContext.HTTP_REQUEST);
+        HttpServletResponse response = (HttpServletResponse) ctx
+                .get(ServletActionContext.HTTP_RESPONSE);
+        HttpSession session = request.getSession(false);
+        String sqlstr ="";
+        Map para = new HashMap<>();
+        if (null!=request.getParameter("datas")){
+            sqlstr ="select * from userinfo a,tellertb b where a.uid=b.uid and salesmanid=?";
+            para.put(1,request.getParameter("datas").toString());
+        }
+        else
+            sqlstr = "select * from userinfo a,tellertb b where a.uid=b.uid";
+        try {
+            ArrayList<HashMap<String, Object>> dbRet = DbManager.getDbManager("").executeSql(sqlstr, (HashMap<Integer, Object>) para);
+            if (null == dbRet || dbRet.size() < 1){
+                return ;
+            }
+            String inputType = "";
+            if (null!=request.getParameter("type") && request.getParameter("type").equals("1"))
+                inputType="checkbox";
+            else
+                inputType="radio";
+            userList = UserList.listToHtml(dbRet,inputType);
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(userList);
+            response.getWriter().flush();
+            response.getWriter().close();
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            return ;
+        }
+        return ;
+    }
+
+    public void InsertTeller() throws Exception {
+        ActionContext ctx = ActionContext.getContext();
+        HttpServletRequest request = (HttpServletRequest) ctx
+                .get(ServletActionContext.HTTP_REQUEST);
+        HttpServletResponse response = (HttpServletResponse) ctx
+                .get(ServletActionContext.HTTP_RESPONSE);
+        HttpSession session = request.getSession(false);
+        //// TODO: 2015-12-04    All database SQL DML operations need to be verified "admin"
+        if (!session.getAttribute("userName").toString().toUpperCase().equals("ADMIN")) return;
+        String datas= request.getParameter("datas").toString();
+        String[] ararystr = datas.split(",");
+        String outstr = "";
+        if (ararystr.length!=2) return;
+        try {
+            Map para = new HashMap<>();
+            para.put(1,ararystr[0]);
+            para.put(2,ararystr[1]);
+            if (!DbManager.getDbManager("").executeUpdate("update tellertb set salesmanid=? where uid=?",
+                    (HashMap<Integer, Object>) para)) {
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().write("Error!");
+                response.getWriter().flush();
+                response.getWriter().close();
+            }
+        }
+        catch (Exception e){
+            return ;
+        }
+        return ;
+    }
+
+    public void SalemanProperty() throws Exception {
+        ActionContext ctx = ActionContext.getContext();
+        HttpServletRequest request = (HttpServletRequest) ctx
+                .get(ServletActionContext.HTTP_REQUEST);
+        HttpServletResponse response = (HttpServletResponse) ctx
+                .get(ServletActionContext.HTTP_RESPONSE);
+        HttpSession session = request.getSession(false);
+        String datas= request.getParameter("datas").toString();
+        try {
+            Map para = new HashMap<>();
+            para.put(1,datas);
+            ArrayList<HashMap<String, Object>> dbRet = DbManager.getDbManager("").executeSql("select * from userinfo a,salesmantb b where a.uid=b.uid and b.uid=?",
+                    (HashMap<Integer, Object>) para);
+            if (null == dbRet || dbRet.size() < 1){
+                return ;
+            }
+            userList = UserList.listToTable(dbRet);
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(userList);
+            response.getWriter().flush();
+            response.getWriter().close();
+        }
+        catch (Exception e){
+            return ;
+        }
+        return ;
+    }
+
+    public void TellerProperty() throws Exception {
+        ActionContext ctx = ActionContext.getContext();
+        HttpServletRequest request = (HttpServletRequest) ctx
+                .get(ServletActionContext.HTTP_REQUEST);
+        HttpServletResponse response = (HttpServletResponse) ctx
+                .get(ServletActionContext.HTTP_RESPONSE);
+        HttpSession session = request.getSession(false);
+        String datas= request.getParameter("datas").toString();
+        try {
+            Map para = new HashMap<>();
+            para.put(1,datas);
+            ArrayList<HashMap<String, Object>> dbRet = DbManager.getDbManager("").executeSql("select * from userinfo a,tellertb b where a.uid=b.uid and b.uid=?",
+                    (HashMap<Integer, Object>) para);
+            if (null == dbRet || dbRet.size() < 1){
+                return ;
+            }
+            userList = UserList.listToTable2(dbRet);
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write(userList);
+            response.getWriter().flush();
+            response.getWriter().close();
+        }
+        catch (Exception e){
+            return ;
+        }
+        return ;
+    }
+
+    public void Register() throws Exception {
+        ActionContext ctx = ActionContext.getContext();
+        HttpServletRequest request = (HttpServletRequest) ctx
+                .get(ServletActionContext.HTTP_REQUEST);
+        HttpSession session = request.getSession(false);
+        if (!session.getAttribute("userName").toString().toLowerCase().equals("admin")) return ;
+        try {
+            Map para = new HashMap<>();
+            para.put(1,userName);
+            ArrayList<HashMap<String, Object>> dbRet = DbManager.getDbManager("").executeSql(
+                    "select 1 from userinfo where uname=?", (HashMap<Integer, Object>) para);
+            if (dbRet.size()>0) return ;
+            para.put(2,userPwd);
+            para.put(3,userNickName);
+            // para.put(4,userType);
+            if  (!DbManager.getDbManager("").executeUpdate("insert into userinfo(uname,upwd,unick) values(?,?,?)", (HashMap<Integer, Object>) para))
+                return  ;
+            dbRet = DbManager.getDbManager("").executeSql(
+                    "select uid from userinfo where uname=? and upwd=? and unick=?", (HashMap<Integer, Object>) para);
+            if ("1".equals(userType))
+                DbManager.getDbManager("").executeUpdate("insert into salesmantb(uid) values("+dbRet.get(0).get("UID")+")");
+            else if ("2".equals(userType))
+                DbManager.getDbManager("").executeUpdate("insert into tellertb(uid) values("+dbRet.get(0).get("UID")+")");
+        }
+        catch (Exception e){
+            return  ;
+        }
+    }
+
+    public void InsertSaleMan() throws Exception {
+        ActionContext ctx = ActionContext.getContext();
+        HttpServletRequest request = (HttpServletRequest) ctx
+                .get(ServletActionContext.HTTP_REQUEST);
+        HttpSession session = request.getSession(false);
+        if (null==request.getParameter("newuserid")) return ;
+        String params = request.getParameter("newuserid").toString();
+        if (params.endsWith(","))
+            params = params.substring(0,params.length()-1);
+        Map para = new HashMap();
+        para.put(1,params);
+        try {
+            if (DbManager.getDbManager("").executeUpdate("select uid from userinfo where uid in (?)", (HashMap<Integer, Object>) para)) {
+
+            }
+            else {
+                int throwerror = 1 / 0;
+            }
+        }
+        catch (Exception e){
+            return ;
+        }
     }
 
     private void logLoginTrack(int userID, String location) throws Exception {

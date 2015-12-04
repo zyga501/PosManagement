@@ -13,7 +13,6 @@
             <result name="loginFailure">/login.jsp</result>
             <result name="logout" type="redirect">/login.jsp</result>
             <result name="personInfo">/personinfo.jsp</result>
-            <result name="userList">/userlist.jsp</result>
         </action>
         <action name="MainPage" class="com.posmanagement.action.UserAction" method="InitMainPage">
             <result name="mainPageInited">/main.jsp</result>
@@ -27,7 +26,8 @@
         <action name="Auth!*" class="com.posmanagement.action.AuthAction" method="{1}">
         </action>
         <action name="Menu!*" class="com.posmanagement.action.MenuAction" method="{1}">
-            <result name="saleManManager">/saleman.jsp</result>
+            <result name="saleManager">/saleman.jsp</result>
+            <result name="tellerManager">/teller.jsp</result>
             <result name="bankManager" type="redirectAction">Bank!Init</result>
         </action>
     </package>

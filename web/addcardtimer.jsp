@@ -13,13 +13,13 @@
     <link href="css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
     <link href="skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
     <script type="text/javascript" src="js/jquery/1.9.1/jquery.min.js"></script>
-    <title><s:text name="addbank.title" /></title>
+    <title><s:text name="addcardtimer.title" /></title>
     <script type="text/javascript">
-        function addBank() {
+        function addCardTimer() {
             $('#Message').html("");
             $.ajax({
                 type: 'post',
-                url: 'Bank!AddBank',
+                url: 'CardTimer!AddCardTimer',
                 dataType:"json",
                 data:$("form").serialize(),
                 success: function (data) {
@@ -29,8 +29,8 @@
                     }
                     else {
                         $('.input').val("");
-                        $('#Message').html("<s:text name="addbank.addBankSuccess" />");
-                        parent.refreshBankList(json.bankList);
+                        $('#Message').html("<s:text name="addcardtimer.addCardSuccess" />");
+                        parent.refreshCardTimerList(json.cardTimerList);
                     }
                 }
             })
@@ -38,34 +38,34 @@
     </script>
 </head>
 <body scroll="no">
-    <div>
-        <form class="form form-horizontal">
-            <table class="table table-border table-bordered table-bg table-hover table-sort">
-                <tr class="text-c odd" role="row">
-                    <td><s:text name="addbank.bankcode" /></td>
-                    <td>
-                        <input id="bankCode" name="bankCode" type="text" placeholder="<s:text name="addbank.bankcode" />" class="input-text size-S">
-                    </td>
-                </tr>
-                <tr class="text-c odd" role="row">
-                    <td><s:text name="addbank.bankname" /></td>
-                    <td>
-                        <input id="bankName" name="bankName" type="text" placeholder="<s:text name="addbank.bankname" />" class="input-text size-S">
-                    </td>
-                </tr>
-            </table>
-            <div class="row">
-                <div class="formControls col-8 col-offset-3">
-                    <div id="Message" style="color:#ff0000;font-size: 12px;height: 12px">
-                    </div>
+<div>
+    <form class="form form-horizontal">
+        <table class="table table-border table-bordered table-bg table-hover table-sort">
+            <tr class="text-c odd" role="row">
+                <td><s:text name="addcardtimer.timer" /></td>
+                <td>
+                    <input id="cardTimer" name="cardTimer" type="text" placeholder="<s:text name="addcardtimer.timer" />" class="input-text size-S">
+                </td>
+            </tr>
+            <tr class="text-c odd" role="row">
+                <td><s:text name="addcardtimer.enabled" /></td>
+                <td>
+                    <input id="timerEnabled" name="timerEnabled" type="checkbox" class="check-box size-S">
+                </td>
+            </tr>
+        </table>
+        <div class="row">
+            <div class="formControls col-8 col-offset-3">
+                <div id="Message" style="color:#ff0000;font-size: 12px;height: 12px">
                 </div>
             </div>
-            <div class="row">
-                <div class="formControls col-8 col-offset-3" align="center">
-                    <input type="button" class="btn btn-success radius size-M" value="<s:text name="addbank.submit" />" onclick="addBank()">
-                </div>
+        </div>
+        <div class="row">
+            <div class="formControls col-8 col-offset-3" align="center">
+                <input type="button" class="btn btn-success radius size-M" value="<s:text name="addcardtimer.submit" />" onclick="addCardTimer()">
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
+</div>
 </body>
 </html>

@@ -1,21 +1,17 @@
 package com.posmanagement.action;
 
-import com.opensymphony.xwork2.ActionSupport;
 import com.posmanagement.utils.DbManager;
 import com.posmanagement.webui.CardTimerList;
-import net.sf.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class CardTimerAction extends ActionSupport {
+public class CardTimerAction extends JsonActionSupport {
     private final static String CARDTIMERMANAGER = "cardTimerManager";
-    private final static String ACTIONFINISHED = "actionFinished";
 
     private String cardTimerList;
     private String cardTimer;
     private String timerEnabled;
-    private String actionResult;
 
     public String getCardTimerList() {
         return cardTimerList;
@@ -27,10 +23,6 @@ public class CardTimerAction extends ActionSupport {
 
     public void setTimerEnabled(String enabled) {
         timerEnabled = enabled;
-    }
-
-    public String getActionResult() {
-        return actionResult;
     }
 
     public String Init() throws Exception {
@@ -54,7 +46,7 @@ public class CardTimerAction extends ActionSupport {
             map.put("cardTimerList", new CardTimerList().generateHTMLString());
         }
 
-        actionResult = JSONObject.fromObject(map).toString();
+        setActionResult(map);
         return ACTIONFINISHED;
     }
 }

@@ -7,7 +7,11 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 
 public class DbManager {
-    public static synchronized DbManager getDbManager(String url) throws Exception{
+    public static synchronized DbManager getDafaultDbManager() throws Exception {
+        return getDbManager("");
+    }
+
+    public static synchronized DbManager getDbManager(String url) throws Exception {
         if (!dbManagerMap.containsKey(url)) {
             dbManagerMap.put(url, new DbManager(url));
         }

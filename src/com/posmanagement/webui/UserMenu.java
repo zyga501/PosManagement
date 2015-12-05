@@ -74,7 +74,7 @@ public class UserMenu {
     private ArrayList<HashMap<String, Object>> fetchMenuByPid(int pid) throws Exception {
         Map parametMap = new HashMap();
         parametMap.put(1,pid);
-        return DbManager.getDbManager("").executeSql("select * from menutree where preid=? order by menuorder", (HashMap<Integer, Object>)parametMap);
+        return DbManager.getDafaultDbManager().executeSql("select * from menutree where preid=? order by menuorder", (HashMap<Integer, Object>)parametMap);
     }
 
     private int userID_; // TODO for role

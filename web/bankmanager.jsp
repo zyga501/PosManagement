@@ -17,10 +17,13 @@
         function addbank(){
             var index = layer.open({
                 type: 2,
-                title: "添加银行",area: ['310px', '230px'],
+                title: "添加银行",area: ['310px', '220px'],
                 fix: false,
                 content: "addbank.jsp"
             });}
+        function refreshBankList(bankList) {
+            $('#bankList').html(bankList);
+        }
     </script>
 </head>
 <body style="overflow: hidden">
@@ -37,8 +40,8 @@
                         <th width="80"><s:text name="bankmanager.bankname" /></th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <s:property value="bankList" escape="false" />
+                    <tbody id="bankList">
+                        <s:property value="bankList" escape="false" />
                     </tbody>
                 </table>
             </div>

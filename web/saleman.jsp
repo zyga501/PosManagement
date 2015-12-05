@@ -80,7 +80,7 @@
             }else
                 refreshsalemanlist()
         }
-        function updatetellerinfo(){
+        function relatetellerinfo(){
             if ("undefined"==typeof($("#uid").val())) {alert("<s:text name="salesman.hasuidalert"/>"); return;}
             var index = layer.open({
                 type: 2,
@@ -89,6 +89,16 @@
                 maxmin: false,
                 content: "tellerlist.jsp"
             });}
+        function updatesalesmaninfo(){
+            $.ajax({
+                type: 'post',
+                url: 'User!UpdateSalesman',
+                data: $("form").serialize(),
+                success: function(data) {
+                    alert(data);
+                }
+            });
+        }
     </script>
 </head>
 <body>
@@ -103,7 +113,7 @@
             <input class="btn btn-primary radius size-S " type="button" value="<s:text name="salesman.savebutton" />" onclick="updatesalesmaninfo()"></span></div>
         <div class="panel-body" id="propertyIframe"></div>
         <div class="panel-header"><s:text name="salesman.listtellertitle" /><span style="float:right">
-            <input class="btn btn-primary radius size-S " type="button" value="<s:text name="salesman.addbutton" />" onclick="updatetellerinfo()"></span></div>
+            <input class="btn btn-primary radius size-S " type="button" value="<s:text name="salesman.addbutton" />" onclick="relatetellerinfo()"></span></div>
         <div class="panel-body" id="tellerlistIframe"></div>
     </div>
 </div>

@@ -15,7 +15,7 @@
 </head>
 <body>
     <section class="page-404 minWP text-c">
-        <p class="error-title"><i class="Hui-iconfont va-m"></i><span class="va-m"> 404</span></p>
+        <p class="error-title"><i class="Hui-iconfont va-m">&#xe688;</i><span class="va-m"> 404</span></p>
         <p class="error-description"><s:text name="404.errorDescription" /></p>
     </section>
 </body>

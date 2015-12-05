@@ -43,11 +43,8 @@
         </action>
         <action name="Bank!*" class="com.posmanagement.action.BankAction" method="{1}">
             <result name="bankManager">/bankmanager.jsp</result>
-            <result name="bankAddSuccess" type="json">
-                <param name="root">toAddBankResult</param>
-            </result>
-            <result name="bankAddFailure" type="json">
-                <param name="root">toAddBankResult</param>
+            <result name="actionFinished" type="json">
+                <param name="root">actionResult</param>
             </result>
         </action>
         <action name="Auth!*" class="com.posmanagement.action.AuthAction" method="{1}">

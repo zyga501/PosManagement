@@ -16,19 +16,22 @@
     <title><s:text name="addbank.title" /></title>
     <script type="text/javascript">
         function addbank() {
-            $("#addBankErrorMessage").css('display','none');
+            $('#addBankErrorMessage').html("");
             $.ajax({
                 type: 'post',
                 url: 'Bank!AddBank',
                 dataType:"json",
                 data:$("form").serialize(),
                 success: function (data) {
-                    var json = eval("("+data+")");
-                    alert(json.addBankErrorMessage);
-                },
-                error: function (data) {
-                    var json = eval("("+data+")");
-                    alert(json.addBankErrorMessage);
+                    var json = eval("(" + data + ")");
+                    if (json.errorMessage != null) {
+                        $('#addBankErrorMessage').html(json.errorMessage);
+                    }
+                    else {
+                        $('.input').val("");
+                        $('#addBankErrorMessage').html("<s:text name="addbank.addBankSuccess" />");
+                        parent.refreshBankList(json.bankList);
+                    }
                 }
             })
         }
@@ -53,13 +56,12 @@
             </table>
             <div class="row">
                 <div class="formControls col-8 col-offset-3">
-                    <div id="addBankErrorMessage" style="color:#ff0000;font-size: 12px;">
-
+                    <div id="addBankErrorMessage" style="color:#ff0000;font-size: 12px;height: 12px">
                     </div>
                 </div>
             </div>
-            <div class="row" align="center">
-                <div class="formControls col-8 col-offset-3">
+            <div class="row">
+                <div class="formControls col-8 col-offset-3" align="center">
                     <input type="button" class="btn btn-success radius size-M" value="<s:text name="addbank.submit" />" onclick="addbank()">
                 </div>
             </div>

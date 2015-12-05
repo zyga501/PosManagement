@@ -25,6 +25,6 @@ public class BankList {
     }
 
     private ArrayList<HashMap<String, Object>> fetchBankList() throws Exception {
-        return DbManager.getDbManager("").executeSql("select * from banktb order by bankid");
+        return DbManager.getDafaultDbManager().executeSql("select * from banktb order by bankid");
     }
 }

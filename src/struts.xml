@@ -36,6 +36,8 @@
                 <param name="root">ajaxActionResult</param>
             </result>
         </global-results>
+        <action name="Auth!*" class="com.posmanagement.action.AuthAction" method="{1}">
+        </action>
         <action name="User!*" class="com.posmanagement.action.UserAction" method="{1}">
             <result name="loginSuccess" type="redirectAction">MainPage</result>
             <result name="loginFailure">/login.jsp</result>
@@ -55,7 +57,8 @@
         <action name="Assets!*" class="com.posmanagement.action.AssetsAction" method="{1}">
             <result name="assetsManager">/systemmanager/assetsmanager.jsp</result>
         </action>
-        <action name="Auth!*" class="com.posmanagement.action.AuthAction" method="{1}">
+        <action name="Industry!*" class="com.posmanagement.action.IndustryAction" method="{1}">
+            <result name="industryManager">/systemmanager/industrymanager.jsp</result>
         </action>
         <action name="Menu!*" class="com.posmanagement.action.MenuAction" method="{1}">
             <result name="saleManager">/saleman.jsp</result>
@@ -63,6 +66,7 @@
             <result name="bankManager" type="redirectAction">Bank!Init</result>
             <result name="cardTimerManager" type="redirectAction">CardTimer!Init</result>
             <result name="assetsManager" type="redirectAction">Assets!Init</result>
+            <result name="industryManager" type="redirectAction">Industry!Init</result>
         </action>
     </package>
 

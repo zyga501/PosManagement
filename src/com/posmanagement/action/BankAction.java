@@ -50,7 +50,7 @@ public class BankAction extends JsonActionSupport {
             }
         }
 
-        setActionResult(map);
+        setAjaxActionResult(map);
         return ACTIONFINISHED;
     }
 }

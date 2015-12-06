@@ -31,6 +31,11 @@
     </package>
 
     <package name="defualt" extends="json-default">
+        <global-results>
+            <result name="ajaxActionFinished" type="json">
+                <param name="root">ajaxActionResult</param>
+            </result>
+        </global-results>
         <action name="User!*" class="com.posmanagement.action.UserAction" method="{1}">
             <result name="loginSuccess" type="redirectAction">MainPage</result>
             <result name="loginFailure">/login.jsp</result>
@@ -43,15 +48,9 @@
         </action>
         <action name="Bank!*" class="com.posmanagement.action.BankAction" method="{1}">
             <result name="bankManager">/systemmanager/bankmanager.jsp</result>
-            <result name="actionFinished" type="json">
-                <param name="root">actionResult</param>
-            </result>
         </action>
         <action name="CardTimer!*" class="com.posmanagement.action.CardTimerAction" method="{1}">
             <result name="cardTimerManager">/systemmanager/cardtimermanager.jsp</result>
-            <result name="actionFinished" type="json">
-                <param name="root">actionResult</param>
-            </result>
         </action>
         <action name="Auth!*" class="com.posmanagement.action.AuthAction" method="{1}">
         </action>

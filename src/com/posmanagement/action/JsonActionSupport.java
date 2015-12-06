@@ -6,15 +6,15 @@ import net.sf.json.JSONObject;
 import java.util.Map;
 
 public abstract class JsonActionSupport extends ActionSupport {
-    protected final static String ACTIONFINISHED = "actionFinished";
+    protected final static String ACTIONFINISHED = "ajaxActionFinished";
 
-    private String actionResult;
+    private String ajaxActionResult;
 
-    public String getActionResult() {
-        return actionResult;
+    public String getAjaxActionResult() {
+        return ajaxActionResult;
     }
 
-    public void setActionResult( Map resultMap) {
-        actionResult = JSONObject.fromObject(resultMap).toString();
+    public void setAjaxActionResult( Map resultMap) {
+        ajaxActionResult = JSONObject.fromObject(resultMap).toString();
     }
 }

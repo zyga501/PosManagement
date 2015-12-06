@@ -46,7 +46,7 @@ public class CardTimerAction extends JsonActionSupport {
             map.put("cardTimerList", new CardTimerList().generateHTMLString());
         }
 
-        setActionResult(map);
+        setAjaxActionResult(map);
         return ACTIONFINISHED;
     }
 }

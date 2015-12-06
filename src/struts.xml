@@ -42,13 +42,13 @@
             <result name="loginFailure">/login.jsp</result>
         </action>
         <action name="Bank!*" class="com.posmanagement.action.BankAction" method="{1}">
-            <result name="bankManager">/bankmanager.jsp</result>
+            <result name="bankManager">/systemmanager/bankmanager.jsp</result>
             <result name="actionFinished" type="json">
                 <param name="root">actionResult</param>
             </result>
         </action>
         <action name="CardTimer!*" class="com.posmanagement.action.CardTimerAction" method="{1}">
-            <result name="cardTimerManager">/cardtimermanager.jsp</result>
+            <result name="cardTimerManager">/systemmanager/cardtimermanager.jsp</result>
             <result name="actionFinished" type="json">
                 <param name="root">actionResult</param>
             </result>

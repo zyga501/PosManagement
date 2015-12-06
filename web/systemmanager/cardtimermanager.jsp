@@ -8,10 +8,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
     <meta http-equiv="Cache-Control" content="no-siteapp" />
-    <link href="css/H-ui.min.css" rel="stylesheet" type="text/css" />
-    <link href="css/H-ui.admin.css" rel="stylesheet" type="text/css" />
-    <link href="css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
-    <link href="skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
+    <link href="../css/H-ui.min.css" rel="stylesheet" type="text/css" />
+    <link href="../css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+    <link href="../css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
+    <link href="../skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
     <title><s:text name="cardtimermanager.title" /></title>
     <script type="text/javascript">
         function addCardTimer(){
@@ -19,7 +19,7 @@
                 type: 2,
                 title: "添加用卡时间",area: ['310px', '220px'],
                 fix: false,
-                content: "addcardtimer.jsp"
+                content: "/systemmanager/addcardtimer.jsp"
             });}
         function refreshCardTimerList(cardTimerList) {
             $('#cardTimerList').html(cardTimerList);
@@ -49,9 +49,9 @@
         </div>
     </div>
 </div>
-<script type="text/javascript" src="js/jquery/1.9.1/jquery.min.js"></script>
-<script type="text/javascript" src="js/layer/1.9.3/layer.js"></script>
-<script type="text/javascript" src="js/H-ui.js"></script>
-<script type="text/javascript" src="js/H-ui.admin.js"></script>
+<script type="text/javascript" src="../js/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../js/layer/1.9.3/layer.js"></script>
+<script type="text/javascript" src="../js/H-ui.js"></script>
+<script type="text/javascript" src="../js/H-ui.admin.js"></script>
 </body>
 </html>

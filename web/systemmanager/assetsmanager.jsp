@@ -12,36 +12,36 @@
     <link href="../css/H-ui.admin.css" rel="stylesheet" type="text/css" />
     <link href="../css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
     <link href="../skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
-    <title><s:text name="cardtimermanager.title" /></title>
+    <title><s:text name="assetsmanager.title" /></title>
     <script type="text/javascript">
-        function addCardTimer(){
+        function addAssets(){
             var index = layer.open({
                 type: 2,
-                title: "添加用卡时间",area: ['310px', '220px'],
+                title: "添加资产",area: ['310px', '220px'],
                 fix: false,
-                content: "/systemmanager/addcardtimer.jsp"
+                content: "/systemmanager/addassets.jsp"
             });}
-        function refreshCardTimerList(cardTimerList) {
-            $('#cardTimerList').html(cardTimerList);
+        function refreshAssetsList(assetsList) {
+            $('#assetsList').html(assetsList);
         }
     </script>
 </head>
 <body>
 <div align="center">
     <div class="panel panel-default" style="float: left;width: 44%">
-        <div class="panel-header"><s:text name="cardtimermanager.paneltitle" /><span style="float:right;" ><a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addCardTimer()"><s:text name="cardtimermanager.add" /></a></span></div>
+        <div class="panel-header"><s:text name="assetsmanager.paneltitle" /><span style="float:right;" ><a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addAssets()"><s:text name="assetsmanager.add" /></a></span></div>
         <div class="panel-body" id="parentIframe">
             <form>
                 <div style="height:80%; overflow:auto;">
                     <table class="table table-border table-bordered table-bg table-hover table-sort">
                         <thead>
                         <tr class="text-c">
-                            <th width="80"><s:text name="cardtimermanager.timer" /></th>
-                            <th width="80"><s:text name="cardtimermanager.enabled" /></th>
+                            <th width="80"><s:text name="assetsmanager.assets" /></th>
+                            <th width="80"><s:text name="assetsmanager.enabled" /></th>
                         </tr>
                         </thead>
-                        <tbody id="cardTimerList">
-                            <s:property value="cardTimerList" escape="false" />
+                        <tbody id="assetsList">
+                        <s:property value="assetsList" escape="false" />
                         </tbody>
                     </table>
                 </div>

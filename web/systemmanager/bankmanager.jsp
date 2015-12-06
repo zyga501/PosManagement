@@ -29,7 +29,7 @@
 <body style="overflow: hidden">
 <div align="center">
     <div class="panel panel-default" style="float: left;width: 44%">
-        <div class="panel-header"><s:text name="bankmanager.panaltitle" /><span style="float:right;" ><a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addbank()"><s:text name="bankmanager.add" /></a></span></div>
+        <div class="panel-header"><s:text name="bankmanager.paneltitle" /><span style="float:right;" ><a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addbank()"><s:text name="bankmanager.add" /></a></span></div>
         <div class="panel-body" id="parentIframe">
             <form>
                 <div style="height:80%; overflow:auto;">

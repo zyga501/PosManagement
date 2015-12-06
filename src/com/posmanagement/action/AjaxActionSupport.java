@@ -5,7 +5,7 @@ import net.sf.json.JSONObject;
 
 import java.util.Map;
 
-public abstract class JsonActionSupport extends ActionSupport {
+public abstract class AjaxActionSupport extends ActionSupport {
     protected final static String ACTIONFINISHED = "ajaxActionFinished";
 
     private String ajaxActionResult;

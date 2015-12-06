@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BankAction extends JsonActionSupport {
+public class BankAction extends AjaxActionSupport {
     private final static String BANKMANAGER = "bankManager";
 
     private String bankList;
@@ -51,6 +51,6 @@ public class BankAction extends JsonActionSupport {
         }
 
         setAjaxActionResult(map);
-        return ACTIONFINISHED;
+        return AjaxActionSupport.ACTIONFINISHED;
     }
 }

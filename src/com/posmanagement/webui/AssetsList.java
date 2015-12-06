@@ -5,20 +5,20 @@ import com.posmanagement.utils.DbManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class CardTimerList {
+public class AssetsList {
     public String generateHTMLString() throws Exception {
-        return generateCardTimerList();
+        return generateAssetsList();
     }
 
-    private String generateCardTimerList() throws Exception {
-        ArrayList<HashMap<String, Object>> dbRet = fetchBankList();
+    private String generateAssetsList() throws Exception {
+        ArrayList<HashMap<String, Object>> dbRet = fetchAssetsList();
         if (dbRet.size() <= 0)
             return new String("");
 
         String htmlString = "";
         for (int index = 0; index < dbRet.size(); ++index) {
             htmlString +="<tr class=\"text-c odd\" role=\"row\">"+
-                    "<td>"+ dbRet.get(index).get("TIMER")+"</td>"+
+                    "<td>"+ dbRet.get(index).get("MCC")+"</td>"+
                     "<td><input type=\"checkbox\"";
             if (dbRet.get(index).get("ENABLED").toString().compareTo("on") == 0) {
                 htmlString += "checked=\"checked\"";
@@ -28,7 +28,7 @@ public class CardTimerList {
         return htmlString;
     }
 
-    private ArrayList<HashMap<String, Object>> fetchBankList() throws Exception {
-        return DbManager.getDafaultDbManager().executeSql("select * from cardtimertb");
+    private ArrayList<HashMap<String, Object>> fetchAssetsList() throws Exception {
+        return DbManager.getDafaultDbManager().executeSql("select * from mcctb");
     }
 }

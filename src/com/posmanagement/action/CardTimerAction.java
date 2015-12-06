@@ -6,7 +6,7 @@ import com.posmanagement.webui.CardTimerList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CardTimerAction extends JsonActionSupport {
+public class CardTimerAction extends AjaxActionSupport {
     private final static String CARDTIMERMANAGER = "cardTimerManager";
 
     private String cardTimerList;
@@ -42,11 +42,11 @@ public class CardTimerAction extends JsonActionSupport {
                 parametMap.put(2, new String("on"));
             else
                 parametMap.put(2, new String("off"));
-            DbManager.getDafaultDbManager().executeUpdate("insert into cardtimertb(cardtimer,enabled) values(?,?)", (HashMap<Integer, Object>) parametMap);
+            DbManager.getDafaultDbManager().executeUpdate("insert into cardtimertb(timer,enabled) values(?,?)", (HashMap<Integer, Object>) parametMap);
             map.put("cardTimerList", new CardTimerList().generateHTMLString());
         }
 
         setAjaxActionResult(map);
-        return ACTIONFINISHED;
+        return AjaxActionSupport.ACTIONFINISHED;
     }
 }

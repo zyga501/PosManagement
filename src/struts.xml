@@ -52,6 +52,9 @@
         <action name="CardTimer!*" class="com.posmanagement.action.CardTimerAction" method="{1}">
             <result name="cardTimerManager">/systemmanager/cardtimermanager.jsp</result>
         </action>
+        <action name="Assets!*" class="com.posmanagement.action.AssetsAction" method="{1}">
+            <result name="assetsManager">/systemmanager/assetsmanager.jsp</result>
+        </action>
         <action name="Auth!*" class="com.posmanagement.action.AuthAction" method="{1}">
         </action>
         <action name="Menu!*" class="com.posmanagement.action.MenuAction" method="{1}">
@@ -59,6 +62,7 @@
             <result name="tellerManager">/teller.jsp</result>
             <result name="bankManager" type="redirectAction">Bank!Init</result>
             <result name="cardTimerManager" type="redirectAction">CardTimer!Init</result>
+            <result name="assetsManager" type="redirectAction">Assets!Init</result>
         </action>
     </package>
 

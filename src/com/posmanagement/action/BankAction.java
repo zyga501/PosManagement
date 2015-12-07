@@ -1,22 +1,18 @@
 package com.posmanagement.action;
 
-import com.opensymphony.xwork2.ActionSupport;
 import com.posmanagement.utils.DbManager;
 import com.posmanagement.webui.BankList;
-import net.sf.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BankAction extends ActionSupport {
+public class BankAction extends AjaxActionSupport {
     private final static String BANKMANAGER = "bankManager";
-    private final static String ACTIONFINISHED = "actionFinished";
 
     private String bankList;
     private String bankCode;
     private String bankName;
-    private String actionResult;
 
     public String getBankList() {
         return bankList;
@@ -28,10 +24,6 @@ public class BankAction extends ActionSupport {
 
     public void setBankName(String _bankName) {
         bankName = _bankName;
-    }
-
-    public String getActionResult() {
-        return actionResult;
     }
 
     public String Init() throws Exception {
@@ -58,7 +50,7 @@ public class BankAction extends ActionSupport {
             }
         }
 
-        actionResult = JSONObject.fromObject(map).toString();
-        return ACTIONFINISHED;
+        setAjaxActionResult(map);
+        return AjaxActionSupport.ACTIONFINISHED;
     }
 }

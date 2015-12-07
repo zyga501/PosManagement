@@ -11,7 +11,7 @@
     <link href="css/H-ui.admin.css" rel="stylesheet" type="text/css" />
     <link href="css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
     <link href="skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
-    <title><s:text name="main.userInfo"></title>
+    <title><s:text name="main.userInfo" /></title>
     <script type="text/javascript" src="js/jquery/1.9.1/jquery.min.js"></script>
     <script type="text/javascript">
         function modifyPassword(){
@@ -31,12 +31,14 @@
         <tr>
             <td><span><s:text name="register.nick"/></span></td>
             <td><input type="text" class="input-text radius" readonly="readonly" value="<s:property value="personInfo.UNICK"/>"/></td>
-            <td rowspan="5"><div class="panel panel-default">
+            <td rowspan="5">
+                <div class="panel panel-default">
                 <div class="panel-header"><s:text name="personinfo.acountinfo"/></div>
                 <div class="panel-body"><s:text name="personinfo.current"/><br>IP：<s:property value="personInfo.LASTLOCATION"/> <s:text name="personinfo.time"/>：<s:property value="personInfo.LASTTIME"/><br>
-                    <s:text name="personinfo.last"/><br><s:property value="#session.userLastLoginInfo"/>
+                    <s:text name="personinfo.last"/><br><s:property value="userLastLoginInfo"/>
                 </div>
-            </div></td>
+                </div>
+            </td>
         </tr>
         <tr>
             <td><span><s:text name="register.name" /></span></td>

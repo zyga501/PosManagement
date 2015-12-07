@@ -8,15 +8,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
     <meta http-equiv="Cache-Control" content="no-siteapp" />
-    <link href="css/H-ui.min.css" rel="stylesheet" type="text/css" />
-    <link href="css/H-ui.admin.css" rel="stylesheet" type="text/css" />
-    <link href="css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
-    <link href="skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
-    <script type="text/javascript" src="js/jquery/1.9.1/jquery.min.js"></script>
+    <link href="../css/H-ui.min.css" rel="stylesheet" type="text/css" />
+    <link href="../css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+    <link href="../css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
+    <link href="../skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
+    <script type="text/javascript" src="../js/jquery/1.9.1/jquery.min.js"></script>
     <title><s:text name="addbank.title" /></title>
     <script type="text/javascript">
-        function addbank() {
-            $('#addBankErrorMessage').html("");
+        function addBank() {
+            $('#Message').html("");
             $.ajax({
                 type: 'post',
                 url: 'Bank!AddBank',
@@ -25,11 +25,11 @@
                 success: function (data) {
                     var json = eval("(" + data + ")");
                     if (json.errorMessage != null) {
-                        $('#addBankErrorMessage').html(json.errorMessage);
+                        $('#Message').html(json.errorMessage);
                     }
                     else {
                         $('.input').val("");
-                        $('#addBankErrorMessage').html("<s:text name="addbank.addBankSuccess" />");
+                        $('#Message').html("<s:text name="addbank.addBankSuccess" />");
                         parent.refreshBankList(json.bankList);
                     }
                 }
@@ -56,13 +56,13 @@
             </table>
             <div class="row">
                 <div class="formControls col-8 col-offset-3">
-                    <div id="addBankErrorMessage" style="color:#ff0000;font-size: 12px;height: 12px">
+                    <div id="Message" style="color:#ff0000;font-size: 12px;height: 12px">
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="formControls col-8 col-offset-3" align="center">
-                    <input type="button" class="btn btn-success radius size-M" value="<s:text name="addbank.submit" />" onclick="addbank()">
+                    <input type="button" class="btn btn-success radius size-M" value="<s:text name="addbank.submit" />" onclick="addBank()">
                 </div>
             </div>
         </form>

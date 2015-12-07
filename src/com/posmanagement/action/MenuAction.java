@@ -7,6 +7,7 @@ public class MenuAction {
     private final static String CARDTIMERMANAGER = "cardTimerManager";
     private final static String ASSETSMANAGER = "assetsManager";
     private final static String INDUSTRYMANAGER = "industryManager";
+    private final static String RATESMANAGER = "ratesManager";
 
     public String ManageSaleMan() {
         return SALEMANAGE;
@@ -30,5 +31,9 @@ public class MenuAction {
 
     public String ManageIndustry() {
         return INDUSTRYMANAGER;
+    }
+
+    public String ManageRates() {
+        return RATESMANAGER;
     }
 }

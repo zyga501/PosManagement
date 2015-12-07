@@ -60,6 +60,9 @@
         <action name="Industry!*" class="com.posmanagement.action.IndustryAction" method="{1}">
             <result name="industryManager">/systemmanager/industrymanager.jsp</result>
         </action>
+        <action name="Rates!*" class="com.posmanagement.action.RatesAction" method="{1}">
+            <result name="ratesManager">/systemmanager/ratesmanager.jsp</result>
+        </action>
         <action name="Menu!*" class="com.posmanagement.action.MenuAction" method="{1}">
             <result name="saleManager">/saleman.jsp</result>
             <result name="tellerManager">/teller.jsp</result>
@@ -67,6 +70,7 @@
             <result name="cardTimerManager" type="redirectAction">CardTimer!Init</result>
             <result name="assetsManager" type="redirectAction">Assets!Init</result>
             <result name="industryManager" type="redirectAction">Industry!Init</result>
+            <result name="ratesManager" type="redirectAction">Rates!Init</result>
         </action>
     </package>
 

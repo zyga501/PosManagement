@@ -13,13 +13,13 @@
     <link href="../css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
     <link href="../skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
     <script type="text/javascript" src="../js/jquery/1.9.1/jquery.min.js"></script>
-    <title><s:text name="addcardtimer.title" /></title>
+    <title><s:text name="addcardtime.title" /></title>
     <script type="text/javascript">
-        function addCardTimer() {
+        function addCardTime() {
             $('#Message').html("");
             $.ajax({
                 type: 'post',
-                url: 'CardTimer!AddCardTimer',
+                url: 'CardTime!AddCardTime',
                 dataType:"json",
                 data:$("form").serialize(),
                 success: function (data) {
@@ -29,8 +29,8 @@
                     }
                     else {
                         $('.input').val("");
-                        $('#Message').html("<s:text name="addcardtimer.addCardSuccess" />");
-                        parent.refreshCardTimerList(json.cardTimerList);
+                        $('#Message').html("<s:text name="addcardtime.addCardSuccess" />");
+                        parent.refreshCardTimeList(json.cardTimeList);
                     }
                 }
             })
@@ -42,15 +42,15 @@
     <form class="form form-horizontal">
         <table class="table table-border table-bordered table-bg table-hover table-sort">
             <tr class="text-c odd" role="row">
-                <td><s:text name="addcardtimer.timer" /></td>
+                <td><s:text name="addcardtime.timer" /></td>
                 <td>
-                    <input id="cardTimer" name="cardTimer" type="text" placeholder="<s:text name="addcardtimer.timer" />" class="input-text size-S">
+                    <input id="cardTime" name="cardTime" type="text" placeholder="<s:text name="addcardtime.timer" />" class="input-text size-S">
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
-                <td><s:text name="addcardtimer.enabled" /></td>
+                <td><s:text name="addcardtime.enabled" /></td>
                 <td>
-                    <input id="timerEnabled" name="timerEnabled" type="checkbox" class="check-box size-S">
+                    <input id="timeEnabled" name="timeEnabled" type="checkbox" class="check-box size-S">
                 </td>
             </tr>
         </table>
@@ -62,7 +62,7 @@
         </div>
         <div class="row">
             <div class="formControls col-8 col-offset-3" align="center">
-                <input type="button" class="btn btn-success radius size-M" value="<s:text name="addcardtimer.submit" />" onclick="addCardTimer()">
+                <input type="button" class="btn btn-success radius size-M" value="<s:text name="addcardtime.submit" />" onclick="addCardTime()">
             </div>
         </div>
     </form>

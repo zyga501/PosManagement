@@ -26,7 +26,7 @@ public class LogManager {
     }
 
     private void writeToDB(Map parametsMap) throws Exception {
-        if (!DbManager.getDafaultDbManager().executeUpdate("insert into usertrack(uid,ttype,tinfo) values(?,?,?)",
+        if (!DbManager.createPosDbManager().executeUpdate("insert into usertrack(uid,ttype,tinfo) values(?,?,?)",
                 (HashMap<Integer, Object>) parametsMap))
             throw new SQLException();
     }

@@ -4,7 +4,7 @@ public class MenuAction {
     private final static String SALEMANAGE = "saleManager";
     private final static String TELLERMANAGE = "tellerManager";
     private final static String BANKMANAGER = "bankManager";
-    private final static String CARDTIMERMANAGER = "cardTimerManager";
+    private final static String CARDTIMEMANAGER = "cardTimeManager";
     private final static String ASSETSMANAGER = "assetsManager";
     private final static String INDUSTRYMANAGER = "industryManager";
     private final static String RATESMANAGER = "ratesManager";
@@ -21,8 +21,8 @@ public class MenuAction {
         return BANKMANAGER;
     }
 
-    public String ManageCardTimer()  {
-        return CARDTIMERMANAGER;
+    public String ManageCardTime()  {
+        return CARDTIMEMANAGER;
     }
 
     public String ManageAssets() {

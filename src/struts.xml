@@ -51,8 +51,8 @@
         <action name="Bank!*" class="com.posmanagement.action.BankAction" method="{1}">
             <result name="bankManager">/systemmanager/bankmanager.jsp</result>
         </action>
-        <action name="CardTimer!*" class="com.posmanagement.action.CardTimerAction" method="{1}">
-            <result name="cardTimerManager">/systemmanager/cardtimermanager.jsp</result>
+        <action name="CardTime!*" class="com.posmanagement.action.CardTimeAction" method="{1}">
+            <result name="cardTimeManager">/systemmanager/cardtimemanager.jsp</result>
         </action>
         <action name="Assets!*" class="com.posmanagement.action.AssetsAction" method="{1}">
             <result name="assetsManager">/systemmanager/assetsmanager.jsp</result>
@@ -67,7 +67,7 @@
             <result name="saleManager">/saleman.jsp</result>
             <result name="tellerManager">/teller.jsp</result>
             <result name="bankManager" type="redirectAction">Bank!Init</result>
-            <result name="cardTimerManager" type="redirectAction">CardTimer!Init</result>
+            <result name="cardTimeManager" type="redirectAction">CardTime!Init</result>
             <result name="assetsManager" type="redirectAction">Assets!Init</result>
             <result name="industryManager" type="redirectAction">Industry!Init</result>
             <result name="ratesManager" type="redirectAction">Rates!Init</result>

@@ -45,7 +45,7 @@ public class RatesAction extends AjaxActionSupport {
                     parametMap.put(2, new String("on"));
                 else
                     parametMap.put(2, new String("off"));
-                DbManager.getDafaultDbManager().executeUpdate("insert into ratestb(rates,enabled) values(?,?)", (HashMap<Integer, Object>) parametMap);
+                DbManager.createPosDbManager().executeUpdate("insert into ratestb(rates,enabled) values(?,?)", (HashMap<Integer, Object>) parametMap);
                 map.put("ratesList", new AssetsList().generateHTMLString());
             }
             catch (NumberFormatException exception) {

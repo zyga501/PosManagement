@@ -39,13 +39,13 @@ public class BankAction extends AjaxActionSupport {
         else {
             Map parametMap = new HashMap();
             parametMap.put(1, bankCode);
-            ArrayList dbRet = DbManager.getDafaultDbManager().executeSql("select * from banktb where bankcode=?", (HashMap<Integer, Object>) parametMap);
+            ArrayList dbRet = DbManager.createPosDbManager().executeSql("select * from banktb where bankcode=?", (HashMap<Integer, Object>) parametMap);
             if (dbRet.size() >= 1) {
                 map.put("errorMessage", getText("addbank.bankCodeConfilct"));
             }
             else {
                 parametMap.put(2, bankName);
-                DbManager.getDafaultDbManager().executeUpdate("insert into banktb(bankcode,bankname) values(?,?)", (HashMap<Integer, Object>) parametMap);
+                DbManager.createPosDbManager().executeUpdate("insert into banktb(bankcode,bankname) values(?,?)", (HashMap<Integer, Object>) parametMap);
                 map.put("bankList", new BankList().generateHTMLString());
             }
         }

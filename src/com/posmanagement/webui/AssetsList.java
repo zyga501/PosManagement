@@ -29,6 +29,6 @@ public class AssetsList {
     }
 
     private ArrayList<HashMap<String, Object>> fetchAssetsList() throws Exception {
-        return DbManager.getDafaultDbManager().executeSql("select * from mcctb");
+        return DbManager.createPosDbManager().executeSql("select * from mcctb");
     }
 }

@@ -29,6 +29,6 @@ public class RatesList {
     }
 
     private ArrayList<HashMap<String, Object>> fetchRatesList() throws Exception {
-        return DbManager.getDafaultDbManager().executeSql("select * from ratestb");
+        return DbManager.createPosDbManager().executeSql("select * from ratestb");
     }
 }

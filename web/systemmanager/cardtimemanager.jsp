@@ -12,36 +12,36 @@
     <link href="../css/H-ui.admin.css" rel="stylesheet" type="text/css" />
     <link href="../css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
     <link href="../skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
-    <title><s:text name="cardtimermanager.title" /></title>
+    <title><s:text name="cardtimemanager.title" /></title>
     <script type="text/javascript">
-        function addCardTimer(){
+        function addCardTime(){
             var index = layer.open({
                 type: 2,
                 title: "添加用卡时间",area: ['310px', '220px'],
                 fix: false,
-                content: "/systemmanager/addcardtimer.jsp"
+                content: "/systemmanager/addcardtime.jsp"
             });}
-        function refreshCardTimerList(cardTimerList) {
-            $('#cardTimerList').html(cardTimerList);
+        function refreshCardTimeList(cardTimeList) {
+            $('#cardTimeList').html(cardTimeList);
         }
     </script>
 </head>
 <body>
 <div align="center">
     <div class="panel panel-default" style="float: left;width: 44%">
-        <div class="panel-header"><s:text name="cardtimermanager.paneltitle" /><span style="float:right;" ><a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addCardTimer()"><s:text name="cardtimermanager.add" /></a></span></div>
+        <div class="panel-header"><s:text name="cardtimemanager.paneltitle" /><span style="float:right;" ><a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addCardTime()"><s:text name="cardtimemanager.add" /></a></span></div>
         <div class="panel-body" id="parentIframe">
             <form>
                 <div style="height:80%; overflow:auto;">
                     <table class="table table-border table-bordered table-bg table-hover table-sort">
                         <thead>
                         <tr class="text-c">
-                            <th width="80"><s:text name="cardtimermanager.timer" /></th>
-                            <th width="80"><s:text name="cardtimermanager.enabled" /></th>
+                            <th width="80"><s:text name="cardtimemanager.timer" /></th>
+                            <th width="80"><s:text name="cardtimemanager.enabled" /></th>
                         </tr>
                         </thead>
-                        <tbody id="cardTimerList">
-                            <s:property value="cardTimerList" escape="false" />
+                        <tbody id="cardTimeList">
+                            <s:property value="cardTimeList" escape="false" />
                         </tbody>
                     </table>
                 </div>

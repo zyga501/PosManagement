@@ -111,7 +111,7 @@ public class UserAction extends ActionSupport{
             ArrayList<HashMap<String, Object>> dbRet  = null;
             parametMap.put(1,userName);
             parametMap.put(2,userPwd);
-            dbRet = DbManager.getDafaultDbManager().executeSql("select * from userinfo where uname=? and upwd=?", (HashMap<Integer, Object>) parametMap);
+            dbRet = DbManager.createPosDbManager().executeSql("select * from userinfo where uname=? and upwd=?", (HashMap<Integer, Object>) parametMap);
             if (null == dbRet || dbRet.size() < 1){
                 loginErrorMessage = getText("UserAction.loginError");
                 return LOGINFAILURE;
@@ -153,7 +153,7 @@ public class UserAction extends ActionSupport{
         try {
             Map parametMap = new HashMap();
             parametMap.put(1,session.getAttribute("userName"));
-            ArrayList<HashMap<String, Object>> dbRet = DbManager.getDafaultDbManager().executeSql("select * from userinfo a left outer join usertrack b on a.uid=b.uid where uname=?", (HashMap<Integer, Object>) parametMap);
+            ArrayList<HashMap<String, Object>> dbRet = DbManager.createPosDbManager().executeSql("select * from userinfo a left outer join usertrack b on a.uid=b.uid where uname=?", (HashMap<Integer, Object>) parametMap);
             if (null == dbRet || dbRet.size() < 1){
                 return LOGINFAILURE;
             }
@@ -177,7 +177,7 @@ public class UserAction extends ActionSupport{
             parametMap.put(1,userNewPwd);
             parametMap.put(2,userPwd);
             parametMap.put(3,userName);
-            if (DbManager.getDafaultDbManager().executeUpdate("update userinfo set upwd=? where  upwd=? and uname=?", (HashMap<Integer, Object>) parametMap))
+            if (DbManager.createPosDbManager().executeUpdate("update userinfo set upwd=? where  upwd=? and uname=?", (HashMap<Integer, Object>) parametMap))
                     rtMsg = "更改成功！";
             else
                 rtMsg = "操做失败！";
@@ -199,7 +199,7 @@ public class UserAction extends ActionSupport{
                 .get(ServletActionContext.HTTP_RESPONSE);
         HttpSession session = request.getSession(false);
         try {
-            ArrayList<HashMap<String, Object>> dbRet = DbManager.getDafaultDbManager().executeSql("select * from userinfo a,salesmantb b where a.uid=b.uid");
+            ArrayList<HashMap<String, Object>> dbRet = DbManager.createPosDbManager().executeSql("select * from userinfo a,salesmantb b where a.uid=b.uid");
             if (null == dbRet || dbRet.size() < 1){
                 return ;
             }
@@ -236,7 +236,7 @@ public class UserAction extends ActionSupport{
         else
             sqlstr = "select * from userinfo a,tellertb b where a.uid=b.uid";
         try {
-            ArrayList<HashMap<String, Object>> dbRet = DbManager.getDafaultDbManager().executeSql(sqlstr, (HashMap<Integer, Object>) para);
+            ArrayList<HashMap<String, Object>> dbRet = DbManager.createPosDbManager().executeSql(sqlstr, (HashMap<Integer, Object>) para);
             if (null == dbRet || dbRet.size() < 1){
                 return ;
             }
@@ -275,7 +275,7 @@ public class UserAction extends ActionSupport{
             Map para = new HashMap<>();
             para.put(1,ararystr[0]);
             para.put(2,ararystr[1]);
-            if (!DbManager.getDafaultDbManager().executeUpdate("update tellertb set salesmanid=? where uid=?",
+            if (!DbManager.createPosDbManager().executeUpdate("update tellertb set salesmanid=? where uid=?",
                     (HashMap<Integer, Object>) para)) {
                 response.setCharacterEncoding("UTF-8");
                 response.getWriter().write("Error!");
@@ -300,7 +300,7 @@ public class UserAction extends ActionSupport{
         try {
             Map para = new HashMap<>();
             para.put(1,datas);
-            ArrayList<HashMap<String, Object>> dbRet = DbManager.getDafaultDbManager().executeSql("select * from userinfo a,salesmantb b where a.uid=b.uid and b.uid=?",
+            ArrayList<HashMap<String, Object>> dbRet = DbManager.createPosDbManager().executeSql("select * from userinfo a,salesmantb b where a.uid=b.uid and b.uid=?",
                     (HashMap<Integer, Object>) para);
             if (null == dbRet || dbRet.size() < 1){
                 return ;
@@ -328,7 +328,7 @@ public class UserAction extends ActionSupport{
         try {
             Map para = new HashMap<>();
             para.put(1,datas);
-            ArrayList<HashMap<String, Object>> dbRet = DbManager.getDafaultDbManager().executeSql("select * from userinfo a,tellertb b where a.uid=b.uid and b.uid=?",
+            ArrayList<HashMap<String, Object>> dbRet = DbManager.createPosDbManager().executeSql("select * from userinfo a,tellertb b where a.uid=b.uid and b.uid=?",
                     (HashMap<Integer, Object>) para);
             if (null == dbRet || dbRet.size() < 1){
                 return ;
@@ -354,20 +354,20 @@ public class UserAction extends ActionSupport{
         try {
             Map para = new HashMap<>();
             para.put(1,userName);
-            ArrayList<HashMap<String, Object>> dbRet = DbManager.getDafaultDbManager().executeSql(
+            ArrayList<HashMap<String, Object>> dbRet = DbManager.createPosDbManager().executeSql(
                     "select 1 from userinfo where uname=?", (HashMap<Integer, Object>) para);
             if (dbRet.size()>0) return ;
             para.put(2,userPwd);
             para.put(3,userNickName);
             // para.put(4,userType);
-            if  (!DbManager.getDafaultDbManager().executeUpdate("insert into userinfo(uname,upwd,unick) values(?,?,?)", (HashMap<Integer, Object>) para))
+            if  (!DbManager.createPosDbManager().executeUpdate("insert into userinfo(uname,upwd,unick) values(?,?,?)", (HashMap<Integer, Object>) para))
                 return  ;
-            dbRet = DbManager.getDafaultDbManager().executeSql(
+            dbRet = DbManager.createPosDbManager().executeSql(
                     "select uid from userinfo where uname=? and upwd=? and unick=?", (HashMap<Integer, Object>) para);
             if ("1".equals(userType))
-                DbManager.getDafaultDbManager().executeUpdate("insert into salesmantb(uid) values("+dbRet.get(0).get("UID")+")");
+                DbManager.createPosDbManager().executeUpdate("insert into salesmantb(uid) values("+dbRet.get(0).get("UID")+")");
             else if ("2".equals(userType))
-                DbManager.getDafaultDbManager().executeUpdate("insert into tellertb(uid) values("+dbRet.get(0).get("UID")+")");
+                DbManager.createPosDbManager().executeUpdate("insert into tellertb(uid) values("+dbRet.get(0).get("UID")+")");
         }
         catch (Exception e){
             return  ;
@@ -386,7 +386,7 @@ public class UserAction extends ActionSupport{
         Map para = new HashMap();
         para.put(1,params);
         try {
-            if (DbManager.getDafaultDbManager().executeUpdate("select uid from userinfo where uid in (?)", (HashMap<Integer, Object>) para)) {
+            if (DbManager.createPosDbManager().executeUpdate("select uid from userinfo where uid in (?)", (HashMap<Integer, Object>) para)) {
 
             }
             else {
@@ -405,7 +405,7 @@ public class UserAction extends ActionSupport{
         parametMap.put(2, new java.sql.Timestamp((now.getTime())));
         parametMap.put(3,userName);
         parametMap.put(4,userPwd);
-        if (!DbManager.getDafaultDbManager().executeUpdate("update userinfo set lastlocation=?,lasttime=? where uname=? and upwd=?", (HashMap<Integer, Object>) parametMap))
+        if (!DbManager.createPosDbManager().executeUpdate("update userinfo set lastlocation=?,lasttime=? where uname=? and upwd=?", (HashMap<Integer, Object>) parametMap))
             throw new RuntimeException();
         LogManager.getInstance().writeLoginTrack(userID, location, now.toString());
     }

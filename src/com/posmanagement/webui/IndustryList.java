@@ -29,6 +29,6 @@ public class IndustryList {
     }
 
     private ArrayList<HashMap<String, Object>> fetchIndustryList() throws Exception {
-        return DbManager.getDafaultDbManager().executeSql("select * from industrytb");
+        return DbManager.createPosDbManager().executeSql("select * from industrytb");
     }
 }

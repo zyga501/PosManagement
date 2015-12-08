@@ -87,7 +87,7 @@
                 title: "<s:text name="teller.listtitle" />",area: ['310px', '380px'],
                 fix: false,
                 maxmin: false,
-                content: "tellerlist.jsp"
+                content: "usermanager/tellerlist.jsp"
             });}
         function updatesalesmaninfo(){
             $.ajax({

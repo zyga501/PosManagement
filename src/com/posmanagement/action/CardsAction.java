@@ -292,7 +292,7 @@ public class CardsAction extends AjaxActionSupport {
         }
         else {
             try {
-                DbManager.getDafaultDbManager().executeUpdate("insert into cardtb(rates,enabled) values(?,?)", (HashMap<Integer, Object>) cardinfo);
+                DbManager.createPosDbManager().executeUpdate("insert into cardtb(rates,enabled) values(?,?)", (HashMap<Integer, Object>) cardinfo);
                 map.put("cardsList", new AssetsList().generateHTMLString());
             }
             catch (NumberFormatException exception) {

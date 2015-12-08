@@ -29,6 +29,6 @@ public class CardsList {
     }
 
     private ArrayList<HashMap<String, Object>> fetchCardsList() throws Exception {
-        return DbManager.getDafaultDbManager().executeSql("select * from cardtb");
+        return DbManager.createPosDbManager().executeSql("select * from cardtb");
     }
 }

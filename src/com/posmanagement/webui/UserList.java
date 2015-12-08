@@ -9,8 +9,7 @@ public class UserList {
             return "";
         else return obj.toString();
     }
-
-    public static String  listToHtml( ArrayList<HashMap<String, Object>> dbRet,String inputType){
+    public static String  userListToHtml( ArrayList<HashMap<String, Object>> dbRet,String inputType){
         String result ="<table class=\"table table-border table-bordered table-hover\">";
         for (int index = 0; index < dbRet.size(); ++index) {
             result +="<tr class=\"text-c odd\" role=\"row\">"+
@@ -22,7 +21,7 @@ public class UserList {
         return result+"</table>";
     }
 
-    public static String  listToTable( ArrayList<HashMap<String, Object>> dbRet){
+    public static String  salesmanPropertylistToTable( ArrayList<HashMap<String, Object>> dbRet){
         String result ="<form><table class=\"table table-border table-bordered table-hover\">";
         for (int index = 0; index < dbRet.size(); ++index) {//only one row
             result +="<tr>"+
@@ -36,7 +35,7 @@ public class UserList {
         }
         return result+"</table></form>";
     }
-    public static String  listToTable2( ArrayList<HashMap<String, Object>> dbRet){
+    public static String  tellerPropertylistToTable( ArrayList<HashMap<String, Object>> dbRet){
         String result ="<form><table class=\"table table-border table-bordered table-hover\">";
         for (int index = 0; index < dbRet.size(); ++index) {
             result +="<tr>"+

@@ -208,7 +208,7 @@ public class UserAction extends ActionSupport{
                 inputType="checkbox";
             else
                 inputType="radio";
-            userList = UserList.listToHtml(dbRet,inputType);
+            userList = UserList.userListToHtml(dbRet,inputType);
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write(userList);
             response.getWriter().flush();
@@ -245,7 +245,7 @@ public class UserAction extends ActionSupport{
                 inputType="checkbox";
             else
                 inputType="radio";
-            userList = UserList.listToHtml(dbRet,inputType);
+            userList = UserList.userListToHtml(dbRet,inputType);
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write(userList);
             response.getWriter().flush();
@@ -305,7 +305,7 @@ public class UserAction extends ActionSupport{
             if (null == dbRet || dbRet.size() < 1){
                 return ;
             }
-            userList = UserList.listToTable(dbRet);
+            userList = UserList.salesmanPropertylistToTable(dbRet);
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write(userList);
             response.getWriter().flush();
@@ -333,7 +333,7 @@ public class UserAction extends ActionSupport{
             if (null == dbRet || dbRet.size() < 1){
                 return ;
             }
-            userList = UserList.listToTable2(dbRet);
+            userList = UserList.tellerPropertylistToTable(dbRet);
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write(userList);
             response.getWriter().flush();

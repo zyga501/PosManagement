@@ -64,13 +64,17 @@
             <result name="ratesManager">/systemmanager/ratesmanager.jsp</result>
         </action>
         <action name="Menu!*" class="com.posmanagement.action.MenuAction" method="{1}">
-            <result name="saleManager">/saleman.jsp</result>
-            <result name="tellerManager">/teller.jsp</result>
+            <result name="saleManager">/usermanager/saleman.jsp</result>
+            <result name="tellerManager">/usermanager/teller.jsp</result>
             <result name="bankManager" type="redirectAction">Bank!Init</result>
             <result name="cardTimeManager" type="redirectAction">CardTime!Init</result>
             <result name="assetsManager" type="redirectAction">Assets!Init</result>
             <result name="industryManager" type="redirectAction">Industry!Init</result>
             <result name="ratesManager" type="redirectAction">Rates!Init</result>
+            <result name="cardsManager" type="redirectAction">Cards!Init</result>
+        </action>
+        <action name="Cards!*" class="com.posmanagement.action.CardsAction" method="{1}">
+            <result name="cardsManager">/cardmanager/cardsmanager.jsp</result>
         </action>
     </package>
 

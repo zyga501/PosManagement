@@ -9,11 +9,11 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
     <meta http-equiv="Cache-Control" content="no-siteapp" />
     <title></title>
-    <link href="css/H-ui.min.css" rel="stylesheet" type="text/css" />
-    <link href="css/H-ui.admin.css" rel="stylesheet" type="text/css" />
-    <link href="css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
-    <link href="skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
-    <script type="text/javascript" src="js/jquery/1.9.1/jquery.min.js"></script>
+    <link href="../css/H-ui.min.css" rel="stylesheet" type="text/css" />
+    <link href="../css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+    <link href="../css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
+    <link href="../skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
+    <script type="text/javascript" src="../js/jquery/1.9.1/jquery.min.js"></script>
     <script type="text/javascript">
         function trclick(obj) {
             $("tr").on("click",function(){
@@ -80,15 +80,25 @@
             }else
                 refreshsalemanlist()
         }
-        function updatetellerinfo(){
+        function relatetellerinfo(){
             if ("undefined"==typeof($("#uid").val())) {alert("<s:text name="salesman.hasuidalert"/>"); return;}
             var index = layer.open({
                 type: 2,
                 title: "<s:text name="teller.listtitle" />",area: ['310px', '380px'],
                 fix: false,
                 maxmin: false,
-                content: "tellerlist.jsp"
+                content: "usermanager/tellerlist.jsp"
             });}
+        function updatesalesmaninfo(){
+            $.ajax({
+                type: 'post',
+                url: 'User!UpdateSalesman',
+                data: $("form").serialize(),
+                success: function(data) {
+                    alert(data);
+                }
+            });
+        }
     </script>
 </head>
 <body>
@@ -103,12 +113,12 @@
             <input class="btn btn-primary radius size-S " type="button" value="<s:text name="salesman.savebutton" />" onclick="updatesalesmaninfo()"></span></div>
         <div class="panel-body" id="propertyIframe"></div>
         <div class="panel-header"><s:text name="salesman.listtellertitle" /><span style="float:right">
-            <input class="btn btn-primary radius size-S " type="button" value="<s:text name="salesman.addbutton" />" onclick="updatetellerinfo()"></span></div>
+            <input class="btn btn-primary radius size-S " type="button" value="<s:text name="salesman.addbutton" />" onclick="relatetellerinfo()"></span></div>
         <div class="panel-body" id="tellerlistIframe"></div>
     </div>
 </div>
-<script type="text/javascript" src="js/layer/1.9.3/layer.js"></script>
-<script type="text/javascript" src="js/H-ui.js"></script>
-<script type="text/javascript" src="js/H-ui.admin.js"></script>
+<script type="text/javascript" src="../js/layer/1.9.3/layer.js"></script>
+<script type="text/javascript" src="../js/H-ui.js"></script>
+<script type="text/javascript" src="../js/H-ui.admin.js"></script>
 </body>
 </html>

@@ -6,14 +6,18 @@ import net.sf.json.JSONObject;
 import java.util.Map;
 
 public abstract class AjaxActionSupport extends ActionSupport {
+    private final static String AJAXACTIONCOMPLETE = "ajaxActionFinished";
     private String ajaxActionResult;
 
     public String getAjaxActionResult() {
         return ajaxActionResult;
     }
 
+    public String AjaxActionComplete() {
+        return AJAXACTIONCOMPLETE;
+    }
     public String AjaxActionComplete( Map resultMap) {
         ajaxActionResult = JSONObject.fromObject(resultMap).toString();
-        return "ajaxActionFinished";
+        return AJAXACTIONCOMPLETE;
     }
 }

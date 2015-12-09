@@ -19,9 +19,10 @@
                 type: 'post',
                 url: 'User!Register',
                 data: $("form").serialize(),
+                dataType : "json",
                 success: function(data) {
-                    parent.callback();
-                    parent.layer.close(parent.layer.getFrameIndex(window.name));
+                    var json = eval("(" + data + ")");
+                    parent.refreshUserList(json.userList);
                 }
             });}
     </script>

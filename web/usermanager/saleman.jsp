@@ -15,6 +15,15 @@
     <link href="../skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
     <script type="text/javascript" src="../js/jquery/1.9.1/jquery.min.js"></script>
     <script type="text/javascript">
+        function registerUser(){
+            var index = layer.open({
+                type: 2,
+                title: "<s:text name="register.reg" />",area: ['310px', '330px'],
+                fix: false,
+                maxmin: false,
+                content: "/register.jsp?usertype=1"
+            });}
+
         function clickSaleman(id) {
             $.ajax({
                 type: 'post',
@@ -28,57 +37,16 @@
             });
         }
 
-        function register(){
-            var index = layer.open({
-                type: 2,
-                title: "<s:text name="register.reg" />",area: ['310px', '330px'],
-                fix: false,
-                maxmin: false,
-                content: "/register.jsp?usertype=1"
-            });}
-
-        function insertteller(param){
-            var inpara =$("#uid").val()+','+ param;
-            $.ajax({
-                type: 'post',
-                url: 'User!InsertTeller',
-                data:{"datas":inpara},//"{datas:'"+inpara+"'}",
-                dataType : "text",
-                success: function(data) {
-                    if (data!="undefined")
-                        alert(data)
-                    else
-                        refreshtellerlist();
-                }
-            });}
-
-        function refreshtellerlist(){
-            $.ajax({
-                type: 'post',
-                url: 'User!ListTeller',
-                data:{datas:$("#uid").val()},
-                success: function(data) {
-                    $("#tellerlistIframe").html(data);
-                }
-            });}
-        function refreshsalemanlist(){
-            $.ajax({
-                type: 'post',
-                url: 'User!ListSalesman',
-                success: function(data) {
-                    $("#parentIframe").html(data);
-                    trclick();
-                }
-            });}
-
-        function callback(params){
-            if (params!="undefined" ){
-                insertteller(params);
-            }else
-                refreshsalemanlist()
+        function refreshUserList(userList){
+            $("#salemanList").html(userList);
         }
-        function relatetellerinfo(){
-            if ("undefined"==typeof($("#uid").val())) {alert("<s:text name="salesman.hasuidalert"/>"); return;}
+
+        function refreshTellerList(tellerList) {
+            $("#tellerlist").html(tellerlist);
+        }
+
+        function fetchTellerList(){
+            if ("undefined"==typeof($("#saleID").val())) {alert("<s:text name="saleman.hasuidalert"/>"); return;}
             var index = layer.open({
                 type: 2,
                 title: "<s:text name="teller.listtitle" />",area: ['310px', '380px'],
@@ -86,7 +54,8 @@
                 maxmin: false,
                 content: "usermanager/tellerlist.jsp"
             });}
-        function updateSalesmanInfo(){
+
+        function updateSalemanInfo(){
             $.ajax({
                 type: 'post',
                 url: 'Saleman!UpdateInfo',
@@ -101,25 +70,25 @@
 <body>
 <div align="center">
     <div class="panel panel-default" style="float: left;width: 44%">
-        <div class="panel-header"><s:text name="salesman.listtitle" /><span style="float:right;" >
-            <a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="register();"><s:text name="salesman.addbutton" /></a></span></div>
-        <div class="panel-body" id="salesmanList" >
+        <div class="panel-header"><s:text name="saleman.listtitle" /><span style="float:right;" >
+            <a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="registerUser();"><s:text name="saleman.addbutton" /></a></span></div>
+        <div class="panel-body" id="salemanList" >
             <s:property value="salemanList" escape="false" />
         </div>
     </div>
     <div class="panel panel-default" style="float: right;width: 54%;">
-            <div class="panel-header"><s:text name="salesman.salemanProperty" />
+            <div class="panel-header"><s:text name="saleman.salemanProperty" />
                 <span style="float:right">
-                    <input class="btn btn-primary radius size-S " type="button" value="<s:text name="salesman.savebutton" />" onclick="updateSalesmanInfo()">
+                    <input class="btn btn-primary radius size-S " type="button" value="<s:text name="saleman.savebutton" />" onclick="updateSalemanInfo()">
                 </span>
             </div>
             <div class="panel-body" id="salemanInfo"></div>
-            <div class="panel-header"><s:text name="salesman.listtellertitle" />
+            <div class="panel-header"><s:text name="saleman.listtellertitle" />
                 <span style="float:right">
-                    <input class="btn btn-primary radius size-S " type="button" value="<s:text name="salesman.addbutton" />" onclick="relatetellerinfo()">
+                    <input class="btn btn-primary radius size-S " type="button" value="<s:text name="saleman.addbutton" />" onclick="fetchTellerList()">
                 </span>
             </div>
-            <div class="panel-body" id="tellerlistIframe"></div>
+            <div class="panel-body" id="tellerlist"></div>
     </div>
 </div>
 <script type="text/javascript" src="../js/layer/1.9.3/layer.js"></script>

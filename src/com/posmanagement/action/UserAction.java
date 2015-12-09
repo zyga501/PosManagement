@@ -1,9 +1,9 @@
 package com.posmanagement.action;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.opensymphony.xwork2.ActionSupport;
 import com.posmanagement.utils.DbManager;
 import com.posmanagement.utils.LogManager;
+import com.posmanagement.webui.SalemanList;
 import com.posmanagement.webui.UserList;
 import com.posmanagement.webui.UserMenu;
 import org.apache.struts2.ServletActionContext;
@@ -16,12 +16,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserAction extends ActionSupport{
+public class UserAction extends AjaxActionSupport{
     private final static String LOGINSUCCESS = "loginSuccess";
     private final static String LOGINFAILURE = "loginFailure";
     private final static String MAGEPAGELOADED = "mainPageInited";
     private final static String LOGOUT = "logout";
-    private final static String USERLIST = "userList";
 
     private String userName ;
     private String userNickName;
@@ -288,57 +287,37 @@ public class UserAction extends ActionSupport{
         return ;
     }
 
-    public void Register() throws Exception {
+    public String Register() throws Exception {
         ActionContext ctx = ActionContext.getContext();
         HttpServletRequest request = (HttpServletRequest) ctx
                 .get(ServletActionContext.HTTP_REQUEST);
         HttpSession session = request.getSession(false);
-        if (!session.getAttribute("userName").toString().toLowerCase().equals("admin")) return ;
-        try {
-            Map para = new HashMap<>();
-            para.put(1,userName);
-            ArrayList<HashMap<String, Object>> dbRet = DbManager.createPosDbManager().executeSql(
-                    "select 1 from userinfo where uname=?", (HashMap<Integer, Object>) para);
-            if (dbRet.size()>0) return ;
-            para.put(2,userPwd);
-            para.put(3,userNickName);
-            // para.put(4,userType);
-            if  (!DbManager.createPosDbManager().executeUpdate("insert into userinfo(uname,upwd,unick) values(?,?,?)", (HashMap<Integer, Object>) para))
-                return  ;
-            dbRet = DbManager.createPosDbManager().executeSql(
-                    "select uid from userinfo where uname=? and upwd=? and unick=?", (HashMap<Integer, Object>) para);
-            if ("1".equals(userType))
-                DbManager.createPosDbManager().executeUpdate("insert into salesmantb(uid) values("+dbRet.get(0).get("UID")+")");
-            else if ("2".equals(userType))
-                DbManager.createPosDbManager().executeUpdate("insert into tellertb(uid) values("+dbRet.get(0).get("UID")+")");
-        }
-        catch (Exception e){
-            return  ;
-        }
-    }
+        if (!session.getAttribute("userName").toString().toLowerCase().equals("admin")) return AjaxActionComplete();
+        Map parametMap = new HashMap<>();
+        parametMap.put(1,userName);
+        ArrayList<HashMap<String, Object>> dbRet = DbManager.createPosDbManager().executeSql(
+                "select 1 from userinfo where uname=?", (HashMap<Integer, Object>) parametMap);
+        if (dbRet.size()>0) return AjaxActionComplete();
 
-    public void InsertSaleMan() throws Exception {
-        ActionContext ctx = ActionContext.getContext();
-        HttpServletRequest request = (HttpServletRequest) ctx
-                .get(ServletActionContext.HTTP_REQUEST);
-        HttpSession session = request.getSession(false);
-        if (null==request.getParameter("newuserid")) return ;
-        String params = request.getParameter("newuserid").toString();
-        if (params.endsWith(","))
-            params = params.substring(0,params.length()-1);
-        Map para = new HashMap();
-        para.put(1,params);
-        try {
-            if (DbManager.createPosDbManager().executeUpdate("select uid from userinfo where uid in (?)", (HashMap<Integer, Object>) para)) {
+        parametMap.put(2,userPwd);
+        parametMap.put(3,userNickName);
+        
+        if  (!DbManager.createPosDbManager().executeUpdate("insert into userinfo(uname,upwd,unick) values(?,?,?)", (HashMap<Integer, Object>) parametMap))
+            return AjaxActionComplete();
+        dbRet = DbManager.createPosDbManager().executeSql(
+                "select uid from userinfo where uname=? and upwd=? and unick=?", (HashMap<Integer, Object>) parametMap);
 
-            }
-            else {
-                int throwerror = 1 / 0;
-            }
+        Map resultMap = new HashMap();
+
+        if ("1".equals(userType)) {
+            DbManager.createPosDbManager().executeUpdate("insert into salesmantb(uid) values(" + dbRet.get(0).get("UID") + ")");
+            resultMap.put("userList", new SalemanList().generateHTMLString());
         }
-        catch (Exception e){
-            return ;
+        else if ("2".equals(userType)) {
+            DbManager.createPosDbManager().executeUpdate("insert into tellertb(uid) values(" + dbRet.get(0).get("UID") + ")");
         }
+
+        return AjaxActionComplete(resultMap);
     }
 
     private void logLoginTrack(int userID, String location) throws Exception {

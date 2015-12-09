@@ -25,11 +25,10 @@
                     $("tr").on('click',function(){
                         if(confirm("您确定选择此用户？！")){
                             var valstrs=$(this).first().children("td").first().children("input").val();
-                            parent.callback(valstrs);
+                            parent.refreshTellerList(valstrs);
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                             return true;
                         }return false;
-                        //alert($(this).first().children("td").text());
                     })
                 }
             });}

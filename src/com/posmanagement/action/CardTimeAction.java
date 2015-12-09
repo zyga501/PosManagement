@@ -3,6 +3,7 @@ package com.posmanagement.action;
 import com.posmanagement.utils.DbManager;
 import com.posmanagement.webui.CardTimeList;
 
+import java.sql.Time;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,6 +12,8 @@ public class CardTimeAction extends AjaxActionSupport {
 
     private String cardTimeList;
     private String cardTime;
+    private String startTime;
+    private String endTime;
     private String timeEnabled;
 
     public String getCardTimeList() {
@@ -19,6 +22,14 @@ public class CardTimeAction extends AjaxActionSupport {
 
     public void setCardTime(String _cardTime) {
         cardTime = _cardTime;
+    }
+
+    public void setStartTime(String _startTime) {
+        startTime = _startTime;
+    }
+
+    public void setEndTime(String _endTime) {
+        endTime = _endTime;
     }
 
     public void setTimeEnabled(String enabled) {
@@ -33,17 +44,31 @@ public class CardTimeAction extends AjaxActionSupport {
     public String AddCardTime() throws Exception {
         Map map = new HashMap();
         if (cardTime.length() == 0) {
-            map.put("errorMessage", getText("addcardtime.timeError"));
+            map.put("errorMessage", getText("addcardtime.cardTimeError"));
         }
         else {
-            Map parametMap = new HashMap();
-            parametMap.put(1, cardTime);
-            if (timeEnabled != null)
-                parametMap.put(2, new String("on"));
-            else
-                parametMap.put(2, new String("off"));
-            DbManager.createPosDbManager().executeUpdate("insert into cardtimetb(cardTime,enabled) values(?,?)", (HashMap<Integer, Object>) parametMap);
-            map.put("cardTimeList", new CardTimeList().generateHTMLString());
+            try {
+                Map parametMap = new HashMap();
+                parametMap.put(1, cardTime);
+                Time _startTime = Time.valueOf(startTime);
+                Time _endTime = Time.valueOf(endTime);
+                if (_startTime.after(_endTime)) {
+                    map.put("errorMessage", getText("addcardtime.endTimeEarlierThanStartTime"));
+                    setAjaxActionResult(map);
+                    return AjaxActionSupport.ACTIONFINISHED;
+                }
+                parametMap.put(2, _startTime);
+                parametMap.put(3, _endTime);
+                if (timeEnabled != null)
+                    parametMap.put(4, new String("on"));
+                else
+                    parametMap.put(4, new String("off"));
+                DbManager.createPosDbManager().executeUpdate("insert into cardtimetb(cardTime,startTime,endTime,enabled) values(?,?,?,?)", (HashMap<Integer, Object>) parametMap);
+                map.put("cardTimeList", new CardTimeList().generateHTMLString());
+            }
+            catch (IllegalArgumentException illegalException) {
+                map.put("errorMessage", getText("addcardtime.timeFormatError"));
+            }
         }
 
         setAjaxActionResult(map);

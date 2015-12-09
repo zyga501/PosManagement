@@ -19,6 +19,8 @@ public class CardTimeList {
         for (int index = 0; index < dbRet.size(); ++index) {
             htmlString +="<tr class=\"text-c odd\" role=\"row\">"+
                     "<td>"+ dbRet.get(index).get("CARDTIME")+"</td>"+
+                    "<td><input type=\"time\" value=\"" + dbRet.get(index).get("STARTTIME").toString() + "\" </td>"+
+                    "<td><input type=\"time\" value=\"" + dbRet.get(index).get("ENDTIME").toString() + "\" </td>"+
                     "<td><input type=\"checkbox\"";
             if (dbRet.get(index).get("ENABLED").toString().compareTo("on") == 0) {
                 htmlString += "checked=\"checked\"";

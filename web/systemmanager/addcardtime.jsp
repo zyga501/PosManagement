@@ -1,3 +1,5 @@
+<%@ page import="java.util.Date" %>
+<%@ page import="java.sql.Time" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="s" uri="/struts-tags"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -45,6 +47,18 @@
                 <td><s:text name="addcardtime.timer" /></td>
                 <td>
                     <input id="cardTime" name="cardTime" type="text" placeholder="<s:text name="addcardtime.timer" />" class="input-text size-S">
+                </td>
+            </tr>
+            <tr class="text-c odd" role="row">
+                <td><s:text name="addcardtime.startTime" /></td>
+                <td>
+                    <input id="startTime" name="startTime" type="time" class="time size-S" value="<%=new Time(new Date().getTime()).toString()%>">
+                </td>
+            </tr>
+            <tr class="text-c odd" role="row">
+                <td><s:text name="addcardtime.endTime" /></td>
+                <td>
+                    <input id="endTime" name="endTime" type="time" class="time size-S" value="<%=new Time(new Date().getTime()).toString()%>" >
                 </td>
             </tr>
             <tr class="text-c odd" role="row">

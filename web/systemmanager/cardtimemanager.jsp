@@ -17,7 +17,7 @@
         function addCardTime(){
             var index = layer.open({
                 type: 2,
-                title: "添加用卡时间",area: ['310px', '220px'],
+                title: "添加用卡时间",area: ['310px', '280px'],
                 fix: false,
                 content: "/systemmanager/addcardtime.jsp"
             });}
@@ -36,7 +36,9 @@
                     <table class="table table-border table-bordered table-bg table-hover table-sort">
                         <thead>
                         <tr class="text-c">
-                            <th width="80"><s:text name="cardtimemanager.timer" /></th>
+                            <th width="80"><s:text name="cardtimemanager.cardTime" /></th>
+                            <th width="80"><s:text name="cardtimemanager.startTime" /></th>
+                            <th width="80"><s:text name="cardtimemanager.endTime" /></th>
                             <th width="80"><s:text name="cardtimemanager.enabled" /></th>
                         </tr>
                         </thead>

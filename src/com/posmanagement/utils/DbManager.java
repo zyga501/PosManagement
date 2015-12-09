@@ -34,6 +34,7 @@ public class DbManager {
             }
         }
     }
+
     public boolean executeUpdate(String strSql) throws SQLException {
         Statement statement = null;
         try {
@@ -130,38 +131,41 @@ public class DbManager {
         }
     }
 
-    private PreparedStatement fillSqlParamets(PreparedStatement pStatement, HashMap<Integer, Object> paramets)
+    private PreparedStatement fillSqlParamets(PreparedStatement pStatement, HashMap<Integer, Object> parametMap)
             throws SQLException, ClassNotFoundException {
-        if (null != paramets) {
-            if (0 <= paramets.size()) {
-                for (int i = 1; i <= paramets.size(); i++) {
-                    if (paramets.get(i).getClass() == Class.forName("java.lang.String")) {
-                        pStatement.setString(i, paramets.get(i).toString());
+        if (null != parametMap) {
+            if (0 <= parametMap.size()) {
+                for (int i = 1; i <= parametMap.size(); i++) {
+                    if (parametMap.get(i).getClass() == Class.forName("java.lang.String")) {
+                        pStatement.setString(i, parametMap.get(i).toString());
                         continue;
                     }
-                    if (paramets.get(i).getClass() == Class.forName("java.sql.Date")) {
-                        pStatement.setDate(i, java.sql.Date.valueOf(paramets
-                                .get(i).toString()));
+                    if (parametMap.get(i).getClass() == Class.forName("java.sql.Date")) {
+                        pStatement.setDate(i, java.sql.Date.valueOf(parametMap.get(i).toString()));
                         continue;
                     }
-                    if (paramets.get(i).getClass() == Class.forName("java.sql.Timestamp")) {
-                        pStatement.setTimestamp(i, java.sql.Timestamp.valueOf(paramets.get(i).toString()));
+                    if (parametMap.get(i).getClass() == Class.forName("java.sql.Timestamp")) {
+                        pStatement.setTimestamp(i, java.sql.Timestamp.valueOf(parametMap.get(i).toString()));
                         continue;
                     }
-                    if (paramets.get(i).getClass() == Class.forName("java.lang.Boolean")) {
-                        pStatement.setBoolean(i, (Boolean) (paramets.get(i)));
+                    if (parametMap.get(i).getClass() == Class.forName("java.sql.Time")) {
+                        pStatement.setTime(i, java.sql.Time.valueOf(parametMap.get(i).toString()) );
                         continue;
                     }
-                    if (paramets.get(i).getClass() == Class.forName("java.lang.Integer")) {
-                        pStatement.setInt(i, (Integer) paramets.get(i));
+                    if (parametMap.get(i).getClass() == Class.forName("java.lang.Boolean")) {
+                        pStatement.setBoolean(i, (Boolean) (parametMap.get(i)));
                         continue;
                     }
-                    if (paramets.get(i).getClass() == Class.forName("java.lang.Float")) {
-                        pStatement.setFloat(i, (Float) paramets.get(i));
+                    if (parametMap.get(i).getClass() == Class.forName("java.lang.Integer")) {
+                        pStatement.setInt(i, (Integer) parametMap.get(i));
                         continue;
                     }
-                    if (paramets.get(i).getClass() == Class.forName("java.lang.Double")) {
-                        pStatement.setDouble(i, (Double) paramets.get(i));
+                    if (parametMap.get(i).getClass() == Class.forName("java.lang.Float")) {
+                        pStatement.setFloat(i, (Float) parametMap.get(i));
+                        continue;
+                    }
+                    if (parametMap.get(i).getClass() == Class.forName("java.lang.Double")) {
+                        pStatement.setDouble(i, (Double) parametMap.get(i));
                         continue;
                     }
                     throw new ClassCastException();

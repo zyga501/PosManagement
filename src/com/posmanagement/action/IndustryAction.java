@@ -46,7 +46,6 @@ public class IndustryAction extends AjaxActionSupport{
             map.put("industryList", new IndustryList().generateHTMLString());
         }
 
-        setAjaxActionResult(map);
-        return AjaxActionSupport.ACTIONFINISHED;
+        return AjaxActionComplete(map);
     }
 }

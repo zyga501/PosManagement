@@ -50,7 +50,6 @@ public class BankAction extends AjaxActionSupport {
             }
         }
 
-        setAjaxActionResult(map);
-        return AjaxActionSupport.ACTIONFINISHED;
+        return AjaxActionComplete(map);
     }
 }

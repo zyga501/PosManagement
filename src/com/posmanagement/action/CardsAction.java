@@ -300,7 +300,6 @@ public class CardsAction extends AjaxActionSupport {
             }
         }
 
-        setAjaxActionResult(map);
-        return AjaxActionSupport.ACTIONFINISHED;
+        return AjaxActionComplete(map);
     }
 }

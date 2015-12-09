@@ -53,7 +53,6 @@ public class RatesAction extends AjaxActionSupport {
             }
         }
 
-        setAjaxActionResult(map);
-        return AjaxActionSupport.ACTIONFINISHED;
+        return AjaxActionComplete(map);
     }
 }

@@ -48,6 +48,9 @@
             <result name="mainPageInited">/main.jsp</result>
             <result name="loginFailure">/login.jsp</result>
         </action>
+        <action name="Saleman!*" class="com.posmanagement.action.SalemanAction" method="{1}">
+            <result name="salemanManager">/usermanager/saleman.jsp</result>
+        </action>
         <action name="Bank!*" class="com.posmanagement.action.BankAction" method="{1}">
             <result name="bankManager">/systemmanager/bankmanager.jsp</result>
         </action>
@@ -64,7 +67,7 @@
             <result name="ratesManager">/systemmanager/ratesmanager.jsp</result>
         </action>
         <action name="Menu!*" class="com.posmanagement.action.MenuAction" method="{1}">
-            <result name="saleManager">/usermanager/saleman.jsp</result>
+            <result name="salemanManager" type="redirectAction">Saleman!Init</result>
             <result name="tellerManager">/usermanager/teller.jsp</result>
             <result name="bankManager" type="redirectAction">Bank!Init</result>
             <result name="cardTimeManager" type="redirectAction">CardTime!Init</result>
@@ -77,6 +80,4 @@
             <result name="cardsManager">/cardmanager/cardsmanager.jsp</result>
         </action>
     </package>
-
-    <package name="default" extends="struts-default"/>
 </struts>

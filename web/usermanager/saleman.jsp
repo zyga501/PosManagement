@@ -15,22 +15,19 @@
     <link href="../skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
     <script type="text/javascript" src="../js/jquery/1.9.1/jquery.min.js"></script>
     <script type="text/javascript">
-        function trclick(obj) {
-            $("tr").on("click",function(){
-                var data = $(this).children().first().children().val();
-                $.ajax({
-                    type: 'post',
-                    url: 'User!SalemanProperty',
-                    data:{"datas":data},
-                    dataType : "text",
-                    success: function(data) {
-                        $("#propertyIframe").html(data);
-                        refreshtellerlist();
-                    }
-                });
-            })}
+        function clickSaleman(id) {
+            $.ajax({
+                type: 'post',
+                url: 'Saleman!FetchInfo',
+                data: "salemanID=" + id,
+                dataType : "json",
+                success: function(data) {
+                    var json = eval("(" + data + ")");
+                    $("#salemanInfo").html(json.salemanInfo);
+                }
+            });
+        }
 
-        $().ready(function(){refreshsalemanlist();});
         function register(){
             var index = layer.open({
                 type: 2,
@@ -89,10 +86,10 @@
                 maxmin: false,
                 content: "usermanager/tellerlist.jsp"
             });}
-        function updatesalesmaninfo(){
+        function updateSalesmanInfo(){
             $.ajax({
                 type: 'post',
-                url: 'User!UpdateSalesman',
+                url: 'Saleman!UpdateInfo',
                 data: $("form").serialize(),
                 success: function(data) {
                     alert(data);
@@ -102,19 +99,27 @@
     </script>
 </head>
 <body>
-<div class="mt">
+<div align="center">
     <div class="panel panel-default" style="float: left;width: 44%">
         <div class="panel-header"><s:text name="salesman.listtitle" /><span style="float:right;" >
             <a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="register();"><s:text name="salesman.addbutton" /></a></span></div>
-        <div class="panel-body" id="parentIframe" ></div>
+        <div class="panel-body" id="salesmanList" >
+            <s:property value="salemanList" escape="false" />
+        </div>
     </div>
     <div class="panel panel-default" style="float: right;width: 54%;">
-        <div class="panel-header"><s:text name="salesman.salemanProperty" /><span style="float:right">
-            <input class="btn btn-primary radius size-S " type="button" value="<s:text name="salesman.savebutton" />" onclick="updatesalesmaninfo()"></span></div>
-        <div class="panel-body" id="propertyIframe"></div>
-        <div class="panel-header"><s:text name="salesman.listtellertitle" /><span style="float:right">
-            <input class="btn btn-primary radius size-S " type="button" value="<s:text name="salesman.addbutton" />" onclick="relatetellerinfo()"></span></div>
-        <div class="panel-body" id="tellerlistIframe"></div>
+            <div class="panel-header"><s:text name="salesman.salemanProperty" />
+                <span style="float:right">
+                    <input class="btn btn-primary radius size-S " type="button" value="<s:text name="salesman.savebutton" />" onclick="updateSalesmanInfo()">
+                </span>
+            </div>
+            <div class="panel-body" id="salemanInfo"></div>
+            <div class="panel-header"><s:text name="salesman.listtellertitle" />
+                <span style="float:right">
+                    <input class="btn btn-primary radius size-S " type="button" value="<s:text name="salesman.addbutton" />" onclick="relatetellerinfo()">
+                </span>
+            </div>
+            <div class="panel-body" id="tellerlistIframe"></div>
     </div>
 </div>
 <script type="text/javascript" src="../js/layer/1.9.3/layer.js"></script>

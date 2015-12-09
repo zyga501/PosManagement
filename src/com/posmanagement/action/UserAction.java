@@ -191,35 +191,6 @@ public class UserAction extends ActionSupport{
         response.getWriter().close();
     }
 
-    public void ListSalesman() throws Exception {
-        ActionContext ctx = ActionContext.getContext();
-        HttpServletRequest request = (HttpServletRequest) ctx
-                .get(ServletActionContext.HTTP_REQUEST);
-        HttpServletResponse response = (HttpServletResponse) ctx
-                .get(ServletActionContext.HTTP_RESPONSE);
-        HttpSession session = request.getSession(false);
-        try {
-            ArrayList<HashMap<String, Object>> dbRet = DbManager.createPosDbManager().executeSql("select * from userinfo a,salesmantb b where a.uid=b.uid");
-            if (null == dbRet || dbRet.size() < 1){
-                return ;
-            }
-            String inputType = "";
-            if (null!=request.getParameter("type") && request.getParameter("type").equals("1"))
-                inputType="checkbox";
-            else
-                inputType="radio";
-            userList = UserList.userListToHtml(dbRet,inputType);
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().write(userList);
-            response.getWriter().flush();
-            response.getWriter().close();
-        }
-        catch (Exception e){
-            return ;
-        }
-        return ;
-    }
-
     public void ListTeller() throws Exception {
         ActionContext ctx = ActionContext.getContext();
         HttpServletRequest request = (HttpServletRequest) ctx
@@ -282,34 +253,6 @@ public class UserAction extends ActionSupport{
                 response.getWriter().flush();
                 response.getWriter().close();
             }
-        }
-        catch (Exception e){
-            return ;
-        }
-        return ;
-    }
-
-    public void SalemanProperty() throws Exception {
-        ActionContext ctx = ActionContext.getContext();
-        HttpServletRequest request = (HttpServletRequest) ctx
-                .get(ServletActionContext.HTTP_REQUEST);
-        HttpServletResponse response = (HttpServletResponse) ctx
-                .get(ServletActionContext.HTTP_RESPONSE);
-        HttpSession session = request.getSession(false);
-        String datas= request.getParameter("datas").toString();
-        try {
-            Map para = new HashMap<>();
-            para.put(1,datas);
-            ArrayList<HashMap<String, Object>> dbRet = DbManager.createPosDbManager().executeSql("select * from userinfo a,salesmantb b where a.uid=b.uid and b.uid=?",
-                    (HashMap<Integer, Object>) para);
-            if (null == dbRet || dbRet.size() < 1){
-                return ;
-            }
-            userList = UserList.salesmanPropertylistToTable(dbRet);
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().write(userList);
-            response.getWriter().flush();
-            response.getWriter().close();
         }
         catch (Exception e){
             return ;

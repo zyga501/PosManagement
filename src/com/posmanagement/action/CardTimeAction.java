@@ -54,8 +54,7 @@ public class CardTimeAction extends AjaxActionSupport {
                 Time _endTime = Time.valueOf(endTime);
                 if (_startTime.after(_endTime)) {
                     map.put("errorMessage", getText("addcardtime.endTimeEarlierThanStartTime"));
-                    setAjaxActionResult(map);
-                    return AjaxActionSupport.ACTIONFINISHED;
+                    return AjaxActionComplete(map);
                 }
                 parametMap.put(2, _startTime);
                 parametMap.put(3, _endTime);
@@ -71,7 +70,6 @@ public class CardTimeAction extends AjaxActionSupport {
             }
         }
 
-        setAjaxActionResult(map);
-        return AjaxActionSupport.ACTIONFINISHED;
+        return AjaxActionComplete(map);
     }
 }

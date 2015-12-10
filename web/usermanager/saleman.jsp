@@ -46,7 +46,7 @@
         }
 
         function fetchTellerList(){
-            if ("undefined"==typeof($("#saleID").val())) {alert("<s:text name="saleman.hasuidalert"/>"); return;}
+            if ("undefined"==typeof($("#salemanID").val())) {alert("<s:text name="saleman.hasuidalert"/>"); return;}
             var index = layer.open({
                 type: 2,
                 title: "<s:text name="teller.listtitle" />",area: ['310px', '380px'],

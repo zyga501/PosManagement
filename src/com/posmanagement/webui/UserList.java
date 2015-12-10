@@ -21,20 +21,6 @@ public class UserList {
         return result+"</table>";
     }
 
-    public static String  salesmanPropertylistToTable( ArrayList<HashMap<String, Object>> dbRet){
-        String result ="<form><table class=\"table table-border table-bordered table-hover\">";
-        for (int index = 0; index < dbRet.size(); ++index) {//only one row
-            result +="<tr>"+
-                    "<td><input type=\"hidden\" name=\"uid\" id=uid  value="+dbRet.get(index).get("UID")+
-                    ">用户名称</td><td><input type=\"text\" class=\"input-text radius\" value="+checknull(dbRet.get(index).get("UNICK"))+" </td></tr>"+
-                    "<tr><td>卡号</td><td><input type=\"text\" class=\"input-text radius\" VALUE="+checknull(dbRet.get(index).get("SCARDNO"))+"></td></tr>"+
-                    "<tr><td>状态</td><td><input type=\"text\" class=\"input-text radius\" VALUE="+checknull(dbRet.get(index).get("STATUS"))+"></td></tr>"+
-                    "<tr><td>费用情况</td><td><input type=\"text\" class=\"input-text radius\" VALUE="+checknull(dbRet.get(index).get("FEEQK"))+"></td></tr>"+
-                    "<tr><td>支付情况</td><td><input type=\"text\" class=\"input-text radius\" VALUE="+checknull(dbRet.get(index).get("PAYMENTTM"))+"></td></tr>"+
-                    "<tr><td>联系情况</td><td><input type=\"text\" class=\"input-text radius\" VALUE="+checknull(dbRet.get(index).get("CONTRACT"))+"></td></tr>";
-        }
-        return result+"</table></form>";
-    }
     public static String  tellerPropertylistToTable( ArrayList<HashMap<String, Object>> dbRet){
         String result ="<form><table class=\"table table-border table-bordered table-hover\">";
         for (int index = 0; index < dbRet.size(); ++index) {

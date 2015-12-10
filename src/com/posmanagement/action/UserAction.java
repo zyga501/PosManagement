@@ -259,34 +259,6 @@ public class UserAction extends AjaxActionSupport{
         return ;
     }
 
-    public void TellerProperty() throws Exception {
-        ActionContext ctx = ActionContext.getContext();
-        HttpServletRequest request = (HttpServletRequest) ctx
-                .get(ServletActionContext.HTTP_REQUEST);
-        HttpServletResponse response = (HttpServletResponse) ctx
-                .get(ServletActionContext.HTTP_RESPONSE);
-        HttpSession session = request.getSession(false);
-        String datas= request.getParameter("datas").toString();
-        try {
-            Map para = new HashMap<>();
-            para.put(1,datas);
-            ArrayList<HashMap<String, Object>> dbRet = DbManager.createPosDbManager().executeSql("select * from userinfo a,tellertb b where a.uid=b.uid and b.uid=?",
-                    (HashMap<Integer, Object>) para);
-            if (null == dbRet || dbRet.size() < 1){
-                return ;
-            }
-            userList = UserList.tellerPropertylistToTable(dbRet);
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().write(userList);
-            response.getWriter().flush();
-            response.getWriter().close();
-        }
-        catch (Exception e){
-            return ;
-        }
-        return ;
-    }
-
     public String Register() throws Exception {
         ActionContext ctx = ActionContext.getContext();
         HttpServletRequest request = (HttpServletRequest) ctx
@@ -301,7 +273,7 @@ public class UserAction extends AjaxActionSupport{
 
         parametMap.put(2,userPwd);
         parametMap.put(3,userNickName);
-        
+
         if  (!DbManager.createPosDbManager().executeUpdate("insert into userinfo(uname,upwd,unick) values(?,?,?)", (HashMap<Integer, Object>) parametMap))
             return AjaxActionComplete();
         dbRet = DbManager.createPosDbManager().executeSql(

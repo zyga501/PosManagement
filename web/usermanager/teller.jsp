@@ -15,52 +15,55 @@
     <link href="../skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
     <script type="text/javascript" src="../js/jquery/1.9.1/jquery.min.js"></script>
     <script type="text/javascript">
-        function trclick(obj) {
-            $("tr").on("click",function(){
-                var data = $(this).children().first().children().val();
-                alert
-                $.ajax({
-                    type: 'post',
-                    url: 'User!TellerProperty',
-                    data:{"datas":data},
-                    dataType : "text",
-                    success: function(data) {
-                        $("#propertyIframe").html(data);
-                    }
-                });
-            })}
-        $().ready(function(){refreshsalemanlist();});
-        function register(){
+        function registerUser(){
             var index = layer.open({
-                type: 2,
-                title: "<s:text name="register.reg" />",area: ['310px', '330px'],
-                fix: false, //不固定
-                maxmin: false,
-                content: "/register.jsp?usertype=2"
-            });}
-        function refreshsalemanlist(){
+            type: 2,
+            title: "<s:text name="register.reg" />",area: ['310px', '330px'],
+            fix: false,
+            maxmin: false,
+            content: "/register.jsp?usertype=2"
+        });}
+
+        function clickTeller(id) {
             $.ajax({
                 type: 'post',
-                url: 'User!ListTeller',
+                url: 'Teller!FetchInfo',
+                data: "tellerID=" + id,
+                dataType : "json",
                 success: function(data) {
-                    $("#parentIframe").html(data);
-                    trclick();
+                    var json = eval("(" + data + ")");
+                    $("#tellerInfo").html(json.tellerInfo);
                 }
-            });}
-        function callback(params){
-            refreshsalemanlist()
+            });
+        }
+
+        function refreshUserList(tellerList){
+            $("tellerList").html(tellerList);
+        }
+
+        function updateTellerInfo(){
+            $.ajax({
+                type: 'post',
+                url: 'Teller!UpdateInfo',
+                data: $("form").serialize(),
+                success: function(data) {
+                    alert(data);
+                }
+            });
         }
     </script>
 </head>
 <body>
 <div class="mt">
     <div class="panel panel-default" style="float: left;width: 44%">
-        <div class="panel-header"><s:text name="teller.listtitle" /><span style="float:right;" ><a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="register();"><s:text name="salesman.addbutton" /></a></span></div>
-        <div class="panel-body" id="parentIframe" ></div>
+        <div class="panel-header"><s:text name="teller.listtitle" /><span style="float:right;" ><a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="registerUser();"><s:text name="teller.addbutton" /></a></span></div>
+        <div class="panel-body" id="tellerList" >
+            <s:property value="tellerList" escape="false" />
+        </div>
     </div>
     <div class="panel panel-default" style="float: right;width: 54%;">
-        <div class="panel-header"><s:text name="teller.tellerProperty" /><span style="float:right"><input class="btn btn-primary radius size-S " type="button" value="<s:text name="salesman.savebutton" />" onclick="updatetellerinfo()"></span></div>
-        <div class="panel-body" id="propertyIframe"></div>
+        <div class="panel-header"><s:text name="teller.tellerProperty" /><span style="float:right"><input class="btn btn-primary radius size-S " type="button" value="<s:text name="teller.savebutton" />" onclick="updateTellerInfo()"></span></div>
+        <div class="panel-body" id="tellerInfo"></div>
     </div>
 </div>
 <script type="text/javascript" src="../js/layer/1.9.3/layer.js"></script>

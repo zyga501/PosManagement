@@ -32,7 +32,7 @@
 
     <package name="defualt" extends="json-default">
         <global-results>
-            <result name="ajaxActionFinished" type="json">
+            <result name="ajaxActionCompleted" type="json">
                 <param name="root">ajaxActionResult</param>
             </result>
         </global-results>
@@ -51,6 +51,9 @@
         <action name="Saleman!*" class="com.posmanagement.action.SalemanAction" method="{1}">
             <result name="salemanManager">/usermanager/saleman.jsp</result>
         </action>
+        <action name="Teller!*" class="com.posmanagement.action.TellerAction" method="{1}">
+            <result name="tellerManager">/usermanager/teller.jsp</result>
+        </action>
         <action name="Bank!*" class="com.posmanagement.action.BankAction" method="{1}">
             <result name="bankManager">/systemmanager/bankmanager.jsp</result>
         </action>
@@ -68,7 +71,7 @@
         </action>
         <action name="Menu!*" class="com.posmanagement.action.MenuAction" method="{1}">
             <result name="salemanManager" type="redirectAction">Saleman!Init</result>
-            <result name="tellerManager">/usermanager/teller.jsp</result>
+            <result name="tellerManager" type="redirectAction">Teller!Init</result>
             <result name="bankManager" type="redirectAction">Bank!Init</result>
             <result name="cardTimeManager" type="redirectAction">CardTime!Init</result>
             <result name="assetsManager" type="redirectAction">Assets!Init</result>

@@ -6,7 +6,7 @@ import net.sf.json.JSONObject;
 import java.util.Map;
 
 public abstract class AjaxActionSupport extends ActionSupport {
-    private final static String AJAXACTIONCOMPLETE = "ajaxActionFinished";
+    private final static String AJAXACTIONCOMPLETED = "ajaxActionCompleted";
     private String ajaxActionResult;
 
     public String getAjaxActionResult() {
@@ -14,10 +14,10 @@ public abstract class AjaxActionSupport extends ActionSupport {
     }
 
     public String AjaxActionComplete() {
-        return AJAXACTIONCOMPLETE;
+        return AJAXACTIONCOMPLETED;
     }
     public String AjaxActionComplete( Map resultMap) {
         ajaxActionResult = JSONObject.fromObject(resultMap).toString();
-        return AJAXACTIONCOMPLETE;
+        return AJAXACTIONCOMPLETED;
     }
 }

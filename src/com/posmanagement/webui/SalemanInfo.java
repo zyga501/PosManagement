@@ -23,8 +23,8 @@ public class SalemanInfo {
 
         String htmlString ="<form><table class=\"table table-border table-bordered table-hover\">";
         htmlString +="<tr>"+
-                "<td><input type=\"hidden\" id=\"saleID\" value="+ StringUtils.convertNullableString(dbRet.get(0).get("UID"))+
-                ">用户名称</td><td><input type=\"text\" name=\"saleName\" class=\"input-text radius\" value=" +
+                "<td><input type=\"hidden\" id=\"salemanID\" name=\"salemanID\" value="+ StringUtils.convertNullableString(dbRet.get(0).get("UID"))+
+                ">用户名称</td><td><input type=\"text\" name=\"salemanName\" class=\"input-text radius\" value=" +
                 StringUtils.convertNullableString(dbRet.get(0).get("UNICK"))+" </td></tr>"+
                 "<tr><td>卡号</td><td><input type=\"text\" name=\"cardID\" class=\"input-text radius\" VALUE=" +
                 StringUtils.convertNullableString(dbRet.get(0).get("SCARDNO"))+"></td></tr>"+

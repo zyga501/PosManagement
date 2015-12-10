@@ -19,9 +19,13 @@
         function refreshsalemanlist(){
             $.ajax({
                 type: 'post',
-                url: 'User!ListTeller',
+                url: 'Teller!FetchTellerList',
+                data: "",
+                dataType : "json",
                 success: function(data) {
-                    $("#tellerIframe").html(data);
+                    var json = eval("(" + data + ")");
+                    alert(json);
+                    $("#tellerList").html(json.tellerList);
                     $("tr").on('click',function(){
                         if(confirm("您确定选择此用户？！")){
                             var valstrs=$(this).first().children("td").first().children("input").val();
@@ -64,7 +68,7 @@
         <input class="input-text " placeholder="<s:text name="search.hint"/>" id=dwtxt  >
     </div>
     <form>
-        <div class="panel-body" id=tellerIframe></div>
+        <div class="panel-body" id="tellerList"></div>
     </form>
 </div>
 <script type="text/javascript" src="../js/layer/1.9.3/layer.js"></script>

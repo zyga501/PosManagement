@@ -21,8 +21,8 @@ public class SalemanAction extends AjaxActionSupport {
         salemanID = _salemanID;
     }
 
-    public void setSaleName(String _saleName) {
-        salemanName = _saleName;
+    public void setSalemanName(String _salemanName) {
+        salemanName = _salemanName;
     }
 
     public String Init() throws Exception {

@@ -4,7 +4,6 @@ import com.opensymphony.xwork2.ActionContext;
 import com.posmanagement.utils.DbManager;
 import com.posmanagement.utils.LogManager;
 import com.posmanagement.webui.SalemanList;
-import com.posmanagement.webui.UserList;
 import com.posmanagement.webui.UserMenu;
 import org.apache.struts2.ServletActionContext;
 
@@ -188,75 +187,6 @@ public class UserAction extends AjaxActionSupport{
         response.getWriter().write(rtMsg);
         response.getWriter().flush();
         response.getWriter().close();
-    }
-
-    public void ListTeller() throws Exception {
-        ActionContext ctx = ActionContext.getContext();
-        HttpServletRequest request = (HttpServletRequest) ctx
-                .get(ServletActionContext.HTTP_REQUEST);
-        HttpServletResponse response = (HttpServletResponse) ctx
-                .get(ServletActionContext.HTTP_RESPONSE);
-        HttpSession session = request.getSession(false);
-        String sqlstr ="";
-        Map para = new HashMap<>();
-        if (null!=request.getParameter("datas")){
-            sqlstr ="select * from userinfo a,tellertb b where a.uid=b.uid and salesmanid=?";
-            para.put(1,request.getParameter("datas").toString());
-        }
-        else
-            sqlstr = "select * from userinfo a,tellertb b where a.uid=b.uid";
-        try {
-            ArrayList<HashMap<String, Object>> dbRet = DbManager.createPosDbManager().executeSql(sqlstr, (HashMap<Integer, Object>) para);
-            if (null == dbRet || dbRet.size() < 1){
-                return ;
-            }
-            String inputType = "";
-            if (null!=request.getParameter("type") && request.getParameter("type").equals("1"))
-                inputType="checkbox";
-            else
-                inputType="radio";
-            userList = UserList.userListToHtml(dbRet,inputType);
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().write(userList);
-            response.getWriter().flush();
-            response.getWriter().close();
-        }
-        catch (Exception e){
-            System.out.println(e.getMessage());
-            return ;
-        }
-        return ;
-    }
-
-    public void InsertTeller() throws Exception {
-        ActionContext ctx = ActionContext.getContext();
-        HttpServletRequest request = (HttpServletRequest) ctx
-                .get(ServletActionContext.HTTP_REQUEST);
-        HttpServletResponse response = (HttpServletResponse) ctx
-                .get(ServletActionContext.HTTP_RESPONSE);
-        HttpSession session = request.getSession(false);
-        //// TODO: 2015-12-04    All database SQL DML operations need to be verified "admin"
-        if (!session.getAttribute("userName").toString().toUpperCase().equals("ADMIN")) return;
-        String datas= request.getParameter("datas").toString();
-        String[] ararystr = datas.split(",");
-        String outstr = "";
-        if (ararystr.length!=2) return;
-        try {
-            Map para = new HashMap<>();
-            para.put(1,ararystr[0]);
-            para.put(2,ararystr[1]);
-            if (!DbManager.createPosDbManager().executeUpdate("update tellertb set salesmanid=? where uid=?",
-                    (HashMap<Integer, Object>) para)) {
-                response.setCharacterEncoding("UTF-8");
-                response.getWriter().write("Error!");
-                response.getWriter().flush();
-                response.getWriter().close();
-            }
-        }
-        catch (Exception e){
-            return ;
-        }
-        return ;
     }
 
     public String Register() throws Exception {

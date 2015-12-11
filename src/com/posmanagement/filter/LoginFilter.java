@@ -29,7 +29,7 @@ public class LoginFilter implements Filter {
             chain.doFilter(servletRequest, servletResponse);
         }
         else {
-            servletResponse.sendRedirect("/login.jsp");
+            servletResponse.sendRedirect("./login.jsp");
         }
     }
 

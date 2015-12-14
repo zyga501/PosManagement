@@ -21,7 +21,7 @@
             title: "<s:text name="register.reg" />",area: ['310px', '330px'],
             fix: false,
             maxmin: false,
-            content: "/register.jsp?usertype=2"
+            content: "./register.jsp?usertype=2"
         });}
 
         function clickTeller(id) {
@@ -38,7 +38,7 @@
         }
 
         function refreshUserList(tellerList){
-            $("tellerList").html(tellerList);
+            $("#tellerList").html(tellerList);
         }
 
         function updateTellerInfo(){

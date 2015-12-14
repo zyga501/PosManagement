@@ -19,7 +19,7 @@
                 type: 2,
                 title: "添加银行",area: ['310px', '220px'],
                 fix: false,
-                content: "/systemmanager/addbank.jsp"
+                content: "./systemmanager/addbank.jsp"
             });}
         function refreshBankList(bankList) {
             $('#bankList').html(bankList);

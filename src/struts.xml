@@ -40,34 +40,37 @@
         </action>
         <action name="User!*" class="com.posmanagement.action.UserAction" method="{1}">
             <result name="loginSuccess" type="redirectAction">MainPage</result>
-            <result name="loginFailure">/login.jsp</result>
-            <result name="logout" type="redirect">/login.jsp</result>
-            <result name="personInfo">/personinfo.jsp</result>
+            <result name="loginFailure">./login.jsp</result>
+            <result name="logout" type="redirect">./login.jsp</result>
+            <result name="personInfo">./personinfo.jsp</result>
         </action>
         <action name="MainPage" class="com.posmanagement.action.UserAction" method="InitMainPage">
-            <result name="mainPageInited">/main.jsp</result>
-            <result name="loginFailure">/login.jsp</result>
+            <result name="mainPageInited">./main.jsp</result>
+            <result name="loginFailure">./login.jsp</result>
         </action>
         <action name="Saleman!*" class="com.posmanagement.action.SalemanAction" method="{1}">
-            <result name="salemanManager">/usermanager/saleman.jsp</result>
+            <result name="salemanManager">./usermanager/saleman.jsp</result>
         </action>
         <action name="Teller!*" class="com.posmanagement.action.TellerAction" method="{1}">
-            <result name="tellerManager">/usermanager/teller.jsp</result>
+            <result name="tellerManager">./usermanager/teller.jsp</result>
         </action>
         <action name="Bank!*" class="com.posmanagement.action.BankAction" method="{1}">
-            <result name="bankManager">/systemmanager/bankmanager.jsp</result>
+            <result name="bankManager">./systemmanager/bankmanager.jsp</result>
         </action>
         <action name="CardTime!*" class="com.posmanagement.action.CardTimeAction" method="{1}">
-            <result name="cardTimeManager">/systemmanager/cardtimemanager.jsp</result>
+            <result name="cardTimeManager">./systemmanager/cardtimemanager.jsp</result>
         </action>
         <action name="Assets!*" class="com.posmanagement.action.AssetsAction" method="{1}">
-            <result name="assetsManager">/systemmanager/assetsmanager.jsp</result>
+            <result name="assetsManager">./systemmanager/assetsmanager.jsp</result>
         </action>
         <action name="Industry!*" class="com.posmanagement.action.IndustryAction" method="{1}">
-            <result name="industryManager">/systemmanager/industrymanager.jsp</result>
+            <result name="industryManager">./systemmanager/industrymanager.jsp</result>
         </action>
         <action name="Rates!*" class="com.posmanagement.action.RatesAction" method="{1}">
-            <result name="ratesManager">/systemmanager/ratesmanager.jsp</result>
+            <result name="ratesManager">./systemmanager/ratesmanager.jsp</result>
+        </action>
+        <action name="Cards!*" class="com.posmanagement.action.CardsAction" method="{1}">
+            <result name="cardsManager">./cardmanager/cardsmanager.jsp</result>
         </action>
         <action name="Menu!*" class="com.posmanagement.action.MenuAction" method="{1}">
             <result name="salemanManager" type="redirectAction">Saleman!Init</result>
@@ -78,9 +81,6 @@
             <result name="industryManager" type="redirectAction">Industry!Init</result>
             <result name="ratesManager" type="redirectAction">Rates!Init</result>
             <result name="cardsManager" type="redirectAction">Cards!Init</result>
-        </action>
-        <action name="Cards!*" class="com.posmanagement.action.CardsAction" method="{1}">
-            <result name="cardsManager">/cardmanager/cardsmanager.jsp</result>
         </action>
     </package>
 </struts>

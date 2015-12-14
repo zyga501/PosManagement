@@ -21,7 +21,7 @@
                 title: "<s:text name="register.reg" />",area: ['310px', '330px'],
                 fix: false,
                 maxmin: false,
-                content: "/register.jsp?usertype=1"
+                content: "./register.jsp?usertype=1"
             });}
 
         function clickSaleman(id) {
@@ -33,6 +33,7 @@
                 success: function(data) {
                     var json = eval("(" + data + ")");
                     $("#salemanInfo").html(json.salemanInfo);
+                    $("#tellerList").html(json.tellerList);
                 }
             });
         }
@@ -41,8 +42,17 @@
             $("#salemanList").html(userList);
         }
 
-        function refreshTellerList(tellerList) {
-            $("#tellerlist").html(tellerlist);
+        function refreshTellerList(tellerID) {
+            $.ajax({
+                type: 'post',
+                url: 'Saleman!AddTeller',
+                data: "salemanID=" + $("#salemanID").val() + "&tellerID="+tellerID,
+                dataType : "json",
+                success: function(data) {
+                    var json = eval("(" + data + ")");
+                    $("#tellerList").html(json.tellerList);
+                }
+            });
         }
 
         function fetchTellerList(){
@@ -52,7 +62,7 @@
                 title: "<s:text name="teller.listtitle" />",area: ['310px', '380px'],
                 fix: false,
                 maxmin: false,
-                content: "usermanager/tellerlist.jsp"
+                content: "./usermanager/tellerlist.jsp"
             });}
 
         function updateSalemanInfo(){
@@ -88,7 +98,7 @@
                     <input class="btn btn-primary radius size-S " type="button" value="<s:text name="saleman.addbutton" />" onclick="fetchTellerList()">
                 </span>
             </div>
-            <div class="panel-body" id="tellerlist"></div>
+            <div class="panel-body" id="tellerList"></div>
     </div>
 </div>
 <script type="text/javascript" src="../js/layer/1.9.3/layer.js"></script>

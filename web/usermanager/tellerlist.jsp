@@ -15,35 +15,28 @@
     <title><s:text name="userlist.title" /></title>
     <script type="text/javascript" src="../js/jquery/1.9.1/jquery.min.js"></script>
     <script type="text/javascript">
-        // $().ready(function(){refreshsalemanlist();});
-        function refreshsalemanlist(){
+        function fetchTellerList(){
             $.ajax({
                 type: 'post',
-                url: 'Teller!FetchTellerList',
+                url: 'Teller!FetchUnAssignTeller',
                 data: "",
                 dataType : "json",
                 success: function(data) {
                     var json = eval("(" + data + ")");
-                    alert(json);
                     $("#tellerList").html(json.tellerList);
-                    $("tr").on('click',function(){
-                        if(confirm("您确定选择此用户？！")){
-                            var valstrs=$(this).first().children("td").first().children("input").val();
-                            parent.refreshTellerList(valstrs);
-                            parent.layer.close(parent.layer.getFrameIndex(window.name));
-                            return true;
-                        }return false;
-                    })
                 }
-            });}
-        function checkuser(){
-            /* var obj = $("input[name='userpick']:checked");
-             var valstrs ='';
-             for(var i=0;i<obj.length;i++){
-             valstrs +=obj[i].value+',';
-             }*/
-            parent.callback(valstrs);
-            parent.layer.close(parent.layer.getFrameIndex(window.name));}
+            });
+        }
+
+        function clickTeller(id) {
+            if(confirm("您确定选择此用户？！")){
+                parent.refreshTellerList(id);
+                parent.layer.close(parent.layer.getFrameIndex(window.name));
+                return true;
+            }
+            return false;
+        }
+
         function searchtxt(){
             $("table tbody tr").hide();
             var ov=$("#dwtxt").val();
@@ -54,8 +47,9 @@
                         }
                     });
         }
+
         $(function(){
-            refreshsalemanlist();
+            fetchTellerList();
             $('#dwtxt').on('input propertychange', function() {
                 searchtxt();
             });

@@ -19,7 +19,7 @@
                 type: 2,
                 title: "添加用卡时间",area: ['310px', '280px'],
                 fix: false,
-                content: "/systemmanager/addcardtime.jsp"
+                content: "./systemmanager/addcardtime.jsp"
             });}
         function refreshCardTimeList(cardTimeList) {
             $('#cardTimeList').html(cardTimeList);

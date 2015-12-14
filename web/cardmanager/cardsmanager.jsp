@@ -20,7 +20,7 @@
                 title: "添加卡信息",
                 fix: true,
                 maxmin: false,
-                content: "cardmanager/addcard.jsp"
+                content: "./cardmanager/addcard.jsp"
             });layer.full(index);}
         function refreshcardList(cardList) {
             $('#cardsList').html(cardList);

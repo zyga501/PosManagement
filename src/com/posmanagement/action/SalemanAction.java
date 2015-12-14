@@ -1,7 +1,9 @@
 package com.posmanagement.action;
 
+import com.posmanagement.utils.DbManager;
 import com.posmanagement.webui.SalemanInfo;
 import com.posmanagement.webui.SalemanList;
+import com.posmanagement.webui.TellerList;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +14,7 @@ public class SalemanAction extends AjaxActionSupport {
     private String salemanList;
     private String salemanID;
     private String salemanName;
+    private String tellerID;
 
     public String getSalemanList() {
         return salemanList;
@@ -25,6 +28,10 @@ public class SalemanAction extends AjaxActionSupport {
         salemanName = _salemanName;
     }
 
+    public void setTellerID(String _tellerID) {
+        tellerID = _tellerID;
+    }
+
     public String Init() throws Exception {
         salemanList = new SalemanList().generateHTMLString();
         return SALEMANMANAGE;
@@ -34,6 +41,7 @@ public class SalemanAction extends AjaxActionSupport {
         Map map = new HashMap();
         if (salemanID != null && salemanID.length() > 0) {
             map.put("salemanInfo", new SalemanInfo(salemanID).generateHTMLString());
+            map.put("tellerList", new TellerList(salemanID).generateHTMLString());
         }
 
         return AjaxActionComplete(map);
@@ -43,6 +51,24 @@ public class SalemanAction extends AjaxActionSupport {
         Map map = new HashMap();
         map.put("ErrorMessage", new String("UnImple"));
         // todo
+        return AjaxActionComplete(map);
+    }
+
+    public String AddTeller() throws Exception {
+        Map map = new HashMap();
+        if (tellerID == null || tellerID.length() <= 0 || salemanID == null || salemanID.length() <= 0) {
+            map.put("ErrorMessage", getText("SalemanAction.AddTellerError"));
+        }
+        else {
+            Map parametMap = new HashMap<Integer, Object>();
+            parametMap.put(1, salemanID);
+            parametMap.put(2, tellerID);
+            if (!DbManager.createPosDbManager().executeUpdate("update tellertb set salesman=? where uid=?", (HashMap<Integer, Object>) parametMap)) {
+                map.put("ErrorMessage", getText("SalemanAction.AddTellerError"));
+            }
+            map.put("tellerList", new TellerList(salemanID).generateHTMLString());
+        }
+
         return AjaxActionComplete(map);
     }
 }

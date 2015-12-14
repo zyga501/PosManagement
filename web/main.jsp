@@ -47,7 +47,7 @@
         <div class="Hui-tabNav-wp">
             <ul id="min_title_list" class="acrossTab cl">
                 <li class="active">
-                    <span title="<s:text name="main.myDesktop" />" data-href="desktop.jsp"><s:text name="main.myDesktop" /></span>
+                    <span title="<s:text name="main.myDesktop" />" data-href="./desktop.jsp"><s:text name="main.myDesktop" /></span>
                     <em></em>
                 </li>
             </ul>
@@ -57,7 +57,7 @@
     <div id="iframe_box" class="Hui-article">
         <div class="show_iframe">
             <div style="display:none" class="loading"></div>
-            <iframe scrolling="yes" frameborder="0" src="desktop.jsp"></iframe>
+            <iframe scrolling="yes" frameborder="0" src="./desktop.jsp"></iframe>
         </div>
     </div>
 </section>

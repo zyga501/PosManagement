@@ -34,9 +34,9 @@ public class TellerAction extends AjaxActionSupport {
         return AjaxActionComplete(map);
     }
 
-    public String FetchTellerList() throws Exception {
+    public String FetchUnAssignTeller() throws Exception {
         Map map = new HashMap();
-        map.put("tellerList", new TellerList().generateHTMLString());
+        map.put("tellerList", new TellerList(true).generateHTMLString());
         return AjaxActionComplete(map);
     }
 

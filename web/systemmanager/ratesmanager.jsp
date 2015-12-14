@@ -19,7 +19,7 @@
                 type: 2,
                 title: "添加费率",area: ['310px', '220px'],
                 fix: false,
-                content: "/systemmanager/addrates.jsp"
+                content: "./systemmanager/addrates.jsp"
             });}
         function refreshRatesList(ratesList) {
             $('#ratesList').html(ratesList);

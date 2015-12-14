@@ -19,7 +19,7 @@
                 type: 2,
                 title: "添加行业",area: ['310px', '220px'],
                 fix: false,
-                content: "/systemmanager/addindustry.jsp"
+                content: "./systemmanager/addindustry.jsp"
             });}
         function refreshIndustryList(industryList) {
             $('#industryList').html(industryList);

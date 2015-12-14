@@ -62,7 +62,7 @@ public class UserMenu {
         String htmlString = new String();
         htmlString += "<li><a _href=\"";
         if (webPath.length() == 0)
-            htmlString += "404.jsp";
+            htmlString += "./404.jsp";
         else
             htmlString += webPath;
         htmlString += "\">";

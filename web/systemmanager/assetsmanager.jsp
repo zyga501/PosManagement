@@ -19,7 +19,7 @@
                 type: 2,
                 title: "添加资产",area: ['310px', '220px'],
                 fix: false,
-                content: "/systemmanager/addassets.jsp"
+                content: "./systemmanager/addassets.jsp"
             });}
         function refreshAssetsList(assetsList) {
             $('#assetsList').html(assetsList);

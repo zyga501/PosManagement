@@ -4,6 +4,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.posmanagement.utils.DbManager;
 import com.posmanagement.utils.LogManager;
 import com.posmanagement.webui.SalemanList;
+import com.posmanagement.webui.TellerList;
 import com.posmanagement.webui.UserMenu;
 import org.apache.struts2.ServletActionContext;
 
@@ -195,7 +196,7 @@ public class UserAction extends AjaxActionSupport{
                 .get(ServletActionContext.HTTP_REQUEST);
         HttpSession session = request.getSession(false);
         if (!session.getAttribute("userName").toString().toLowerCase().equals("admin")) return AjaxActionComplete();
-        Map parametMap = new HashMap<>();
+        Map parametMap = new HashMap<Integer, Object>();
         parametMap.put(1,userName);
         ArrayList<HashMap<String, Object>> dbRet = DbManager.createPosDbManager().executeSql(
                 "select 1 from userinfo where uname=?", (HashMap<Integer, Object>) parametMap);
@@ -217,6 +218,7 @@ public class UserAction extends AjaxActionSupport{
         }
         else if ("2".equals(userType)) {
             DbManager.createPosDbManager().executeUpdate("insert into tellertb(uid) values(" + dbRet.get(0).get("UID") + ")");
+            resultMap.put("userList", new TellerList().generateHTMLString());
         }
 
         return AjaxActionComplete(resultMap);

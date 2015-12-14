@@ -41,7 +41,7 @@ public class SalemanInfo {
     }
 
     private ArrayList<HashMap<String, Object>> fetchSalemanInfo() throws Exception {
-        Map parametMap = new HashMap<>();
+        Map parametMap = new HashMap<Integer, Object>();
         parametMap.put(1, salemanID);
         return DbManager.createPosDbManager().executeSql("select * from userinfo a,salesmantb b where a.uid=b.uid and b.uid=?",
                 (HashMap<Integer, Object>) parametMap);

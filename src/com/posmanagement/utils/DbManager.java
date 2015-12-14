@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+
 public class DbManager {
     private static String URL = "jdbc:mysql://localhost:3306/posmanagement?autoReconnect=true&useUnicode=true&characterEncoding=utf8";
     private static String USERNAME = "root";
@@ -15,14 +16,9 @@ public class DbManager {
     }
 
     private DbManager(String url, String user, String password) throws SQLException, ClassNotFoundException {
-        try {
-            Class.forName(DRIVERNAME);
-            connection_ = DriverManager.getConnection(url, user, password);
-            connection_.setAutoCommit(false);
-        }
-        catch (ClassNotFoundException classNotFound) {
-            classNotFound.printStackTrace();
-        }
+        loadDriver();
+        connection_ = DriverManager.getConnection(url, user, password);
+        connection_.setAutoCommit(false);
     }
 
     protected void finalize() {

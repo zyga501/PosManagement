@@ -23,7 +23,7 @@
                 content: "./cardmanager/addcard.jsp"
             });layer.full(index);}
         function refreshcardList(cardList) {
-            $('#cardsList').html(cardList);
+            $('#cardList').html(cardList);
         }
     </script>
 </head>

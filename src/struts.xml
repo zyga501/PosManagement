@@ -69,8 +69,11 @@
         <action name="Rates!*" class="com.posmanagement.action.RatesAction" method="{1}">
             <result name="ratesManager">./systemmanager/ratesmanager.jsp</result>
         </action>
-        <action name="Cards!*" class="com.posmanagement.action.CardAction" method="{1}">
-            <result name="cardsManager">./cardmanager/cardsmanager.jsp</result>
+        <action name="Card!*" class="com.posmanagement.action.CardAction" method="{1}">
+            <result name="cardManager">./cardmanager/cardmanager.jsp</result>
+        </action>
+        <action name="Asset!*" class="com.posmanagement.action.AssetAction" method="{1}">
+            <result name="assetManager">./cardmanager/assetmanager.jsp</result>
         </action>
         <action name="Menu!*" class="com.posmanagement.action.MenuAction" method="{1}">
             <result name="salemanManager" type="redirectAction">Saleman!Init</result>
@@ -80,7 +83,8 @@
             <result name="mccManager" type="redirectAction">MCC!Init</result>
             <result name="industryManager" type="redirectAction">Industry!Init</result>
             <result name="ratesManager" type="redirectAction">Rates!Init</result>
-            <result name="cardsManager" type="redirectAction">Cards!Init</result>
+            <result name="cardManager" type="redirectAction">Card!Init</result>
+            <result name="assetManager" type="redirectAction">Asset!Init</result>
         </action>
     </package>
 </struts>

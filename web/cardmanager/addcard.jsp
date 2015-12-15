@@ -15,11 +15,11 @@
     <script type="text/javascript" src="../js/jquery/1.9.1/jquery.min.js"></script>
     <title><s:text name="addmcc.title" /></title>
     <script type="text/javascript">
-        function addcard() {
+        function addCard() {
             $('#Message').html("");
             $.ajax({
                 type: 'post',
-                url: 'Cards!AddCards',
+                url: 'Card!AddCard',
                 dataType:"json",
                 data:$("form").serialize(),
                 success: function (data) {
@@ -29,8 +29,8 @@
                     }
                     else {
                         $('.input').val("");
-                        $('#Message').html("<s:text name="addmcc.addmccSuccess" />");
-                        parent.refreshcardList(json.cardsList);
+                        $('#Message').html("<s:text name="addmcc.addMCCSuccess" />");
+                        parent.refreshcardList(json.cardList);
                     }
                 }
             })
@@ -96,7 +96,7 @@
         </div>
         <div class="row">
             <div class="formControls" align="center">
-                <input type="button" class="btn btn-success radius size-M" value="<s:text name="addmcc.submit" />" onclick="addCards()">
+                <input type="button" class="btn btn-success radius size-M" value="<s:text name="addmcc.submit" />" onclick="addCard()">
             </div>
         </div>
     </form>

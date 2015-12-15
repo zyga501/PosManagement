@@ -8,9 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CardAction extends AjaxActionSupport {
-    private final static String CARDSMANAGER = "cardsManager";
+    private final static String CARDMANAGER = "cardManager";
 
-    private String cardsList;
+    private String cardList;
 
     public Map getCardinfo() {
         return cardinfo;
@@ -276,16 +276,16 @@ public class CardAction extends AjaxActionSupport {
     }
 
 */
-    public String getCardsList() {
-        return cardsList;
+    public String getCardList() {
+        return cardList;
     }
 
     public String Init() throws Exception {
-        cardsList = new CardList().generateHTMLString();
-        return CARDSMANAGER;
+        cardList = new CardList().generateHTMLString();
+        return CARDMANAGER;
     }
 
-    public String AddCards() throws Exception {
+    public String AddCard() throws Exception {
         Map map = new HashMap();
         if (cardinfo.size()  == 0) {
             map.put("errorMessage", getText("addrates.ratesError"));
@@ -293,7 +293,7 @@ public class CardAction extends AjaxActionSupport {
         else {
             try {
                 DbManager.createPosDbManager().executeUpdate("insert into cardtb(rates,enabled) values(?,?)", (HashMap<Integer, Object>) cardinfo);
-                map.put("cardsList", new MCCList().generateHTMLString());
+                map.put("cardList", new MCCList().generateHTMLString());
             }
             catch (NumberFormatException exception) {
                 map.put("errorMessage", getText("addrates.ratesFormatError"));

@@ -8,7 +8,8 @@ public class MenuAction {
     private final static String MCCMANAGER = "mccManager";
     private final static String INDUSTRYMANAGER = "industryManager";
     private final static String RATESMANAGER = "ratesManager";
-    private final static String CARDSMANAGER = "cardsManager";
+    private final static String CARDMANAGER = "cardManager";
+    private final static String ASSETMANAGER = "assetManager";
 
     public String ManageSaleMan() {
         return SALEMANMANAGE;
@@ -38,7 +39,11 @@ public class MenuAction {
         return RATESMANAGER;
     }
 
-    public String ManageCards() {
-        return CARDSMANAGER;
+    public String ManageCard() {
+        return CARDMANAGER;
+    }
+
+    public String ManageAsset() {
+        return ASSETMANAGER;
     }
 }

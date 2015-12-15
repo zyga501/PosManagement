@@ -12,36 +12,36 @@
     <link href="../css/H-ui.admin.css" rel="stylesheet" type="text/css" />
     <link href="../css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
     <link href="../skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
-    <title><s:text name="assetsmanager.title" /></title>
+    <title><s:text name="mccmanager.title" /></title>
     <script type="text/javascript">
-        function addAssets(){
+        function addMCC(){
             var index = layer.open({
                 type: 2,
-                title: "添加资产",area: ['310px', '220px'],
+                title: "添加MCC",area: ['310px', '220px'],
                 fix: false,
-                content: "./systemmanager/addassets.jsp"
+                content: "./systemmanager/addmcc.jsp"
             });}
-        function refreshAssetsList(assetsList) {
-            $('#assetsList').html(assetsList);
+        function refreshMCCList(mccList) {
+            $('#mccList').html(mccList);
         }
     </script>
 </head>
 <body>
 <div align="center">
     <div class="panel panel-default" style="float: left;width: 44%">
-        <div class="panel-header"><s:text name="assetsmanager.paneltitle" /><span style="float:right;" ><a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addAssets()"><s:text name="assetsmanager.add" /></a></span></div>
+        <div class="panel-header"><s:text name="mccmanager.paneltitle" /><span style="float:right;" ><a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addMCC()"><s:text name="mccmanager.add" /></a></span></div>
         <div class="panel-body" id="parentIframe">
             <form>
                 <div style="height:80%; overflow:auto;">
                     <table class="table table-border table-bordered table-bg table-hover table-sort">
                         <thead>
                         <tr class="text-c">
-                            <th width="80"><s:text name="assetsmanager.assets" /></th>
-                            <th width="80"><s:text name="assetsmanager.enabled" /></th>
+                            <th width="80"><s:text name="mccmanager.mcc" /></th>
+                            <th width="80"><s:text name="mccmanager.enabled" /></th>
                         </tr>
                         </thead>
-                        <tbody id="assetsList">
-                        <s:property value="assetsList" escape="false" />
+                        <tbody id="mccList">
+                            <s:property value="mccList" escape="false" />
                         </tbody>
                     </table>
                 </div>

@@ -13,7 +13,7 @@
     <link href="../css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
     <link href="../skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
     <script type="text/javascript" src="../js/jquery/1.9.1/jquery.min.js"></script>
-    <title><s:text name="addassets.title" /></title>
+    <title><s:text name="addmcc.title" /></title>
     <script type="text/javascript">
         function addcard() {
             $('#Message').html("");
@@ -29,7 +29,7 @@
                     }
                     else {
                         $('.input').val("");
-                        $('#Message').html("<s:text name="addassets.addAssetsSuccess" />");
+                        $('#Message').html("<s:text name="addmcc.addmccSuccess" />");
                         parent.refreshcardList(json.cardsList);
                     }
                 }
@@ -96,7 +96,7 @@
         </div>
         <div class="row">
             <div class="formControls" align="center">
-                <input type="button" class="btn btn-success radius size-M" value="<s:text name="addassets.submit" />" onclick="addCards()">
+                <input type="button" class="btn btn-success radius size-M" value="<s:text name="addmcc.submit" />" onclick="addCards()">
             </div>
         </div>
     </form>

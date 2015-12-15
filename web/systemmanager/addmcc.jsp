@@ -13,13 +13,13 @@
     <link href="../css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
     <link href="../skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
     <script type="text/javascript" src="../js/jquery/1.9.1/jquery.min.js"></script>
-    <title><s:text name="addassets.title" /></title>
+    <title><s:text name="addmcc.title" /></title>
     <script type="text/javascript">
-        function addAssets() {
+        function addMCC() {
             $('#Message').html("");
             $.ajax({
                 type: 'post',
-                url: 'Assets!AddAssets',
+                url: 'MCC!AddMCC',
                 dataType:"json",
                 data:$("form").serialize(),
                 success: function (data) {
@@ -29,8 +29,8 @@
                     }
                     else {
                         $('.input').val("");
-                        $('#Message').html("<s:text name="addassets.addAssetsSuccess" />");
-                        parent.refreshAssetsList(json.assetsList);
+                        $('#Message').html("<s:text name="addmcc.addMCCSuccess" />");
+                        parent.refreshMCCList(json.mccList);
                     }
                 }
             })
@@ -42,15 +42,15 @@
     <form class="form form-horizontal">
         <table class="table table-border table-bordered table-bg table-hover table-sort">
             <tr class="text-c odd" role="row">
-                <td><s:text name="addassets.assets" /></td>
+                <td><s:text name="addmcc.mcc" /></td>
                 <td>
-                    <input id="assets" name="assets" type="text" placeholder="<s:text name="addassets.assets" />" class="input-text size-S">
+                    <input id="mccCode" name="mccCode" type="text" placeholder="<s:text name="addmcc.mcc" />" class="input-text size-S">
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
-                <td><s:text name="addassets.enabled" /></td>
+                <td><s:text name="addmcc.enabled" /></td>
                 <td>
-                    <input id="assetsEnabled" name="assetsEnabled" type="checkbox" class="check-box size-S">
+                    <input id="mccEnabled" name="mccEnabled" type="checkbox" class="check-box size-S">
                 </td>
             </tr>
         </table>
@@ -62,7 +62,7 @@
         </div>
         <div class="row">
             <div class="formControls col-8 col-offset-3" align="center">
-                <input type="button" class="btn btn-success radius size-M" value="<s:text name="addassets.submit" />" onclick="addAssets()">
+                <input type="button" class="btn btn-success radius size-M" value="<s:text name="addmcc.submit" />" onclick="addMCC()">
             </div>
         </div>
     </form>

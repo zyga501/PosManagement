@@ -100,11 +100,13 @@ public class UserAction extends AjaxActionSupport{
                 .get(ServletActionContext.HTTP_REQUEST);
         HttpSession session = request.getSession(true);
 
-        if (!verifyCode.toUpperCase().equals(session.getAttribute("verifyCode"))) {
-            loginErrorMessage = getText("UserAction.verifyCodeError");
-            session.removeAttribute("verifyCode");
-            return LOGINFAILURE;
-        }
+        // Disabled Now
+        //if (!verifyCode.toUpperCase().equals(session.getAttribute("verifyCode"))) {
+        //    loginErrorMessage = getText("UserAction.verifyCodeError");
+        //    session.removeAttribute("verifyCode");
+        //    return LOGINFAILURE;
+        //}
+
         try {
             Map parametMap = new HashMap();
             ArrayList<HashMap<String, Object>> dbRet  = null;

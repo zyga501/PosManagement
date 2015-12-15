@@ -1,7 +1,6 @@
 package com.posmanagement.action;
 
 import com.posmanagement.utils.DbManager;
-import com.posmanagement.webui.AssetsList;
 import com.posmanagement.webui.RatesList;
 
 import java.util.HashMap;
@@ -46,7 +45,7 @@ public class RatesAction extends AjaxActionSupport {
                 else
                     parametMap.put(2, new String("off"));
                 DbManager.createPosDbManager().executeUpdate("insert into ratestb(rates,enabled) values(?,?)", (HashMap<Integer, Object>) parametMap);
-                map.put("ratesList", new AssetsList().generateHTMLString());
+                map.put("ratesList", new RatesList().generateHTMLString());
             }
             catch (NumberFormatException exception) {
                 map.put("errorMessage", getText("addrates.ratesFormatError"));

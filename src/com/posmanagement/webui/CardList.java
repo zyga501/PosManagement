@@ -5,13 +5,13 @@ import com.posmanagement.utils.DbManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class AssetsList {
+public class CardList {
     public String generateHTMLString() throws Exception {
-        return generateAssetsList();
+        return generateCardList();
     }
 
-    private String generateAssetsList() throws Exception {
-        ArrayList<HashMap<String, Object>> dbRet = fetchAssetsList();
+    private String generateCardList() throws Exception {
+        ArrayList<HashMap<String, Object>> dbRet = fetchCardList();
         if (dbRet.size() <= 0)
             return new String("");
 
@@ -28,7 +28,7 @@ public class AssetsList {
         return htmlString;
     }
 
-    private ArrayList<HashMap<String, Object>> fetchAssetsList() throws Exception {
-        return DbManager.createPosDbManager().executeSql("select * from mcctb");
+    private ArrayList<HashMap<String, Object>> fetchCardList() throws Exception {
+        return DbManager.createPosDbManager().executeSql("select * from cardtb");
     }
 }

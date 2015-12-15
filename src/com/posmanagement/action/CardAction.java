@@ -1,13 +1,13 @@
 package com.posmanagement.action;
 
 import com.posmanagement.utils.DbManager;
-import com.posmanagement.webui.AssetsList;
-import com.posmanagement.webui.CardsList;
+import com.posmanagement.webui.MCCList;
+import com.posmanagement.webui.CardList;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class CardsAction extends AjaxActionSupport {
+public class CardAction extends AjaxActionSupport {
     private final static String CARDSMANAGER = "cardsManager";
 
     private String cardsList;
@@ -281,7 +281,7 @@ public class CardsAction extends AjaxActionSupport {
     }
 
     public String Init() throws Exception {
-        cardsList = new CardsList().generateHTMLString();
+        cardsList = new CardList().generateHTMLString();
         return CARDSMANAGER;
     }
 
@@ -293,7 +293,7 @@ public class CardsAction extends AjaxActionSupport {
         else {
             try {
                 DbManager.createPosDbManager().executeUpdate("insert into cardtb(rates,enabled) values(?,?)", (HashMap<Integer, Object>) cardinfo);
-                map.put("cardsList", new AssetsList().generateHTMLString());
+                map.put("cardsList", new MCCList().generateHTMLString());
             }
             catch (NumberFormatException exception) {
                 map.put("errorMessage", getText("addrates.ratesFormatError"));

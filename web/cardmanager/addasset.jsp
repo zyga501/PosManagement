@@ -16,10 +16,9 @@
     <title><s:text name="addasset.title" /></title>
     <script type="text/javascript">
         function addAsset() {
-            $('#Message').html("");
             $.ajax({
                 type: 'post',
-                url: 'Asset!addasset',
+                url: 'Asset!addAsset',
                 dataType:"json",
                 data:$("form").serialize(),
                 success: function (data) {
@@ -35,6 +34,23 @@
                 }
             })
         }
+
+        function fetchBankList() {
+            $.ajax({
+                type: 'post',
+                url: 'Bank!FetchBankList',
+                data: "uiMode=SELECTLIST",
+                dataType : "json",
+                success: function(data) {
+                    var json = eval("(" + data + ")");
+                    $("#bankName").html(json.bankList);
+                }
+            });
+        }
+
+        $(function(){
+            fetchBankList();
+        })
     </script>
 </head>
 <body scroll="no">
@@ -56,7 +72,8 @@
             <tr class="text-c odd" role="row">
                 <td><s:text name="addasset.bankName" /></td>
                 <td>
-                    <input id="bankName" name="bankName" type="text" placeholder="<s:text name="addasset.bankName" />" class="input-text size-S">
+                    <select id="bankName" name="bankName">
+                    </select>
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
@@ -68,25 +85,25 @@
             <tr class="text-c odd" role="row">
                 <td><s:text name="addasset.signpwd" /></td>
                 <td>
-                    <input id="signpwd" name="signpwd" type="text" placeholder="<s:text name="addasset.signpwd" />" class="input-text size-S">
+                    <input id="signPwd" name="signPwd" type="text" placeholder="<s:text name="addasset.signpwd" />" class="input-text size-S">
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
                 <td><s:text name="addasset.cashpwd" /></td>
                 <td>
-                    <input id="cashpwd" name="cashpwd" type="text" placeholder="<s:text name="addasset.cashpwd" />" class="input-text size-S">
+                    <input id="cashPwd" name="cashPwd" type="text" placeholder="<s:text name="addasset.cashpwd" />" class="input-text size-S">
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
                 <td><s:text name="addasset.transferpwd" /></td>
                 <td>
-                    <input id="transferpwd" name="transferpwd" type="text" placeholder="<s:text name="addasset.transferpwd" />" class="input-text size-S">
+                    <input id="transferPwd" name="transferPwd" type="text" placeholder="<s:text name="addasset.transferpwd" />" class="input-text size-S">
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
                 <td><s:text name="addasset.atmcashpwd" /></td>
                 <td>
-                    <input id="atmcashpwd" name="atmcashpwd" type="text" placeholder="<s:text name="addasset.atmcashpwd" />" class="input-text size-S">
+                    <input id="atmCashPwd" name="atmCashPwd" type="text" placeholder="<s:text name="addasset.atmcashpwd" />" class="input-text size-S">
                 </td>
             </tr>
         </table>

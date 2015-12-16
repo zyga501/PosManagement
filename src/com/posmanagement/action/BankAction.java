@@ -13,6 +13,7 @@ public class BankAction extends AjaxActionSupport {
     private String bankList;
     private String bankCode;
     private String bankName;
+    private String uiMode;
 
     public String getBankList() {
         return bankList;
@@ -26,9 +27,25 @@ public class BankAction extends AjaxActionSupport {
         bankName = _bankName;
     }
 
+    public void setUiMode(String _uiMode) {
+        uiMode = _uiMode;
+    }
+
     public String Init() throws Exception {
-        bankList = new BankList().generateHTMLString();
+        bankList = new BankList(BankList.UIMode.TABLELIST).generateHTMLString();
         return BANKMANAGER;
+    }
+
+    public String FetchBankList() throws Exception {
+        Map map = new HashMap();
+        if (uiMode != null && uiMode.compareTo("SELECTLIST") == 0) {
+            map.put("bankList", new BankList(BankList.UIMode.SELECTLIST).generateHTMLString());
+        }
+        else {
+            map.put("bankList", new BankList(BankList.UIMode.TABLELIST).generateHTMLString());
+        }
+
+        return AjaxActionComplete(map);
     }
 
     public String AddBank() throws Exception {
@@ -46,7 +63,7 @@ public class BankAction extends AjaxActionSupport {
             else {
                 parametMap.put(2, bankName);
                 DbManager.createPosDbManager().executeUpdate("insert into banktb(bankcode,bankname) values(?,?)", (HashMap<Integer, Object>) parametMap);
-                map.put("bankList", new BankList().generateHTMLString());
+                map.put("bankList", new BankList(BankList.UIMode.TABLELIST).generateHTMLString());
             }
         }
 

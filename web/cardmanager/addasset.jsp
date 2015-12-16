@@ -42,15 +42,51 @@
     <form class="form form-horizontal">
         <table class="table table-border table-bordered table-bg table-hover table-sort">
             <tr class="text-c odd" role="row">
-                <td><s:text name="addasset.asset" /></td>
+                <td><s:text name="addasset.assetMaster" /></td>
                 <td>
-                    <input id="asset" name="asset" type="text" placeholder="<s:text name="addasset.asset" />" class="input-text size-S">
+                    <input id="assetMaster" name="assetMaster" type="text" placeholder="<s:text name="addasset.assetMaster" />" class="input-text size-S">
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
-                <td><s:text name="addasset.enabled" /></td>
+                <td><s:text name="addasset.cardCode" /></td>
                 <td>
-                    <input id="assetEnabled" name="assetEnabled" type="checkbox" class="check-box size-S">
+                    <input id="cardCode" name="cardCode" type="text" placeholder="<s:text name="addasset.cardCode" />" class="input-text size-S">
+                </td>
+            </tr>
+            <tr class="text-c odd" role="row">
+                <td><s:text name="addasset.bankName" /></td>
+                <td>
+                    <input id="bankName" name="bankName" type="text" placeholder="<s:text name="addasset.bankName" />" class="input-text size-S">
+                </td>
+            </tr>
+            <tr class="text-c odd" role="row">
+                <td><s:text name="addasset.balance" /></td>
+                <td>
+                    <input id="balance" name="balance" type="text" placeholder="<s:text name="addasset.balance" />" class="input-text size-S">
+                </td>
+            </tr>
+            <tr class="text-c odd" role="row">
+                <td><s:text name="addasset.signpwd" /></td>
+                <td>
+                    <input id="signpwd" name="signpwd" type="text" placeholder="<s:text name="addasset.signpwd" />" class="input-text size-S">
+                </td>
+            </tr>
+            <tr class="text-c odd" role="row">
+                <td><s:text name="addasset.cashpwd" /></td>
+                <td>
+                    <input id="cashpwd" name="cashpwd" type="text" placeholder="<s:text name="addasset.cashpwd" />" class="input-text size-S">
+                </td>
+            </tr>
+            <tr class="text-c odd" role="row">
+                <td><s:text name="addasset.transferpwd" /></td>
+                <td>
+                    <input id="transferpwd" name="transferpwd" type="text" placeholder="<s:text name="addasset.transferpwd" />" class="input-text size-S">
+                </td>
+            </tr>
+            <tr class="text-c odd" role="row">
+                <td><s:text name="addasset.atmcashpwd" /></td>
+                <td>
+                    <input id="atmcashpwd" name="atmcashpwd" type="text" placeholder="<s:text name="addasset.atmcashpwd" />" class="input-text size-S">
                 </td>
             </tr>
         </table>

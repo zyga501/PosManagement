@@ -13,10 +13,6 @@ public class SalemanInfo {
     }
 
     public String generateHTMLString() throws Exception {
-        return generateSalemanInfo();
-    }
-
-    private String generateSalemanInfo() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchSalemanInfo();
         if (dbRet.size() != 1)
             return new String("");

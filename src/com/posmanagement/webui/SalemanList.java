@@ -7,10 +7,6 @@ import java.util.HashMap;
 
 public class SalemanList {
     public String generateHTMLString() throws Exception {
-        return generateSalemanList();
-    }
-
-    private String generateSalemanList() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchSalemanList();
         if (dbRet.size() <= 0)
             return new String("");

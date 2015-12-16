@@ -7,10 +7,6 @@ import java.util.HashMap;
 
 public class BankList {
     public String generateHTMLString() throws Exception {
-        return generateBankList();
-    }
-
-    private String generateBankList() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchBankList();
         if (dbRet.size() <= 0)
             return new String("");

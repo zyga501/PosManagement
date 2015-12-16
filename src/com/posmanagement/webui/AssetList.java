@@ -7,10 +7,6 @@ import java.util.HashMap;
 
 public class AssetList {
     public String generateHTMLString() throws Exception {
-        return generateAssetList();
-    }
-
-    private String generateAssetList() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchAssetList();
         if (dbRet.size() <= 0)
             return new String("");
@@ -26,7 +22,6 @@ public class AssetList {
                     "<td>"+ dbRet.get(index).get("EBANKCASHPWD")+"</td>" +
                     "<td>"+ dbRet.get(index).get("EBANKTRANSFERPWD")+"</td>" +
                     "<td>"+ dbRet.get(index).get("ATMCASHPWD")+"</td>" +
-                    "<td>"+ dbRet.get(index).get("SALESMAN")+"</td>" +
                     "</tr>";
         }
         return htmlString;

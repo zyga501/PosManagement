@@ -17,7 +17,7 @@
         function addAsset(){
             var index = layer.open({
                 type: 2,
-                title: "添加资产",area: ['310px', '220px'],
+                title: "添加资产",area: ['310px', '500px'],
                 fix: false,
                 content: "./cardmanager/addasset.jsp"
             });}
@@ -44,7 +44,6 @@
                             <th><s:text name="assetmanager.cashpwd" /></th>
                             <th><s:text name="assetmanager.transferpwd" /></th>
                             <th><s:text name="assetmanager.atmcashpwd" /></th>
-                            <th><s:text name="assetmanager.saleman" /></th>
                         </tr>
                         </thead>
                         <tbody id="assetList">

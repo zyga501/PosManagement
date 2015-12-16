@@ -19,10 +19,6 @@ public class TellerList {
     }
 
     public String generateHTMLString() throws Exception {
-        return generateTellerList();
-    }
-
-    private String generateTellerList() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchTellerList();
         if (dbRet.size() <= 0)
             return new String("");

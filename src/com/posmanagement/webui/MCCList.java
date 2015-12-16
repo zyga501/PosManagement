@@ -7,10 +7,6 @@ import java.util.HashMap;
 
 public class MCCList {
     public String generateHTMLString() throws Exception {
-        return generateMCCList();
-    }
-
-    private String generateMCCList() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchMCCList();
         if (dbRet.size() <= 0)
             return new String("");

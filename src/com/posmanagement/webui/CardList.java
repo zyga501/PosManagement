@@ -7,10 +7,6 @@ import java.util.HashMap;
 
 public class CardList {
     public String generateHTMLString() throws Exception {
-        return generateCardList();
-    }
-
-    private String generateCardList() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchCardList();
         if (dbRet.size() <= 0)
             return new String("");

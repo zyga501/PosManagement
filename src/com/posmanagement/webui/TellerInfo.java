@@ -13,10 +13,6 @@ public class TellerInfo {
     }
 
     public String generateHTMLString() throws Exception {
-        return generateTellerInfo();
-    }
-
-    private String generateTellerInfo() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchTellerInfo();
         if (dbRet.size() != 1)
             return new String("");

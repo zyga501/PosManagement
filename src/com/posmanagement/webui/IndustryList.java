@@ -7,10 +7,6 @@ import java.util.HashMap;
 
 public class IndustryList {
     public String generateHTMLString() throws Exception {
-        return generateIndustryList();
-    }
-
-    private String generateIndustryList() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchIndustryList();
         if (dbRet.size() <= 0)
             return new String("");

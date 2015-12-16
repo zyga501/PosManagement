@@ -7,10 +7,6 @@ import java.util.HashMap;
 
 public class RatesList {
     public String generateHTMLString() throws Exception {
-        return generateRatesList();
-    }
-
-    private String generateRatesList() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchRatesList();
         if (dbRet.size() <= 0)
             return new String("");

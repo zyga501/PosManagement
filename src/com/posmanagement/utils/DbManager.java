@@ -28,6 +28,9 @@ public class DbManager {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+            finally {
+                connection_ = null;
+            }
         }
     }
 
@@ -47,6 +50,7 @@ public class DbManager {
         finally {
             if (statement != null) {
                 statement.close();
+                statement = null;
             }
         }
         return false;
@@ -68,6 +72,7 @@ public class DbManager {
         finally {
             if (preparedStatement != null) {
                 preparedStatement.close();
+                preparedStatement = null;
             }
         }
         return false;
@@ -86,9 +91,11 @@ public class DbManager {
         finally {
             if (resultSet != null) {
                 resultSet.close();
+                resultSet = null;
             }
             if (statement != null) {
                 statement.close();
+                statement =  null;
             }
         }
 
@@ -109,9 +116,11 @@ public class DbManager {
         finally {
             if (resultSet != null) {
                 resultSet.close();
+                resultSet = null;
             }
             if (preparedStatement != null) {
                 preparedStatement.close();
+                preparedStatement = null;
             }
         }
         return null;

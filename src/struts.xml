@@ -75,6 +75,9 @@
         <action name="Asset!*" class="com.posmanagement.action.AssetAction" method="{1}">
             <result name="assetManager">./cardmanager/assetmanager.jsp</result>
         </action>
+        <action name="PosServer!*" class="com.posmanagement.action.PosServerAction" method="{1}">
+            <result name="posServerManager">./systemmanager/posservermanager.jsp</result>
+        </action>
         <action name="Menu!*" class="com.posmanagement.action.MenuAction" method="{1}">
             <result name="salemanManager" type="redirectAction">Saleman!Init</result>
             <result name="tellerManager" type="redirectAction">Teller!Init</result>
@@ -85,6 +88,7 @@
             <result name="ratesManager" type="redirectAction">Rates!Init</result>
             <result name="cardManager" type="redirectAction">Card!Init</result>
             <result name="assetManager" type="redirectAction">Asset!Init</result>
+            <result name="posServerManager" type="redirectAction">PosServer!Init</result>
         </action>
     </package>
 </struts>

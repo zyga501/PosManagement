@@ -12,36 +12,36 @@
     <link href="../css/H-ui.admin.css" rel="stylesheet" type="text/css" />
     <link href="../css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
     <link href="../skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
-    <title><s:text name="bankmanager.title" /></title>
+    <title><s:text name="posservermanager.title" /></title>
     <script type="text/javascript">
-        function addBank(){
+        function addPosServer(){
             var index = layer.open({
                 type: 2,
-                title: "添加银行",area: ['310px', '220px'],
+                title: "添加机具服务商",area: ['310px', '220px'],
                 fix: false,
-                content: "./systemmanager/addbank.jsp"
+                content: "./systemmanager/addposserver.jsp"
             });}
-        function refreshBankList(bankList) {
-            $('#bankList').html(bankList);
+        function refreshPosServerList(posServerList) {
+            $('#posServerList').html(posServerList);
         }
     </script>
 </head>
 <body style="overflow: hidden">
 <div align="center">
     <div class="panel panel-default" style="float: left;width: 44%">
-        <div class="panel-header"><s:text name="bankmanager.paneltitle" /><span style="float:right;" ><a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addBank()"><s:text name="bankmanager.add" /></a></span></div>
+        <div class="panel-header"><s:text name="posservermanager.paneltitle" /><span style="float:right;" ><a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addPosServer()"><s:text name="posservermanager.add" /></a></span></div>
         <div class="panel-body" id="parentIframe">
             <form>
                 <div style="height:80%; overflow:auto;">
                     <table class="table table-border table-bordered table-bg table-hover table-sort">
                         <thead>
                         <tr class="text-c">
-                            <th width="80"><s:text name="bankmanager.bankcode" /></th>
-                            <th width="80"><s:text name="bankmanager.bankname" /></th>
+                            <th width="80"><s:text name="posservermanager.bankname" /></th>
+                            <th width="80"><s:text name="posservermanager.enabled" /></th>
                         </tr>
                         </thead>
-                        <tbody id="bankList">
-                            <s:property value="bankList" escape="false" />
+                        <tbody id="posServerList">
+                            <s:property value="posServerList" escape="false" />
                         </tbody>
                     </table>
                 </div>

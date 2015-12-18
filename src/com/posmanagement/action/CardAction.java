@@ -2,20 +2,16 @@ package com.posmanagement.action;
 
 import com.posmanagement.utils.DbManager;
 import com.posmanagement.utils.Readconfig;
-import com.posmanagement.webui.AssetList;
 import com.posmanagement.webui.CardList;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class CardAction extends AjaxActionSupport {
-    private final static String CARDSMANAGER = "cardsManager";
+    private final static String CARDMANAGER = "cardManager";
 
-    private String cardsList;
+    private String cardList;
     private File filesfz1;
     private File filesfz2;
     private String newid ;
@@ -53,13 +49,13 @@ public class CardAction extends AjaxActionSupport {
         this.filesfz2 = filesfz2;
     }
 
-    public String getCardsList() {
-        return cardsList;
+    public String getCardList() {
+        return cardList;
     }
 
     public String Init() throws Exception {
-        cardsList = new CardList().generateHTMLString();
-        return CARDSMANAGER;
+        cardList = new CardList().generateHTMLString();
+        return CARDMANAGER;
     }
 
     public String UpdateZsf() throws Exception {
@@ -81,10 +77,10 @@ public class CardAction extends AjaxActionSupport {
             }
         }
 
-        map.put("cardsList", new AssetList().generateHTMLString());
         return AjaxActionComplete(map);
     }
-    public String AddCards() throws Exception {
+
+    public String AddCard() throws Exception {
         Map map = new HashMap();
         if (cardinfo.length  == 0) {
             map.put("errorMessage", getText("addrates.ratesError"));
@@ -103,7 +99,7 @@ public class CardAction extends AjaxActionSupport {
                         "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",(HashMap<Integer, Object>)  para))
                     map.put("errorMessage", getText("addrates.ratesFormatError"));
                 else
-                    map.put("cardsList", new AssetList().generateHTMLString());
+                    map.put("cardList", new CardList().generateHTMLString());
                 map.put("newid",para.get(3));//cardno
             }
             catch (NumberFormatException exception) {

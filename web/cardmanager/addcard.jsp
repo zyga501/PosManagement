@@ -21,7 +21,7 @@
             $('#Message').html("");
             $.ajax({
                 type: 'post',
-                url: 'Cards!AddCards',
+                url: 'Card!AddCard',
                 dataType:"json",
                 data:$("form").serialize(),
                 success: function (data) {
@@ -33,9 +33,8 @@
                         $('.input').val("");
                         $('#Message').html("<s:text name="addasset.addassetSuccess" />");
                         $('#newid').val(json.newid);
-                        //ajaxFileUpload(json.newid);
                         $("#upfile").css("display","");
-                        parent.refreshcardList(json.cardsList);
+                        parent.refreshcardList(json.cardList);
                     }
                 }
             })
@@ -44,7 +43,7 @@
             $.ajaxFileUpload
             (
                     {
-                        url: 'Cards!UpdateZsf', //用于文件上传的服务器端请求地址
+                        url: 'Card!UpdateZsf', //用于文件上传的服务器端请求地址
                         secureuri: false, //是否需要安全协议，一般设置为false
                         fileElementId: ["filesfz1","filesfz2"], //文件上传域的ID
                         data:{newid :$('#newid').val()},

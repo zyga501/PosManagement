@@ -1,299 +1,110 @@
 package com.posmanagement.action;
 
 import com.posmanagement.utils.DbManager;
-import com.posmanagement.webui.MCCList;
+import com.posmanagement.utils.Readconfig;
+import com.posmanagement.webui.AssetList;
 import com.posmanagement.webui.CardList;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class CardAction extends AjaxActionSupport {
-    private final static String CARDMANAGER = "cardManager";
+    private final static String CARDSMANAGER = "cardsManager";
 
-    private String cardList;
+    private String cardsList;
+    private File filesfz1;
+    private File filesfz2;
+    private String newid ;
+    private String[] cardinfo  ;
 
-    public Map getCardinfo() {
+    public String getNewid() {
+        return newid;
+    }
+
+    public void setNewid(String newid) {
+        this.newid = newid;
+    }
+
+    public String[] getCardinfo() {
         return cardinfo;
     }
 
-    public void setCardinfo(Map cardinfo) {
+    public void setCardinfo(String[] cardinfo) {
         this.cardinfo = cardinfo;
     }
 
-    private Map cardinfo;
-/*
-    private String paneltitle;
-    private String inserttime;
-    private String cardserial;
-    private String cardno;
-    private String bankname;
-    private String creditamount;
-    private String tempamount;
-    private String templimitdate;
-    private String useamount;
-    private String billdate;
-    private String pin;
-    private String telpwd;
-    private String tradepwd;
-    private String enchashmentpwd;
-    private String billafterdate;
-    private String lastrepaymentdate;
-    private String billemail;
-    private String sfqy;
-    private String commissioncharge;
-    private String cardmaster;
-    private String identityno;
-    private String identitypicfront;
-    private String identitypicback;
-    private String cmaddress;
-    private String cmtel;
-    private String cmseccontact;
-    private String salesman;
-    private String memos;
-
-    public String getPaneltitle() {
-        return paneltitle;
+    public File getFilesfz1() {
+        return filesfz1;
     }
 
-    public void setPaneltitle(String paneltitle) {
-        this.paneltitle = paneltitle;
+    public void setFilesfz1(File filesfz1) {
+        this.filesfz1 = filesfz1;
     }
 
-    public String getInserttime() {
-        return inserttime;
+    public File getFilesfz2() {
+        return filesfz2;
     }
 
-    public void setInserttime(String inserttime) {
-        this.inserttime = inserttime;
+    public void setFilesfz2(File filesfz2) {
+        this.filesfz2 = filesfz2;
     }
 
-    public String getCardserial() {
-        return cardserial;
-    }
-
-    public void setCardserial(String cardserial) {
-        this.cardserial = cardserial;
-    }
-
-    public String getCardno() {
-        return cardno;
-    }
-
-    public void setCardno(String cardno) {
-        this.cardno = cardno;
-    }
-
-    public String getBankname() {
-        return bankname;
-    }
-
-    public void setBankname(String bankname) {
-        this.bankname = bankname;
-    }
-
-    public String getCreditamount() {
-        return creditamount;
-    }
-
-    public void setCreditamount(String creditamount) {
-        this.creditamount = creditamount;
-    }
-
-    public String getTempamount() {
-        return tempamount;
-    }
-
-    public void setTempamount(String tempamount) {
-        this.tempamount = tempamount;
-    }
-
-    public String getTemplimitdate() {
-        return templimitdate;
-    }
-
-    public void setTemplimitdate(String templimitdate) {
-        this.templimitdate = templimitdate;
-    }
-
-    public String getUseamount() {
-        return useamount;
-    }
-
-    public void setUseamount(String useamount) {
-        this.useamount = useamount;
-    }
-
-    public String getBilldate() {
-        return billdate;
-    }
-
-    public void setBilldate(String billdate) {
-        this.billdate = billdate;
-    }
-
-    public String getPin() {
-        return pin;
-    }
-
-    public void setPin(String pin) {
-        this.pin = pin;
-    }
-
-    public String getTelpwd() {
-        return telpwd;
-    }
-
-    public void setTelpwd(String telpwd) {
-        this.telpwd = telpwd;
-    }
-
-    public String getTradepwd() {
-        return tradepwd;
-    }
-
-    public void setTradepwd(String tradepwd) {
-        this.tradepwd = tradepwd;
-    }
-
-    public String getEnchashmentpwd() {
-        return enchashmentpwd;
-    }
-
-    public void setEnchashmentpwd(String enchashmentpwd) {
-        this.enchashmentpwd = enchashmentpwd;
-    }
-
-    public String getBillafterdate() {
-        return billafterdate;
-    }
-
-    public void setBillafterdate(String billafterdate) {
-        this.billafterdate = billafterdate;
-    }
-
-    public String getLastrepaymentdate() {
-        return lastrepaymentdate;
-    }
-
-    public void setLastrepaymentdate(String lastrepaymentdate) {
-        this.lastrepaymentdate = lastrepaymentdate;
-    }
-
-    public String getBillemail() {
-        return billemail;
-    }
-
-    public void setBillemail(String billemail) {
-        this.billemail = billemail;
-    }
-
-    public String getSfqy() {
-        return sfqy;
-    }
-
-    public void setSfqy(String sfqy) {
-        this.sfqy = sfqy;
-    }
-
-    public String getCommissioncharge() {
-        return commissioncharge;
-    }
-
-    public void setCommissioncharge(String commissioncharge) {
-        this.commissioncharge = commissioncharge;
-    }
-
-    public String getCardmaster() {
-        return cardmaster;
-    }
-
-    public void setCardmaster(String cardmaster) {
-        this.cardmaster = cardmaster;
-    }
-
-    public String getIdentityno() {
-        return identityno;
-    }
-
-    public void setIdentityno(String identityno) {
-        this.identityno = identityno;
-    }
-
-    public String getIdentitypicfront() {
-        return identitypicfront;
-    }
-
-    public void setIdentitypicfront(String identitypicfront) {
-        this.identitypicfront = identitypicfront;
-    }
-
-    public String getIdentitypicback() {
-        return identitypicback;
-    }
-
-    public void setIdentitypicback(String identitypicback) {
-        this.identitypicback = identitypicback;
-    }
-
-    public String getCmaddress() {
-        return cmaddress;
-    }
-
-    public void setCmaddress(String cmaddress) {
-        this.cmaddress = cmaddress;
-    }
-
-    public String getCmtel() {
-        return cmtel;
-    }
-
-    public void setCmtel(String cmtel) {
-        this.cmtel = cmtel;
-    }
-
-    public String getCmseccontact() {
-        return cmseccontact;
-    }
-
-    public void setCmseccontact(String cmseccontact) {
-        this.cmseccontact = cmseccontact;
-    }
-
-    public String getSalesman() {
-        return salesman;
-    }
-
-    public void setSalesman(String salesman) {
-        this.salesman = salesman;
-    }
-
-    public String getMemos() {
-        return memos;
-    }
-
-    public void setMemos(String memos) {
-        this.memos = memos;
-    }
-
-*/
-    public String getCardList() {
-        return cardList;
+    public String getCardsList() {
+        return cardsList;
     }
 
     public String Init() throws Exception {
-        cardList = new CardList().generateHTMLString();
-        return CARDMANAGER;
+        cardsList = new CardList().generateHTMLString();
+        return CARDSMANAGER;
     }
 
-    public String AddCard() throws Exception {
+    public String UpdateZsf() throws Exception {
         Map map = new HashMap();
-        if (cardinfo.size()  == 0) {
+        if(newid.equals(""))
+            map.put("errorMessage", getText("addrates.ratesError"));
+        else
+        {
+            try {
+                //从本地硬盘读取一张读片
+                if (null != filesfz1) {
+                    filesfz1.renameTo(new File(Readconfig.getfileds("imgpath"),newid+"_1.jpg"));
+                }
+                if (null != filesfz2) {
+                    filesfz1.renameTo(new File(Readconfig.getfileds("imgpath"),newid+"_1."+ filesfz1.getName().split(".")[1]));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        map.put("cardsList", new AssetList().generateHTMLString());
+        return AjaxActionComplete(map);
+    }
+    public String AddCards() throws Exception {
+        Map map = new HashMap();
+        if (cardinfo.length  == 0) {
             map.put("errorMessage", getText("addrates.ratesError"));
         }
         else {
+            Map para = new HashMap();
             try {
-                DbManager.createPosDbManager().executeUpdate("insert into cardtb(rates,enabled) values(?,?)", (HashMap<Integer, Object>) cardinfo);
-                map.put("cardList", new MCCList().generateHTMLString());
+                for (int i=0;i<cardinfo.length;i++) {
+                    System.out.print("'"+cardinfo[i]+"',");
+                    para.put(i+1, cardinfo[i] );
+                }
+                if (!DbManager.createPosDbManager().executeUpdate("insert into cardtb(inserttime,cardserial,cardno,bankname,creditamount," +
+                        "tempamount,templimitdate,useamount,billdate,pin,telpwd,tradepwd,enchashmentpwd," +
+                        "billafterdate,lastrepaymentdate,billemail,sfqy,commissioncharge,cardmaster,identityno," +
+                        "cmaddress,cmtel,cmseccontact,salesman,memos) values(?,?," +
+                        "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",(HashMap<Integer, Object>)  para))
+                    map.put("errorMessage", getText("addrates.ratesFormatError"));
+                else
+                    map.put("cardsList", new AssetList().generateHTMLString());
+                map.put("newid",para.get(3));//cardno
             }
             catch (NumberFormatException exception) {
                 map.put("errorMessage", getText("addrates.ratesFormatError"));

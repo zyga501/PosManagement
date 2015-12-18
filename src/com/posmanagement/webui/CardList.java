@@ -13,18 +13,17 @@ public class CardList {
 
         String htmlString = "";
         for (int index = 0; index < dbRet.size(); ++index) {
-            htmlString +="<tr class=\"text-c odd\" role=\"row\">"+
-                    "<td>"+ dbRet.get(index).get("MCC")+"</td>"+
-                    "<td><input type=\"checkbox\"";
-            if (dbRet.get(index).get("ENABLED").toString().compareTo("on") == 0) {
-                htmlString += "checked=\"checked\"";
+            htmlString += "<tr class=\"text-c odd\" role=\"row\">" ;
+            Object[] keystr= (Object[]) dbRet.get(index).keySet().toArray();
+            for (int jindex = 0 ; jindex < keystr.length;++jindex){
+                htmlString += "<td>" + dbRet.get(index).get(keystr[jindex]) + "</td>" ;
             }
-            htmlString += " /></td></tr>";
+            htmlString += "</tr>";
         }
         return htmlString;
     }
 
     private ArrayList<HashMap<String, Object>> fetchCardList() throws Exception {
-        return DbManager.createPosDbManager().executeSql("select * from cardtb");
+        return DbManager.createPosDbManager().executeSql("select cardno,cardmaster,cmtel,cmseccontact,salesman from cardtb");
     }
 }

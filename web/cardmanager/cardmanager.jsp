@@ -39,30 +39,11 @@
                     <table class="table table-border table-bordered table-bg table-hover table-sort">
                         <thead>
                         <tr class="text-c">
-                            <th ><s:text name="cardmanager.inserttime"/></th>
-                            <th ><s:text name="cardmanager.cardserial"/></th>
                             <th ><s:text name="cardmanager.cardno"/></th>
-                            <th ><s:text name="cardmanager.bankname"/></th>
-                            <th ><s:text name="cardmanager.creditamount"/></th>
-                            <th ><s:text name="cardmanager.tempamount"/></th>
-                            <th ><s:text name="cardmanager.templimitdate"/></th>
-                            <th ><s:text name="cardmanager.useamount"/></th>
-                            <th ><s:text name="cardmanager.billdate"/></th>
-                            <th ><s:text name="cardmanager.pin"/></th>
-                            <th ><s:text name="cardmanager.telpwd"/></th>
-                            <th ><s:text name="cardmanager.tradepwd"/></th>
-                            <th ><s:text name="cardmanager.enchashmentpwd"/></th>
-                            <th ><s:text name="cardmanager.billafterdate"/></th>
-                            <th ><s:text name="cardmanager.lastrepaymentdate"/></th>
-                            <th ><s:text name="cardmanager.billemail"/></th>
-                            <th ><s:text name="cardmanager.sfqy"/></th>
-                            <th ><s:text name="cardmanager.commissioncharge"/></th>
                             <th ><s:text name="cardmanager.cardmaster"/></th>
-                            <th ><s:text name="cardmanager.identityno"/></th>
-                            <th ><s:text name="cardmanager.identitypicfront"/></th>
-                            <th ><s:text name="cardmanager.identitypicback"/></th>
-                            <th ><s:text name="cardmanager.cmaddress"/></th>
                             <th ><s:text name="cardmanager.cmtel"/></th>
+                            <th ><s:text name="cardmanager.cmseccontact"/></th>
+                            <th ><s:text name="cardmanager.salesman"/></th>
                         </tr>
                         </thead>
                         <tbody id="cardList">

@@ -1,27 +1,27 @@
 package com.posmanagement.action;
 
 import com.posmanagement.utils.DbManager;
-import com.posmanagement.webui.CardTimeList;
+import com.posmanagement.webui.SwingTimeList;
 
 import java.sql.Time;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CardTimeAction extends AjaxActionSupport {
-    private final static String CARDTIMEMANAGER = "cardTimeManager";
+public class SwingTimeAction extends AjaxActionSupport {
+    private final static String SWINGTIMEMANAGER = "swingTimeManager";
 
-    private String cardTimeList;
-    private String cardTime;
+    private String swingTimeList;
+    private String swingTime;
     private String startTime;
     private String endTime;
     private String timeEnabled;
 
-    public String getCardTimeList() {
-        return cardTimeList;
+    public String getSwingTimeList() {
+        return swingTimeList;
     }
 
-    public void setCardTime(String _cardTime) {
-        cardTime = _cardTime;
+    public void setSwingTime(String _swingTime) {
+        swingTime = _swingTime;
     }
 
     public void setStartTime(String _startTime) {
@@ -37,23 +37,23 @@ public class CardTimeAction extends AjaxActionSupport {
     }
 
     public String Init() throws Exception {
-        cardTimeList = new CardTimeList().generateHTMLString();
-        return CARDTIMEMANAGER;
+        swingTimeList = new SwingTimeList().generateHTMLString();
+        return SWINGTIMEMANAGER;
     }
 
-    public String AddCardTime() throws Exception {
+    public String AddSwingTime() throws Exception {
         Map map = new HashMap();
-        if (cardTime.length() == 0) {
-            map.put("errorMessage", getText("addcardtime.cardTimeError"));
+        if (swingTime.length() == 0) {
+            map.put("errorMessage", getText("addswingtime.swingTimeError"));
         }
         else {
             try {
                 Map parametMap = new HashMap();
-                parametMap.put(1, cardTime);
+                parametMap.put(1, swingTime);
                 Time _startTime = Time.valueOf(startTime);
                 Time _endTime = Time.valueOf(endTime);
                 if (_startTime.after(_endTime)) {
-                    map.put("errorMessage", getText("addcardtime.endTimeEarlierThanStartTime"));
+                    map.put("errorMessage", getText("addswingtime.endTimeEarlierThanStartTime"));
                     return AjaxActionComplete(map);
                 }
                 parametMap.put(2, _startTime);
@@ -62,11 +62,11 @@ public class CardTimeAction extends AjaxActionSupport {
                     parametMap.put(4, new String("on"));
                 else
                     parametMap.put(4, new String("off"));
-                DbManager.createPosDbManager().executeUpdate("insert into cardtimetb(cardTime,startTime,endTime,enabled) values(?,?,?,?)", (HashMap<Integer, Object>) parametMap);
-                map.put("cardTimeList", new CardTimeList().generateHTMLString());
+                DbManager.createPosDbManager().executeUpdate("insert into swingtimetb(swingTime,startTime,endTime,enabled) values(?,?,?,?)", (HashMap<Integer, Object>) parametMap);
+                map.put("swingTimeList", new SwingTimeList().generateHTMLString());
             }
             catch (IllegalArgumentException illegalException) {
-                map.put("errorMessage", getText("addcardtime.timeFormatError"));
+                map.put("errorMessage", getText("addswingtime.timeFormatError"));
             }
         }
 

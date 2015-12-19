@@ -12,6 +12,7 @@ public class PosServerAction extends AjaxActionSupport {
     private String posServerList;
     private String posServer;
     private String posServerEnabled;
+    private String uiMode;
 
     public String getPosServerList() {
         return posServerList;
@@ -25,9 +26,25 @@ public class PosServerAction extends AjaxActionSupport {
         posServerEnabled = _posServerEnabled;
     }
 
+    public void setUiMode(String _uiMode) {
+        uiMode = _uiMode;
+    }
+
     public String Init() throws Exception {
-        posServerList = new PosServerList().generateHTMLString();
+        posServerList = new PosServerList(PosServerList.UIMode.TABLELIST).generateHTMLString();
         return POSSERVERMANAGER;
+    }
+
+    public String FetchPosServerList() throws Exception {
+        Map map = new HashMap();
+        if (uiMode != null && uiMode.compareTo("SELECTLIST") == 0) {
+            map.put("posServerList", new PosServerList(PosServerList.UIMode.SELECTLIST).generateHTMLString());
+        }
+        else {
+            map.put("posServerList", new PosServerList(PosServerList.UIMode.TABLELIST).generateHTMLString());
+        }
+
+        return AjaxActionComplete(map);
     }
 
     public String AddPosServer() throws Exception {
@@ -43,7 +60,7 @@ public class PosServerAction extends AjaxActionSupport {
             else
                 parametMap.put(2, new String("off"));
             DbManager.createPosDbManager().executeUpdate("insert into posservertb(servername,enabled) values(?,?)", (HashMap<Integer, Object>) parametMap);
-            map.put("posServerList", new PosServerList().generateHTMLString());
+            map.put("posServerList", new PosServerList(PosServerList.UIMode.TABLELIST).generateHTMLString());
         }
 
         return AjaxActionComplete(map);

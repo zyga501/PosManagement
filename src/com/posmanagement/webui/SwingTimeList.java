@@ -5,16 +5,16 @@ import com.posmanagement.utils.DbManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class CardTimeList {
+public class SwingTimeList {
     public String generateHTMLString() throws Exception {
-        ArrayList<HashMap<String, Object>> dbRet = fetchCardTimeList();
+        ArrayList<HashMap<String, Object>> dbRet = fetchSwingTimeList();
         if (dbRet.size() <= 0)
             return new String("");
 
         String htmlString = "";
         for (int index = 0; index < dbRet.size(); ++index) {
             htmlString +="<tr class=\"text-c odd\" role=\"row\">"+
-                    "<td>"+ dbRet.get(index).get("CARDTIME")+"</td>"+
+                    "<td>"+ dbRet.get(index).get("SWINGTIME")+"</td>"+
                     "<td><input type=\"time\" value=\"" + dbRet.get(index).get("STARTTIME").toString() + "\" </td>"+
                     "<td><input type=\"time\" value=\"" + dbRet.get(index).get("ENDTIME").toString() + "\" </td>"+
                     "<td><input type=\"checkbox\"";
@@ -26,7 +26,7 @@ public class CardTimeList {
         return htmlString;
     }
 
-    private ArrayList<HashMap<String, Object>> fetchCardTimeList() throws Exception {
-        return DbManager.createPosDbManager().executeSql("select * from cardtimetb");
+    private ArrayList<HashMap<String, Object>> fetchSwingTimeList() throws Exception {
+        return DbManager.createPosDbManager().executeSql("select * from swingtimetb");
     }
 }

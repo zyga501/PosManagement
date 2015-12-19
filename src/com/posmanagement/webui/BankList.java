@@ -11,8 +11,6 @@ public class BankList {
         SELECTLIST
     }
 
-    private UIMode uiMode;
-
     public BankList(UIMode _uimode) {
         uiMode = _uimode;
     }
@@ -60,4 +58,6 @@ public class BankList {
     private ArrayList<HashMap<String, Object>> fetchBankList() throws Exception {
         return DbManager.createPosDbManager().executeSql("select * from banktb order by bankid");
     }
+
+    private UIMode uiMode;
 }

@@ -59,8 +59,8 @@
         <action name="Bank!*" class="com.posmanagement.action.BankAction" method="{1}">
             <result name="bankManager">./systemmanager/bankmanager.jsp</result>
         </action>
-        <action name="CardTime!*" class="com.posmanagement.action.CardTimeAction" method="{1}">
-            <result name="cardTimeManager">./systemmanager/cardtimemanager.jsp</result>
+        <action name="SwingTime!*" class="com.posmanagement.action.SwingTimeAction" method="{1}">
+            <result name="swingTimeManager">./systemmanager/swingtimemanager.jsp</result>
         </action>
         <action name="MCC!*" class="com.posmanagement.action.MCCAction" method="{1}">
             <result name="mccManager">./systemmanager/mccmanager.jsp</result>
@@ -80,17 +80,21 @@
         <action name="PosServer!*" class="com.posmanagement.action.PosServerAction" method="{1}">
             <result name="posServerManager">./systemmanager/posservermanager.jsp</result>
         </action>
+        <action name="Rule!*" class="com.posmanagement.action.RuleAction" method="{1}">
+            <result name="ruleManager">./advancemanager/rulemanager.jsp</result>
+        </action>
         <action name="Menu!*" class="com.posmanagement.action.MenuAction" method="{1}">
             <result name="salemanManager" type="redirectAction">Saleman!Init</result>
             <result name="tellerManager" type="redirectAction">Teller!Init</result>
             <result name="bankManager" type="redirectAction">Bank!Init</result>
-            <result name="cardTimeManager" type="redirectAction">CardTime!Init</result>
+            <result name="swingTimeManager" type="redirectAction">SwingTime!Init</result>
             <result name="mccManager" type="redirectAction">MCC!Init</result>
             <result name="industryManager" type="redirectAction">Industry!Init</result>
             <result name="rateManager" type="redirectAction">Rate!Init</result>
             <result name="cardManager" type="redirectAction">Card!Init</result>
             <result name="assetManager" type="redirectAction">Asset!Init</result>
             <result name="posServerManager" type="redirectAction">PosServer!Init</result>
+            <result name="ruleManager" type="redirectAction">Rule!Init</result>
         </action>
     </package>
 </struts>

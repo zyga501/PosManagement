@@ -15,13 +15,13 @@
     <link href="../css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
     <link href="../skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
     <script type="text/javascript" src="../js/jquery/1.9.1/jquery.min.js"></script>
-    <title><s:text name="addcardtime.title" /></title>
+    <title><s:text name="addswingtime.title" /></title>
     <script type="text/javascript">
-        function addCardTime() {
+        function addSwingTime() {
             $('#Message').html("");
             $.ajax({
                 type: 'post',
-                url: 'CardTime!AddCardTime',
+                url: 'SwingTime!AddSwingTime',
                 dataType:"json",
                 data:$("form").serialize(),
                 success: function (data) {
@@ -31,8 +31,8 @@
                     }
                     else {
                         $('.input').val("");
-                        $('#Message').html("<s:text name="addcardtime.addCardSuccess" />");
-                        parent.refreshCardTimeList(json.cardTimeList);
+                        $('#Message').html("<s:text name="addswingtime.addCardSuccess" />");
+                        parent.refreshSwingTimeList(json.swingTimeList);
                     }
                 }
             })
@@ -44,25 +44,25 @@
     <form class="form form-horizontal">
         <table class="table table-border table-bordered table-bg table-hover table-sort">
             <tr class="text-c odd" role="row">
-                <td><s:text name="addcardtime.timer" /></td>
+                <td><s:text name="addswingtime.timer" /></td>
                 <td>
-                    <input id="cardTime" name="cardTime" type="text" placeholder="<s:text name="addcardtime.timer" />" class="input-text size-S">
+                    <input id="swingTime" name="swingTime" type="text" placeholder="<s:text name="addswingtime.timer" />" class="input-text size-S">
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
-                <td><s:text name="addcardtime.startTime" /></td>
+                <td><s:text name="addswingtime.startTime" /></td>
                 <td>
                     <input id="startTime" name="startTime" type="time" class="time size-S" value="<%=new Time(new Date().getTime()).toString()%>">
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
-                <td><s:text name="addcardtime.endTime" /></td>
+                <td><s:text name="addswingtime.endTime" /></td>
                 <td>
                     <input id="endTime" name="endTime" type="time" class="time size-S" value="<%=new Time(new Date().getTime()).toString()%>" >
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
-                <td><s:text name="addcardtime.enabled" /></td>
+                <td><s:text name="addswingtime.enabled" /></td>
                 <td>
                     <input id="timeEnabled" name="timeEnabled" type="checkbox" class="check-box size-S">
                 </td>
@@ -76,7 +76,7 @@
         </div>
         <div class="row">
             <div class="formControls col-8 col-offset-3" align="center">
-                <input type="button" class="btn btn-success radius size-M" value="<s:text name="addcardtime.submit" />" onclick="addCardTime()">
+                <input type="button" class="btn btn-success radius size-M" value="<s:text name="addswingtime.submit" />" onclick="addSwingTime()">
             </div>
         </div>
     </form>

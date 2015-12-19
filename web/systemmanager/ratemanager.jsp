@@ -12,36 +12,36 @@
     <link href="../css/H-ui.admin.css" rel="stylesheet" type="text/css" />
     <link href="../css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
     <link href="../skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
-    <title><s:text name="ratesmanager.title" /></title>
+    <title><s:text name="ratemanager.title" /></title>
     <script type="text/javascript">
-        function addRates(){
+        function addRate(){
             var index = layer.open({
                 type: 2,
                 title: "添加费率",area: ['310px', '220px'],
                 fix: false,
-                content: "./systemmanager/addrates.jsp"
+                content: "./systemmanager/addrate.jsp"
             });}
-        function refreshRatesList(ratesList) {
-            $('#ratesList').html(ratesList);
+        function refreshRateList(rateList) {
+            $('#rateList').html(rateList);
         }
     </script>
 </head>
 <body>
 <div align="center">
     <div class="panel panel-default" style="float: left;width: 44%">
-        <div class="panel-header"><s:text name="ratesmanager.paneltitle" /><span style="float:right;" ><a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addRates()"><s:text name="ratesmanager.add" /></a></span></div>
+        <div class="panel-header"><s:text name="ratemanager.paneltitle" /><span style="float:right;" ><a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addRate()"><s:text name="ratemanager.add" /></a></span></div>
         <div class="panel-body" id="parentIframe">
             <form>
                 <div style="height:80%; overflow:auto;">
                     <table class="table table-border table-bordered table-bg table-hover table-sort">
                         <thead>
                         <tr class="text-c">
-                            <th width="80"><s:text name="ratesmanager.rates" /></th>
-                            <th width="80"><s:text name="ratesmanager.enabled" /></th>
+                            <th width="80"><s:text name="ratemanager.rate" /></th>
+                            <th width="80"><s:text name="ratemanager.enabled" /></th>
                         </tr>
                         </thead>
-                        <tbody id="ratesList">
-                        <s:property value="ratesList" escape="false" />
+                        <tbody id="rateList">
+                        <s:property value="rateList" escape="false" />
                         </tbody>
                     </table>
                 </div>

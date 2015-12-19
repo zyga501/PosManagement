@@ -126,7 +126,7 @@
     </form>
     <form >
         <input type="hidden" id="newid" value="989">
-        <div id="upfile"  style="display: none">
+        <div id="upfile">
             <div   class="row cl" >
                 <label class="form-label col-2"><s:text name="cardmanager.identitypicfront"/></label>
                 <div class="formControls col-3"><input type="file" class="btn btn-secondary radius" value="选取图片" id="selector" name="filesfz1"  /></div>

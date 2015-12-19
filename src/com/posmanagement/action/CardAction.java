@@ -61,7 +61,7 @@ public class CardAction extends AjaxActionSupport {
     public String UpdateZsf() throws Exception {
         Map map = new HashMap();
         if(newid.equals(""))
-            map.put("errorMessage", getText("addrates.ratesError"));
+            map.put("errorMessage", getText("addrate.rateError"));
         else
         {
             try {
@@ -83,7 +83,7 @@ public class CardAction extends AjaxActionSupport {
     public String AddCard() throws Exception {
         Map map = new HashMap();
         if (cardinfo.length  == 0) {
-            map.put("errorMessage", getText("addrates.ratesError"));
+            map.put("errorMessage", getText("addrate.rateError"));
         }
         else {
             Map para = new HashMap();
@@ -97,13 +97,13 @@ public class CardAction extends AjaxActionSupport {
                         "billafterdate,lastrepaymentdate,billemail,sfqy,commissioncharge,cardmaster,identityno," +
                         "cmaddress,cmtel,cmseccontact,salesman,memos) values(?,?," +
                         "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",(HashMap<Integer, Object>)  para))
-                    map.put("errorMessage", getText("addrates.ratesFormatError"));
+                    map.put("errorMessage", getText("addrate.rateFormatError"));
                 else
                     map.put("cardList", new CardList().generateHTMLString());
                 map.put("newid",para.get(3));//cardno
             }
             catch (NumberFormatException exception) {
-                map.put("errorMessage", getText("addrates.ratesFormatError"));
+                map.put("errorMessage", getText("addrate.rateFormatError"));
             }
         }
 

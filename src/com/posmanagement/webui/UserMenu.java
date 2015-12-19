@@ -39,8 +39,6 @@ public class UserMenu {
 
         String htmlString = "";
         for (int index = 0; index < dbRet.size(); ++index) {
-            // TODO for layer3
-            // generateSubMenu()
             htmlString += generateSubMenuHtml(dbRet.get(index).get("WEBPATH").toString(), dbRet.get(index).get("MENUNAME").toString());
         }
         return htmlString;

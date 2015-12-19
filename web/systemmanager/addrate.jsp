@@ -13,13 +13,13 @@
     <link href="../css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
     <link href="../skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
     <script type="text/javascript" src="../js/jquery/1.9.1/jquery.min.js"></script>
-    <title><s:text name="addrates.title" /></title>
+    <title><s:text name="addrate.title" /></title>
     <script type="text/javascript">
-        function addRates() {
+        function addRate() {
             $('#Message').html("");
             $.ajax({
                 type: 'post',
-                url: 'Rates!AddRates',
+                url: 'Rate!AddRate',
                 dataType:"json",
                 data:$("form").serialize(),
                 success: function (data) {
@@ -29,8 +29,8 @@
                     }
                     else {
                         $('.input').val("");
-                        $('#Message').html("<s:text name="addrates.addRatesSuccess" />");
-                        parent.refreshRatesList(json.ratesList);
+                        $('#Message').html("<s:text name="addrate.addRateSuccess" />");
+                        parent.refreshRateList(json.rateList);
                     }
                 }
             })
@@ -42,15 +42,15 @@
     <form class="form form-horizontal">
         <table class="table table-border table-bordered table-bg table-hover table-sort">
             <tr class="text-c odd" role="row">
-                <td><s:text name="addrates.rates" /></td>
+                <td><s:text name="addrate.rate" /></td>
                 <td>
-                    <input id="rates" name="rates" type="text" placeholder="<s:text name="addrates.rates" />" class="input-text size-S">
+                    <input id="rate" name="rate" type="text" placeholder="<s:text name="addrate.rate" />" class="input-text size-S">
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
-                <td><s:text name="addrates.enabled" /></td>
+                <td><s:text name="addrate.enabled" /></td>
                 <td>
-                    <input id="ratesEnabled" name="ratesEnabled" type="checkbox" class="check-box size-S">
+                    <input id="rateEnabled" name="rateEnabled" type="checkbox" class="check-box size-S">
                 </td>
             </tr>
         </table>
@@ -62,7 +62,7 @@
         </div>
         <div class="row">
             <div class="formControls col-8 col-offset-3" align="center">
-                <input type="button" class="btn btn-success radius size-M" value="<s:text name="addrates.submit" />" onclick="addRates()">
+                <input type="button" class="btn btn-success radius size-M" value="<s:text name="addrate.submit" />" onclick="addRate()">
             </div>
         </div>
     </form>

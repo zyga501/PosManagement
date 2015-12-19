@@ -60,8 +60,9 @@ public class CardAction extends AjaxActionSupport {
 
     public String UpdateZsf() throws Exception {
         Map map = new HashMap();
-        if(newid.equals(""))
-            map.put("errorMessage", getText("addrate.rateError"));
+        if(newid.equals("")) {
+
+        }
         else
         {
             try {
@@ -70,7 +71,7 @@ public class CardAction extends AjaxActionSupport {
                     filesfz1.renameTo(new File(Readconfig.getfileds("imgpath"),newid+"_1.jpg"));
                 }
                 if (null != filesfz2) {
-                    filesfz1.renameTo(new File(Readconfig.getfileds("imgpath"),newid+"_1."+ filesfz1.getName().split(".")[1]));
+                    filesfz1.renameTo(new File(Readconfig.getfileds("imgpath"),newid+"_2.jpg"));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -83,7 +84,6 @@ public class CardAction extends AjaxActionSupport {
     public String AddCard() throws Exception {
         Map map = new HashMap();
         if (cardinfo.length  == 0) {
-            map.put("errorMessage", getText("addrate.rateError"));
         }
         else {
             Map para = new HashMap();
@@ -100,7 +100,7 @@ public class CardAction extends AjaxActionSupport {
                     map.put("errorMessage", getText("addrate.rateFormatError"));
                 else
                     map.put("cardList", new CardList().generateHTMLString());
-                map.put("newid",para.get(3));//cardno
+                map.put("newid",para.get(3));
             }
             catch (NumberFormatException exception) {
                 map.put("errorMessage", getText("addrate.rateFormatError"));

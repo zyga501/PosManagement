@@ -15,6 +15,7 @@ public class SwingTimeAction extends AjaxActionSupport {
     private String startTime;
     private String endTime;
     private String timeEnabled;
+    private String uiMode;
 
     public String getSwingTimeList() {
         return swingTimeList;
@@ -36,9 +37,25 @@ public class SwingTimeAction extends AjaxActionSupport {
         timeEnabled = enabled;
     }
 
+    public void setUiMode(String _uiMode) {
+        uiMode = _uiMode;
+    }
+
     public String Init() throws Exception {
-        swingTimeList = new SwingTimeList().generateHTMLString();
+        swingTimeList = new SwingTimeList(SwingTimeList.UIMode.TABLELIST).generateHTMLString();
         return SWINGTIMEMANAGER;
+    }
+
+    public String FetchSwingTimeList() throws Exception {
+        Map map = new HashMap();
+        if (uiMode != null && uiMode.compareTo("SELECTLIST") == 0) {
+            map.put("swingTimeList", new SwingTimeList(SwingTimeList.UIMode.SELECTLIST).generateHTMLString());
+        }
+        else {
+            map.put("swingTimeList", new SwingTimeList(SwingTimeList.UIMode.TABLELIST).generateHTMLString());
+        }
+
+        return AjaxActionComplete(map);
     }
 
     public String AddSwingTime() throws Exception {
@@ -63,7 +80,7 @@ public class SwingTimeAction extends AjaxActionSupport {
                 else
                     parametMap.put(4, new String("off"));
                 DbManager.createPosDbManager().executeUpdate("insert into swingtimetb(swingTime,startTime,endTime,enabled) values(?,?,?,?)", (HashMap<Integer, Object>) parametMap);
-                map.put("swingTimeList", new SwingTimeList().generateHTMLString());
+                map.put("swingTimeList", new SwingTimeList(SwingTimeList.UIMode.TABLELIST).generateHTMLString());
             }
             catch (IllegalArgumentException illegalException) {
                 map.put("errorMessage", getText("addswingtime.timeFormatError"));

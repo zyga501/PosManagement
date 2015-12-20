@@ -12,6 +12,7 @@ public class IndustryAction extends AjaxActionSupport{
     private String industryList;
     private String industryName;
     private String industryEnabled;
+    private String uiMode;
 
     public String getIndustryList() {
         return industryList;
@@ -25,9 +26,25 @@ public class IndustryAction extends AjaxActionSupport{
         industryEnabled = _industryEnabled;
     }
 
+    public void setUiMode(String _uiMode) {
+        uiMode = _uiMode;
+    }
+
     public String Init() throws Exception {
-        industryList = new IndustryList().generateHTMLString();
+        industryList = new IndustryList(IndustryList.UIMode.TABLELIST).generateHTMLString();
         return INDUSTRYMANAGER;
+    }
+
+    public String FetchIndustryList() throws Exception {
+        Map map = new HashMap();
+        if (uiMode != null && uiMode.compareTo("SELECTLIST") == 0) {
+            map.put("industryList", new IndustryList(IndustryList.UIMode.SELECTLIST).generateHTMLString());
+        }
+        else {
+            map.put("industryList", new IndustryList(IndustryList.UIMode.TABLELIST).generateHTMLString());
+        }
+
+        return AjaxActionComplete(map);
     }
 
     public String AddIndustry() throws Exception {
@@ -43,7 +60,7 @@ public class IndustryAction extends AjaxActionSupport{
             else
                 parametMap.put(2, new String("off"));
             DbManager.createPosDbManager().executeUpdate("insert into industrytb(name,enabled) values(?,?)", (HashMap<Integer, Object>) parametMap);
-            map.put("industryList", new IndustryList().generateHTMLString());
+            map.put("industryList", new IndustryList(IndustryList.UIMode.TABLELIST).generateHTMLString());
         }
 
         return AjaxActionComplete(map);

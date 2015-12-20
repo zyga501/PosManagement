@@ -19,7 +19,7 @@ public class RuleList {
                     "<td>"+ dbRet.get(index).get("POSSERVER")+"</td>"+
                     "<td>"+ dbRet.get(index).get("MINSWINGNUM")+"</td>"+
                     "<td>"+ dbRet.get(index).get("MAXSWINGNUM")+"</td>"+
-                    "<td>"+ dbRet.get(index).get("SWINGINTERVAL")+"</td>"+
+                    "<td>"+ dbRet.get(index).get("SWINGTIME")+"</td>"+
                     "<td>"+ dbRet.get(index).get("MINSWINGMONEY")+"</td>"+
                     "<td>"+ dbRet.get(index).get("MAXSWINGMONEY")+"</td>"+
                     "<td>"+ dbRet.get(index).get("SWINGPERCENT")+"</td>"+

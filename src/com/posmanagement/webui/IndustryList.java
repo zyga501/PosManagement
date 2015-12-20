@@ -6,7 +6,27 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class IndustryList {
+    public enum UIMode {
+        TABLELIST,
+        SELECTLIST
+    }
+
+    public IndustryList(UIMode _uidMode) {
+        uiMode = _uidMode;
+    }
+
     public String generateHTMLString() throws Exception {
+        switch (uiMode) {
+            case TABLELIST:
+                return generateTableList();
+            case SELECTLIST:
+                return generateSelectList();
+        }
+
+        return "";
+    }
+
+    public String generateTableList() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchIndustryList();
         if (dbRet.size() <= 0)
             return new String("");
@@ -24,7 +44,26 @@ public class IndustryList {
         return htmlString;
     }
 
+    public String generateSelectList() throws Exception {
+        ArrayList<HashMap<String, Object>> dbRet = fetchIndustryList();
+        if (dbRet.size() <= 0)
+            return new String("");
+
+        String htmlString = "";
+        for (int index = 0; index < dbRet.size(); ++index) {
+            if (dbRet.get(index).get("ENABLED").toString().compareTo("on") == 0) {
+                htmlString +="<option " +
+                        "value=\""+dbRet.get(index).get("ID")+"\">"+
+                        dbRet.get(index).get("NAME")+"</option>";
+            }
+        }
+
+        return htmlString;
+    }
+
     private ArrayList<HashMap<String, Object>> fetchIndustryList() throws Exception {
         return DbManager.createPosDbManager().executeSql("select * from industrytb");
     }
+
+    private UIMode uiMode;
 }

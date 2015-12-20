@@ -15,10 +15,10 @@
     <script type="text/javascript" src="../js/jquery/1.9.1/jquery.min.js"></script>
     <title><s:text name="addasset.title" /></title>
     <script type="text/javascript">
-        function addAsset() {
+        function addRule() {
             $.ajax({
                 type: 'post',
-                url: 'Rule!addRule',
+                url: 'Rule!AddRule',
                 dataType:"json",
                 data:$("form").serialize(),
                 success: function (data) {
@@ -29,7 +29,7 @@
                     else {
                         $('.input').val("");
                         $('#Message').html("<s:text name="addasset.addassetSuccess" />");
-                        parent.refreshAssetList(json.assetList);
+                        parent.refreshRuleList(json.ruleList);
                     }
                 }
             })
@@ -61,9 +61,65 @@
             });
         }
 
+        function fetchSwingTimeList() {
+            $.ajax({
+                type: 'post',
+                url: 'SwingTime!FetchSwingTimeList',
+                data: "uiMode=SELECTLIST",
+                dataType : "json",
+                success: function(data) {
+                    var json = eval("(" + data + ")");
+                    $("#swingTime").html(json.swingTimeList);
+                }
+            });
+        }
+
+        function fetchIndustryList() {
+            $.ajax({
+                type: 'post',
+                url: 'Industry!FetchIndustryList',
+                data: "uiMode=SELECTLIST",
+                dataType : "json",
+                success: function(data) {
+                    var json = eval("(" + data + ")");
+                    $("#industryName").html(json.industryList);
+                }
+            });
+        }
+
+        function fetchRateList() {
+            $.ajax({
+                type: 'post',
+                url: 'Rate!FetchRateList',
+                data: "uiMode=SELECTLIST",
+                dataType : "json",
+                success: function(data) {
+                    var json = eval("(" + data + ")");
+                    $("#rate").html(json.rateList);
+                }
+            });
+        }
+
+        function fetchMCCList() {
+            $.ajax({
+                type: 'post',
+                url: 'MCC!FetchMCCList',
+                data: "uiMode=SELECTLIST",
+                dataType : "json",
+                success: function(data) {
+                    var json = eval("(" + data + ")");
+                    $("#mcc").html(json.mccList);
+                }
+            });
+        }
+
         $(function(){
             fetchBankList();
             fetchPosServerList();
+            fetchSwingTimeList();
+            fetchIndustryList();
+            fetchRateList();
+            fetchMCCList();
         })
     </script>
 </head>
@@ -94,38 +150,119 @@
             <tr class="text-c odd" role="row">
                 <td><s:text name="addrule.maxswingnum" /></td>
                 <td>
-                    <input id="cardCode" name="cardCode" type="text" placeholder="<s:text name="addrule.maxswingnum" />" class="input-text size-S">
+                    <input id="maxSwingNum" name="maxSwingNum" type="text" placeholder="<s:text name="addrule.maxswingnum" />" class="input-text size-S">
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
-                <td><s:text name="addrule.posserver" /></td>
+                <td><s:text name="addrule.swingtime" /></td>
                 <td>
-                    <select id="swingTime" name="posServer">
+                    <select id="swingTime" name="swingTime">
                     </select>
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
-                <td><s:text name="addrule.signpwd" /></td>
+                <td><s:text name="addrule.minswingmoney" /></td>
                 <td>
-                    <input id="signPwd" name="signPwd" type="text" placeholder="<s:text name="addrule.signpwd" />" class="input-text size-S">
+                    <input id="minSwingMoney" name="minSwingMoney" type="text" placeholder="<s:text name="addrule.minswingmoney" />" class="input-text size-S">
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
-                <td><s:text name="addrule.cashpwd" /></td>
+                <td><s:text name="addrule.maxswingmoney" /></td>
                 <td>
-                    <input id="cashPwd" name="cashPwd" type="text" placeholder="<s:text name="addrule.cashpwd" />" class="input-text size-S">
+                    <input id="maxSwingMoney" name="maxSwingMoney" type="text" placeholder="<s:text name="addrule.maxswingmoney" />" class="input-text size-S">
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
-                <td><s:text name="addrule.transferpwd" /></td>
+                <td><s:text name="addrule.swingpercent" /></td>
                 <td>
-                    <input id="transferPwd" name="transferPwd" type="text" placeholder="<s:text name="addrule.transferpwd" />" class="input-text size-S">
+                    <input id="swingPercent" name="swingPercent" type="text" placeholder="<s:text name="addrule.swingpercent" />" class="input-text size-S">
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
-                <td><s:text name="addrule.atmcashpwd" /></td>
+                <td><s:text name="addrule.industryname" /></td>
                 <td>
-                    <input id="atmCashPwd" name="atmCashPwd" type="text" placeholder="<s:text name="addrule.atmcashpwd" />" class="input-text size-S">
+                    <select id="industryName" name="industryName">
+                    </select>
+                </td>
+            </tr>
+            <tr class="text-c odd" role="row">
+                <td><s:text name="addrule.industryfre" /></td>
+                <td>
+                    <input id="industryFre" name="industryFre" type="text" placeholder="<s:text name="addrule.industryfre" />" class="input-text size-S">
+                </td>
+            </tr>
+            <tr class="text-c odd" role="row">
+                <td><s:text name="addrule.industryinterval" /></td>
+                <td>
+                    <input id="industryInterval" name="industryInterval" type="text" placeholder="<s:text name="addrule.industryinterval" />" class="input-text size-S">
+                </td>
+            </tr>
+            <tr class="text-c odd" role="row">
+                <td><s:text name="addrule.rate" /></td>
+                <td>
+                    <select id="rate" name="rate">
+                    </select>
+                </td>
+            </tr>
+            <tr class="text-c odd" role="row">
+                <td><s:text name="addrule.ratefre" /></td>
+                <td>
+                    <input id="rateFre" name="rateFre" type="text" placeholder="<s:text name="addrule.ratefre" />" class="input-text size-S">
+                </td>
+            </tr>
+            <tr class="text-c odd" role="row">
+                <td><s:text name="addrule.rateinterval" /></td>
+                <td>
+                    <input id="rateInterval" name="rateInterval" type="text" placeholder="<s:text name="addrule.rateinterval" />" class="input-text size-S">
+                </td>
+            </tr>
+            <tr class="text-c odd" role="row">
+                <td><s:text name="addrule.mcc" /></td>
+                <td>
+                    <select id="mcc" name="mcc">
+                    </select>
+                </td>
+            </tr>
+            <tr class="text-c odd" role="row">
+                <td><s:text name="addrule.mccfre" /></td>
+                <td>
+                    <input id="mccFre" name="mccFre" type="text" placeholder="<s:text name="addrule.mccfre" />" class="input-text size-S">
+                </td>
+            </tr>
+            <tr class="text-c odd" role="row">
+                <td><s:text name="addrule.mccinterval" /></td>
+                <td>
+                    <input id="mccInterval" name="mccInterval" type="text" placeholder="<s:text name="addrule.mccinterval" />" class="input-text size-S">
+                </td>
+            </tr>
+            <tr class="text-c odd" role="row">
+                <td><s:text name="addrule.usefre" /></td>
+                <td>
+                    <input id="useFre" name="useFre" type="text" placeholder="<s:text name="addrule.usefre" />" class="input-text size-S">
+                </td>
+            </tr>
+            <tr class="text-c odd" role="row">
+                <td><s:text name="addrule.useinterval" /></td>
+                <td>
+                    <input id="useInterval" name="useInterval" type="text" placeholder="<s:text name="addrule.useinterval" />" class="input-text size-S">
+                </td>
+            </tr>
+            <tr class="text-c odd" role="row">
+                <td><s:text name="addrule.ruleusefre" /></td>
+                <td>
+                    <input id="ruleUseFre" name="ruleUseFre" type="text" placeholder="<s:text name="addrule.ruleusefre" />" class="input-text size-S">
+                </td>
+            </tr>
+            <tr class="text-c odd" role="row">
+                <td><s:text name="addrule.ruleuseinterval" /></td>
+                <td>
+                    <input id="ruleUseInterval" name="ruleUseInterval" type="text" placeholder="<s:text name="addrule.ruleuseinterval" />" class="input-text size-S">
+                </td>
+            </tr>
+            <tr class="text-c odd" role="row">
+                <td><s:text name="addrule.status" /></td>
+                <td>
+                    <input id="status" name="status" type="checkbox" class="check-box size-S">
                 </td>
             </tr>
         </table>

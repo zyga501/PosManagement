@@ -12,6 +12,7 @@ public class MCCAction extends AjaxActionSupport {
     private String mccList;
     private String mccCode;
     private String mccEnabled;
+    private String uiMode;
 
     public String getMccList() {
         return mccList;
@@ -25,9 +26,25 @@ public class MCCAction extends AjaxActionSupport {
         mccEnabled = _mccEnabled;
     }
 
+    public void setUiMode(String _uiMode) {
+        uiMode = _uiMode;
+    }
+
     public String Init() throws Exception{
-        mccList = new MCCList().generateHTMLString();
+        mccList = new MCCList(MCCList.UIMode.TABLELIST).generateHTMLString();
         return MCCMANAGER;
+    }
+
+    public String FetchMCCList() throws Exception {
+        Map map = new HashMap();
+        if (uiMode != null && uiMode.compareTo("SELECTLIST") == 0) {
+            map.put("mccList", new MCCList(MCCList.UIMode.SELECTLIST).generateHTMLString());
+        }
+        else {
+            map.put("mccList", new MCCList(MCCList.UIMode.TABLELIST).generateHTMLString());
+        }
+
+        return AjaxActionComplete(map);
     }
 
     public String AddMCC() throws Exception {
@@ -45,7 +62,7 @@ public class MCCAction extends AjaxActionSupport {
                 else
                     parametMap.put(2, new String("off"));
                 DbManager.createPosDbManager().executeUpdate("insert into mcctb(mcc,enabled) values(?,?)", (HashMap<Integer, Object>) parametMap);
-                map.put("mccList", new MCCList().generateHTMLString());
+                map.put("mccList", new MCCList(MCCList.UIMode.TABLELIST).generateHTMLString());
             }
             catch (NumberFormatException exception) {
                 map.put("errorMessage", getText("addmcc.mccCodeFormatError"));

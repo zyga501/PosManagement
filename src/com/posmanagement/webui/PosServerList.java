@@ -51,9 +51,11 @@ public class PosServerList {
 
         String htmlString = "";
         for (int index = 0; index < dbRet.size(); ++index) {
-            htmlString +="<option " +
-                    "value=\""+dbRet.get(index).get("ID")+"\">"+
-                    dbRet.get(index).get("SERVERNAME")+"</option>";
+            if (dbRet.get(index).get("ENABLED").toString().compareTo("on") == 0) {
+                htmlString +="<option " +
+                        "value=\""+dbRet.get(index).get("ID")+"\">"+
+                        dbRet.get(index).get("SERVERNAME")+"</option>";
+            }
         }
 
         return htmlString;

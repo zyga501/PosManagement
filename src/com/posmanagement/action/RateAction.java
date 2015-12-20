@@ -12,6 +12,7 @@ public class RateAction extends AjaxActionSupport {
     private String rateList;
     private String rate;
     private String rateEnabled;
+    private String uiMode;
 
     public String getRateList() {
         return rateList;
@@ -25,9 +26,25 @@ public class RateAction extends AjaxActionSupport {
         rateEnabled = _rateEnabled;
     }
 
+    public void setUiMode(String _uiMode) {
+        uiMode = _uiMode;
+    }
+
     public String Init() throws Exception {
-        rateList = new RateList().generateHTMLString();
+        rateList = new RateList(RateList.UIMode.TABLELIST).generateHTMLString();
         return RATEMANAGER;
+    }
+
+    public String FetchRateList() throws Exception {
+        Map map = new HashMap();
+        if (uiMode != null && uiMode.compareTo("SELECTLIST") == 0) {
+            map.put("rateList", new RateList(RateList.UIMode.SELECTLIST).generateHTMLString());
+        }
+        else {
+            map.put("rateList", new RateList(RateList.UIMode.TABLELIST).generateHTMLString());
+        }
+
+        return AjaxActionComplete(map);
     }
 
     public String AddRate() throws Exception {
@@ -45,7 +62,7 @@ public class RateAction extends AjaxActionSupport {
                 else
                     parametMap.put(2, new String("off"));
                 DbManager.createPosDbManager().executeUpdate("insert into ratetb(rate,enabled) values(?,?)", (HashMap<Integer, Object>) parametMap);
-                map.put("rateList", new RateList().generateHTMLString());
+                map.put("rateList", new RateList(RateList.UIMode.TABLELIST).generateHTMLString());
             }
             catch (NumberFormatException exception) {
                 map.put("errorMessage", getText("addrate.rateFormatError"));

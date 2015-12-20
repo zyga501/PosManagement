@@ -41,7 +41,7 @@
                             <th><s:text name="rulemanager.posserver" /></th>
                             <th><s:text name="rulemanager.minswingnum" /></th>
                             <th><s:text name="rulemanager.maxswingnum" /></th>
-                            <th><s:text name="rulemanager.swinginterval" /></th>
+                            <th><s:text name="rulemanager.swingtime" /></th>
                             <th><s:text name="rulemanager.minswingmoney" /></th>
                             <th><s:text name="rulemanager.maxswingmoney" /></th>
                             <th><s:text name="rulemanager.swingpercent" /></th>

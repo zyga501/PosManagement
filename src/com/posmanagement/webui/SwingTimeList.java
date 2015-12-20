@@ -1,6 +1,6 @@
 package com.posmanagement.webui;
 
-import com.posmanagement.utils.DbManager;
+import com.posmanagement.utils.PosDbManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,7 +64,7 @@ public class SwingTimeList {
     }
 
     private ArrayList<HashMap<String, Object>> fetchSwingTimeList() throws Exception {
-        return DbManager.createPosDbManager().executeSql("select * from swingtimetb");
+        return PosDbManager.executeSql("select * from swingtimetb");
     }
 
     private UIMode uiMode;

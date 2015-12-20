@@ -1,6 +1,6 @@
 package com.posmanagement.action;
 
-import com.posmanagement.utils.DbManager;
+import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.utils.Readconfig;
 import com.posmanagement.webui.CardList;
 
@@ -92,7 +92,7 @@ public class CardAction extends AjaxActionSupport {
                     System.out.print("'"+cardinfo[i]+"',");
                     para.put(i+1, cardinfo[i] );
                 }
-                if (!DbManager.createPosDbManager().executeUpdate("insert into cardtb(inserttime,cardserial,cardno,bankname,creditamount," +
+                if (!PosDbManager.executeUpdate("insert into cardtb(inserttime,cardserial,cardno,bankname,creditamount," +
                         "tempamount,templimitdate,useamount,billdate,pin,telpwd,tradepwd,enchashmentpwd," +
                         "billafterdate,lastrepaymentdate,billemail,sfqy,commissioncharge,cardmaster,identityno," +
                         "cmaddress,cmtel,cmseccontact,salesman,memos) values(?,?," +

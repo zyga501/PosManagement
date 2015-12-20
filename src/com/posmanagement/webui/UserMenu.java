@@ -1,6 +1,6 @@
 package com.posmanagement.webui;
 
-import com.posmanagement.utils.DbManager;
+import com.posmanagement.utils.PosDbManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -72,7 +72,7 @@ public class UserMenu {
     private ArrayList<HashMap<String, Object>> fetchMenuByPid(int pid) throws Exception {
         Map parametMap = new HashMap();
         parametMap.put(1,pid);
-        return DbManager.createPosDbManager().executeSql("select * from menutree where preid=? order by menuorder", (HashMap<Integer, Object>)parametMap);
+        return PosDbManager.executeSql("select * from menutree where preid=? order by menuorder", (HashMap<Integer, Object>)parametMap);
     }
 
     private int userID_; // TODO for role

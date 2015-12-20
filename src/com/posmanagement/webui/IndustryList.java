@@ -1,6 +1,6 @@
 package com.posmanagement.webui;
 
-import com.posmanagement.utils.DbManager;
+import com.posmanagement.utils.PosDbManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,7 +62,7 @@ public class IndustryList {
     }
 
     private ArrayList<HashMap<String, Object>> fetchIndustryList() throws Exception {
-        return DbManager.createPosDbManager().executeSql("select * from industrytb");
+        return PosDbManager.executeSql("select * from industrytb");
     }
 
     private UIMode uiMode;

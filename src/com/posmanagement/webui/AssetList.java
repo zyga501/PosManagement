@@ -1,6 +1,6 @@
 package com.posmanagement.webui;
 
-import com.posmanagement.utils.DbManager;
+import com.posmanagement.utils.PosDbManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +28,6 @@ public class AssetList {
     }
 
     private ArrayList<HashMap<String, Object>> fetchAssetList() throws Exception {
-        return DbManager.createPosDbManager().executeSql("select * from assettb");
+        return PosDbManager.executeSql("select * from assettb");
     }
 }

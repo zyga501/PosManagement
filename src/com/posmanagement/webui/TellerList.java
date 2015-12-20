@@ -1,6 +1,6 @@
 package com.posmanagement.webui;
 
-import com.posmanagement.utils.DbManager;
+import com.posmanagement.utils.PosDbManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,7 +46,7 @@ public class TellerList {
                 parametMap.put(1, salemanID);
             }
         }
-        return DbManager.createPosDbManager().executeSql(sql, (HashMap<Integer, Object>)parametMap);
+        return PosDbManager.executeSql(sql, (HashMap<Integer, Object>)parametMap);
     }
 
     private String salemanID;

@@ -1,6 +1,6 @@
 package com.posmanagement.action;
 
-import com.posmanagement.utils.DbManager;
+import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.webui.BankList;
 
 import java.util.ArrayList;
@@ -56,13 +56,13 @@ public class BankAction extends AjaxActionSupport {
         else {
             Map parametMap = new HashMap();
             parametMap.put(1, bankCode);
-            ArrayList dbRet = DbManager.createPosDbManager().executeSql("select * from banktb where bankcode=?", (HashMap<Integer, Object>) parametMap);
+            ArrayList dbRet = PosDbManager.executeSql("select * from banktb where bankcode=?", (HashMap<Integer, Object>) parametMap);
             if (dbRet.size() >= 1) {
                 map.put("errorMessage", getText("addbank.bankCodeConfilct"));
             }
             else {
                 parametMap.put(2, bankName);
-                DbManager.createPosDbManager().executeUpdate("insert into banktb(bankcode,bankname) values(?,?)", (HashMap<Integer, Object>) parametMap);
+                PosDbManager.executeUpdate("insert into banktb(bankcode,bankname) values(?,?)", (HashMap<Integer, Object>) parametMap);
                 map.put("bankList", new BankList(BankList.UIMode.TABLELIST).generateHTMLString());
             }
         }

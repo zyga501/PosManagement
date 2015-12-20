@@ -1,6 +1,6 @@
 package com.posmanagement.action;
 
-import com.posmanagement.utils.DbManager;
+import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.webui.SalemanInfo;
 import com.posmanagement.webui.SalemanList;
 import com.posmanagement.webui.TellerList;
@@ -63,7 +63,7 @@ public class SalemanAction extends AjaxActionSupport {
             Map parametMap = new HashMap<Integer, Object>();
             parametMap.put(1, salemanID);
             parametMap.put(2, tellerID);
-            if (!DbManager.createPosDbManager().executeUpdate("update tellertb set salesman=? where uid=?", (HashMap<Integer, Object>) parametMap)) {
+            if (!PosDbManager.executeUpdate("update tellertb set salesman=? where uid=?", (HashMap<Integer, Object>) parametMap)) {
                 map.put("ErrorMessage", getText("SalemanAction.AddTellerError"));
             }
             map.put("tellerList", new TellerList(salemanID).generateHTMLString());

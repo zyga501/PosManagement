@@ -1,6 +1,6 @@
 package com.posmanagement.webui;
 
-import com.posmanagement.utils.DbManager;
+import com.posmanagement.utils.PosDbManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,7 +62,7 @@ public class RateList {
     }
 
     private ArrayList<HashMap<String, Object>> fetchRateList() throws Exception {
-        return DbManager.createPosDbManager().executeSql("select * from ratetb");
+        return PosDbManager.executeSql("select * from ratetb");
     }
 
     private UIMode uiMode;

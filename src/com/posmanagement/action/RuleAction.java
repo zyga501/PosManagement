@@ -1,6 +1,6 @@
 package com.posmanagement.action;
 
-import com.posmanagement.utils.DbManager;
+import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.webui.RuleList;
 
 import java.util.HashMap;
@@ -52,7 +52,7 @@ public class RuleAction extends AjaxActionSupport {
         }
 
         Map map = new HashMap();
-        if (DbManager.createPosDbManager().executeUpdate("insert into ruletb(ruleno,bankname,posserver,minswingnum,maxswingnum,swingtime," +
+        if (PosDbManager.executeUpdate("insert into ruletb(ruleno,bankname,posserver,minswingnum,maxswingnum,swingtime," +
                 "minswingmoney,maxswingmoney,swingpercent,industryname,industryfre,industryinterval,rate,ratefre,rateinterval,mcc," +
                 "mccfre,mccinterval,usefre,useinterval,ruleusefre,ruleuseinterval,status)" +
                 "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>)parametMap)) {

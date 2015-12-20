@@ -1,6 +1,6 @@
 package com.posmanagement.webui;
 
-import com.posmanagement.utils.DbManager;
+import com.posmanagement.utils.PosDbManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,6 +46,6 @@ public class RuleList {
     }
 
     private ArrayList<HashMap<String, Object>> fetchRuleList() throws Exception {
-        return DbManager.createPosDbManager().executeSql("select * from ruletb");
+        return PosDbManager.executeSql("select * from ruletb");
     }
 }

@@ -1,6 +1,6 @@
 package com.posmanagement.webui;
 
-import com.posmanagement.utils.DbManager;
+import com.posmanagement.utils.PosDbManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,6 +24,6 @@ public class CardList {
     }
 
     private ArrayList<HashMap<String, Object>> fetchCardList() throws Exception {
-        return DbManager.createPosDbManager().executeSql("select cardno,cardmaster,cmtel,cmseccontact,salesman from cardtb");
+        return PosDbManager.executeSql("select cardno,cardmaster,cmtel,cmseccontact,salesman from cardtb");
     }
 }

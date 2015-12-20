@@ -1,8 +1,8 @@
 package com.posmanagement.action;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.posmanagement.utils.DbManager;
 import com.posmanagement.utils.LogManager;
+import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.webui.SalemanList;
 import com.posmanagement.webui.TellerList;
 import com.posmanagement.webui.UserMenu;
@@ -112,7 +112,7 @@ public class UserAction extends AjaxActionSupport{
             ArrayList<HashMap<String, Object>> dbRet  = null;
             parametMap.put(1,userName);
             parametMap.put(2,userPwd);
-            dbRet = DbManager.createPosDbManager().executeSql("select * from userinfo where uname=? and upwd=?", (HashMap<Integer, Object>) parametMap);
+            dbRet = PosDbManager.executeSql("select * from userinfo where uname=? and upwd=?", (HashMap<Integer, Object>) parametMap);
             if (null == dbRet || dbRet.size() < 1){
                 loginErrorMessage = getText("UserAction.loginError");
                 return LOGINFAILURE;
@@ -154,7 +154,7 @@ public class UserAction extends AjaxActionSupport{
         try {
             Map parametMap = new HashMap();
             parametMap.put(1,session.getAttribute("userName"));
-            ArrayList<HashMap<String, Object>> dbRet = DbManager.createPosDbManager().executeSql("select * from userinfo a left outer join usertrack b on a.uid=b.uid where uname=?", (HashMap<Integer, Object>) parametMap);
+            ArrayList<HashMap<String, Object>> dbRet = PosDbManager.executeSql("select * from userinfo a left outer join usertrack b on a.uid=b.uid where uname=?", (HashMap<Integer, Object>) parametMap);
             if (null == dbRet || dbRet.size() < 1){
                 return LOGINFAILURE;
             }
@@ -178,7 +178,7 @@ public class UserAction extends AjaxActionSupport{
             parametMap.put(1,userNewPwd);
             parametMap.put(2,userPwd);
             parametMap.put(3,userName);
-            if (DbManager.createPosDbManager().executeUpdate("update userinfo set upwd=? where  upwd=? and uname=?", (HashMap<Integer, Object>) parametMap))
+            if (PosDbManager.executeUpdate("update userinfo set upwd=? where  upwd=? and uname=?", (HashMap<Integer, Object>) parametMap))
                     rtMsg = "更改成功！";
             else
                 rtMsg = "操做失败！";
@@ -200,26 +200,26 @@ public class UserAction extends AjaxActionSupport{
         if (!session.getAttribute("userName").toString().toLowerCase().equals("admin")) return AjaxActionComplete();
         Map parametMap = new HashMap<Integer, Object>();
         parametMap.put(1,userName);
-        ArrayList<HashMap<String, Object>> dbRet = DbManager.createPosDbManager().executeSql(
+        ArrayList<HashMap<String, Object>> dbRet = PosDbManager.executeSql(
                 "select 1 from userinfo where uname=?", (HashMap<Integer, Object>) parametMap);
         if (dbRet.size()>0) return AjaxActionComplete();
 
         parametMap.put(2,userPwd);
         parametMap.put(3,userNickName);
 
-        if  (!DbManager.createPosDbManager().executeUpdate("insert into userinfo(uname,upwd,unick) values(?,?,?)", (HashMap<Integer, Object>) parametMap))
+        if  (!PosDbManager.executeUpdate("insert into userinfo(uname,upwd,unick) values(?,?,?)", (HashMap<Integer, Object>) parametMap))
             return AjaxActionComplete();
-        dbRet = DbManager.createPosDbManager().executeSql(
+        dbRet = PosDbManager.executeSql(
                 "select uid from userinfo where uname=? and upwd=? and unick=?", (HashMap<Integer, Object>) parametMap);
 
         Map resultMap = new HashMap();
 
         if ("1".equals(userType)) {
-            DbManager.createPosDbManager().executeUpdate("insert into salesmantb(uid) values(" + dbRet.get(0).get("UID") + ")");
+            PosDbManager.executeUpdate("insert into salesmantb(uid) values(" + dbRet.get(0).get("UID") + ")");
             resultMap.put("userList", new SalemanList().generateHTMLString());
         }
         else if ("2".equals(userType)) {
-            DbManager.createPosDbManager().executeUpdate("insert into tellertb(uid) values(" + dbRet.get(0).get("UID") + ")");
+            PosDbManager.executeUpdate("insert into tellertb(uid) values(" + dbRet.get(0).get("UID") + ")");
             resultMap.put("userList", new TellerList().generateHTMLString());
         }
 
@@ -233,7 +233,7 @@ public class UserAction extends AjaxActionSupport{
         parametMap.put(2, new java.sql.Timestamp((now.getTime())));
         parametMap.put(3,userName);
         parametMap.put(4,userPwd);
-        if (!DbManager.createPosDbManager().executeUpdate("update userinfo set lastlocation=?,lasttime=? where uname=? and upwd=?", (HashMap<Integer, Object>) parametMap))
+        if (!PosDbManager.executeUpdate("update userinfo set lastlocation=?,lasttime=? where uname=? and upwd=?", (HashMap<Integer, Object>) parametMap))
             throw new RuntimeException();
         LogManager.getInstance().writeLoginTrack(userID, location, now.toString());
     }

@@ -1,7 +1,7 @@
 package com.posmanagement.action;
 
 import com.opensymphony.xwork2.ActionContext;
-import com.posmanagement.utils.DbManager;
+import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.utils.StringUtils;
 import com.posmanagement.webui.AssetList;
 import org.apache.struts2.ServletActionContext;
@@ -102,7 +102,7 @@ public class AssetAction extends AjaxActionSupport {
                         .get(ServletActionContext.HTTP_REQUEST);
                 HttpSession session = request.getSession(false);
                 parametMap.put(9, session.getAttribute("userID"));
-                DbManager.createPosDbManager().executeUpdate("insert into assettb(cardmaster,bankname,cardno,firstbalance,ebanksignpwd,ebankcashpwd," +
+                PosDbManager.executeUpdate("insert into assettb(cardmaster,bankname,cardno,firstbalance,ebanksignpwd,ebankcashpwd," +
                         "ebanktransferpwd,atmcashpwd,salesman) values(?,?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>)parametMap);
                 map.put("assetList", new AssetList().generateHTMLString());
             }

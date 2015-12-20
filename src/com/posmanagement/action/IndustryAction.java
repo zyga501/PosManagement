@@ -1,6 +1,6 @@
 package com.posmanagement.action;
 
-import com.posmanagement.utils.DbManager;
+import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.webui.IndustryList;
 
 import java.util.HashMap;
@@ -59,7 +59,7 @@ public class IndustryAction extends AjaxActionSupport{
                 parametMap.put(2, new String("on"));
             else
                 parametMap.put(2, new String("off"));
-            DbManager.createPosDbManager().executeUpdate("insert into industrytb(name,enabled) values(?,?)", (HashMap<Integer, Object>) parametMap);
+            PosDbManager.executeUpdate("insert into industrytb(name,enabled) values(?,?)", (HashMap<Integer, Object>) parametMap);
             map.put("industryList", new IndustryList(IndustryList.UIMode.TABLELIST).generateHTMLString());
         }
 

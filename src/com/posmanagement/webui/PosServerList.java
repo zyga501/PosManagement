@@ -1,6 +1,6 @@
 package com.posmanagement.webui;
 
-import com.posmanagement.utils.DbManager;
+import com.posmanagement.utils.PosDbManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,7 +62,7 @@ public class PosServerList {
     }
 
     private ArrayList<HashMap<String, Object>> fetchPosServerList() throws Exception {
-        return DbManager.createPosDbManager().executeSql("select * from posservertb order by id");
+        return PosDbManager.executeSql("select * from posservertb order by id");
     }
 
     private UIMode uiMode;

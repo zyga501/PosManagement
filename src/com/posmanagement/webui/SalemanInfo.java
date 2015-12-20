@@ -1,6 +1,6 @@
 package com.posmanagement.webui;
 
-import com.posmanagement.utils.DbManager;
+import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.utils.StringUtils;
 
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class SalemanInfo {
     private ArrayList<HashMap<String, Object>> fetchSalemanInfo() throws Exception {
         Map parametMap = new HashMap<Integer, Object>();
         parametMap.put(1, salemanID);
-        return DbManager.createPosDbManager().executeSql("select * from userinfo a,salesmantb b where a.uid=b.uid and b.uid=?",
+        return PosDbManager.executeSql("select * from userinfo a,salesmantb b where a.uid=b.uid and b.uid=?",
                 (HashMap<Integer, Object>) parametMap);
     }
 

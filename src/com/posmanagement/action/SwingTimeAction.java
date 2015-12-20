@@ -1,6 +1,6 @@
 package com.posmanagement.action;
 
-import com.posmanagement.utils.DbManager;
+import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.webui.SwingTimeList;
 
 import java.sql.Time;
@@ -79,7 +79,7 @@ public class SwingTimeAction extends AjaxActionSupport {
                     parametMap.put(4, new String("on"));
                 else
                     parametMap.put(4, new String("off"));
-                DbManager.createPosDbManager().executeUpdate("insert into swingtimetb(swingTime,startTime,endTime,enabled) values(?,?,?,?)", (HashMap<Integer, Object>) parametMap);
+                PosDbManager.executeUpdate("insert into swingtimetb(swingTime,startTime,endTime,enabled) values(?,?,?,?)", (HashMap<Integer, Object>) parametMap);
                 map.put("swingTimeList", new SwingTimeList(SwingTimeList.UIMode.TABLELIST).generateHTMLString());
             }
             catch (IllegalArgumentException illegalException) {

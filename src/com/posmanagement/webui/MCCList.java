@@ -6,12 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MCCList {
-    public enum UIMode {
-        TABLELIST,
-        SELECTLIST
-    }
-
-    public MCCList(UIMode _uidMode) {
+    public MCCList(WebUI.UIMode _uidMode) {
         uiMode = _uidMode;
     }
 
@@ -33,13 +28,17 @@ public class MCCList {
 
         String htmlString = "";
         for (int index = 0; index < dbRet.size(); ++index) {
-            htmlString +="<tr class=\"text-c odd\" role=\"row\">"+
-                    "<td>"+ dbRet.get(index).get("MCC")+"</td>"+
-                    "<td><input type=\"checkbox\"";
-            if (dbRet.get(index).get("ENABLED").toString().compareTo("on") == 0) {
-                htmlString += "checked=\"checked\"";
-            }
-            htmlString += " /></td></tr>";
+            htmlString += new UIContainer("tr")
+                    .addAttribute("class", "text-c odd")
+                    .addAttribute("role", "row")
+                    .addElement("td", dbRet.get(index).get("MCC").toString())
+                    .addElement(new UIContainer("td")
+                                    .addElement(
+                                    new UIContainer("input")
+                                            .addAttribute("type", "checkbox")
+                                            .addAttribute("checked", "checked", dbRet.get(index).get("ENABLED").toString().compareTo("on") == 0)
+                                    )
+                    );
         }
         return htmlString;
     }
@@ -50,11 +49,11 @@ public class MCCList {
             return new String("");
 
         String htmlString = "";
+        UIContainer uiContainer = new UIContainer();
         for (int index = 0; index < dbRet.size(); ++index) {
             if (dbRet.get(index).get("ENABLED").toString().compareTo("on") == 0) {
-                htmlString +="<option " +
-                        "value=\""+dbRet.get(index).get("MCCID")+"\">"+
-                        dbRet.get(index).get("MCC")+"</option>";
+                htmlString += uiContainer.addElement("option", dbRet.get(index).get("MCC").toString())
+                        .addAttribute("value", dbRet.get(index).get("MCCID").toString());
             }
         }
 
@@ -65,5 +64,5 @@ public class MCCList {
         return PosDbManager.executeSql("select * from mcctb");
     }
 
-    private UIMode uiMode;
+    private WebUI.UIMode uiMode;
 }

@@ -13,16 +13,17 @@ public class AssetList {
 
         String htmlString = "";
         for (int index = 0; index < dbRet.size(); ++index) {
-            htmlString +="<tr class=\"text-c odd\" role=\"row\">"+
-                    "<td>"+ dbRet.get(index).get("CARDMASTER")+"</td>" +
-                    "<td>"+ dbRet.get(index).get("BANKNAME")+"</td>" +
-                    "<td>"+ dbRet.get(index).get("CARDNO")+"</td>" +
-                    "<td>"+ dbRet.get(index).get("FIRSTBALANCE")+"</td>" +
-                    "<td>"+ dbRet.get(index).get("EBANKSIGNPWD")+"</td>" +
-                    "<td>"+ dbRet.get(index).get("EBANKCASHPWD")+"</td>" +
-                    "<td>"+ dbRet.get(index).get("EBANKTRANSFERPWD")+"</td>" +
-                    "<td>"+ dbRet.get(index).get("ATMCASHPWD")+"</td>" +
-                    "</tr>";
+            htmlString += new UIContainer("tr")
+                    .addAttribute("class", "text-c odd")
+                    .addAttribute("role", "row")
+                    .addElement("td", dbRet.get(index).get("CARDMASTER").toString())
+                    .addElement("td", dbRet.get(index).get("BANKNAME").toString())
+                    .addElement("td", dbRet.get(index).get("CARDNO").toString())
+                    .addElement("td", dbRet.get(index).get("FIRSTBALANCE").toString())
+                    .addElement("td", dbRet.get(index).get("EBANKSIGNPWD").toString())
+                    .addElement("td", dbRet.get(index).get("EBANKCASHPWD").toString())
+                    .addElement("td", dbRet.get(index).get("EBANKTRANSFERPWD").toString())
+                    .addElement("td", dbRet.get(index).get("ATMCASHPWD").toString());
         }
         return htmlString;
     }

@@ -6,12 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SwingTimeList {
-    public enum UIMode {
-        TABLELIST,
-        SELECTLIST
-    }
-
-    public SwingTimeList(UIMode _uiMode) {
+    public SwingTimeList(WebUI.UIMode _uiMode) {
         uiMode = _uiMode;
     }
 
@@ -33,15 +28,31 @@ public class SwingTimeList {
 
         String htmlString = "";
         for (int index = 0; index < dbRet.size(); ++index) {
-            htmlString +="<tr class=\"text-c odd\" role=\"row\">"+
-                    "<td>"+ dbRet.get(index).get("SWINGTIME")+"</td>"+
-                    "<td><input type=\"time\" value=\"" + dbRet.get(index).get("STARTTIME").toString() + "\" </td>"+
-                    "<td><input type=\"time\" value=\"" + dbRet.get(index).get("ENDTIME").toString() + "\" </td>"+
-                    "<td><input type=\"checkbox\"";
-            if (dbRet.get(index).get("ENABLED").toString().compareTo("on") == 0) {
-                htmlString += "checked=\"checked\"";
-            }
-            htmlString += " /></td></tr>";
+            htmlString += new UIContainer("tr")
+                    .addAttribute("class", "text-c odd")
+                    .addAttribute("role", "row")
+                    .addElement("td", dbRet.get(index).get("SWINGTIME").toString())
+                    .addElement(new UIContainer("td")
+                                    .addElement(
+                                            new UIContainer("input")
+                                                    .addAttribute("type", "time")
+                                                    .addAttribute("value", dbRet.get(index).get("STARTTIME").toString())
+                                    )
+                    )
+                    .addElement(new UIContainer("td")
+                            .addElement(
+                                    new UIContainer("input")
+                                            .addAttribute("type", "time")
+                                            .addAttribute("value", dbRet.get(index).get("ENDTIME").toString())
+                            )
+                    )
+                    .addElement(new UIContainer("td")
+                            .addElement(
+                                    new UIContainer("input")
+                                            .addAttribute("type", "checkbox")
+                                            .addAttribute("checked", "checked", dbRet.get(index).get("ENABLED").toString().compareTo("on") == 0)
+                            )
+                    );
         }
         return htmlString;
     }
@@ -52,11 +63,11 @@ public class SwingTimeList {
             return new String("");
 
         String htmlString = "";
+        UIContainer uiContainer = new UIContainer();
         for (int index = 0; index < dbRet.size(); ++index) {
             if (dbRet.get(index).get("ENABLED").toString().compareTo("on") == 0) {
-                htmlString += "<option " +
-                        "value=\"" + dbRet.get(index).get("TIMERID") + "\">" +
-                        dbRet.get(index).get("SWINGTIME") + "</option>";
+                htmlString += uiContainer.addElement("option", dbRet.get(index).get("SWINGTIME").toString())
+                        .addAttribute("value", dbRet.get(index).get("TIMERID").toString());
             }
         }
 
@@ -67,5 +78,5 @@ public class SwingTimeList {
         return PosDbManager.executeSql("select * from swingtimetb");
     }
 
-    private UIMode uiMode;
+    private WebUI.UIMode uiMode;
 }

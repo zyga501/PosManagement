@@ -2,6 +2,7 @@ package com.posmanagement.action;
 
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.webui.PosServerList;
+import com.posmanagement.webui.WebUI;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,17 +32,17 @@ public class PosServerAction extends AjaxActionSupport {
     }
 
     public String Init() throws Exception {
-        posServerList = new PosServerList(PosServerList.UIMode.TABLELIST).generateHTMLString();
+        posServerList = new PosServerList(WebUI.UIMode.TABLELIST).generateHTMLString();
         return POSSERVERMANAGER;
     }
 
     public String FetchPosServerList() throws Exception {
         Map map = new HashMap();
         if (uiMode != null && uiMode.compareTo("SELECTLIST") == 0) {
-            map.put("posServerList", new PosServerList(PosServerList.UIMode.SELECTLIST).generateHTMLString());
+            map.put("posServerList", new PosServerList(WebUI.UIMode.SELECTLIST).generateHTMLString());
         }
         else {
-            map.put("posServerList", new PosServerList(PosServerList.UIMode.TABLELIST).generateHTMLString());
+            map.put("posServerList", new PosServerList(WebUI.UIMode.TABLELIST).generateHTMLString());
         }
 
         return AjaxActionComplete(map);
@@ -60,7 +61,7 @@ public class PosServerAction extends AjaxActionSupport {
             else
                 parametMap.put(2, new String("off"));
             PosDbManager.executeUpdate("insert into posservertb(servername,enabled) values(?,?)", (HashMap<Integer, Object>) parametMap);
-            map.put("posServerList", new PosServerList(PosServerList.UIMode.TABLELIST).generateHTMLString());
+            map.put("posServerList", new PosServerList(WebUI.UIMode.TABLELIST).generateHTMLString());
         }
 
         return AjaxActionComplete(map);

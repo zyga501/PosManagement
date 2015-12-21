@@ -13,34 +13,38 @@ public class RuleList {
 
         String htmlString = "";
         for (int index = 0; index < dbRet.size(); ++index) {
-            htmlString +="<tr class=\"text-c odd\" role=\"row\">"+
-                    "<td>"+ dbRet.get(index).get("RULENO")+"</td>"+
-                    "<td>"+ dbRet.get(index).get("BANKNAME")+"</td>"+
-                    "<td>"+ dbRet.get(index).get("POSSERVER")+"</td>"+
-                    "<td>"+ dbRet.get(index).get("MINSWINGNUM")+"</td>"+
-                    "<td>"+ dbRet.get(index).get("MAXSWINGNUM")+"</td>"+
-                    "<td>"+ dbRet.get(index).get("SWINGTIME")+"</td>"+
-                    "<td>"+ dbRet.get(index).get("MINSWINGMONEY")+"</td>"+
-                    "<td>"+ dbRet.get(index).get("MAXSWINGMONEY")+"</td>"+
-                    "<td>"+ dbRet.get(index).get("SWINGPERCENT")+"</td>"+
-                    "<td>"+ dbRet.get(index).get("INDUSTRYNAME")+"</td>"+
-                    "<td>"+ dbRet.get(index).get("INDUSTRYFRE")+"</td>"+
-                    "<td>"+ dbRet.get(index).get("INDUSTRYINTERVAL")+"</td>"+
-                    "<td>"+ dbRet.get(index).get("RATE")+"</td>"+
-                    "<td>"+ dbRet.get(index).get("RATEFRE")+"</td>"+
-                    "<td>"+ dbRet.get(index).get("RATEINTERVAL")+"</td>"+
-                    "<td>"+ dbRet.get(index).get("MCC")+"</td>"+
-                    "<td>"+ dbRet.get(index).get("MCCFRE")+"</td>"+
-                    "<td>"+ dbRet.get(index).get("MCCINTERVAL")+"</td>"+
-                    "<td>"+ dbRet.get(index).get("USEFRE")+"</td>"+
-                    "<td>"+ dbRet.get(index).get("USEINTERVAL")+"</td>"+
-                    "<td>"+ dbRet.get(index).get("RULEUSEFRE")+"</td>"+
-                    "<td>"+ dbRet.get(index).get("RULEUSEINTERVAL")+"</td>"+
-                    "<td><input type=\"checkbox\"";
-            if (dbRet.get(index).get("STATUS").toString().compareTo("on") == 0) {
-                htmlString += "checked=\"checked\"";
-            }
-            htmlString += " /></td></tr>";
+            htmlString += new UIContainer("tr")
+                    .addAttribute("class", "text-c odd")
+                    .addAttribute("role", "row")
+                    .addElement("td", dbRet.get(index).get("RULENO").toString())
+                    .addElement("td", dbRet.get(index).get("BANKNAME").toString())
+                    .addElement("td", dbRet.get(index).get("POSSERVER").toString())
+                    .addElement("td", dbRet.get(index).get("MINSWINGNUM").toString())
+                    .addElement("td", dbRet.get(index).get("MAXSWINGNUM").toString())
+                    .addElement("td", dbRet.get(index).get("SWINGTIME").toString())
+                    .addElement("td", dbRet.get(index).get("MINSWINGMONEY").toString())
+                    .addElement("td", dbRet.get(index).get("MAXSWINGMONEY").toString())
+                    .addElement("td", dbRet.get(index).get("SWINGPERCENT").toString())
+                    .addElement("td", dbRet.get(index).get("INDUSTRYNAME").toString())
+                    .addElement("td", dbRet.get(index).get("INDUSTRYFRE").toString())
+                    .addElement("td", dbRet.get(index).get("INDUSTRYINTERVAL").toString())
+                    .addElement("td", dbRet.get(index).get("RATE").toString())
+                    .addElement("td", dbRet.get(index).get("RATEFRE").toString())
+                    .addElement("td", dbRet.get(index).get("RATEINTERVAL").toString())
+                    .addElement("td", dbRet.get(index).get("MCC").toString())
+                    .addElement("td", dbRet.get(index).get("MCCFRE").toString())
+                    .addElement("td", dbRet.get(index).get("MCCINTERVAL").toString())
+                    .addElement("td", dbRet.get(index).get("USEFRE").toString())
+                    .addElement("td", dbRet.get(index).get("USEINTERVAL").toString())
+                    .addElement("td", dbRet.get(index).get("RULEUSEFRE").toString())
+                    .addElement("td", dbRet.get(index).get("RULEUSEINTERVAL").toString())
+                    .addElement(new UIContainer("td")
+                            .addElement(
+                                    new UIContainer("input")
+                                            .addAttribute("type", "checkbox")
+                                            .addAttribute("checked", "checked", dbRet.get(index).get("STATUS").toString().compareTo("on") == 0)
+                            )
+                    );
         }
         return htmlString;
     }

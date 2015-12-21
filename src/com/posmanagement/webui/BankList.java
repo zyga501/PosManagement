@@ -6,12 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class BankList {
-    public enum UIMode {
-        TABLELIST,
-        SELECTLIST
-    }
-
-    public BankList(UIMode _uimode) {
+    public BankList(WebUI.UIMode _uimode) {
         uiMode = _uimode;
     }
 
@@ -33,9 +28,11 @@ public class BankList {
 
         String htmlString = "";
         for (int index = 0; index < dbRet.size(); ++index) {
-            htmlString +="<tr class=\"text-c odd\" role=\"row\">"+
-                    "<td>"+dbRet.get(index).get("BANKCODE")+"</td>"+
-                    "<td>"+dbRet.get(index).get("BANKNAME")+"</td></tr>";
+            htmlString += new UIContainer("tr")
+                    .addAttribute("class", "text-c odd")
+                    .addAttribute("role", "row")
+                    .addElement("td", dbRet.get(index).get("BANKCODE").toString())
+                    .addElement("td", dbRet.get(index).get("BANKNAME").toString());
         }
         return htmlString;
     }
@@ -46,10 +43,12 @@ public class BankList {
             return new String("");
 
         String htmlString = "";
+        UIContainer uiContainer = new UIContainer();
         for (int index = 0; index < dbRet.size(); ++index) {
-            htmlString +="<option " +
-                    "value=\""+dbRet.get(index).get("BANKCODE")+"\">"+
-                    dbRet.get(index).get("BANKNAME")+"</option>";
+            String bankCode = dbRet.get(index).get("BANKCODE").toString();
+            htmlString += uiContainer
+                    .addElement("option", dbRet.get(index).get("BANKNAME").toString())
+                    .addAttribute("value", dbRet.get(index).get("BANKCODE").toString());
         }
 
         return htmlString;
@@ -59,5 +58,5 @@ public class BankList {
         return PosDbManager.executeSql("select * from banktb order by bankid");
     }
 
-    private UIMode uiMode;
+    private WebUI.UIMode uiMode;
 }

@@ -16,7 +16,7 @@ public class SalemanInfo {
         ArrayList<HashMap<String, Object>> dbRet = fetchSalemanInfo();
         if (dbRet.size() != 1)
             return new String("");
-
+        
         String htmlString ="<form><table class=\"table table-border table-bordered table-hover\">";
         htmlString +="<tr>"+
                 "<td><input type=\"hidden\" id=\"salemanID\" name=\"salemanID\" value="+ StringUtils.convertNullableString(dbRet.get(0).get("UID"))+

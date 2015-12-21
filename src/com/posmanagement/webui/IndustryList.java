@@ -6,12 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class IndustryList {
-    public enum UIMode {
-        TABLELIST,
-        SELECTLIST
-    }
-
-    public IndustryList(UIMode _uidMode) {
+    public IndustryList(WebUI.UIMode _uidMode) {
         uiMode = _uidMode;
     }
 
@@ -33,13 +28,18 @@ public class IndustryList {
 
         String htmlString = "";
         for (int index = 0; index < dbRet.size(); ++index) {
-            htmlString +="<tr class=\"text-c odd\" role=\"row\">"+
-                    "<td>"+ dbRet.get(index).get("NAME")+"</td>"+
-                    "<td><input type=\"checkbox\"";
-            if (dbRet.get(index).get("ENABLED").toString().compareTo("on") == 0) {
-                htmlString += "checked=\"checked\"";
-            }
-            htmlString += " /></td></tr>";
+            boolean checked = dbRet.get(index).get("ENABLED").toString().compareTo("on") == 0;
+            htmlString += new UIContainer("tr")
+                    .addAttribute("class", "text-c odd")
+                    .addAttribute("role", "row")
+                    .addElement("td", dbRet.get(index).get("NAME").toString())
+                    .addElement(new UIContainer("td")
+                            .addElement(
+                                    new UIContainer("input")
+                                        .addAttribute("type", "checkbox")
+                                        .addAttribute("checked", "checked", dbRet.get(index).get("ENABLED").toString().compareTo("on") == 0)
+                            )
+                    );
         }
         return htmlString;
     }
@@ -50,11 +50,11 @@ public class IndustryList {
             return new String("");
 
         String htmlString = "";
+        UIContainer uiContainer = new UIContainer();
         for (int index = 0; index < dbRet.size(); ++index) {
             if (dbRet.get(index).get("ENABLED").toString().compareTo("on") == 0) {
-                htmlString +="<option " +
-                        "value=\""+dbRet.get(index).get("ID")+"\">"+
-                        dbRet.get(index).get("NAME")+"</option>";
+                htmlString += uiContainer.addElement("option", dbRet.get(index).get("NAME").toString())
+                        .addAttribute("value", dbRet.get(index).get("ID").toString());
             }
         }
 
@@ -65,5 +65,5 @@ public class IndustryList {
         return PosDbManager.executeSql("select * from industrytb");
     }
 
-    private UIMode uiMode;
+    private WebUI.UIMode uiMode;
 }

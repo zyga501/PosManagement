@@ -23,15 +23,19 @@ public class TellerList {
         if (dbRet.size() <= 0)
             return new String("");
 
-        String htmlString ="<table class=\"table table-border table-bordered table-hover\">";
+        UIContainer uiTable = new UIContainer("table")
+                .addAttribute("class", "table table-border table-bordered table-hover");
         for (int index = 0; index < dbRet.size(); ++index) {
-            htmlString +="<tr class=\"text-c odd\" role=\"row\" onclick=\"clickTeller('" + dbRet.get(index).get("UID") + "')\">"+
-                    "<td>"+String.valueOf(index+1)+" </td>"+
-                    "<td>"+dbRet.get(index).get("UNICK")+"</td>"+
-                    "<td>"+dbRet.get(index).get("UNAME")+"</td></tr>";
+            uiTable.addElement(new UIContainer("tr")
+                    .addAttribute("class", "text-c odd")
+                    .addAttribute("role", "row")
+                    .addAttribute("onclick", "clickTeller('" + dbRet.get(index).get("UID") + "')")
+                    .addElement("td", String.valueOf(index+1).toString())
+                    .addElement("td", dbRet.get(index).get("UNICK").toString())
+                    .addElement("td", dbRet.get(index).get("UNAME").toString()));
         }
 
-        return htmlString + "</table>";
+        return uiTable.generateUI();
     }
 
     private ArrayList<HashMap<String, Object>> fetchTellerList() throws Exception {

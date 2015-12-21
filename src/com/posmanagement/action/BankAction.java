@@ -2,6 +2,7 @@ package com.posmanagement.action;
 
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.webui.BankList;
+import com.posmanagement.webui.WebUI;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,17 +33,17 @@ public class BankAction extends AjaxActionSupport {
     }
 
     public String Init() throws Exception {
-        bankList = new BankList(BankList.UIMode.TABLELIST).generateHTMLString();
+        bankList = new BankList(WebUI.UIMode.TABLELIST).generateHTMLString();
         return BANKMANAGER;
     }
 
     public String FetchBankList() throws Exception {
         Map map = new HashMap();
         if (uiMode != null && uiMode.compareTo("SELECTLIST") == 0) {
-            map.put("bankList", new BankList(BankList.UIMode.SELECTLIST).generateHTMLString());
+            map.put("bankList", new BankList(WebUI.UIMode.SELECTLIST).generateHTMLString());
         }
         else {
-            map.put("bankList", new BankList(BankList.UIMode.TABLELIST).generateHTMLString());
+            map.put("bankList", new BankList(WebUI.UIMode.TABLELIST).generateHTMLString());
         }
 
         return AjaxActionComplete(map);
@@ -63,7 +64,7 @@ public class BankAction extends AjaxActionSupport {
             else {
                 parametMap.put(2, bankName);
                 PosDbManager.executeUpdate("insert into banktb(bankcode,bankname) values(?,?)", (HashMap<Integer, Object>) parametMap);
-                map.put("bankList", new BankList(BankList.UIMode.TABLELIST).generateHTMLString());
+                map.put("bankList", new BankList(WebUI.UIMode.TABLELIST).generateHTMLString());
             }
         }
 

@@ -13,12 +13,14 @@ public class CardList {
 
         String htmlString = "";
         for (int index = 0; index < dbRet.size(); ++index) {
-            htmlString += "<tr class=\"text-c odd\" role=\"row\">" ;
-            Object[] keystr= (Object[]) dbRet.get(index).keySet().toArray();
-            for (int jindex = 0 ; jindex < keystr.length;++jindex){
-                htmlString += "<td>" + dbRet.get(index).get(keystr[jindex]) + "</td>" ;
-            }
-            htmlString += "</tr>";
+            htmlString += new UIContainer("tr")
+                            .addAttribute("class", "text-c odd")
+                            .addAttribute("role", "row")
+                            .addElement("td", dbRet.get(index).get("CARDNO").toString())
+                            .addElement("td", dbRet.get(index).get("CARDMASTER").toString())
+                            .addElement("td", dbRet.get(index).get("CMTEL").toString())
+                            .addElement("td", dbRet.get(index).get("CMSECCONTACT").toString())
+                            .addElement("td", dbRet.get(index).get("SALESMAN").toString());
         }
         return htmlString;
     }

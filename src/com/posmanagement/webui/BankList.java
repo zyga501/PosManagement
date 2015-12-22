@@ -29,10 +29,10 @@ public class BankList {
         String htmlString = "";
         for (int index = 0; index < dbRet.size(); ++index) {
             htmlString += new UIContainer("tr")
-                    .addAttribute("class", "text-c odd")
-                    .addAttribute("role", "row")
-                    .addElement("td", dbRet.get(index).get("BANKCODE").toString())
-                    .addElement("td", dbRet.get(index).get("BANKNAME").toString());
+                            .addAttribute("class", "text-c odd")
+                            .addAttribute("role", "row")
+                            .addElement("td", dbRet.get(index).get("BANKCODE").toString())
+                            .addElement("td", dbRet.get(index).get("BANKNAME").toString());
         }
         return htmlString;
     }

@@ -45,28 +45,24 @@ public class UserMenu {
     }
 
     private String generateMainMenuHtml(String menuID, String menuName, String subMenu) {
-        String htmlString = new String();
-        htmlString += "<dl id=\"1menu-article" + menuID + "\" >";
-        htmlString += "<dt ><i class=\"Hui-iconfont\" >&#xe616;</i> "
-                + menuName
-                + "<i class=\"Hui-iconfont menu_dropdown-arrow\">&#xe6d5;</i></dt>";
-        htmlString += "<dd><ul>";
-        htmlString += subMenu;
-        htmlString += "</dd></ul></dl>";
-        return htmlString;
+        return new UIContainer("dl")
+                .addAttribute("id", "1menu-article" + menuID)
+                .addElement(new UIContainer("dt")
+                            .addElement(new UIContainer("i", "&#xe616;")
+                                        .addAttribute("class", "Hui-iconfont"))
+                            .addElement("", menuName)
+                            .addElement(new UIContainer("i", "&#xe6d5;")
+                                        .addAttribute("class", "Hui-iconfont menu_dropdown-arrow")))
+                .addElement(new UIContainer("dd")
+                            .addElement(new UIContainer("ul")
+                                        .addElement("", subMenu))).generateUI();
     }
 
     private  String generateSubMenuHtml(String webPath, String menuName) {
-        String htmlString = new String();
-        htmlString += "<li><a _href=\"";
-        if (webPath.length() == 0)
-            htmlString += "./404.jsp";
-        else
-            htmlString += webPath;
-        htmlString += "\">";
-        htmlString += menuName;
-        htmlString += "</a></li>";
-        return htmlString;
+        return new UIContainer("li")
+            .addElement(new UIContainer("a", menuName)
+                        .addAttribute("_href", "./404.jsp", webPath.length() == 0)
+                        .addAttribute("_href", webPath, webPath.length() != 0)).generateUI();
     }
 
     private ArrayList<HashMap<String, Object>> fetchMenuByPid(int pid) throws Exception {

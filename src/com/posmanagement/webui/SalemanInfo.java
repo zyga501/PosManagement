@@ -17,23 +17,63 @@ public class SalemanInfo {
         if (dbRet.size() != 1)
             return new String("");
 
-        String htmlString ="<form><table class=\"table table-border table-bordered table-hover\">";
-        htmlString +="<tr>"+
-                "<td><input type=\"hidden\" id=\"salemanID\" name=\"salemanID\" value="+ StringUtils.convertNullableString(dbRet.get(0).get("UID"))+
-                ">用户名称</td><td><input type=\"text\" name=\"salemanName\" class=\"input-text radius\" value=" +
-                StringUtils.convertNullableString(dbRet.get(0).get("UNICK"))+" </td></tr>"+
-                "<tr><td>卡号</td><td><input type=\"text\" name=\"cardID\" class=\"input-text radius\" VALUE=" +
-                StringUtils.convertNullableString(dbRet.get(0).get("SCARDNO"))+"></td></tr>"+
-                "<tr><td>状态</td><td><input type=\"text\" name=\"saleStatus\" class=\"input-text radius\" VALUE=" +
-                StringUtils.convertNullableString(dbRet.get(0).get("STATUS"))+"></td></tr>"+
-                "<tr><td>费用情况</td><td><input type=\"text\" name=\"feeQK\" class=\"input-text radius\" VALUE=" +
-                StringUtils.convertNullableString(dbRet.get(0).get("FEEQK"))+"></td></tr>"+
-                "<tr><td>支付情况</td><td><input type=\"text\" name=\"paymentTM\" class=\"input-text radius\" VALUE=" +
-                StringUtils.convertNullableString(dbRet.get(0).get("PAYMENTTM"))+"></td></tr>"+
-                "<tr><td>联系情况</td><td><input type=\"text\" name=\"contract\" class=\"input-text radius\" VALUE=" +
-                StringUtils.convertNullableString(dbRet.get(0).get("CONTRACT"))+"></td></tr>";
-
-        return htmlString+"</table></form>";
+        return new UIContainer("form")
+                            .addElement(new UIContainer("table")
+                                            .addAttribute("class", "table table-border table-bordered table-hover")
+                                            .addElement(new UIContainer("tr")
+                                                        .addElement(new UIContainer("td", "用户名称")
+                                                                    .addElement(new UIContainer("input")
+                                                                                .addAttribute("type", "hidden")
+                                                                                .addAttribute("id", "salemanID")
+                                                                                .addAttribute("name", "salemanID")
+                                                                                .addAttribute("value", StringUtils.convertNullableString(dbRet.get(0).get("UID")))))
+                                                        .addElement(new UIContainer("td")
+                                                                    .addElement(new UIContainer("input")
+                                                                                .addAttribute("type", "text")
+                                                                                .addAttribute("name", "salemanName")
+                                                                                .addAttribute("class", "input-text radius")
+                                                                                .addAttribute("value", StringUtils.convertNullableString(dbRet.get(0).get("UNICK"))))))
+                                            .addElement(new UIContainer("tr")
+                                                        .addElement("td", "卡号")
+                                                        .addElement(new UIContainer("td")
+                                                                .addElement(new UIContainer("input")
+                                                                        .addAttribute("type", "text")
+                                                                        .addAttribute("name", "cardID")
+                                                                        .addAttribute("class", "input-text radius")
+                                                                        .addAttribute("value", StringUtils.convertNullableString(dbRet.get(0).get("SCARDNO"))))))
+                                            .addElement(new UIContainer("tr")
+                                                    .addElement("td", "状态")
+                                                    .addElement(new UIContainer("td")
+                                                            .addElement(new UIContainer("input")
+                                                                    .addAttribute("type", "text")
+                                                                    .addAttribute("name", "saleStatus")
+                                                                    .addAttribute("class", "input-text radius")
+                                                                    .addAttribute("value", StringUtils.convertNullableString(dbRet.get(0).get("STATUS"))))))
+                                            .addElement(new UIContainer("tr")
+                                                    .addElement("td", "费用情况")
+                                                    .addElement(new UIContainer("td")
+                                                            .addElement(new UIContainer("input")
+                                                                    .addAttribute("type", "text")
+                                                                    .addAttribute("name", "feeQK")
+                                                                    .addAttribute("class", "input-text radius")
+                                                                    .addAttribute("value", StringUtils.convertNullableString(dbRet.get(0).get("FEEQK"))))))
+                                            .addElement(new UIContainer("tr")
+                                                    .addElement("td", "支付情况")
+                                                    .addElement(new UIContainer("td")
+                                                            .addElement(new UIContainer("input")
+                                                                    .addAttribute("type", "text")
+                                                                    .addAttribute("name", "paymentTM")
+                                                                    .addAttribute("class", "input-text radius")
+                                                                    .addAttribute("value", StringUtils.convertNullableString(dbRet.get(0).get("PAYMENTTM"))))))
+                                            .addElement(new UIContainer("tr")
+                                                    .addElement("td", "联系情况")
+                                                    .addElement(new UIContainer("td")
+                                                            .addElement(new UIContainer("input")
+                                                                    .addAttribute("type", "text")
+                                                                    .addAttribute("name", "contract")
+                                                                    .addAttribute("class", "input-text radius")
+                                                                    .addAttribute("value", StringUtils.convertNullableString(dbRet.get(0).get("CONTRACT"))))))
+                            ).generateUI();
     }
 
     private ArrayList<HashMap<String, Object>> fetchSalemanInfo() throws Exception {

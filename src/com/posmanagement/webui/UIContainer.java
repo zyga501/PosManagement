@@ -11,9 +11,11 @@ public class UIContainer {
     }
 
     public UIContainer(String element, String value) {
-        uiStart = "<" + element + " ";
+        if (element != null && element.length() > 0) {
+            uiStart = "<" + element + " ";
+            uiEnd = "</"+ element + ">";
+        }
         uiValue = value;
-        uiEnd = "</"+ element + ">";
     }
 
     public UIContainer addElement(UIContainer childObject) {
@@ -43,17 +45,23 @@ public class UIContainer {
     }
 
     public String generateUI() {
-        String uiString = uiStart;
-        uiString += parseAttributes();
-        uiString += ">";
+        String uiString = new String();
+        if (uiStart != null) {
+            uiString = uiStart;
+            uiString += parseAttributes();
+            uiString += ">";
+        }
         if (uiValue != null)
             uiString += uiValue;
-
         String childUI = "";
         for (int index = 0; index < uiElements.size(); ++index) {
             childUI += uiElements.get(index).generateUI();
         }
-        return uiString + childUI + uiEnd;
+        uiString += childUI;
+        if (uiEnd != null) {
+            uiString += uiEnd;
+        }
+        return uiString;
     }
 
     public String toString() {

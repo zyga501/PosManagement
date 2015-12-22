@@ -14,22 +14,23 @@ public class BillList {
 
         String htmlString = "";
         for (int index = 0; index < dbRet.size(); ++index) {
-            htmlString +="<tr class=\"text-c odd\" role=\"row\">"+ 
-                    "<td>"+ StringUtils.convertNullableString(dbRet.get(index).get("BANKNAME"))+"</td>" +
-                    "<td>"+ StringUtils.convertNullableString(dbRet.get(index).get("CARDNO"))+"</td>" +
-                    "<td>"+ StringUtils.convertNullableString(dbRet.get(index).get("BILLDATE"))+"</td>" +
-                    "<td>"+ StringUtils.convertNullableString(dbRet.get(index).get("LASTREPAYMENTDATE"))+"</td>" +
-                    "<td>"+ StringUtils.convertNullableString(dbRet.get(index).get("BILLAMOUNT"))+"</td>" +
-                    "<td>"+ StringUtils.convertNullableString(dbRet.get(index).get("CANUSEAMOUNT"))+"</td>" +
-                    "<td>"+ StringUtils.convertNullableString(dbRet.get(index).get("BILLHADPAY"))+"</td>" +
-                    "<td>"+ StringUtils.convertNullableString(dbRet.get(index).get("BILLNOPAY"))+"</td>" +
-                    "<td>"+ StringUtils.convertNullableString(dbRet.get(index).get("LASTPAY"))+"</td>" +
-                    "<td>"+ StringUtils.convertNullableString(dbRet.get(index).get("LASTPAYDATETM"))+"</td>" +
-                    "<td>"+ StringUtils.convertNullableString(dbRet.get(index).get("LASTTELLER"))+"</td>" +
-                    "<td>"+ StringUtils.convertNullableString(dbRet.get(index).get("SALESMAN"))+"</td>" +
-                    "<td>"+ StringUtils.convertNullableString(dbRet.get(index).get("EXPIRED"))+"</td>" +
-                    "<td>"+ StringUtils.convertNullableString(dbRet.get(index).get("STATUS"))+"</td>" +
-                    "</tr>";
+            htmlString += new UIContainer("tr")
+                                .addAttribute("class", "text-c odd")
+                                .addAttribute("role", "row")
+                                .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("BANKNAME")).toString())
+                                .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("CARDNO")).toString())
+                                .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("BILLDATE")).toString())
+                                .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("LASTREPAYMENTDATE")).toString())
+                                .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("BILLAMOUNT")).toString())
+                                .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("CANUSEAMOUNT")).toString())
+                                .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("BILLHADPAY")).toString())
+                                .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("BILLNOPAY")).toString())
+                                .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("LASTPAY")).toString())
+                                .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("LASTPAYDATETM")).toString())
+                                .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("LASTTELLER")).toString())
+                                .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("SALESMAN")).toString())
+                                .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("EXPIRED")).toString())
+                                .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("STATUS")).toString());
         }
         return htmlString;
     }

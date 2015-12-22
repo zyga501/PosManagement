@@ -14,16 +14,16 @@ public class AssetList {
         String htmlString = "";
         for (int index = 0; index < dbRet.size(); ++index) {
             htmlString += new UIContainer("tr")
-                    .addAttribute("class", "text-c odd")
-                    .addAttribute("role", "row")
-                    .addElement("td", dbRet.get(index).get("CARDMASTER").toString())
-                    .addElement("td", dbRet.get(index).get("BANKNAME").toString())
-                    .addElement("td", dbRet.get(index).get("CARDNO").toString())
-                    .addElement("td", dbRet.get(index).get("FIRSTBALANCE").toString())
-                    .addElement("td", dbRet.get(index).get("EBANKSIGNPWD").toString())
-                    .addElement("td", dbRet.get(index).get("EBANKCASHPWD").toString())
-                    .addElement("td", dbRet.get(index).get("EBANKTRANSFERPWD").toString())
-                    .addElement("td", dbRet.get(index).get("ATMCASHPWD").toString());
+                            .addAttribute("class", "text-c odd")
+                            .addAttribute("role", "row")
+                            .addElement("td", dbRet.get(index).get("CARDMASTER").toString())
+                            .addElement("td", dbRet.get(index).get("BANKNAME").toString())
+                            .addElement("td", dbRet.get(index).get("CARDNO").toString())
+                            .addElement("td", dbRet.get(index).get("FIRSTBALANCE").toString())
+                            .addElement("td", dbRet.get(index).get("EBANKSIGNPWD").toString())
+                            .addElement("td", dbRet.get(index).get("EBANKCASHPWD").toString())
+                            .addElement("td", dbRet.get(index).get("EBANKTRANSFERPWD").toString())
+                            .addElement("td", dbRet.get(index).get("ATMCASHPWD").toString());
         }
         return htmlString;
     }

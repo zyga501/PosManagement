@@ -27,12 +27,12 @@ public class TellerList {
                 .addAttribute("class", "table table-border table-bordered table-hover");
         for (int index = 0; index < dbRet.size(); ++index) {
             uiTable.addElement(new UIContainer("tr")
-                    .addAttribute("class", "text-c odd")
-                    .addAttribute("role", "row")
-                    .addAttribute("onclick", "clickTeller('" + dbRet.get(index).get("UID") + "')")
-                    .addElement("td", String.valueOf(index+1).toString())
-                    .addElement("td", dbRet.get(index).get("UNICK").toString())
-                    .addElement("td", dbRet.get(index).get("UNAME").toString()));
+                                .addAttribute("class", "text-c odd")
+                                .addAttribute("role", "row")
+                                .addAttribute("onclick", "clickTeller('" + dbRet.get(index).get("UID") + "')")
+                                .addElement("td", String.valueOf(index+1).toString())
+                                .addElement("td", dbRet.get(index).get("UNICK").toString())
+                                .addElement("td", dbRet.get(index).get("UNAME").toString()));
         }
 
         return uiTable.generateUI();

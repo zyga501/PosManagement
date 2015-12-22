@@ -42,17 +42,14 @@ public class BankList {
         if (dbRet.size() <= 0)
             return new String("");
 
-        String htmlString = "";
         UIContainer uiContainer = new UIContainer();
         uiContainer.addElement("option");
         for (int index = 0; index < dbRet.size(); ++index) {
-            String bankCode = dbRet.get(index).get("BANKCODE").toString();
-            htmlString += uiContainer
-                    .addElement("option", dbRet.get(index).get("BANKNAME").toString())
-                    .addAttribute("value", dbRet.get(index).get("BANKCODE").toString());
+            uiContainer.addElement(new UIContainer("option", dbRet.get(index).get("BANKNAME").toString())
+                                    .addAttribute("value", dbRet.get(index).get("BANKCODE").toString()));
         }
 
-        return htmlString;
+        return uiContainer.generateUI();
     }
 
     private ArrayList<HashMap<String, Object>> fetchBankList() throws Exception {

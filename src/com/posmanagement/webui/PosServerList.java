@@ -48,16 +48,15 @@ public class PosServerList {
         if (dbRet.size() <= 0)
             return new String("");
 
-        String htmlString = "";
         UIContainer uiContainer = new UIContainer();
         for (int index = 0; index < dbRet.size(); ++index) {
             if (dbRet.get(index).get("ENABLED").toString().compareTo("on") == 0) {
-                htmlString += uiContainer.addElement("option", dbRet.get(index).get("SERVERNAME").toString())
-                        .addAttribute("value", dbRet.get(index).get("ID").toString());
+                uiContainer.addElement(new UIContainer("option", dbRet.get(index).get("SERVERNAME").toString())
+                                        .addAttribute("value", dbRet.get(index).get("ID").toString()));
             }
         }
 
-        return htmlString;
+        return uiContainer.generateUI();
     }
 
     private ArrayList<HashMap<String, Object>> fetchPosServerList() throws Exception {

@@ -2,6 +2,7 @@ package com.posmanagement.action;
 
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.utils.Readconfig;
+import com.posmanagement.webui.BillList;
 import com.posmanagement.webui.CardList;
 
 import java.io.File;
@@ -15,7 +16,8 @@ public class CardAction extends AjaxActionSupport {
     private File filesfz1;
     private File filesfz2;
     private String newid ;
-    private String[] cardinfo  ;
+    private String[] cardinfo;
+    private String cardno;
 
     public String getNewid() {
         return newid;
@@ -51,6 +53,14 @@ public class CardAction extends AjaxActionSupport {
 
     public String getCardList() {
         return cardList;
+    }
+
+    public void setCardno(String cardno) {
+        this.cardno = cardno;
+    }
+
+    public String getCardno() {
+        return cardno;
     }
 
     public String Init() throws Exception {
@@ -94,7 +104,7 @@ public class CardAction extends AjaxActionSupport {
                 }
                 if (!PosDbManager.executeUpdate("insert into cardtb(inserttime,cardserial,cardno,bankname,creditamount," +
                         "tempamount,templimitdate,useamount,billdate,pin,telpwd,tradepwd,enchashmentpwd," +
-                        "billafterdate,lastrepaymentdate,billemail,sfqy,commissioncharge,cardmaster,identityno," +
+                        "billafterdate,lastrepaymentdate,billemail,status,commissioncharge,cardmaster,identityno," +
                         "cmaddress,cmtel,cmseccontact,salesman,memos) values(?,?," +
                         "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",(HashMap<Integer, Object>)  para))
                     map.put("errorMessage", getText("addrate.rateFormatError"));
@@ -107,6 +117,14 @@ public class CardAction extends AjaxActionSupport {
             }
         }
 
+        return AjaxActionComplete(map);
+    }
+
+    public String FetchMaster() throws Exception {
+        if (null==cardno || cardno.trim().equals(""))
+            return "";
+        Map map = new HashMap();
+        map.put("cardMaster", new CardList().generateMasterString(cardno));
         return AjaxActionComplete(map);
     }
 }

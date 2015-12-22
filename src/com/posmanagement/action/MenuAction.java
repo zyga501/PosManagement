@@ -12,6 +12,7 @@ public class MenuAction {
     private final static String ASSETMANAGER = "assetManager";
     private final static String POSSERVERMANAGER = "posServerManager";
     private final static String RULEMANAGER = "ruleManager";
+    private final static String BILLMANAGER = "billManager";
 
     public String ManageSaleMan() {
         return SALEMANMANAGE;
@@ -55,5 +56,9 @@ public class MenuAction {
 
     public String ManageRule() {
         return RULEMANAGER;
+    }
+
+    public String ManageBill() {
+        return BILLMANAGER;
     }
 }

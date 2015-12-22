@@ -83,6 +83,9 @@
         <action name="Rule!*" class="com.posmanagement.action.RuleAction" method="{1}">
             <result name="ruleManager">./advancemanager/rulemanager.jsp</result>
         </action>
+        <action name="Bill!*" class="com.posmanagement.action.BillAction" method="{1}">
+            <result name="billManager">./cardmanager/billmanager.jsp</result>
+        </action>
         <action name="Menu!*" class="com.posmanagement.action.MenuAction" method="{1}">
             <result name="salemanManager" type="redirectAction">Saleman!Init</result>
             <result name="tellerManager" type="redirectAction">Teller!Init</result>
@@ -95,6 +98,7 @@
             <result name="assetManager" type="redirectAction">Asset!Init</result>
             <result name="posServerManager" type="redirectAction">PosServer!Init</result>
             <result name="ruleManager" type="redirectAction">Rule!Init</result>
+            <result name="billManager" type="redirectAction">Bill!Init</result>
         </action>
     </package>
 </struts>

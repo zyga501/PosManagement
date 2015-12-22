@@ -61,6 +61,24 @@
             )
             return false;
         }
+
+        function fetchBankList() {
+            $.ajax({
+                type: 'post',
+                url: 'Bank!FetchBankList',
+                data: "uiMode=SELECTLIST",
+                dataType: "json",
+                success: function (data) {
+                    var json = eval("(" + data + ")");
+                    $("#bankName").html(json.bankList);
+                }
+            });
+        }
+
+
+        $(function () {
+            fetchBankList();
+        })
     </script>
 </head>
 <body scroll="no">
@@ -72,8 +90,11 @@
                     <td><s:text name="cardmanager.inserttime"/></td><td><input id=inserttime name=cardinfo type="text" placeholder="<s:text name="cardmanager.inserttime"/>" class="input-text size-S"></td>
                     <td><s:text name="cardmanager.cardserial"/></td><td><input id=cardserial name=cardinfo type="text" placeholder="<s:text name="cardmanager.cardserial"/>" class="input-text size-S"></td>
                     <td><s:text name="cardmanager.cardno"/></td><td><input id=cardno name=cardinfo type="text" placeholder="<s:text name="cardmanager.cardno"/>" class="input-text size-S"></td>
-                    <td><s:text name="cardmanager.bankname"/></td><td><input id=bankname name=cardinfo type="text" placeholder="<s:text name="cardmanager.bankname"/>" class="input-text size-S"></td>
-
+                    <td><s:text name="cardmanager.bankname"/></td>
+                    <td>
+                        <select id="bankName" name="cardinfo" style="width: 100%">
+                        </select>
+                    </td>
                 </tr>
                 <tr class="text-c">
                     <td><s:text name="cardmanager.creditamount"/></td><td><input id=creditamount name=cardinfo type="text" placeholder="<s:text name="cardmanager.creditamount"/>" class="input-text size-S"></td>

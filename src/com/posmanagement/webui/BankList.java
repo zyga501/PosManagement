@@ -44,6 +44,7 @@ public class BankList {
 
         String htmlString = "";
         UIContainer uiContainer = new UIContainer();
+        uiContainer.addElement("option");
         for (int index = 0; index < dbRet.size(); ++index) {
             String bankCode = dbRet.get(index).get("BANKCODE").toString();
             htmlString += uiContainer

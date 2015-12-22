@@ -1,27 +1,30 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="s" uri="/struts-tags"%>
+<%@ taglib prefix="s" uri="/struts-tags" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
     <meta charset="utf-8">
     <meta name="renderer" content="webkit|ie-comp|ie-stand">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
-    <meta http-equiv="Cache-Control" content="no-siteapp" />
-    <link href="../css/H-ui.min.css" rel="stylesheet" type="text/css" />
-    <link href="../css/H-ui.admin.css" rel="stylesheet" type="text/css" />
-    <link href="../css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
-    <link href="../skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
-    <title><s:text name="bankmanager.title" /></title>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <link href="../css/H-ui.min.css" rel="stylesheet" type="text/css"/>
+    <link href="../css/H-ui.admin.css" rel="stylesheet" type="text/css"/>
+    <link href="../css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css"/>
+    <link href="../skin/default/skin.css" rel="stylesheet" type="text/css" id="skin"/>
+    <title><s:text name="bankmanager.title"/></title>
     <script type="text/javascript">
-        function addcard(){
+        function addcard() {
             var index = layer.open({
                 type: 2,
                 title: "添加卡信息",
                 fix: true,
                 maxmin: false,
                 content: "./cardmanager/addcard.jsp"
-            });layer.full(index);}
+            });
+            layer.full(index);
+        }
         function refreshcardList(cardList) {
             $('#cardList').html(cardList);
         }
@@ -30,24 +33,24 @@
 <body style="overflow: hidden">
 <div align="center">
     <div class="panel panel-default" style="float: left;width: auto">
-        <div class="panel-header"><s:text name="cardmanager.paneltitle" /><span style="float:right;" >
+        <div class="panel-header"><s:text name="cardmanager.paneltitle"/><span style="float:right;">
             <a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addcard()">
-                <s:text name="ratemanager.add" /></a></span></div>
+                <s:text name="ratemanager.add"/></a></span></div>
         <div class="panel-body" id="parentIframe">
             <form>
                 <div style="height:100%; overflow:auto;">
                     <table class="table table-border table-bordered table-bg table-hover table-sort">
                         <thead>
                         <tr class="text-c">
-                            <th ><s:text name="cardmanager.cardno"/></th>
-                            <th ><s:text name="cardmanager.cardmaster"/></th>
-                            <th ><s:text name="cardmanager.cmtel"/></th>
-                            <th ><s:text name="cardmanager.cmseccontact"/></th>
-                            <th ><s:text name="cardmanager.salesman"/></th>
+                            <th><s:text name="cardmanager.cardno"/></th>
+                            <th><s:text name="cardmanager.cardmaster"/></th>
+                            <th><s:text name="cardmanager.cmtel"/></th>
+                            <th><s:text name="cardmanager.cmseccontact"/></th>
+                            <th><s:text name="cardmanager.salesman"/></th>
                         </tr>
                         </thead>
                         <tbody id="cardList">
-                            <s:property value="cardList" escape="false" />
+                        <s:property value="cardList" escape="false"/>
                         </tbody>
                     </table>
                 </div>

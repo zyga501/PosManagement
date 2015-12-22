@@ -23,6 +23,14 @@ public class CardList {
         return htmlString;
     }
 
+    public String generateMasterString(String cardno) throws Exception {
+        ArrayList<HashMap<String, Object>> dbRet =  PosDbManager.executeSql("select cardmaster from cardtb where cardno='"+cardno+"'");
+        if (dbRet.size() > 0)
+            return dbRet.get(0).get("CARDMASTER").toString();
+        else
+            return "Not exists this Card!";
+    }
+
     private ArrayList<HashMap<String, Object>> fetchCardList() throws Exception {
         return PosDbManager.executeSql("select cardno,cardmaster,cmtel,cmseccontact,salesman from cardtb");
     }

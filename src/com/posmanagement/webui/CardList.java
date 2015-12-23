@@ -14,13 +14,21 @@ public class CardList {
         String htmlString = "";
         for (int index = 0; index < dbRet.size(); ++index) {
             htmlString += new UIContainer("tr")
-                            .addAttribute("class", "text-c odd")
-                            .addAttribute("role", "row")
-                            .addElement("td", dbRet.get(index).get("CARDNO").toString())
-                            .addElement("td", dbRet.get(index).get("CARDMASTER").toString())
-                            .addElement("td", dbRet.get(index).get("CMTEL").toString())
-                            .addElement("td", dbRet.get(index).get("CMSECCONTACT").toString())
-                            .addElement("td", dbRet.get(index).get("SALESMAN").toString());
+                    .addAttribute("class", "text-c odd")
+                    .addAttribute("role", "row")
+                    .addElement(new UIContainer("td")
+                        .addElement(
+                            new UIContainer("input")
+                                    .addAttribute("type", "radio")
+                                    .addAttribute("name", "newid")
+                                    .addAttribute("value", dbRet.get(index).get("CID").toString())
+                                    .addAttribute("checked", "checked",false)
+                        ))
+                    .addElement("td", dbRet.get(index).get("CARDNO").toString())
+                    .addElement("td", dbRet.get(index).get("CARDMASTER").toString())
+                    .addElement("td", dbRet.get(index).get("CMTEL").toString())
+                    .addElement("td", dbRet.get(index).get("CMSECCONTACT").toString())
+                    .addElement("td", dbRet.get(index).get("SALESMAN").toString());
         }
         return htmlString;
     }
@@ -34,6 +42,6 @@ public class CardList {
     }
 
     private ArrayList<HashMap<String, Object>> fetchCardList() throws Exception {
-        return PosDbManager.executeSql("select cardno,cardmaster,cmtel,cmseccontact,salesman from cardtb");
+        return PosDbManager.executeSql("select cid, cardno,cardmaster,cmtel,cmseccontact,salesman from cardtb");
     }
 }

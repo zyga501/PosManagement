@@ -31,7 +31,7 @@
                 title: "<s:text name="global.edit"/>",
                 fix: true,
                 maxmin: false,
-                content: "Card!FetchCard"
+                content: "Card!FetchCard?"+$("form").serialize()
             });
             layer.full(index);
         }
@@ -54,6 +54,7 @@
                     <table class="table table-border table-bordered table-bg table-hover table-sort">
                         <thead>
                         <tr class="text-c">
+                            <th><s:text name="global.sequence"/></th>
                             <th><s:text name="cardmanager.cardno"/></th>
                             <th><s:text name="cardmanager.cardmaster"/></th>
                             <th><s:text name="cardmanager.cmtel"/></th>

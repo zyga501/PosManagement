@@ -74,12 +74,13 @@ public class CardAction extends AjaxActionSupport {
 
     public String FetchCard()
     {
-        if (null==newid || (!newid.equals(""))) return "";
+        if (null==newid || (newid.equals(""))) return "";
         Map para= new HashMap();
         para.put(1,newid);
         try {
             ArrayList<HashMap<String, Object>> hashMaps = PosDbManager.executeSql("select * from cardtb where cid=?",( HashMap<Integer, Object>) para);
             if (hashMaps.size()<=0) return "";
+            cardmanager = new HashMap();
             for (Object keyName:hashMaps.get(0).keySet())
                 cardmanager.put(keyName.toString().toLowerCase(),hashMaps.get(0).get(keyName));
         } catch (SQLException e) {

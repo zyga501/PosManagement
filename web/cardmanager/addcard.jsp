@@ -146,7 +146,10 @@
         </div>
     </form>
     <form >
-        <input type="hidden" id="newid" value="989">
+        <input type="hidden" id="newid" value="<s:property value="newid"/>">
+        <%
+            if (null==request.getAttribute("newid")){
+        %>
         <div id="upfile">
             <div   class="row cl" >
                 <label class="form-label col-2"><s:text name="cardmanager.identitypicfront"/></label>
@@ -158,6 +161,22 @@
                 <input type="button" class="btn btn-success radius size-M" value="<s:text name="addasset.submit" />" onclick="ajaxFileUpload();">
             </div>
         </div>
+        <%
+            }
+            else {
+        %>
+        <div   class="row cl" >
+            <label class="form-label col-2"><s:text name="cardmanager.identitypicfront"/></label>
+            <div class="formControls col-3"><img src="<s:property value="cardmanager.identityno"/>" ></div>
+            <label class="form-label col-2"><s:text name="cardmanager.identitypicback"/></label>
+            <div class="formControls col-3"><input type="file" class="btn btn-secondary radius" value="选取图片" id="selector2"  name="filesfz2"   /></div>
+        </div>
+        <div class="formControls" align="center">
+            <input type="button" class="btn btn-success radius size-M" value="<s:text name="addasset.submit" />" onclick="ajaxFileUpload();">
+        </div>
+        <%
+            }
+        %>
     </form>
 </div>
 </body>

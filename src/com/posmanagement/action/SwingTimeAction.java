@@ -77,10 +77,10 @@ public class SwingTimeAction extends AjaxActionSupport {
                 parametMap.put(2, _startTime);
                 parametMap.put(3, _endTime);
                 if (timeEnabled != null)
-                    parametMap.put(4, new String("on"));
+                    parametMap.put(4, new String("enable"));
                 else
-                    parametMap.put(4, new String("off"));
-                PosDbManager.executeUpdate("insert into swingtimetb(swingTime,startTime,endTime,enabled) values(?,?,?,?)", (HashMap<Integer, Object>) parametMap);
+                    parametMap.put(4, new String("disable"));
+                PosDbManager.executeUpdate("insert into swingtimetb(swingTime,startTime,endTime,status) values(?,?,?,?)", (HashMap<Integer, Object>) parametMap);
                 map.put("swingTimeList", new SwingTimeList(WebUI.UIMode.TABLELIST).generateHTMLString());
             }
             catch (IllegalArgumentException illegalException) {

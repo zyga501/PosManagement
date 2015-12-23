@@ -2,7 +2,6 @@ package com.posmanagement.action;
 
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.utils.Readconfig;
-import com.posmanagement.webui.BillList;
 import com.posmanagement.webui.CardList;
 
 import java.io.File;

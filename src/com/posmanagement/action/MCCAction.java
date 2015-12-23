@@ -59,10 +59,10 @@ public class MCCAction extends AjaxActionSupport {
                 Map parametMap = new HashMap();
                 parametMap.put(1, mccCode);
                 if (mccEnabled != null)
-                    parametMap.put(2, new String("on"));
+                    parametMap.put(2, new String("enable"));
                 else
-                    parametMap.put(2, new String("off"));
-                PosDbManager.executeUpdate("insert into mcctb(mcc,enabled) values(?,?)", (HashMap<Integer, Object>) parametMap);
+                    parametMap.put(2, new String("disable"));
+                PosDbManager.executeUpdate("insert into mcctb(mcc,status) values(?,?)", (HashMap<Integer, Object>) parametMap);
                 map.put("mccList", new MCCList(WebUI.UIMode.TABLELIST).generateHTMLString());
             }
             catch (NumberFormatException exception) {

@@ -57,10 +57,10 @@ public class IndustryAction extends AjaxActionSupport{
             Map parametMap = new HashMap();
             parametMap.put(1, industryName);
             if (industryEnabled != null)
-                parametMap.put(2, new String("on"));
+                parametMap.put(2, new String("enable"));
             else
-                parametMap.put(2, new String("off"));
-            PosDbManager.executeUpdate("insert into industrytb(name,enabled) values(?,?)", (HashMap<Integer, Object>) parametMap);
+                parametMap.put(2, new String("disable"));
+            PosDbManager.executeUpdate("insert into industrytb(name,status) values(?,?)", (HashMap<Integer, Object>) parametMap);
             map.put("industryList", new IndustryList(WebUI.UIMode.TABLELIST).generateHTMLString());
         }
 

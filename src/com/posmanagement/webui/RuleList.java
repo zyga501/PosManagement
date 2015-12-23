@@ -42,7 +42,7 @@ public class RuleList {
                                         .addElement(
                                                 new UIContainer("input")
                                                 .addAttribute("type", "checkbox")
-                                                .addAttribute("checked", "checked", dbRet.get(index).get("STATUS").toString().compareTo("on") == 0)
+                                                .addAttribute("checked", "checked", dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0)
                                         )
                             );
         }

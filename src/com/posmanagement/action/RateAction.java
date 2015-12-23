@@ -59,10 +59,10 @@ public class RateAction extends AjaxActionSupport {
                 Map parametMap = new HashMap();
                 parametMap.put(1, rate);
                 if (rateEnabled != null)
-                    parametMap.put(2, new String("on"));
+                    parametMap.put(2, new String("enable"));
                 else
-                    parametMap.put(2, new String("off"));
-                PosDbManager.executeUpdate("insert into ratetb(rate,enabled) values(?,?)", (HashMap<Integer, Object>) parametMap);
+                    parametMap.put(2, new String("disable"));
+                PosDbManager.executeUpdate("insert into ratetb(rate,status) values(?,?)", (HashMap<Integer, Object>) parametMap);
                 map.put("rateList", new RateList(WebUI.UIMode.TABLELIST).generateHTMLString());
             }
             catch (NumberFormatException exception) {

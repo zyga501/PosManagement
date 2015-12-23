@@ -44,11 +44,11 @@ public class RuleAction extends AjaxActionSupport {
         parametMap.put(20, (String) getParameter("useInterval"));
         parametMap.put(21, (String) getParameter("ruleUseFre"));
         parametMap.put(22, (String) getParameter("ruleUseInterval"));
-        if (getParameter("status") != null && getParameter("status").toString().compareTo("on") == 0) {
-            parametMap.put(23, "on");
+        if (getParameter("status") != null && getParameter("status").toString().compareTo("enable") == 0) {
+            parametMap.put(23, "enable");
         }
         else {
-            parametMap.put(23, "off");
+            parametMap.put(23, "disable");
         }
 
         Map map = new HashMap();

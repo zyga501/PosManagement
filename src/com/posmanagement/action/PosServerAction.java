@@ -57,10 +57,10 @@ public class PosServerAction extends AjaxActionSupport {
             Map parametMap = new HashMap();
             parametMap.put(1, posServer);
             if (posServerEnabled != null)
-                parametMap.put(2, new String("on"));
+                parametMap.put(2, new String("enable"));
             else
-                parametMap.put(2, new String("off"));
-            PosDbManager.executeUpdate("insert into posservertb(servername,enabled) values(?,?)", (HashMap<Integer, Object>) parametMap);
+                parametMap.put(2, new String("disable"));
+            PosDbManager.executeUpdate("insert into posservertb(servername,status) values(?,?)", (HashMap<Integer, Object>) parametMap);
             map.put("posServerList", new PosServerList(WebUI.UIMode.TABLELIST).generateHTMLString());
         }
 

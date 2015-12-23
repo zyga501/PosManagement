@@ -18,10 +18,20 @@
         function addcard() {
             var index = layer.open({
                 type: 2,
-                title: "添加卡信息",
+                title: "<s:text name="global.add"/>",
                 fix: true,
                 maxmin: false,
                 content: "./cardmanager/addcard.jsp"
+            });
+            layer.full(index);
+        }
+        function editcard() {
+            var index = layer.open({
+                type: 2,
+                title: "<s:text name="global.edit"/>",
+                fix: true,
+                maxmin: false,
+                content: "Card!FetchCard"
             });
             layer.full(index);
         }
@@ -34,8 +44,10 @@
 <div align="center">
     <div class="panel panel-default" style="float: left;width: auto">
         <div class="panel-header"><s:text name="cardmanager.paneltitle"/><span style="float:right;">
+            <a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="editcard()">
+                <s:text name="global.edit"/></a></span> <span style="float:right;">
             <a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addcard()">
-                <s:text name="ratemanager.add"/></a></span></div>
+                <s:text name="global.add"/></a></span></div>
         <div class="panel-body" id="parentIframe">
             <form>
                 <div style="height:100%; overflow:auto;">

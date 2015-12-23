@@ -2,21 +2,34 @@ package com.posmanagement.action;
 
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.utils.Readconfig;
+import com.posmanagement.webui.BillList;
 import com.posmanagement.webui.CardList;
 
 import java.io.File;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class CardAction extends AjaxActionSupport {
     private final static String CARDMANAGER = "cardManager";
+    private final static String FETCHCARD = "fetchCard";
 
     private String cardList;
     private File filesfz1;
     private File filesfz2;
+
     private String newid ;
-    private String[] cardinfo;
+    private Map cardmanager;
     private String cardno;
+
+    public Map getCardmanager() {
+        return cardmanager;
+    }
+
+    public void setCardmanager(Map cardmanager) {
+        this.cardmanager = cardmanager;
+    }
 
     public String getNewid() {
         return newid;
@@ -24,14 +37,6 @@ public class CardAction extends AjaxActionSupport {
 
     public void setNewid(String newid) {
         this.newid = newid;
-    }
-
-    public String[] getCardinfo() {
-        return cardinfo;
-    }
-
-    public void setCardinfo(String[] cardinfo) {
-        this.cardinfo = cardinfo;
     }
 
     public File getFilesfz1() {
@@ -67,6 +72,23 @@ public class CardAction extends AjaxActionSupport {
         return CARDMANAGER;
     }
 
+    public String FetchCard()
+    {
+        if (null==newid || (!newid.equals(""))) return "";
+        Map para= new HashMap();
+        para.put(1,newid);
+        try {
+            ArrayList<HashMap<String, Object>> hashMaps = PosDbManager.executeSql("select * from cardtb where cid=?",( HashMap<Integer, Object>) para);
+            if (hashMaps.size()<=0) return "";
+            for (Object keyName:hashMaps.get(0).keySet())
+                cardmanager.put(keyName.toString().toLowerCase(),hashMaps.get(0).get(keyName));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return FETCHCARD;
+    }
     public String UpdateZsf() throws Exception {
         Map map = new HashMap();
         if(newid.equals("")) {
@@ -92,14 +114,16 @@ public class CardAction extends AjaxActionSupport {
 
     public String AddCard() throws Exception {
         Map map = new HashMap();
-        if (cardinfo.length  == 0) {
+        if (cardmanager.size() == 0) {
         }
         else {
             Map para = new HashMap();
             try {
-                for (int i=0;i<cardinfo.length;i++) {
-                    System.out.print("'"+cardinfo[i]+"',");
-                    para.put(i+1, cardinfo[i] );
+                //for (int i=0;i<cardmanager.size();i++) {
+                int i=1;
+                for (Object key : cardmanager.keySet()) {
+                    System.out.print("'"+cardmanager.get(key)+"',");
+                    para.put(i++,cardmanager.get(key).toString() );
                 }
                 if (!PosDbManager.executeUpdate("insert into cardtb(inserttime,cardserial,cardno,bankname,creditamount," +
                         "tempamount,templimitdate,useamount,billdate,pin,telpwd,tradepwd,enchashmentpwd," +

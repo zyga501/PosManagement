@@ -16,7 +16,7 @@
     <script type="text/javascript" src="../js/jquery/1.9.1/jquery.min.js"></script>
     <script type="text/javascript" src="../js/upload/ajaxupload.js"></script>
     <script type="text/javascript">
-        function addcard() {
+        function addCard() {
             $('#newid').val("");
             $('#Message').html("");
             $.ajax({
@@ -39,21 +39,22 @@
                 }
             })
         }
+
         function ajaxFileUpload() {
             $.ajaxFileUpload
             (
                     {
-                        url: 'Card!UpdateZsf', //用于文件上传的服务器端请求地址
-                        secureuri: false, //是否需要安全协议，一般设置为false
-                        fileElementId: ["filesfz1","filesfz2"], //文件上传域的ID
+                        url: 'Card!UpdateZsf',
+                        secureuri: false,
+                        fileElementId: ["filesfz1","filesfz2"],
                         data:{newid :$('#newid').val()},
-                        success: function (data, status)  //服务器成功响应处理函数
+                        success: function (data, status)
                         {
                             alert('OK!');
                             $("#upfile").css("display","none");
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         },
-                        error: function (data, status, e)//服务器响应失败处理函数
+                        error: function (data, status, e)
                         {
                             alert(e);
                         }
@@ -75,7 +76,6 @@
             });
         }
 
-
         $(function () {
             fetchBankList();
         })
@@ -87,48 +87,48 @@
         <div style="height:auto; overflow:auto;">
             <table class="table table-border table-bordered table-bg table-hover table-sort">
                 <tr class="text-c">
-                    <td><s:text name="cardmanager.inserttime"/></td><td><input id=inserttime name=cardinfo type="text" placeholder="<s:text name="cardmanager.inserttime"/>" class="input-text size-S"></td>
-                    <td><s:text name="cardmanager.cardserial"/></td><td><input id=cardserial name=cardinfo type="text" placeholder="<s:text name="cardmanager.cardserial"/>" class="input-text size-S"></td>
-                    <td><s:text name="cardmanager.cardno"/></td><td><input id=cardno name=cardinfo type="text" placeholder="<s:text name="cardmanager.cardno"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.inserttime"/></td><td><input id=inserttime name=cardmanager.inserttime type="text" value="<s:property value="cardmanager.inserttime"/>" placeholder="<s:text name="cardmanager.inserttime"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.cardserial"/></td><td><input id=cardserial name=cardmanager.cardserial type="text" value="<s:property value="cardmanager.cardserial"/>" placeholder="<s:text name="cardmanager.cardserial"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.cardno"/></td><td><input id=cardno name=cardmanager.cardno type="text" value="<s:property value="cardmanager.cardno"/>" placeholder="<s:text name="cardmanager.cardno"/>" class="input-text size-S"></td>
                     <td><s:text name="cardmanager.bankname"/></td>
                     <td>
-                        <select id="bankName" name="cardinfo" style="width: 100%">
+                        <select id="bankName" name="cardmanager.bankname" style="width: 100%">
                         </select>
                     </td>
                 </tr>
                 <tr class="text-c">
-                    <td><s:text name="cardmanager.creditamount"/></td><td><input id=creditamount name=cardinfo type="text" placeholder="<s:text name="cardmanager.creditamount"/>" class="input-text size-S"></td>
-                    <td><s:text name="cardmanager.tempamount"/></td><td><input id=tempamount name=cardinfo type="text" placeholder="<s:text name="cardmanager.tempamount"/>" class="input-text size-S"></td>
-                    <td><s:text name="cardmanager.templimitdate"/></td><td><input id=templimitdate name=cardinfo type="text" placeholder="<s:text name="cardmanager.templimitdate"/>" class="input-text size-S"></td>
-                    <td><s:text name="cardmanager.useamount"/></td><td><input id=useamount name=cardinfo type="text" placeholder="<s:text name="cardmanager.useamount"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.creditamount"/></td><td><input id=creditamount name=cardmanager.creditamount type="text" value="<s:property value="cardmanager.creditamount"/>" placeholder="<s:text name="cardmanager.creditamount"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.tempamount"/></td><td><input id=tempamount name=cardmanager.tempamount type="text" value="<s:property value="cardmanager.tempamount"/>" placeholder="<s:text name="cardmanager.tempamount"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.templimitdate"/></td><td><input id=templimitdate name=cardmanager.templimitdate type="text" value="<s:property value="cardmanager.templimitdate"/>" placeholder="<s:text name="cardmanager.templimitdate"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.useamount"/></td><td><input id=useamount name=cardmanager.useamount type="text" value="<s:property value="cardmanager.useamount"/>" placeholder="<s:text name="cardmanager.useamount"/>" class="input-text size-S"></td>
                 </tr>
                 <tr class="text-c">
-                    <td><s:text name="cardmanager.billdate"/></td><td><input id=billdate name=cardinfo type="text" placeholder="<s:text name="cardmanager.billdate"/>" class="input-text size-S"></td>
-                    <td><s:text name="cardmanager.pin"/></td><td><input id=pin name=cardinfo type="text" placeholder="<s:text name="cardmanager.pin"/>" class="input-text size-S"></td>
-                    <td><s:text name="cardmanager.telpwd"/></td><td><input id=telpwd name=cardinfo type="text" placeholder="<s:text name="cardmanager.telpwd"/>" class="input-text size-S"></td>
-                    <td><s:text name="cardmanager.tradepwd"/></td><td><input id=tradepwd name=cardinfo type="text" placeholder="<s:text name="cardmanager.tradepwd"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.billdate"/></td><td><input id=billdate name=cardmanager.billdate type="text" value="<s:property value="cardmanager.billdate"/>" placeholder="<s:text name="cardmanager.billdate"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.pin"/></td><td><input id=pin name=cardmanager.pin type="text" value="<s:property value="cardmanager.pin"/>" placeholder="<s:text name="cardmanager.pin"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.telpwd"/></td><td><input id=telpwd name=cardmanager.telpwd type="text" value="<s:property value="cardmanager.telpwd"/>" placeholder="<s:text name="cardmanager.telpwd"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.tradepwd"/></td><td><input id=tradepwd name=cardmanager.tradepwd type="text" value="<s:property value="cardmanager.tradepwd"/>" placeholder="<s:text name="cardmanager.tradepwd"/>" class="input-text size-S"></td>
                 </tr>
                 <tr class="text-c">
-                    <td><s:text name="cardmanager.enchashmentpwd"/></td><td><input id=enchashmentpwd name=cardinfo type="text" placeholder="<s:text name="cardmanager.enchashmentpwd"/>" class="input-text size-S"></td>
-                    <td><s:text name="cardmanager.billafterdate"/></td><td><input id=billafterdate name=cardinfo type="text" placeholder="<s:text name="cardmanager.billafterdate"/>" class="input-text size-S"></td>
-                    <td><s:text name="cardmanager.lastrepaymentdate"/></td><td><input id=lastrepaymentdate name=cardinfo type="text" placeholder="<s:text name="cardmanager.lastrepaymentdate"/>" class="input-text size-S"></td>
-                    <td><s:text name="cardmanager.billemail"/></td><td><input id=billemail name=cardinfo type="text" placeholder="<s:text name="cardmanager.billemail"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.enchashmentpwd"/></td><td><input id=enchashmentpwd name=cardmanager.enchashmentpwd type="text" value="<s:property value="cardmanager.enchashmentpwd"/>" placeholder="<s:text name="cardmanager.enchashmentpwd"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.billafterdate"/></td><td><input id=billafterdate name=cardmanager.billafterdate type="text" value="<s:property value="cardmanager.billafterdate"/>"  placeholder="<s:text name="cardmanager.billafterdate"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.lastrepaymentdate"/></td><td><input id=lastrepaymentdate name=cardmanager.lastrepaymentdate value="<s:property value="cardmanager.lastrepaymentdate"/>" type="text" placeholder="<s:text name="cardmanager.lastrepaymentdate"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.billemail"/></td><td><input id=billemail name=cardmanager.billemail type="text" value="<s:property value="cardmanager.billemail"/>" placeholder="<s:text name="cardmanager.billemail"/>" class="input-text size-S"></td>
                 </tr>
                 <tr class="text-c">
-                    <td><s:text name="cardmanager.sfqy"/></td><td><input id=sfqy name=cardinfo type="text" placeholder="<s:text name="cardmanager.sfqy"/>" class="input-text size-S"></td>
-                    <td><s:text name="cardmanager.commissioncharge"/></td><td><input id=commission-charge name=cardinfo type="text" placeholder="<s:text name="cardmanager.commissioncharge"/>" class="input-text size-S"></td>
-                    <td><s:text name="cardmanager.cardmaster"/></td><td><input id=cardmaster name=cardinfo type="text" placeholder="<s:text name="cardmanager.cardmaster"/>" class="input-text size-S"></td>
-                    <td><s:text name="cardmanager.identityno"/></td><td><input id=identityno name=cardinfo type="text" placeholder="<s:text name="cardmanager.identityno"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.status"/></td><td><input id=sfqy name=cardmanager.status type="text" value="<s:property value="cardmanager.status"/>" placeholder="<s:text name="cardmanager.status"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.commissioncharge"/></td><td><input id=commissioncharge name=cardmanager.commissioncharge type="text" value="<s:property value="cardmanager.commissioncharge"/>" placeholder="<s:text name="cardmanager.commissioncharge"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.cardmaster"/></td><td><input id=cardmaster name=cardmanager.cardmaster type="text" value="<s:property value="cardmanager.cardmaster"/>" placeholder="<s:text name="cardmanager.cardmaster"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.identityno"/></td><td><input id=identityno name=cardmanager.identityno type="text" value="<s:property value="cardmanager.identityno"/>" placeholder="<s:text name="cardmanager.identityno"/>" class="input-text size-S"></td>
                 </tr>
                 <tr class="text-c">
-                    <td><s:text name="cardmanager.cmaddress"/></td><td><input id=cmaddress name=cardinfo type="text" placeholder="<s:text name="cardmanager.cmaddress"/>" class="input-text size-S"></td>
-                    <td><s:text name="cardmanager.cmtel"/></td><td><input id=cmtel name=cardinfo type="text" placeholder="<s:text name="cardmanager.cmtel"/>" class="input-text size-S"></td>
-                    <td><s:text name="cardmanager.cmseccontact"/></td><td><input id=cmseccontact name=cardinfo type="text" placeholder="<s:text name="cardmanager.cmseccontact"/>" class="input-text size-S"></td>
-                    <td><s:text name="cardmanager.salesman"/></td><td><input id=salesman name=cardinfo type="text" placeholder="<s:text name="cardmanager.salesman"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.cmaddress"/></td><td><input id=cmaddress name=cardmanager.cmaddress type="text" value="<s:property value="cardmanager.cmaddress"/>" placeholder="<s:text name="cardmanager.cmaddress"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.cmtel"/></td><td><input id=cmtel name=cardmanager.cmtel type="text" value="<s:property value="cardmanager.cmtel"/>" placeholder="<s:text name="cardmanager.cmtel"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.cmseccontact"/></td><td><input id=cmseccontact name=cardmanager.cmseccontact type="text" value="<s:property value="cardmanager.cmseccontact"/>" placeholder="<s:text name="cardmanager.cmseccontact"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.salesman"/></td><td><input id=salesman name=cardmanager.salesman type="text" value="<s:property value="cardmanager.salesman"/>" placeholder="<s:text name="cardmanager.salesman"/>" class="input-text size-S"></td>
                 </tr>
                 <tr class="text-c">
                     <td><s:text name="cardmanager.memos"/></td>
-                    <td colspan="7"><input id=memos name=cardinfo type="text" placeholder="<s:text name="cardmanager.memos"/>" class="input-text size-S"></td>
+                    <td colspan="7"><input id=memos name=cardmanager.memos type="text" value="<s:property value="cardmanager.memos"/>" placeholder="<s:text name="cardmanager.memos"/>" class="input-text size-S"></td>
                 </tr>
                 </tbody>
             </table>
@@ -141,7 +141,7 @@
         </div>
         <div class="row">
             <div class="formControls" align="center">
-                <input type="button" class="btn btn-success radius size-M" value="<s:text name="addasset.submit" />" onclick="addcard();">
+                <input type="button" class="btn btn-success radius size-M" value="<s:text name="addasset.submit" />" onclick="addCard();">
             </div>
         </div>
     </form>

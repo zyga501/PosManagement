@@ -73,6 +73,7 @@
         </action>
         <action name="Card!*" class="com.posmanagement.action.CardAction" method="{1}">
             <result name="cardManager">./cardmanager/cardmanager.jsp</result>
+            <result name="fetchCard">./cardmanager/addcard.jsp</result>
         </action>
         <action name="Asset!*" class="com.posmanagement.action.AssetAction" method="{1}">
             <result name="assetManager">./cardmanager/assetmanager.jsp</result>

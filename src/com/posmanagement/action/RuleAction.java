@@ -52,8 +52,8 @@ public class RuleAction extends AjaxActionSupport {
         }
 
         Map map = new HashMap();
-        if (PosDbManager.executeUpdate("insert into ruletb(ruleno,bankname,posserver,minswingnum,maxswingnum,swingtime," +
-                "minswingmoney,maxswingmoney,swingpercent,industryname,industryfre,industryinterval,rate,ratefre,rateinterval,mcc," +
+        if (PosDbManager.executeUpdate("insert into ruletb(ruleno,bankname,posserver,swingtime," +
+                "minswingmoney,maxswingmoney,industryname,industryfre,industryinterval,rate,ratefre,rateinterval,mcc," +
                 "mccfre,mccinterval,usefre,useinterval,ruleusefre,ruleuseinterval,status)" +
                 "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>)parametMap)) {
             map.put("ruleList", new RuleList().generateHTMLString());

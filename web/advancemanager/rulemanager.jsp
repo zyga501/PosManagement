@@ -39,12 +39,9 @@
                             <th><s:text name="rulemanager.ruleno" /></th>
                             <th><s:text name="rulemanager.bankname" /></th>
                             <th><s:text name="rulemanager.posserver" /></th>
-                            <th><s:text name="rulemanager.minswingnum" /></th>
-                            <th><s:text name="rulemanager.maxswingnum" /></th>
                             <th><s:text name="rulemanager.swingtime" /></th>
                             <th><s:text name="rulemanager.minswingmoney" /></th>
                             <th><s:text name="rulemanager.maxswingmoney" /></th>
-                            <th><s:text name="rulemanager.swingpercent" /></th>
                             <th><s:text name="rulemanager.industryname" /></th>
                             <th><s:text name="rulemanager.industryfre" /></th>
                             <th><s:text name="rulemanager.industryinterval" /></th>

@@ -142,18 +142,6 @@
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
-                <td><s:text name="addrule.minswingnum" /></td>
-                <td>
-                    <input id="minSwingNum" name="minSwingNum" type="text" placeholder="<s:text name="addrule.minswingnum" />" class="input-text size-S">
-                </td>
-            </tr>
-            <tr class="text-c odd" role="row">
-                <td><s:text name="addrule.maxswingnum" /></td>
-                <td>
-                    <input id="maxSwingNum" name="maxSwingNum" type="text" placeholder="<s:text name="addrule.maxswingnum" />" class="input-text size-S">
-                </td>
-            </tr>
-            <tr class="text-c odd" role="row">
                 <td><s:text name="addrule.swingtime" /></td>
                 <td>
                     <select id="swingTime" name="swingTime">
@@ -170,12 +158,6 @@
                 <td><s:text name="addrule.maxswingmoney" /></td>
                 <td>
                     <input id="maxSwingMoney" name="maxSwingMoney" type="text" placeholder="<s:text name="addrule.maxswingmoney" />" class="input-text size-S">
-                </td>
-            </tr>
-            <tr class="text-c odd" role="row">
-                <td><s:text name="addrule.swingpercent" /></td>
-                <td>
-                    <input id="swingPercent" name="swingPercent" type="text" placeholder="<s:text name="addrule.swingpercent" />" class="input-text size-S">
                 </td>
             </tr>
             <tr class="text-c odd" role="row">

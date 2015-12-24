@@ -72,13 +72,12 @@ public class CardAction extends AjaxActionSupport {
         return CARDMANAGER;
     }
 
-    public String FetchCard()
-    {
+    public String FetchCard(){
         if (null==newid || (newid.equals(""))) return "";
         Map para= new HashMap();
         para.put(1,newid);
         try {
-            ArrayList<HashMap<String, Object>> hashMaps = PosDbManager.executeSql("select * from cardtb where cid=?",( HashMap<Integer, Object>) para);
+            ArrayList<HashMap<String, Object>> hashMaps = PosDbManager.executeSql("select * from cardtb where cardno=?",( HashMap<Integer, Object>) para);
             if (hashMaps.size()<=0) return "";
             cardmanager = new HashMap();
             for (Object keyName:hashMaps.get(0).keySet())
@@ -103,7 +102,7 @@ public class CardAction extends AjaxActionSupport {
                     filesfz1.renameTo(new File(Readconfig.getfileds("imgpath"),newid+"_1.jpg"));
                 }
                 if (null != filesfz2) {
-                    filesfz1.renameTo(new File(Readconfig.getfileds("imgpath"),newid+"_2.jpg"));
+                    filesfz2.renameTo(new File(Readconfig.getfileds("imgpath"),newid+"_2.jpg"));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -113,6 +112,45 @@ public class CardAction extends AjaxActionSupport {
         return AjaxActionComplete(map);
     }
 
+    public String editCard() throws Exception {
+        Map map = new HashMap();
+        if (null==newid)
+        {
+            map.put("errorMessage", getText("addrate.rateFormatError"));
+            return AjaxActionComplete(map);
+        }
+        if (cardmanager.size() == 0) {
+        }
+        else {
+            Map para = new HashMap();
+            try {
+                //for (int i=0;i<cardmanager.size();i++) {
+                int i=1;
+                String[] strary=(new String("inserttime,cardserial,cardno,bankname,creditamount,tempamount,templimitdate," +
+                        "useamount,billdate,pin,telpwd,tradepwd,enchashmentpwd,billafterdate,lastrepaymentdate," +
+                        "billemail,status,commissioncharge,cardmaster,identityno,cmaddress,cmtel,cmseccontact," +
+                        "salesman,memos")).split(",");
+                for (String key : strary) {
+                    System.out.print("'"+((String[])cardmanager.get(key))[0]+"',");
+                    para.put(i++,((String[])cardmanager.get(key))[0] );
+                }
+                para.put(i,newid);
+                if (!PosDbManager.executeUpdate("update cardtb set inserttime=?,cardserial=?,cardno=?,bankname=?,creditamount=?," +
+                        "tempamount=?,templimitdate=?,useamount=?,billdate=?,pin=?,telpwd=?,tradepwd=?,enchashmentpwd=?," +
+                        "billafterdate=?,lastrepaymentdate=?,billemail=?,status=?,commissioncharge=?,cardmaster=?,identityno=?,"+
+                        "cmaddress=?,cmtel=?,cmseccontact=?,salesman=?,memos=?  where cardno=?",(HashMap<Integer, Object>)  para))
+                    map.put("errorMessage", getText("addrate.rateFormatError"));
+                else
+                    map.put("cardList", new CardList().generateHTMLString());
+                map.put("newid",para.get(3));
+            }
+            catch (NumberFormatException exception) {
+                map.put("errorMessage", getText("addrate.rateFormatError"));
+            }
+        }
+
+        return AjaxActionComplete(map);
+    }
     public String AddCard() throws Exception {
         Map map = new HashMap();
         if (cardmanager.size() == 0) {
@@ -122,9 +160,13 @@ public class CardAction extends AjaxActionSupport {
             try {
                 //for (int i=0;i<cardmanager.size();i++) {
                 int i=1;
-                for (Object key : cardmanager.keySet()) {
-                    System.out.print("'"+cardmanager.get(key)+"',");
-                    para.put(i++,cardmanager.get(key).toString() );
+                String[] strary=(new String("inserttime,cardserial,cardno,bankname,creditamount,tempamount,templimitdate," +
+                        "useamount,billdate,pin,telpwd,tradepwd,enchashmentpwd,billafterdate,lastrepaymentdate," +
+                        "billemail,status,commissioncharge,cardmaster,identityno,cmaddress,cmtel,cmseccontact," +
+                        "salesman,memos")).split(",");
+                for (String key : strary) {
+                    System.out.print("'"+((String[])cardmanager.get(key))[0]+"',");
+                    para.put(i++,((String[])cardmanager.get(key))[0] );
                 }
                 if (!PosDbManager.executeUpdate("insert into cardtb(inserttime,cardserial,cardno,bankname,creditamount," +
                         "tempamount,templimitdate,useamount,billdate,pin,telpwd,tradepwd,enchashmentpwd," +

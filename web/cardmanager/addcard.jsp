@@ -17,6 +17,9 @@
     <script type="text/javascript" src="../js/upload/ajaxupload.js"></script>
     <script type="text/javascript">
         function addCard() {
+            <%
+                if (null==request.getAttribute("newid")){
+            %>
             $('#newid').val("");
             $('#Message').html("");
             $.ajax({
@@ -33,11 +36,35 @@
                         $('.input').val("");
                         $('#Message').html("<s:text name="addasset.addassetSuccess" />");
                         $('#newid').val(json.newid);
-                        $("#upfile").css("display","");
+                       // $("#upfile").css("display","");
+                        ajaxFileUpload();
                         parent.refreshcardList(json.cardList);
                     }
                 }
             })
+            <%
+               }else {
+            %>
+            $('#Message').html("");
+            $.ajax({
+                type: 'post',
+                url: 'Card!editCard',
+                dataType:"json",
+                data:$("form").serialize(),
+                success: function (data) {
+                    var json = eval("(" + data + ")");
+                    if (json.errorMessage != null) {
+                        $('#Message').html(json.errorMessage);
+                    }
+                    else {
+                        $('.input').val("");
+                        $('#Message').html("<s:text name="global.dosuccess" />");
+                        ajaxFileUpload();
+                        parent.refreshcardList(json.cardList);
+                    }
+                }
+            })
+            <% } %>
         }
 
         function ajaxFileUpload() {
@@ -72,6 +99,7 @@
                 success: function (data) {
                     var json = eval("(" + data + ")");
                     $("#bankName").html(json.bankList);
+                    $("#bankName").val("<s:property value="cardmanager.bankname"/>");
                 }
             });
         }
@@ -82,7 +110,6 @@
     </script>
 </head>
 <body scroll="no">
-<div>
     <form class="form form-horizontal">
         <div style="height:auto; overflow:auto;">
             <table class="table table-border table-bordered table-bg table-hover table-sort">
@@ -144,40 +171,94 @@
                 <input type="button" class="btn btn-success radius size-M" value="<s:text name="addasset.submit" />" onclick="addCard();">
             </div>
         </div>
+        <input type="hidden" id="newid" name="newid" value="<s:property value="newid"/>">
     </form>
     <form >
-        <input type="hidden" id="newid" value="<s:property value="newid"/>">
-        <%
-            if (null==request.getAttribute("newid")){
-        %>
         <div id="upfile">
-            <div   class="row cl" >
-                <label class="form-label col-2"><s:text name="cardmanager.identitypicfront"/></label>
-                <div class="formControls col-3"><input type="file" class="btn btn-secondary radius" value="选取图片" id="selector" name="filesfz1"  /></div>
-                <label class="form-label col-2"><s:text name="cardmanager.identitypicback"/></label>
-                <div class="formControls col-3"><input type="file" class="btn btn-secondary radius" value="选取图片" id="selector2"  name="filesfz2"   /></div>
+            <div style="float: left;width: 44%">
+                <label ><s:text name="cardmanager.identitypicfront"/></label><br>
+                <div><input type="file" title="divimg1" class="btn btn-secondary radius"  value="选取图片" id="selector" name="filesfz1"  onchange="previewImage(this)" /></div>
+                <div id="divimg1" >
+                    <%
+                        if (null!=request.getAttribute("newid")){
+                    %>
+                    <img id="imgheaddivimg1" width="300" height="200" src="../pics/<s:property value="cardmanager.cardno"/>_1.jpg" >
+                    <%
+                    }
+                    %>
+                </div>
             </div>
-            <div class="formControls" align="center">
-                <input type="button" class="btn btn-success radius size-M" value="<s:text name="addasset.submit" />" onclick="ajaxFileUpload();">
+                <div  style="float: right;width: 44%">
+                    <label ><s:text name="cardmanager.identitypicback"/></label>
+                <div ><input type="file" title="divimg2" class="btn btn-secondary radius" value="选取图片" id="selector2"  name="filesfz2"  onchange="previewImage(this)" /></div>
+                    <div id="divimg2" >
+                        <%
+                            if (null!=request.getAttribute("newid")){
+                        %><img id="imgheaddivimg2" width="300" height="200" src="/pics/<s:property value="cardmanager.cardno"/>_2.jpg" alt="不存在">
+                        <%
+                            }
+                        %>
+                    </div>
             </div>
         </div>
-        <%
-            }
-            else {
-        %>
-        <div   class="row cl" >
-            <label class="form-label col-2"><s:text name="cardmanager.identitypicfront"/></label>
-            <div class="formControls col-3"><img src="<s:property value="cardmanager.identityno"/>" ></div>
-            <label class="form-label col-2"><s:text name="cardmanager.identitypicback"/></label>
-            <div class="formControls col-3"><input type="file" class="btn btn-secondary radius" value="选取图片" id="selector2"  name="filesfz2"   /></div>
-        </div>
-        <div class="formControls" align="center">
-            <input type="button" class="btn btn-success radius size-M" value="<s:text name="addasset.submit" />" onclick="ajaxFileUpload();">
-        </div>
-        <%
-            }
-        %>
     </form>
 </div>
 </body>
+<script type="text/javascript">
+function previewImage(file)
+{
+var MAXWIDTH  = 260;
+var MAXHEIGHT = 180;
+var div=document.getElementById(file.title);
+if (file.files && file.files[0])
+{
+div.innerHTML ='<img id=imghead'+file.title+'>';
+var img = document.getElementById('imghead'+file.title);
+img.onload = function(){
+var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+img.width  =  rect.width;
+img.height =  rect.height;
+//                 img.style.marginLeft = rect.left+'px';
+img.style.marginTop = rect.top+'px';
+}
+var reader = new FileReader();
+reader.onload = function(evt){img.src = evt.target.result;}
+reader.readAsDataURL(file.files[0]);
+}
+else //兼容IE
+{
+var sFilter='filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src="';
+file.select();
+var src = document.selection.createRange().text;
+div.innerHTML = '<img id=imghead'+file.title+'>';
+var img = document.getElementById('imghead'+file.title);
+img.filters.item('DXImageTransform.Microsoft.AlphaImageLoader').src = src;
+var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+status =('rect:'+rect.top+','+rect.left+','+rect.width+','+rect.height);
+div.innerHTML = "<div id=divhead style='width:"+rect.width+"px;height:"+rect.height+"px;margin-top:"+rect.top+"px;"+sFilter+src+"\"'></div>";
+}
+}
+function clacImgZoomParam( maxWidth, maxHeight, width, height ){
+var param = {top:0, left:0, width:width, height:height};
+if( width>maxWidth || height>maxHeight )
+{
+rateWidth = width / maxWidth;
+rateHeight = height / maxHeight;
+
+if( rateWidth > rateHeight )
+{
+param.width =  maxWidth;
+param.height = Math.round(height / rateWidth);
+}else
+{
+param.width = Math.round(width / rateHeight);
+param.height = maxHeight;
+}
+}
+
+param.left = Math.round((maxWidth - param.width) / 2);
+param.top = Math.round((maxHeight - param.height) / 2);
+return param;
+}
+</script>
 </html>

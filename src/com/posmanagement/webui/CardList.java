@@ -21,7 +21,7 @@ public class CardList {
                             new UIContainer("input")
                                     .addAttribute("type", "radio")
                                     .addAttribute("name", "newid")
-                                    .addAttribute("value", dbRet.get(index).get("CID").toString())
+                                    .addAttribute("value", dbRet.get(index).get("CARDNO").toString())
                                     .addAttribute("checked", "checked",false)
                         ))
                     .addElement("td", dbRet.get(index).get("CARDNO").toString())

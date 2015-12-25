@@ -24,12 +24,16 @@
         function refreshBillList(billList) {
             $('#billList').html(billList);
         }
+
     </script>
 </head>
 <body>
 <div align="center">
     <div class="panel panel-default" style="float: left;width: auto">
-        <div class="panel-header"><s:text name="billmanager.paneltitle" /><span style="float:right;" ><a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addBill()"><s:text name="billmanager.makebill" /></a></span></div>
+        <div class="panel-header"><s:text name="billmanager.paneltitle" />
+            <span style="float:right;" >
+             <a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addBill()">
+                <s:text name="billmanager.makebill" /></a></span></div>
         <div class="panel-body" id="parentIframe">
             <form>
                 <div style="height:80%; overflow:auto;">
@@ -65,5 +69,46 @@
 <script type="text/javascript" src="../js/layer/1.9.3/layer.js"></script>
 <script type="text/javascript" src="../js/H-ui.js"></script>
 <script type="text/javascript" src="../js/H-ui.admin.js"></script>
+<script type="text/javascript">
+    $().ready( function(){
+        $("input[type=button]").on("click", function() {
+                    var val = this.value;
+                    var obj = this;
+                    if (val == "N") {
+                        layer.confirm('确定启用？', {
+                            btn: ['yes', 'no'] //按钮
+                        }, function () {
+                            obj.value = "Y";
+                            obj.setAttribute("class", "btn btn-success radius");
+                            layer.msg('你选择了YES', {icon: 1});
+                        }, function () {
+                        });
+                    }
+                }
+        )
+                $("label[name=billamount]").on("click", function() {
+                            var name = prompt("输入新的金额",this.innerHTML);
+                    if (name==null) return ;
+                    if (trim(name)=="")
+                        this.innerHTML="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";//防止无法点击事件
+                    else
+                        this.innerHTML = name ;
+                    layer.msg('你输入了'+name);
+                    $.ajax({
+                        type: 'post',
+                        url: 'Bill!EditBill',
+                        data: "billamount="+name+",",
+                        dataType: "json",
+                        success: function (data) {
+                            var json = eval("(" + data + ")");
+                            $("#bankName").html(json.bankList);
+                            $("#bankName").val("<s:property value="cardmanager.bankname"/>");
+                        }
+                    });
+                })
+    }
+    )
+
+</script>
 </body>
 </html>

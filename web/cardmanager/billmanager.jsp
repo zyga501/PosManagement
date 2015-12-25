@@ -89,20 +89,18 @@
                 $("label[name=billamount]").on("click", function() {
                             var name = prompt("输入新的金额",this.innerHTML);
                     if (name==null) return ;
-                    if (trim(name)=="")
-                        this.innerHTML="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";//防止无法点击事件
-                    else
-                        this.innerHTML = name ;
-                    layer.msg('你输入了'+name);
+                    this.innerHTML = name ;
+                    var obj = this;
                     $.ajax({
                         type: 'post',
-                        url: 'Bill!EditBill',
-                        data: "billamount="+name+",",
-                        dataType: "json",
+                        url: 'Bill!editBill',
+                        data: {billamount:name , cardno:obj.title},
                         success: function (data) {
-                            var json = eval("(" + data + ")");
-                            $("#bankName").html(json.bankList);
-                            $("#bankName").val("<s:property value="cardmanager.bankname"/>");
+                            var json = eval("(" + data + ")");alert(json);
+                            if (json.successMessage!="")
+                                layer.msg(json.successMessage);
+                            if (json.errorMessage!="")
+                                layer.msg(json.errorMessage);
                         }
                     });
                 })

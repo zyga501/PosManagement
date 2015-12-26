@@ -16,6 +16,15 @@ public class BillAction extends AjaxActionSupport {
     private String cardno;
     private String bankName;
     private String billDate;
+    private String billamount;
+
+    public String getBillamount() {
+        return billamount;
+    }
+
+    public void setBillamount(String billamount) {
+        this.billamount = billamount;
+    }
 
     public void setCardno(String cardno) {
         this.cardno = cardno;
@@ -48,6 +57,22 @@ public class BillAction extends AjaxActionSupport {
     public String Init() throws Exception {
         billList = new BillList().generateHTMLString();
         return BILLMANAGER;
+    }
+
+    public void editBill(){
+        if (null==billamount || null==cardno) return ;
+        Map map = new HashMap();
+        Map para = new HashMap();
+        para.put(1,billamount);
+        para.put(2,cardno);
+        String sqlString="update billtb set billamount=? where cardno=?";
+        try {
+            if (PosDbManager.executeUpdate(sqlString,(HashMap<Integer, Object>)para))
+                map.put("successMessage",getText("BillAction.InfoSuccess") );
+        } catch (Exception e) {
+            map.put("errorMessage", getText("BillAction.InfoError"));
+            e.printStackTrace();
+        }
     }
 
     public void makeBill(){

@@ -44,7 +44,7 @@
 <div align="center">
     <div class="panel panel-default" style="float: left;width: auto">
         <div class="panel-header"><s:text name="cardmanager.paneltitle"/><span style="float:right;">
-            <a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="editcard()">
+            <a href="javascript:void(0);" class="btn btn-warning  radius size-S " onclick="editcard()">
                 <s:text name="global.edit"/></a></span> <span style="float:right;">
             <a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addcard()">
                 <s:text name="global.add"/></a></span></div>

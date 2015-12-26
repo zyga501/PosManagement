@@ -23,39 +23,36 @@ public class RuleAction extends AjaxActionSupport {
     public String AddRule() throws Exception {
         Map parametMap = new HashMap();
         parametMap.put(1, UUID.randomUUID().toString().toUpperCase());
-        parametMap.put(2, (String) getParameter("bankName"));
+        parametMap.put(2, (String) getParameter("bankCode"));
         parametMap.put(3, (String) getParameter("posServer"));
-        parametMap.put(4, (String) getParameter("minSwingNum"));
-        parametMap.put(5, (String) getParameter("maxSwingNum"));
-        parametMap.put(6, (String) getParameter("swingTime"));
-        parametMap.put(7, (String) getParameter("minSwingMoney"));
-        parametMap.put(8, (String) getParameter("maxSwingMoney"));
-        parametMap.put(9, (String) getParameter("swingPercent"));
-        parametMap.put(10, (String) getParameter("industryName"));
-        parametMap.put(11, (String) getParameter("industryFre"));
-        parametMap.put(12, (String) getParameter("industryInterval"));
-        parametMap.put(13, (String) getParameter("rate"));
-        parametMap.put(14, (String) getParameter("rateFre"));
-        parametMap.put(15, (String) getParameter("rateInterval"));
-        parametMap.put(16, (String) getParameter("mcc"));
-        parametMap.put(17, (String) getParameter("mccFre"));
-        parametMap.put(18, (String) getParameter("mccInterval"));
-        parametMap.put(19, (String) getParameter("useFre"));
-        parametMap.put(20, (String) getParameter("useInterval"));
-        parametMap.put(21, (String) getParameter("ruleUseFre"));
-        parametMap.put(22, (String) getParameter("ruleUseInterval"));
-        if (getParameter("status") != null && getParameter("status").toString().compareTo("enable") == 0) {
-            parametMap.put(23, "enable");
+        parametMap.put(4, (String) getParameter("swingTime"));
+        parametMap.put(5, (String) getParameter("minSwingMoney"));
+        parametMap.put(6, (String) getParameter("maxSwingMoney"));
+        parametMap.put(7, (String) getParameter("industryName"));
+        parametMap.put(8, (String) getParameter("industryFre"));
+        parametMap.put(9, (String) getParameter("industryInterval"));
+        parametMap.put(10, (String) getParameter("rate"));
+        parametMap.put(11, (String) getParameter("rateFre"));
+        parametMap.put(12, (String) getParameter("rateInterval"));
+        parametMap.put(13, (String) getParameter("mcc"));
+        parametMap.put(14, (String) getParameter("mccFre"));
+        parametMap.put(15, (String) getParameter("mccInterval"));
+        parametMap.put(16, (String) getParameter("useFre"));
+        parametMap.put(17, (String) getParameter("useInterval"));
+        parametMap.put(18, (String) getParameter("ruleUseFre"));
+        parametMap.put(19, (String) getParameter("ruleUseInterval"));
+        if (getParameter("status") != null && getParameter("status").toString().compareTo("on") == 0) {
+            parametMap.put(20, "enable");
         }
         else {
-            parametMap.put(23, "disable");
+            parametMap.put(20, "disable");
         }
 
         Map map = new HashMap();
-        if (PosDbManager.executeUpdate("insert into ruletb(ruleno,bankname,posserver,swingtime," +
+        if (PosDbManager.executeUpdate("insert into ruletb(ruleno,bankcode,posserver,swingtime," +
                 "minswingmoney,maxswingmoney,industryname,industryfre,industryinterval,rate,ratefre,rateinterval,mcc," +
                 "mccfre,mccinterval,usefre,useinterval,ruleusefre,ruleuseinterval,status)" +
-                "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>)parametMap)) {
+                "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>)parametMap)) {
             map.put("ruleList", new RuleList().generateHTMLString());
         }
 

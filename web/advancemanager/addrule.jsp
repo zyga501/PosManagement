@@ -43,7 +43,7 @@
                 dataType : "json",
                 success: function(data) {
                     var json = eval("(" + data + ")");
-                    $("#bankName").html(json.bankList);
+                    $("#bankCode").html(json.bankList);
                 }
             });
         }
@@ -130,7 +130,7 @@
             <tr class="text-c odd" role="row">
                 <td><s:text name="addrule.bankname" /></td>
                 <td>
-                    <select id="bankName" name="bankName">
+                    <select id="bankCode" name="bankCode">
                     </select>
                 </td>
             </tr>

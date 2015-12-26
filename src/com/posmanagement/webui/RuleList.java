@@ -18,21 +18,13 @@ public class RuleList {
                             .addAttribute("role", "row")
                             .addElement("td", dbRet.get(index).get("RULENO").toString())
                             .addElement("td", dbRet.get(index).get("BANKNAME").toString())
-                            .addElement("td", dbRet.get(index).get("POSSERVER").toString())
+                            .addElement("td", dbRet.get(index).get("SERVERNAME").toString())
                             .addElement("td", dbRet.get(index).get("SWINGTIME").toString())
                             .addElement("td", dbRet.get(index).get("MINSWINGMONEY").toString())
                             .addElement("td", dbRet.get(index).get("MAXSWINGMONEY").toString())
                             .addElement("td", dbRet.get(index).get("INDUSTRYNAME").toString())
                             .addElement("td", dbRet.get(index).get("INDUSTRYFRE").toString())
                             .addElement("td", dbRet.get(index).get("INDUSTRYINTERVAL").toString())
-                            .addElement("td", dbRet.get(index).get("RATE").toString())
-                            .addElement("td", dbRet.get(index).get("RATEFRE").toString())
-                            .addElement("td", dbRet.get(index).get("RATEINTERVAL").toString())
-                            .addElement("td", dbRet.get(index).get("MCC").toString())
-                            .addElement("td", dbRet.get(index).get("MCCFRE").toString())
-                            .addElement("td", dbRet.get(index).get("MCCINTERVAL").toString())
-                            .addElement("td", dbRet.get(index).get("USEFRE").toString())
-                            .addElement("td", dbRet.get(index).get("USEINTERVAL").toString())
                             .addElement("td", dbRet.get(index).get("RULEUSEFRE").toString())
                             .addElement("td", dbRet.get(index).get("RULEUSEINTERVAL").toString())
                             .addElement(new UIContainer("td")
@@ -47,6 +39,24 @@ public class RuleList {
     }
 
     private ArrayList<HashMap<String, Object>> fetchRuleList() throws Exception {
-        return PosDbManager.executeSql("select * from ruletb");
+        return PosDbManager.executeSql("SELECT\n" +
+                "ruletb.ruleno,\n" +
+                "banktb.bankname,\n" +
+                "posservertb.servername,\n" +
+                "ruletb.swingtime,\n" +
+                "ruletb.minswingmoney,\n" +
+                "ruletb.maxswingmoney,\n" +
+                "industrytb.industryname,\n" +
+                "ruletb.industryfre,\n" +
+                "ruletb.industryinterval,\n" +
+                "ruletb.ruleusefre,\n" +
+                "ruletb.ruleuseinterval,\n" +
+                "ruletb.`status`,\n" +
+                "industrytb.industrycode\n" +
+                "FROM\n" +
+                "ruletb\n" +
+                "INNER JOIN banktb ON banktb.bankcode = ruletb.bankcode\n" +
+                "INNER JOIN posservertb ON posservertb.servercode = ruletb.posservercode\n" +
+                "INNER JOIN industrytb ON ruletb.industrycode = industrytb.industrycode\n");
     }
 }

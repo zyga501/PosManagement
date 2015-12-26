@@ -53,7 +53,7 @@ public class BankList {
     }
 
     private ArrayList<HashMap<String, Object>> fetchBankList() throws Exception {
-        return PosDbManager.executeSql("select * from banktb order by bankid");
+        return PosDbManager.executeSql("select * from banktb");
     }
 
     private WebUI.UIMode uiMode;

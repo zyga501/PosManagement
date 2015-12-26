@@ -45,14 +45,6 @@
                             <th><s:text name="rulemanager.industryname" /></th>
                             <th><s:text name="rulemanager.industryfre" /></th>
                             <th><s:text name="rulemanager.industryinterval" /></th>
-                            <th><s:text name="rulemanager.rate" /></th>
-                            <th><s:text name="rulemanager.ratefre" /></th>
-                            <th><s:text name="rulemanager.rateinterval" /></th>
-                            <th><s:text name="rulemanager.mcc" /></th>
-                            <th><s:text name="rulemanager.mccfre" /></th>
-                            <th><s:text name="rulemanager.mccinterval" /></th>
-                            <th><s:text name="rulemanager.usefre" /></th>
-                            <th><s:text name="rulemanager.useinterval" /></th>
                             <th><s:text name="rulemanager.ruleusefre" /></th>
                             <th><s:text name="rulemanager.ruleuseinterval" /></th>
                             <th><s:text name="rulemanager.status" /></th>

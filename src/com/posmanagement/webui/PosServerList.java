@@ -52,7 +52,7 @@ public class PosServerList {
         for (int index = 0; index < dbRet.size(); ++index) {
             if (dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0) {
                 uiContainer.addElement(new UIContainer("option", dbRet.get(index).get("SERVERNAME").toString())
-                                        .addAttribute("value", dbRet.get(index).get("ID").toString()));
+                                        .addAttribute("value", dbRet.get(index).get("SERVERCODE").toString()));
             }
         }
 
@@ -60,7 +60,7 @@ public class PosServerList {
     }
 
     private ArrayList<HashMap<String, Object>> fetchPosServerList() throws Exception {
-        return PosDbManager.executeSql("select * from posservertb order by id");
+        return PosDbManager.executeSql("select * from posservertb");
     }
 
     private WebUI.UIMode uiMode;

@@ -66,7 +66,7 @@ public class SwingTimeList {
         for (int index = 0; index < dbRet.size(); ++index) {
             if (dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0) {
                 uiContainer.addElement(new UIContainer("option", dbRet.get(index).get("SWINGTIME").toString())
-                                        .addAttribute("value", dbRet.get(index).get("TIMERID").toString()));
+                                        .addAttribute("value", dbRet.get(index).get("SWINGCODE").toString()));
             }
         }
 

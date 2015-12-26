@@ -28,11 +28,10 @@ public class IndustryList {
 
         String htmlString = "";
         for (int index = 0; index < dbRet.size(); ++index) {
-            boolean checked = dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0;
             htmlString += new UIContainer("tr")
                             .addAttribute("class", "text-c odd")
                             .addAttribute("role", "row")
-                            .addElement("td", dbRet.get(index).get("NAME").toString())
+                            .addElement("td", dbRet.get(index).get("INDUSTRYNAME").toString())
                             .addElement(new UIContainer("td")
                                         .addElement(
                                                 new UIContainer("input")
@@ -52,8 +51,8 @@ public class IndustryList {
         UIContainer uiContainer = new UIContainer();
         for (int index = 0; index < dbRet.size(); ++index) {
             if (dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0) {
-                uiContainer.addElement(new UIContainer("option", dbRet.get(index).get("NAME").toString())
-                                        .addAttribute("value", dbRet.get(index).get("ID").toString()));
+                uiContainer.addElement(new UIContainer("option", dbRet.get(index).get("INDUSTRYNAME").toString())
+                                        .addAttribute("value", dbRet.get(index).get("INDUSTRYCODE").toString()));
             }
         }
 

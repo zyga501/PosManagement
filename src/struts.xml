@@ -87,6 +87,9 @@
         <action name="Bill!*" class="com.posmanagement.action.BillAction" method="{1}">
             <result name="billManager">./cardmanager/billmanager.jsp</result>
         </action>
+        <action name="SwingCard!*" class="com.posmanagement.action.SwingCardAction" method="{1}">
+            <result name="swingCardManager">./cardmanager/swingcardmanager.jsp</result>
+        </action>
         <action name="Menu!*" class="com.posmanagement.action.MenuAction" method="{1}">
             <result name="salemanManager" type="redirectAction">Saleman!Init</result>
             <result name="tellerManager" type="redirectAction">Teller!Init</result>
@@ -100,6 +103,7 @@
             <result name="posServerManager" type="redirectAction">PosServer!Init</result>
             <result name="ruleManager" type="redirectAction">Rule!Init</result>
             <result name="billManager" type="redirectAction">Bill!Init</result>
+            <result name="swingCardManager" type="redirectAction">SwingCard!Init</result>
         </action>
     </package>
 </struts>

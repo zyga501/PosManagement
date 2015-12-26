@@ -23,8 +23,6 @@ public class RuleList {
                             .addElement("td", dbRet.get(index).get("MINSWINGMONEY").toString())
                             .addElement("td", dbRet.get(index).get("MAXSWINGMONEY").toString())
                             .addElement("td", dbRet.get(index).get("INDUSTRYNAME").toString())
-                            .addElement("td", dbRet.get(index).get("INDUSTRYFRE").toString())
-                            .addElement("td", dbRet.get(index).get("INDUSTRYINTERVAL").toString())
                             .addElement("td", dbRet.get(index).get("RULEUSEFRE").toString())
                             .addElement("td", dbRet.get(index).get("RULEUSEINTERVAL").toString())
                             .addElement(new UIContainer("td")
@@ -43,20 +41,18 @@ public class RuleList {
                 "ruletb.ruleno,\n" +
                 "banktb.bankname,\n" +
                 "posservertb.servername,\n" +
-                "ruletb.swingtime,\n" +
+                "swingtimetb.swingTime,\n" +
                 "ruletb.minswingmoney,\n" +
                 "ruletb.maxswingmoney,\n" +
                 "industrytb.industryname,\n" +
-                "ruletb.industryfre,\n" +
-                "ruletb.industryinterval,\n" +
                 "ruletb.ruleusefre,\n" +
                 "ruletb.ruleuseinterval,\n" +
-                "ruletb.`status`,\n" +
-                "industrytb.industrycode\n" +
+                "ruletb.`status`\n" +
                 "FROM\n" +
                 "ruletb\n" +
                 "INNER JOIN banktb ON banktb.bankcode = ruletb.bankcode\n" +
                 "INNER JOIN posservertb ON posservertb.servercode = ruletb.posservercode\n" +
-                "INNER JOIN industrytb ON ruletb.industrycode = industrytb.industrycode\n");
+                "INNER JOIN industrytb ON ruletb.industrycode = industrytb.industrycode\n" +
+                "INNER JOIN swingtimetb ON swingtimetb.swingCode = ruletb.swingtimecode\n");
     }
 }

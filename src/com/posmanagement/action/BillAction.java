@@ -96,7 +96,7 @@ public class BillAction extends AjaxActionSupport {
             wherestr = "  and bankname= '"+bankName+"'";
         else  if (null!=cardno && (!cardno.equals("")))
             wherestr = "  and cardno= '"+cardno+"'";
-        String sqlString= "insert into billtb (bankname,cardno,billdate,lastrepaymentdate) " +
+        String sqlString= "insert into billtb (bankcode,cardno,billdate,lastrepaymentdate) " +
                 "select bankname,cardno,'" + (new SimpleDateFormat("yyyy-MM-dd")).format(billd)+"',date_add('"+
         (new SimpleDateFormat("yyyy-MM-dd")).format(billd)+"',INTERVAL lastrepaymentdate DAY ) from cardtb a where status='enable' and billdate=" + day + wherestr+" and  not exists " +
                 "(select 1 from billtb b where a.cardno=b.cardno and b.billdate='" + (new SimpleDateFormat("yyyy-MM-dd")).format(billd)+"')";

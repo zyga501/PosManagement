@@ -17,7 +17,7 @@ public class BillList {
             htmlString += new UIContainer("tr")
                     .addAttribute("class", "text-c odd")
                     .addAttribute("role", "row")
-                    .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("BANKNAME")))
+                    .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("BANKCODE")))
                     .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("CARDNO")))
                     .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("BILLDATE")))
                     .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("LASTREPAYMENTDATE")))

@@ -43,8 +43,6 @@
                             <th><s:text name="rulemanager.minswingmoney" /></th>
                             <th><s:text name="rulemanager.maxswingmoney" /></th>
                             <th><s:text name="rulemanager.industryname" /></th>
-                            <th><s:text name="rulemanager.industryfre" /></th>
-                            <th><s:text name="rulemanager.industryinterval" /></th>
                             <th><s:text name="rulemanager.ruleusefre" /></th>
                             <th><s:text name="rulemanager.ruleuseinterval" /></th>
                             <th><s:text name="rulemanager.status" /></th>

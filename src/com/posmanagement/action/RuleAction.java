@@ -29,16 +29,6 @@ public class RuleAction extends AjaxActionSupport {
         parametMap.put(5, (String) getParameter("minSwingMoney"));
         parametMap.put(6, (String) getParameter("maxSwingMoney"));
         parametMap.put(7, (String) getParameter("industryName"));
-        parametMap.put(8, (String) getParameter("industryFre"));
-        parametMap.put(9, (String) getParameter("industryInterval"));
-        parametMap.put(10, (String) getParameter("rate"));
-        parametMap.put(11, (String) getParameter("rateFre"));
-        parametMap.put(12, (String) getParameter("rateInterval"));
-        parametMap.put(13, (String) getParameter("mcc"));
-        parametMap.put(14, (String) getParameter("mccFre"));
-        parametMap.put(15, (String) getParameter("mccInterval"));
-        parametMap.put(16, (String) getParameter("useFre"));
-        parametMap.put(17, (String) getParameter("useInterval"));
         parametMap.put(18, (String) getParameter("ruleUseFre"));
         parametMap.put(19, (String) getParameter("ruleUseInterval"));
         if (getParameter("status") != null && getParameter("status").toString().compareTo("on") == 0) {
@@ -49,10 +39,9 @@ public class RuleAction extends AjaxActionSupport {
         }
 
         Map map = new HashMap();
-        if (PosDbManager.executeUpdate("insert into ruletb(ruleno,bankcode,posserver,swingtime," +
-                "minswingmoney,maxswingmoney,industryname,industryfre,industryinterval,rate,ratefre,rateinterval,mcc," +
-                "mccfre,mccinterval,usefre,useinterval,ruleusefre,ruleuseinterval,status)" +
-                "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>)parametMap)) {
+        if (PosDbManager.executeUpdate("insert into ruletb(ruleno,bankcode,posservercode,swingtimecode," +
+                "minswingmoney,maxswingmoney,industrycode,ruleusefre,ruleuseinterval,status)" +
+                "values(?,?,?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>)parametMap)) {
             map.put("ruleList", new RuleList().generateHTMLString());
         }
 

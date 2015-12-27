@@ -39,7 +39,8 @@ public class BillList {
                         .addAttribute("class", dbRet.get(index).get("STATUS").equals("enable")?"label label-success radius":"btn btn-danger radius")
                         .addAttribute("type","button")
                                     .addAttribute("title", dbRet.get(index).get("STATUS").equals("enable")?"已开启":"未开启")
-                                    .addAttribute("value", dbRet.get(index).get("STATUS").equals("enable")?"Y":"N")));
+                                    .addAttribute("value", dbRet.get(index).get("STATUS").equals("enable")?"Y":"N")
+                                    .addAttribute("onclick", "clickBill(this,'" + StringUtils.convertNullableString(dbRet.get(index).get("ID")) + "')")));
         }
         return htmlString;
     }

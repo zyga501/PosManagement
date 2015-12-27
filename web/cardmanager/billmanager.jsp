@@ -21,6 +21,31 @@
                 fix: false,
                 content: "./cardmanager/addbill.jsp"
             });}
+
+        function clickBill(button, billNO) {
+            var val = button.value;
+            if (val == "N") {
+                layer.confirm('确定启用？', {
+                    btn: ['yes', 'no'] //按钮
+                }, function () {
+                    button.value = "Y";
+                    button.setAttribute("class", "btn btn-success radius");
+                    layer.msg('你选择了YES', {icon: 1});
+                    $.ajax({
+                        type: 'post',
+                        url: 'SwingCard!GenerateSwingCard',
+                        data: "billNO=" + billNO,
+                        dataType : "json",
+                        success: function(data) {
+                            var json = eval("(" + data + ")");
+                            $("#bankName").html(json.bankList);
+                        }
+                    });
+                }, function () {
+                });
+            }
+        }
+
         function refreshBillList(billList) {
             $('#billList').html(billList);
         }
@@ -71,39 +96,24 @@
 <script type="text/javascript" src="../js/H-ui.admin.js"></script>
 <script type="text/javascript">
     $().ready( function(){
-        $("input[type=button]").on("click", function() {
-                    var val = this.value;
-                    var obj = this;
-                    if (val == "N") {
-                        layer.confirm('确定启用？', {
-                            btn: ['yes', 'no'] //按钮
-                        }, function () {
-                            obj.value = "Y";
-                            obj.setAttribute("class", "btn btn-success radius");
-                            layer.msg('你选择了YES', {icon: 1});
-                        }, function () {
-                        });
-                    }
-                }
-        )
-                $("label[name=billamount]").on("click", function() {
-                            var name = prompt("输入新的金额",this.innerHTML);
-                    if (name==null) return ;
-                    this.innerHTML = name ;
-                    var obj = this;
-                    $.ajax({
-                        type: 'post',
-                        url: 'Bill!editBill',
-                        data: {billamount:name , cardno:obj.title},
-                        success: function (data) {
-                            var json = eval("(" + data + ")");alert(json);
-                            if (json.successMessage!="")
-                                layer.msg(json.successMessage);
-                            if (json.errorMessage!="")
-                                layer.msg(json.errorMessage);
-                        }
-                    });
-                })
+        $("label[name=billamount]").on("click", function() {
+        var name = prompt("输入新的金额",this.innerHTML);
+        if (name==null) return ;
+        this.innerHTML = name ;
+        var obj = this;
+        $.ajax({
+            type: 'post',
+            url: 'Bill!editBill',
+            data: {billamount:name , cardno:obj.title},
+            success: function (data) {
+                var json = eval("(" + data + ")");alert(json);
+                if (json.successMessage!="")
+                    layer.msg(json.successMessage);
+                if (json.errorMessage!="")
+                    layer.msg(json.errorMessage);
+            }
+        });
+    })
     }
     )
 

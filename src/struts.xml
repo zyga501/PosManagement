@@ -89,6 +89,7 @@
         </action>
         <action name="SwingCard!*" class="com.posmanagement.action.SwingCardAction" method="{1}">
             <result name="swingCardManager">./cardmanager/swingcardmanager.jsp</result>
+            <result name="">./cardmanager/swingcardmanager.jsp</result>
         </action>
         <action name="Menu!*" class="com.posmanagement.action.MenuAction" method="{1}">
             <result name="salemanManager" type="redirectAction">Saleman!Init</result>

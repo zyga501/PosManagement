@@ -34,8 +34,9 @@ public class SwingCardAction extends AjaxActionSupport {
             parametMap.put(3, swingList.cardMaster);
             parametMap.put(4, swingList.swingCardList.get(index).money);
             parametMap.put(5, swingList.swingCardList.get(index).swingDate);
-            PosDbManager.executeUpdate("insert into swingcard(thedate,cardno,cardmaster,amount,sdatetm) " +
-                    "values(?,?,?,?,?)",
+            parametMap.put(6, swingList.swingCardList.get(index).ruleNO);
+            PosDbManager.executeUpdate("insert into swingcard(thedate,cardno,cardmaster,amount,sdatetm,ruleno) " +
+                    "values(?,?,?,?,?,?)",
                     (HashMap<Integer, Object>)parametMap);
         }
 

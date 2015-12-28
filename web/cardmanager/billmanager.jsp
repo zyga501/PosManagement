@@ -8,10 +8,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
     <meta http-equiv="Cache-Control" content="no-siteapp" />
-    <link href="../css/H-ui.min.css" rel="stylesheet" type="text/css" />
-    <link href="../css/H-ui.admin.css" rel="stylesheet" type="text/css" />
-    <link href="../css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
-    <link href="../skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
+    <link href="<%=request.getContextPath()%>/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+    <link href="<%=request.getContextPath()%>/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+    <link href="<%=request.getContextPath()%>/css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
+    <link href="<%=request.getContextPath()%>/skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
     <title></title>
     <script type="text/javascript">
         function addBill(){
@@ -21,31 +21,6 @@
                 fix: false,
                 content: "./cardmanager/addbill.jsp"
             });}
-
-        function clickBill(button, billNO) {
-            var val = button.value;
-            if (val == "N") {
-                layer.confirm('确定启用？', {
-                    btn: ['yes', 'no'] //按钮
-                }, function () {
-                    button.value = "Y";
-                    button.setAttribute("class", "btn btn-success radius");
-                    layer.msg('你选择了YES', {icon: 1});
-                    $.ajax({
-                        type: 'post',
-                        url: 'SwingCard!GenerateSwingCard',
-                        data: "billNO=" + billNO,
-                        dataType : "json",
-                        success: function(data) {
-                            var json = eval("(" + data + ")");
-                            $("#bankName").html(json.bankList);
-                        }
-                    });
-                }, function () {
-                });
-            }
-        }
-
         function refreshBillList(billList) {
             $('#billList').html(billList);
         }
@@ -54,7 +29,7 @@
 </head>
 <body>
 <div align="center">
-    <div class="panel panel-default" style="float: left;width: auto">
+    <div class="panel panel-default"  >
         <div class="panel-header"><s:text name="billmanager.paneltitle" />
             <span style="float:right;" >
              <a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addBill()">
@@ -90,30 +65,59 @@
         </div>
     </div>
 </div>
-<script type="text/javascript" src="../js/jquery/1.9.1/jquery.min.js"></script>
-<script type="text/javascript" src="../js/layer/1.9.3/layer.js"></script>
-<script type="text/javascript" src="../js/H-ui.js"></script>
-<script type="text/javascript" src="../js/H-ui.admin.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/layer/1.9.3/layer.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.admin.js"></script>
 <script type="text/javascript">
     $().ready( function(){
-        $("label[name=billamount]").on("click", function() {
-        var name = prompt("输入新的金额",this.innerHTML);
-        if (name==null) return ;
-        this.innerHTML = name ;
-        var obj = this;
-        $.ajax({
-            type: 'post',
-            url: 'Bill!editBill',
-            data: {billamount:name , cardno:obj.title},
-            success: function (data) {
-                var json = eval("(" + data + ")");alert(json);
-                if (json.successMessage!="")
-                    layer.msg(json.successMessage);
-                if (json.errorMessage!="")
-                    layer.msg(json.errorMessage);
-            }
-        });
-    })
+        $("input[type=button]").on("click", function() {
+                    var val = this.value;
+                    var obj = this;
+                    if (val == "N") {
+                        layer.confirm('确定启用？', {
+                            btn: ['yes', 'no'] //按钮
+                        }, function () {
+                            layer.msg('你选择了YES', {icon:1});
+                            $.ajax({
+                                type: 'post',
+                                url: 'Bill!editBill',
+                                data: {status:"enable" , cardno:$(obj).attr("datav")},
+                                success: function (data) {
+                                    var json = eval("(" + data + ")");
+                                    if (json.successMessage) {
+                                        obj.value = "Y";
+                                        obj.setAttribute("class", "btn btn-success radius");
+                                        layer.msg(json.successMessage);
+                                    }
+                                    else if (json.errorMessage)
+                                        layer.msg(json.errorMessage);
+                                }
+                            });
+                        }, function () {
+                        });
+                    }
+                }
+        )
+                $("label[name=billamount]").on("click", function() {
+                    var name = prompt("输入新的金额",this.innerHTML);
+                    if (name==null) return ;
+                    var obj = this;
+                    $.ajax({
+                        type: 'post',
+                        url: 'Bill!editBill',
+                        data: {billamount:name , cardno:$(obj).attr("datav")},
+                        success: function (data) {
+                            var json = eval("(" + data + ")");
+                            if (json.successMessage) {
+                                obj.innerHTML = name ;
+                                layer.msg(json.successMessage, {icon: 1});
+                            }
+                            else if (json.errorMessage)
+                                layer.msg(json.errorMessage, {icon:2});
+                        }
+                    });
+                })
     }
     )
 

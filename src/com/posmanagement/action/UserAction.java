@@ -6,6 +6,7 @@ import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.webui.SalemanList;
 import com.posmanagement.webui.TellerList;
 import com.posmanagement.webui.UserMenu;
+import com.posmanagement.webui.WebUI;
 import org.apache.struts2.ServletActionContext;
 
 import javax.servlet.http.HttpServletRequest;
@@ -236,5 +237,12 @@ public class UserAction extends AjaxActionSupport{
         if (!PosDbManager.executeUpdate("update userinfo set lastlocation=?,lasttime=? where uname=? and upwd=?", (HashMap<Integer, Object>) parametMap))
             throw new RuntimeException();
         LogManager.getInstance().writeLoginTrack(userID, location, now.toString());
+    }
+
+    public String FetchSalemanList() throws Exception {
+        Map map = new HashMap();
+        map.put("userList", new SalemanList().generateListHTMLString());
+
+        return AjaxActionComplete(map);
     }
 }

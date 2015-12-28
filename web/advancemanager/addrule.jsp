@@ -8,11 +8,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
     <meta http-equiv="Cache-Control" content="no-siteapp" />
-    <link href="../css/H-ui.min.css" rel="stylesheet" type="text/css" />
-    <link href="../css/H-ui.admin.css" rel="stylesheet" type="text/css" />
-    <link href="../css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
-    <link href="../skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
-    <script type="text/javascript" src="../js/jquery/1.9.1/jquery.min.js"></script>
+    <link href="<%=request.getContextPath()%>/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+    <link href="<%=request.getContextPath()%>/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+    <link href="<%=request.getContextPath()%>/css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
+    <link href="<%=request.getContextPath()%>/skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
+    <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery/1.9.1/jquery.min.js"></script>
     <title><s:text name="addasset.title" /></title>
     <script type="text/javascript">
         function addRule() {
@@ -43,7 +43,7 @@
                 dataType : "json",
                 success: function(data) {
                     var json = eval("(" + data + ")");
-                    $("#bankCode").html(json.bankList);
+                    $("#bankName").html(json.bankList);
                 }
             });
         }
@@ -130,7 +130,7 @@
             <tr class="text-c odd" role="row">
                 <td><s:text name="addrule.bankname" /></td>
                 <td>
-                    <select id="bankCode" name="bankCode">
+                    <select id="bankName" name="bankName">
                     </select>
                 </td>
             </tr>
@@ -139,6 +139,18 @@
                 <td>
                     <select id="posServer" name="posServer">
                     </select>
+                </td>
+            </tr>
+            <tr class="text-c odd" role="row">
+                <td><s:text name="addrule.minswingnum" /></td>
+                <td>
+                    <input id="minSwingNum" name="minSwingNum" type="text" placeholder="<s:text name="addrule.minswingnum" />" class="input-text size-S">
+                </td>
+            </tr>
+            <tr class="text-c odd" role="row">
+                <td><s:text name="addrule.maxswingnum" /></td>
+                <td>
+                    <input id="maxSwingNum" name="maxSwingNum" type="text" placeholder="<s:text name="addrule.maxswingnum" />" class="input-text size-S">
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
@@ -161,69 +173,75 @@
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
+                <td><s:text name="addrule.swingpercent" /></td>
+                <td>
+                    <input id="swingPercent" name="swingPercent" type="text" placeholder="<s:text name="addrule.swingpercent" />" class="input-text size-S">
+                </td>
+            </tr>
+            <tr class="text-c odd" role="row">
                 <td><s:text name="addrule.industryname" /></td>
                 <td>
                     <select id="industryName" name="industryName">
                     </select>
                 </td>
             </tr>
-            <tr class="text-c odd" role="row" style="display: none">
+            <tr class="text-c odd" role="row">
                 <td><s:text name="addrule.industryfre" /></td>
                 <td>
                     <input id="industryFre" name="industryFre" type="text" placeholder="<s:text name="addrule.industryfre" />" class="input-text size-S">
                 </td>
             </tr>
-            <tr class="text-c odd" role="row" style="display: none">
+            <tr class="text-c odd" role="row">
                 <td><s:text name="addrule.industryinterval" /></td>
                 <td>
                     <input id="industryInterval" name="industryInterval" type="text" placeholder="<s:text name="addrule.industryinterval" />" class="input-text size-S">
                 </td>
             </tr>
-            <tr class="text-c odd" role="row" style="display: none">
+            <tr class="text-c odd" role="row">
                 <td><s:text name="addrule.rate" /></td>
                 <td>
                     <select id="rate" name="rate">
                     </select>
                 </td>
             </tr>
-            <tr class="text-c odd" role="row" style="display: none">
+            <tr class="text-c odd" role="row">
                 <td><s:text name="addrule.ratefre" /></td>
                 <td>
                     <input id="rateFre" name="rateFre" type="text" placeholder="<s:text name="addrule.ratefre" />" class="input-text size-S">
                 </td>
             </tr>
-            <tr class="text-c odd" role="row" style="display: none">
+            <tr class="text-c odd" role="row">
                 <td><s:text name="addrule.rateinterval" /></td>
                 <td>
                     <input id="rateInterval" name="rateInterval" type="text" placeholder="<s:text name="addrule.rateinterval" />" class="input-text size-S">
                 </td>
             </tr>
-            <tr class="text-c odd" role="row" style="display: none">
+            <tr class="text-c odd" role="row">
                 <td><s:text name="addrule.mcc" /></td>
                 <td>
                     <select id="mcc" name="mcc">
                     </select>
                 </td>
             </tr>
-            <tr class="text-c odd" role="row" style="display: none">
+            <tr class="text-c odd" role="row">
                 <td><s:text name="addrule.mccfre" /></td>
                 <td>
                     <input id="mccFre" name="mccFre" type="text" placeholder="<s:text name="addrule.mccfre" />" class="input-text size-S">
                 </td>
             </tr>
-            <tr class="text-c odd" role="row" style="display: none">
+            <tr class="text-c odd" role="row">
                 <td><s:text name="addrule.mccinterval" /></td>
                 <td>
                     <input id="mccInterval" name="mccInterval" type="text" placeholder="<s:text name="addrule.mccinterval" />" class="input-text size-S">
                 </td>
             </tr>
-            <tr class="text-c odd" role="row" style="display: none">
+            <tr class="text-c odd" role="row">
                 <td><s:text name="addrule.usefre" /></td>
                 <td>
                     <input id="useFre" name="useFre" type="text" placeholder="<s:text name="addrule.usefre" />" class="input-text size-S">
                 </td>
             </tr>
-            <tr class="text-c odd" role="row" style="display: none">
+            <tr class="text-c odd" role="row">
                 <td><s:text name="addrule.useinterval" /></td>
                 <td>
                     <input id="useInterval" name="useInterval" type="text" placeholder="<s:text name="addrule.useinterval" />" class="input-text size-S">

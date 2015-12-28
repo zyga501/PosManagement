@@ -15,38 +15,36 @@
     <link href="<%=request.getContextPath()%>/skin/default/skin.css" rel="stylesheet" type="text/css" id="skin"/>
     <title><s:text name="bankmanager.title"/></title>
     <script type="text/javascript">
-        function addcard() {
+        function addpos() {
             var index = layer.open({
                 type: 2,
                 title: "<s:text name="global.add"/>",
-                fix: true,
+                fix: false,area: ['310px', '500px'],
                 maxmin: false,
-                content: "./cardmanager/addcard.jsp"
+                content: "./cardmanager/addpos.jsp"
             });
-            layer.full(index);
         }
-        function editcard() {
+        function editpos() {
             var index = layer.open({
                 type: 2,
                 title: "<s:text name="global.edit"/>",
-                fix: true,
+                fix:false,area: ['310px', '500px'],
                 maxmin: false,
-                content: "Card!FetchCard?" + $("form").serialize()
+                content: "POS!FetchPOS?"+$("form").serialize()
             });
-            layer.full(index);
         }
-        function refreshcardList(cardList) {
-            $('#cardList').html(cardList);
+        function refreshposList(posList) {
+            $('#posList').html(posList);
         }
     </script>
 </head>
 <body style="overflow: hidden">
 <div align="center">
-    <div class="panel panel-default">
-        <div class="panel-header"><s:text name="cardmanager.paneltitle"/><span style="float:right;">
-            <a href="javascript:void(0);" class="btn btn-warning  radius size-S " onclick="editcard()">
+    <div class="panel panel-default"  >
+        <div class="panel-header"><s:text name="posmanager.paneltitle"/><span style="float:right;">
+            <a href="javascript:void(0);" class="btn btn-warning  radius size-S " onclick="editpos()">
                 <s:text name="global.edit"/></a></span> <span style="float:right;">
-            <a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addcard()">
+            <a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addpos()">
                 <s:text name="global.add"/></a></span></div>
         <div class="panel-body" id="parentIframe">
             <form>
@@ -55,15 +53,15 @@
                         <thead>
                         <tr class="text-c">
                             <th><s:text name="global.sequence"/></th>
-                            <th><s:text name="cardmanager.cardno"/></th>
-                            <th><s:text name="cardmanager.cardmaster"/></th>
-                            <th><s:text name="cardmanager.cmtel"/></th>
-                            <th><s:text name="cardmanager.billdate"/></th>
-                            <th><s:text name="cardmanager.salesman"/></th>
+                            <th><s:text name="posmanager.posname"/></th>
+                            <th><s:text name="posmanager.industryname"/></th>
+                            <th><s:text name="posmanager.rate"/></th>
+                            <th><s:text name="posmanager.posserver"/></th>
+                            <th><s:text name="posmanager.mcc"/></th>
                         </tr>
                         </thead>
-                        <tbody id="cardList">
-                        <s:property value="cardList" escape="false"/>
+                        <tbody id="posList">
+                        <s:property value="posList" escape="false"/>
                         </tbody>
                     </table>
                 </div>

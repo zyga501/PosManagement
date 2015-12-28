@@ -2,6 +2,8 @@ package com.posmanagement.action;
 
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.webui.BillList;
+import com.posmanagement.webui.PosList;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -9,14 +11,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BillAction extends AjaxActionSupport {
-    public final static String BILLMANAGER = "billManager";
+public class POSAction extends AjaxActionSupport {
+    public final static String POSMANAGER = "posManager";
 
-    private String billList;
-    private String cardno;
-    private String bankName;
-    private String billDate;
-    private String billamount;
+    private String posList;
     private String status;
 
     public String getStatus() {
@@ -26,48 +24,13 @@ public class BillAction extends AjaxActionSupport {
     public void setStatus(String status) {
         this.status = status;
     }
-    public String getBillamount() {
-        return billamount;
-    }
-
-    public void setBillamount(String billamount) {
-        this.billamount = billamount;
-    }
-
-    public void setCardno(String cardno) {
-        this.cardno = cardno;
-    }
-
-    public String getCardno() {
-        return cardno;
-    }
-
-    public void setBankName(String bankName) {
-        this.bankName = bankName;
-    }
-
-    public String getBankName() {
-        return bankName;
-    }
-
-    public String getBillDate() {
-        return billDate;
-    }
-
-    public void setBillDate(String billDate) {
-        this.billDate = billDate;
-    }
-
-    public String getBillList() {
-        return billList;
-    }
 
     public String Init() throws Exception {
-        billList = new BillList().generateHTMLString();
-        return BILLMANAGER;
+        posList = new PosList().generateHTMLString();
+        return POSMANAGER;
     }
-
-    public String editBill(){
+/*
+    public String editPos(){
         if ( null==cardno) return "";
         Map map = new HashMap();
         Map para = new HashMap();
@@ -93,7 +56,7 @@ public class BillAction extends AjaxActionSupport {
         return AjaxActionComplete(map);
     }
 
-    public void makeBill(){
+    public void addPos(){
         if (null==billDate) return ;
         Map map = new HashMap();
         Date billd= null ;
@@ -126,5 +89,5 @@ public class BillAction extends AjaxActionSupport {
             map.put("errorMessage", getText("AssetAction.InfoError"));
             e.printStackTrace();
         }
-    }
+    }*/
 }

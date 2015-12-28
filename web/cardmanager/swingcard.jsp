@@ -13,57 +13,52 @@
     <link href="<%=request.getContextPath()%>/css/H-ui.admin.css" rel="stylesheet" type="text/css"/>
     <link href="<%=request.getContextPath()%>/css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css"/>
     <link href="<%=request.getContextPath()%>/skin/default/skin.css" rel="stylesheet" type="text/css" id="skin"/>
-    <title><s:text name="bankmanager.title"/></title>
+    <title></title>
     <script type="text/javascript">
-        function addcard() {
-            var index = layer.open({
-                type: 2,
-                title: "<s:text name="global.add"/>",
-                fix: true,
-                maxmin: false,
-                content: "./cardmanager/addcard.jsp"
-            });
-            layer.full(index);
-        }
-        function editcard() {
+
+        function editSwingCard() {
             var index = layer.open({
                 type: 2,
                 title: "<s:text name="global.edit"/>",
-                fix: true,
+                fix:false,area: ['310px', '500px'],
                 maxmin: false,
-                content: "Card!FetchCard?" + $("form").serialize()
+                content: "SwingCard!FetchSwingCard?"+$("form").serialize()
             });
-            layer.full(index);
         }
-        function refreshcardList(cardList) {
-            $('#cardList').html(cardList);
+        function refreshswingCardList(swingCardList) {
+            $('#swingCardList').html(swingCardList);
         }
     </script>
 </head>
 <body style="overflow: hidden">
 <div align="center">
-    <div class="panel panel-default">
-        <div class="panel-header"><s:text name="cardmanager.paneltitle"/><span style="float:right;">
-            <a href="javascript:void(0);" class="btn btn-warning  radius size-S " onclick="editcard()">
-                <s:text name="global.edit"/></a></span> <span style="float:right;">
-            <a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addcard()">
-                <s:text name="global.add"/></a></span></div>
+    <div class="panel panel-default" >
+        <div class="panel-header"><s:text name="swingcard.paneltitle"/><span style="float:right;">
+            <a href="javascript:void(0);" class="btn btn-warning  radius size-S " onclick="editpos()">
+                <s:text name="global.edit"/></a></span></div>
         <div class="panel-body" id="parentIframe">
             <form>
                 <div style="height:100%; overflow:auto;">
                     <table class="table table-border table-bordered table-bg table-hover table-sort">
                         <thead>
                         <tr class="text-c">
-                            <th><s:text name="global.sequence"/></th>
-                            <th><s:text name="cardmanager.cardno"/></th>
-                            <th><s:text name="cardmanager.cardmaster"/></th>
-                            <th><s:text name="cardmanager.cmtel"/></th>
-                            <th><s:text name="cardmanager.billdate"/></th>
-                            <th><s:text name="cardmanager.salesman"/></th>
+                            <th></th>
+                            <th><s:text name="swingcard.thedate"/></th>
+                            <th><s:text name="swingcard.cardno"/></th>
+                            <th><s:text name="swingcard.cardmaster"/></th>
+                            <th><s:text name="swingcard.amount"/></th>
+                            <th><s:text name="swingcard.sdatetm"/></th>
+                            <th><s:text name="swingcard.machineno"/></th>
+                            <th><s:text name="swingcard.machinename"/></th>
+                            <th><s:text name="swingcard.swingstatus"/></th>
+                            <th><s:text name="swingcard.teller"/></th>
+                            <th><s:text name="swingcard.realsdatetm"/></th>
+                            <th><s:text name="swingcard.salesman"/></th>
+                            <th><s:text name="swingcard.validstatus"/></th>
                         </tr>
                         </thead>
-                        <tbody id="cardList">
-                        <s:property value="cardList" escape="false"/>
+                        <tbody id="swingCardList">
+                        <s:property value="swingCardList" escape="false"/>
                         </tbody>
                     </table>
                 </div>

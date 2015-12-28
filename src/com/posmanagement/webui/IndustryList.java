@@ -28,15 +28,16 @@ public class IndustryList {
 
         String htmlString = "";
         for (int index = 0; index < dbRet.size(); ++index) {
+            boolean checked = dbRet.get(index).get("ENABLED").toString().compareTo("on") == 0;
             htmlString += new UIContainer("tr")
                             .addAttribute("class", "text-c odd")
                             .addAttribute("role", "row")
-                            .addElement("td", dbRet.get(index).get("INDUSTRYNAME").toString())
+                            .addElement("td", dbRet.get(index).get("NAME").toString())
                             .addElement(new UIContainer("td")
                                         .addElement(
                                                 new UIContainer("input")
                                                     .addAttribute("type", "checkbox")
-                                                    .addAttribute("checked", "checked", dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0)
+                                                    .addAttribute("checked", "checked", dbRet.get(index).get("ENABLED").toString().compareTo("on") == 0)
                                         )
                             );
         }
@@ -49,6 +50,8 @@ public class IndustryList {
             return new String("");
 
         UIContainer uiContainer = new UIContainer();
+        uiContainer.addElement(new UIContainer("option","")
+                .addAttribute("value", ""));
         for (int index = 0; index < dbRet.size(); ++index) {
             if (dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0) {
                 uiContainer.addElement(new UIContainer("option", dbRet.get(index).get("INDUSTRYNAME").toString())

@@ -36,7 +36,7 @@ public class MCCList {
                                     .addElement(
                                     new UIContainer("input")
                                             .addAttribute("type", "checkbox")
-                                            .addAttribute("checked", "checked", dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0)
+                                            .addAttribute("checked", "checked", dbRet.get(index).get("ENABLED").toString().compareTo("on") == 0)
                                     )
                     );
         }
@@ -49,6 +49,8 @@ public class MCCList {
             return new String("");
 
         UIContainer uiContainer = new UIContainer();
+        uiContainer.addElement(new UIContainer("option", "")
+                .addAttribute("value", ""));
         for (int index = 0; index < dbRet.size(); ++index) {
             if (dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0) {
                 uiContainer.addElement(new UIContainer("option", dbRet.get(index).get("MCC").toString())

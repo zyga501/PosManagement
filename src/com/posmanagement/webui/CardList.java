@@ -27,7 +27,7 @@ public class CardList {
                     .addElement("td", dbRet.get(index).get("CARDNO").toString())
                     .addElement("td", dbRet.get(index).get("CARDMASTER").toString())
                     .addElement("td", dbRet.get(index).get("CMTEL").toString())
-                    .addElement("td", dbRet.get(index).get("CMSECCONTACT").toString())
+                    .addElement("td", dbRet.get(index).get("BILLDATE").toString())
                     .addElement("td", dbRet.get(index).get("SALESMAN").toString());
         }
         return htmlString;
@@ -42,6 +42,6 @@ public class CardList {
     }
 
     private ArrayList<HashMap<String, Object>> fetchCardList() throws Exception {
-        return PosDbManager.executeSql("select cid, cardno,cardmaster,cmtel,cmseccontact,salesman from cardtb");
+        return PosDbManager.executeSql("select cid, cardno,cardmaster,cmtel,billdate,salesman from cardtb");
     }
 }

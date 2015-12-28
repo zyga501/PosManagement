@@ -2,7 +2,6 @@ package com.posmanagement.action;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.posmanagement.utils.PosDbManager;
-import com.posmanagement.utils.StringUtils;
 import com.posmanagement.webui.AssetList;
 import org.apache.struts2.ServletActionContext;
 
@@ -17,49 +16,9 @@ public class AssetAction extends AjaxActionSupport {
     public final static String ASSETMANAGER = "assetManager";
 
     private String assetList;
-    private String assetMaster;
-    private String cardCode;
-    private String bankName;
-    private String balance;
-    private String signPwd;
-    private String cashPwd;
-    private String transferPwd;
-    private String atmCashPwd;
 
     public String getAssetList() {
         return assetList;
-    }
-
-    public void setAssetMaster(String _assetMaster) {
-        assetMaster = _assetMaster;
-    }
-
-    public void setCardCode(String _cardCode) {
-        cardCode = _cardCode;
-    }
-
-    public void setBankName(String _bankName) {
-        bankName = _bankName;
-    }
-
-    public void setBalance(String _balance) {
-        balance = _balance;
-    }
-
-    public void setSignPwd(String _signPwd) {
-        signPwd = _signPwd;
-    }
-
-    public void setCashPwd(String _cashPwd) {
-        cashPwd = _cashPwd;
-    }
-
-    public void setTransferPwd(String _transferPwd) {
-        transferPwd = _transferPwd;
-    }
-
-    public void setAtmCashPwd(String _atmCashPwd) {
-        atmCashPwd = _atmCashPwd;
     }
 
     public String Init() throws Exception {
@@ -69,46 +28,32 @@ public class AssetAction extends AjaxActionSupport {
 
     public String addAsset() throws Exception {
         Map map = new HashMap();
-        if (StringUtils.isEmpty(assetMaster) || StringUtils.isEmpty(cardCode) ||
-                StringUtils.isEmpty(bankName) || StringUtils.isEmpty(balance) ||
-                StringUtils.isEmpty(signPwd) || StringUtils.isEmpty(cashPwd) ||
-                StringUtils.isEmpty(transferPwd) || StringUtils.isEmpty(atmCashPwd)) {
-            map.put("errorMessage", getText("AssetAction.InfoError"));
+        try {
+            Pattern pattern = Pattern.compile("[0-9]*");
+            Matcher isNum = pattern.matcher(getParameter("cardCode").toString());
+            if (!isNum.matches()) {
+                throw new IllegalArgumentException();
+            }
+            Map parametMap = new HashMap();
+            parametMap.put(1, getParameter("assetMaster").toString());
+            parametMap.put(2, getParameter("bankUUID").toString());
+            parametMap.put(3, getParameter("cardCode").toString());
+            parametMap.put(4, getParameter("balance").toString());
+            parametMap.put(5, getParameter("signPwd").toString());
+            parametMap.put(6, getParameter("cashPwd").toString());
+            parametMap.put(7, getParameter("transferPwd").toString());
+            parametMap.put(8, getParameter("atmCashPwd").toString());
+            ActionContext ctx = ActionContext.getContext();
+            HttpServletRequest request = (HttpServletRequest) ctx
+                    .get(ServletActionContext.HTTP_REQUEST);
+            HttpSession session = request.getSession(false);
+            parametMap.put(9, session.getAttribute("userID"));
+            PosDbManager.executeUpdate("insert into assettb(cardmaster,bankuuid,cardno,firstbalance,ebanksignpwd,ebankcashpwd," +
+                    "ebanktransferpwd,atmcashpwd,salesman) values(?,?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>)parametMap);
+            map.put("assetList", new AssetList().generateHTMLString());
         }
-        else {
-            try {
-                Pattern pattern = Pattern.compile("[0-9]*");
-                Matcher isNum = pattern.matcher(cardCode);
-                if (!isNum.matches()) {
-                    throw new IllegalArgumentException();
-                }
-                Double.parseDouble(balance);
-                Integer.parseInt(signPwd);
-                Integer.parseInt(cashPwd);
-                Integer.parseInt(cashPwd);
-                Integer.parseInt(transferPwd);
-                Integer.parseInt(atmCashPwd);
-                Map parametMap = new HashMap();
-                parametMap.put(1, assetMaster);
-                parametMap.put(2, bankName);
-                parametMap.put(3, cardCode);
-                parametMap.put(4, balance);
-                parametMap.put(5, signPwd);
-                parametMap.put(6, cashPwd);
-                parametMap.put(7, transferPwd);
-                parametMap.put(8, atmCashPwd);
-                ActionContext ctx = ActionContext.getContext();
-                HttpServletRequest request = (HttpServletRequest) ctx
-                        .get(ServletActionContext.HTTP_REQUEST);
-                HttpSession session = request.getSession(false);
-                parametMap.put(9, session.getAttribute("userID"));
-                PosDbManager.executeUpdate("insert into assettb(cardmaster,bankname,cardno,firstbalance,ebanksignpwd,ebankcashpwd," +
-                        "ebanktransferpwd,atmcashpwd,salesman) values(?,?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>)parametMap);
-                map.put("assetList", new AssetList().generateHTMLString());
-            }
-            catch (Exception exception) {
-                map.put("errorMessage", getText("AssetAction.InfoError"));
-            }
+        catch (Exception exception) {
+            map.put("errorMessage", getText("AssetAction.InfoError"));
         }
 
         return AjaxActionComplete(map);

@@ -29,6 +29,17 @@ public class AssetList {
     }
 
     private ArrayList<HashMap<String, Object>> fetchAssetList() throws Exception {
-        return PosDbManager.executeSql("select * from assettb");
+        return PosDbManager.executeSql("SELECT\n" +
+                "assettb.cardmaster,\n" +
+                "banktb.`name` bankname,\n" +
+                "assettb.cardno,\n" +
+                "assettb.firstbalance,\n" +
+                "assettb.ebanksignpwd,\n" +
+                "assettb.ebankcashpwd,\n" +
+                "assettb.ebanktransferpwd,\n" +
+                "assettb.atmcashpwd\n" +
+                "FROM\n" +
+                "assettb\n" +
+                "INNER JOIN banktb ON banktb.uuid = assettb.bankuuid");
     }
 }

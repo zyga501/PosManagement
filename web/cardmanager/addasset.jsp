@@ -43,7 +43,7 @@
                 dataType : "json",
                 success: function(data) {
                     var json = eval("(" + data + ")");
-                    $("#bankName").html(json.bankList);
+                    $("#bankUUID").html(json.bankList);
                 }
             });
         }
@@ -72,7 +72,7 @@
             <tr class="text-c odd" role="row">
                 <td><s:text name="addasset.bankName" /></td>
                 <td>
-                    <select id="bankName" name="bankName">
+                    <select id="bankUUID" name="bankUUID">
                     </select>
                 </td>
             </tr>

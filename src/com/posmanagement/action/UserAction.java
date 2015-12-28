@@ -3,10 +3,10 @@ package com.posmanagement.action;
 import com.opensymphony.xwork2.ActionContext;
 import com.posmanagement.utils.LogManager;
 import com.posmanagement.utils.PosDbManager;
+import com.posmanagement.utils.UUIDUtils;
 import com.posmanagement.webui.SalemanList;
 import com.posmanagement.webui.TellerList;
 import com.posmanagement.webui.UserMenu;
-import com.posmanagement.webui.WebUI;
 import org.apache.struts2.ServletActionContext;
 
 import javax.servlet.http.HttpServletRequest;
@@ -199,28 +199,27 @@ public class UserAction extends AjaxActionSupport{
                 .get(ServletActionContext.HTTP_REQUEST);
         HttpSession session = request.getSession(false);
         if (!session.getAttribute("userName").toString().toLowerCase().equals("admin")) return AjaxActionComplete();
-        Map parametMap = new HashMap<Integer, Object>();
-        parametMap.put(1,userName);
         ArrayList<HashMap<String, Object>> dbRet = PosDbManager.executeSql(
-                "select 1 from userinfo where uname=?", (HashMap<Integer, Object>) parametMap);
+                "select 1 from userinfo where uname='" + userName + "'");
         if (dbRet.size()>0) return AjaxActionComplete();
 
-        parametMap.put(2,userPwd);
-        parametMap.put(3,userNickName);
+        Map parametMap = new HashMap<Integer, Object>();
+        String UUID = UUIDUtils.generaterUUID();
+        parametMap.put(1, UUID);
+        parametMap.put(2, userName);
+        parametMap.put(3,userPwd);
+        parametMap.put(4,userNickName);
 
-        if  (!PosDbManager.executeUpdate("insert into userinfo(uname,upwd,unick) values(?,?,?)", (HashMap<Integer, Object>) parametMap))
+        if  (!PosDbManager.executeUpdate("insert into userinfo(uid,uname,upwd,unick) values(?,?,?,?)", (HashMap<Integer, Object>) parametMap))
             return AjaxActionComplete();
-        dbRet = PosDbManager.executeSql(
-                "select uid from userinfo where uname=? and upwd=? and unick=?", (HashMap<Integer, Object>) parametMap);
 
         Map resultMap = new HashMap();
-
         if ("1".equals(userType)) {
-            PosDbManager.executeUpdate("insert into salesmantb(uid) values(" + dbRet.get(0).get("UID") + ")");
+            PosDbManager.executeUpdate("insert into salesmantb(uid) values('" + UUID + "')");
             resultMap.put("userList", new SalemanList().generateHTMLString());
         }
         else if ("2".equals(userType)) {
-            PosDbManager.executeUpdate("insert into tellertb(uid) values(" + dbRet.get(0).get("UID") + ")");
+            PosDbManager.executeUpdate("insert into tellertb(uid) values('" + UUID + "')");
             resultMap.put("userList", new TellerList().generateHTMLString());
         }
 

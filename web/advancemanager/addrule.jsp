@@ -8,11 +8,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
     <meta http-equiv="Cache-Control" content="no-siteapp" />
-    <link href="<%=request.getContextPath()%>/css/H-ui.min.css" rel="stylesheet" type="text/css" />
-    <link href="<%=request.getContextPath()%>/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
-    <link href="<%=request.getContextPath()%>/css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
-    <link href="<%=request.getContextPath()%>/skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
-    <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery/1.9.1/jquery.min.js"></script>
+    <link href="../css/H-ui.min.css" rel="stylesheet" type="text/css" />
+    <link href="../css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+    <link href="../css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
+    <link href="../skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
+    <script type="text/javascript" src="../js/jquery/1.9.1/jquery.min.js"></script>
     <title><s:text name="addasset.title" /></title>
     <script type="text/javascript">
         function addRule() {
@@ -34,7 +34,6 @@
                 }
             })
         }
-
         function fetchBankList() {
             $.ajax({
                 type: 'post',
@@ -43,11 +42,10 @@
                 dataType : "json",
                 success: function(data) {
                     var json = eval("(" + data + ")");
-                    $("#bankName").html(json.bankList);
+                    $("#bankUUID").html(json.bankList);
                 }
             });
         }
-
         function fetchPosServerList() {
             $.ajax({
                 type: 'post',
@@ -56,11 +54,10 @@
                 dataType : "json",
                 success: function(data) {
                     var json = eval("(" + data + ")");
-                    $("#posServer").html(json.posServerList);
+                    $("#posServerUUID").html(json.posServerList);
                 }
             });
         }
-
         function fetchSwingTimeList() {
             $.ajax({
                 type: 'post',
@@ -69,11 +66,10 @@
                 dataType : "json",
                 success: function(data) {
                     var json = eval("(" + data + ")");
-                    $("#swingTime").html(json.swingTimeList);
+                    $("#swingTimeUUID").html(json.swingTimeList);
                 }
             });
         }
-
         function fetchIndustryList() {
             $.ajax({
                 type: 'post',
@@ -82,11 +78,10 @@
                 dataType : "json",
                 success: function(data) {
                     var json = eval("(" + data + ")");
-                    $("#industryName").html(json.industryList);
+                    $("#industryUUID").html(json.industryList);
                 }
             });
         }
-
         function fetchRateList() {
             $.ajax({
                 type: 'post',
@@ -95,11 +90,10 @@
                 dataType : "json",
                 success: function(data) {
                     var json = eval("(" + data + ")");
-                    $("#rate").html(json.rateList);
+                    $("#rateUUID").html(json.rateList);
                 }
             });
         }
-
         function fetchMCCList() {
             $.ajax({
                 type: 'post',
@@ -108,11 +102,10 @@
                 dataType : "json",
                 success: function(data) {
                     var json = eval("(" + data + ")");
-                    $("#mcc").html(json.mccList);
+                    $("#mccUUID").html(json.mccList);
                 }
             });
         }
-
         $(function(){
             fetchBankList();
             fetchPosServerList();
@@ -130,33 +123,21 @@
             <tr class="text-c odd" role="row">
                 <td><s:text name="addrule.bankname" /></td>
                 <td>
-                    <select id="bankName" name="bankName">
+                    <select id="bankUUID" name="bankUUID">
                     </select>
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
                 <td><s:text name="addrule.posserver" /></td>
                 <td>
-                    <select id="posServer" name="posServer">
+                    <select id="posServerUUID" name="posServerUUID">
                     </select>
-                </td>
-            </tr>
-            <tr class="text-c odd" role="row">
-                <td><s:text name="addrule.minswingnum" /></td>
-                <td>
-                    <input id="minSwingNum" name="minSwingNum" type="text" placeholder="<s:text name="addrule.minswingnum" />" class="input-text size-S">
-                </td>
-            </tr>
-            <tr class="text-c odd" role="row">
-                <td><s:text name="addrule.maxswingnum" /></td>
-                <td>
-                    <input id="maxSwingNum" name="maxSwingNum" type="text" placeholder="<s:text name="addrule.maxswingnum" />" class="input-text size-S">
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
                 <td><s:text name="addrule.swingtime" /></td>
                 <td>
-                    <select id="swingTime" name="swingTime">
+                    <select id="swingTimeUUID" name="swingTimeUUID">
                     </select>
                 </td>
             </tr>
@@ -173,75 +154,69 @@
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
-                <td><s:text name="addrule.swingpercent" /></td>
-                <td>
-                    <input id="swingPercent" name="swingPercent" type="text" placeholder="<s:text name="addrule.swingpercent" />" class="input-text size-S">
-                </td>
-            </tr>
-            <tr class="text-c odd" role="row">
                 <td><s:text name="addrule.industryname" /></td>
                 <td>
-                    <select id="industryName" name="industryName">
+                    <select id="industryUUID" name="industryUUID">
                     </select>
                 </td>
             </tr>
-            <tr class="text-c odd" role="row">
+            <tr class="text-c odd" role="row" style="display: none">
                 <td><s:text name="addrule.industryfre" /></td>
                 <td>
                     <input id="industryFre" name="industryFre" type="text" placeholder="<s:text name="addrule.industryfre" />" class="input-text size-S">
                 </td>
             </tr>
-            <tr class="text-c odd" role="row">
+            <tr class="text-c odd" role="row" style="display: none">
                 <td><s:text name="addrule.industryinterval" /></td>
                 <td>
                     <input id="industryInterval" name="industryInterval" type="text" placeholder="<s:text name="addrule.industryinterval" />" class="input-text size-S">
                 </td>
             </tr>
-            <tr class="text-c odd" role="row">
+            <tr class="text-c odd" role="row" style="display: none">
                 <td><s:text name="addrule.rate" /></td>
                 <td>
-                    <select id="rate" name="rate">
+                    <select id="rateUUID" name="rateUUID">
                     </select>
                 </td>
             </tr>
-            <tr class="text-c odd" role="row">
+            <tr class="text-c odd" role="row" style="display: none">
                 <td><s:text name="addrule.ratefre" /></td>
                 <td>
                     <input id="rateFre" name="rateFre" type="text" placeholder="<s:text name="addrule.ratefre" />" class="input-text size-S">
                 </td>
             </tr>
-            <tr class="text-c odd" role="row">
+            <tr class="text-c odd" role="row" style="display: none">
                 <td><s:text name="addrule.rateinterval" /></td>
                 <td>
                     <input id="rateInterval" name="rateInterval" type="text" placeholder="<s:text name="addrule.rateinterval" />" class="input-text size-S">
                 </td>
             </tr>
-            <tr class="text-c odd" role="row">
+            <tr class="text-c odd" role="row" style="display: none">
                 <td><s:text name="addrule.mcc" /></td>
                 <td>
-                    <select id="mcc" name="mcc">
+                    <select id="mccUUID" name="mccUUID">
                     </select>
                 </td>
             </tr>
-            <tr class="text-c odd" role="row">
+            <tr class="text-c odd" role="row" style="display: none">
                 <td><s:text name="addrule.mccfre" /></td>
                 <td>
                     <input id="mccFre" name="mccFre" type="text" placeholder="<s:text name="addrule.mccfre" />" class="input-text size-S">
                 </td>
             </tr>
-            <tr class="text-c odd" role="row">
+            <tr class="text-c odd" role="row" style="display: none">
                 <td><s:text name="addrule.mccinterval" /></td>
                 <td>
                     <input id="mccInterval" name="mccInterval" type="text" placeholder="<s:text name="addrule.mccinterval" />" class="input-text size-S">
                 </td>
             </tr>
-            <tr class="text-c odd" role="row">
+            <tr class="text-c odd" role="row" style="display: none">
                 <td><s:text name="addrule.usefre" /></td>
                 <td>
                     <input id="useFre" name="useFre" type="text" placeholder="<s:text name="addrule.usefre" />" class="input-text size-S">
                 </td>
             </tr>
-            <tr class="text-c odd" role="row">
+            <tr class="text-c odd" role="row" style="display: none">
                 <td><s:text name="addrule.useinterval" /></td>
                 <td>
                     <input id="useInterval" name="useInterval" type="text" placeholder="<s:text name="addrule.useinterval" />" class="input-text size-S">

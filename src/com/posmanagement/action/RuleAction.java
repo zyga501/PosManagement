@@ -23,24 +23,24 @@ public class RuleAction extends AjaxActionSupport {
     public String AddRule() throws Exception {
         Map parametMap = new HashMap();
         parametMap.put(1, UUIDUtils.generaterUUID());
-        parametMap.put(2, (String) getParameter("bankCode"));
-        parametMap.put(3, (String) getParameter("posServer"));
-        parametMap.put(4, (String) getParameter("swingTime"));
+        parametMap.put(2, (String) getParameter("bankUUID"));
+        parametMap.put(3, (String) getParameter("posServerUUID"));
+        parametMap.put(4, (String) getParameter("swingTimeUUID"));
         parametMap.put(5, (String) getParameter("minSwingMoney"));
         parametMap.put(6, (String) getParameter("maxSwingMoney"));
-        parametMap.put(7, (String) getParameter("industryName"));
-        parametMap.put(18, (String) getParameter("ruleUseFre"));
-        parametMap.put(19, (String) getParameter("ruleUseInterval"));
+        parametMap.put(7, (String) getParameter("industryUUID"));
+        parametMap.put(8, (String) getParameter("ruleUseFre"));
+        parametMap.put(9, (String) getParameter("ruleUseInterval"));
         if (getParameter("status") != null && getParameter("status").toString().compareTo("on") == 0) {
-            parametMap.put(20, "enable");
+            parametMap.put(10, "enable");
         }
         else {
-            parametMap.put(20, "disable");
+            parametMap.put(10, "disable");
         }
 
         Map map = new HashMap();
-        if (PosDbManager.executeUpdate("insert into ruletb(ruleno,bankcode,posservercode,swingtimecode," +
-                "minswingmoney,maxswingmoney,industrycode,ruleusefre,ruleuseinterval,status)" +
+        if (PosDbManager.executeUpdate("insert into ruletb(uuid,bankuuid,posserveruuid,swingtimeuuid," +
+                "minswingmoney,maxswingmoney,industryuuid,ruleusefre,ruleuseinterval,status)" +
                 "values(?,?,?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>)parametMap)) {
             map.put("ruleList", new RuleList().generateHTMLString());
         }

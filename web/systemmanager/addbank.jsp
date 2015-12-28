@@ -42,15 +42,15 @@
         <form class="form form-horizontal">
             <table class="table table-border table-bordered table-bg table-hover table-sort">
                 <tr class="text-c odd" role="row">
-                    <td><s:text name="addbank.bankcode" /></td>
-                    <td>
-                        <input id="bankCode" name="bankCode" type="text" placeholder="<s:text name="addbank.bankcode" />" class="input-text size-S">
-                    </td>
-                </tr>
-                <tr class="text-c odd" role="row">
                     <td><s:text name="addbank.bankname" /></td>
                     <td>
                         <input id="bankName" name="bankName" type="text" placeholder="<s:text name="addbank.bankname" />" class="input-text size-S">
+                    </td>
+                </tr>
+                <tr class="text-c odd" role="row">
+                    <td><s:text name="addbank.enabled" /></td>
+                    <td>
+                        <input id="bankEnabled" name="bankEnabled" type="checkbox" class="check-box size-S">
                     </td>
                 </tr>
             </table>

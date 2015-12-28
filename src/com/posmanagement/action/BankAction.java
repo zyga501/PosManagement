@@ -1,10 +1,10 @@
 package com.posmanagement.action;
 
 import com.posmanagement.utils.PosDbManager;
+import com.posmanagement.utils.UUIDUtils;
 import com.posmanagement.webui.BankList;
 import com.posmanagement.webui.WebUI;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,20 +12,20 @@ public class BankAction extends AjaxActionSupport {
     private final static String BANKMANAGER = "bankManager";
 
     private String bankList;
-    private String bankCode;
     private String bankName;
+    private String bankEnabled;
     private String uiMode;
 
     public String getBankList() {
         return bankList;
     }
 
-    public void setBankCode(String _bankCode) {
-        bankCode = _bankCode;
-    }
-
     public void setBankName(String _bankName) {
         bankName = _bankName;
+    }
+
+    public void setBankEnabled(String _bankEnabled) {
+        bankEnabled = _bankEnabled;
     }
 
     public void setUiMode(String _uiMode) {
@@ -51,21 +51,19 @@ public class BankAction extends AjaxActionSupport {
 
     public String AddBank() throws Exception {
         Map map = new HashMap();
-        if (bankCode.length() == 0 || bankName.length() == 0) {
-            map.put("errorMessage", getText("addbank.bankCodeOrBankNameError"));
+        if (bankName.length() == 0) {
+            map.put("errorMessage", getText("addbank.BankNameError"));
         }
         else {
             Map parametMap = new HashMap();
-            parametMap.put(1, bankCode);
-            ArrayList dbRet = PosDbManager.executeSql("select * from banktb where bankcode=?", (HashMap<Integer, Object>) parametMap);
-            if (dbRet.size() >= 1) {
-                map.put("errorMessage", getText("addbank.bankCodeConfilct"));
-            }
-            else {
-                parametMap.put(2, bankName);
-                PosDbManager.executeUpdate("insert into banktb(bankcode,bankname) values(?,?)", (HashMap<Integer, Object>) parametMap);
-                map.put("bankList", new BankList(WebUI.UIMode.TABLELIST).generateHTMLString());
-            }
+            parametMap.put(1, UUIDUtils.generaterUUID());
+            parametMap.put(2, bankName);
+            if (bankEnabled != null)
+                parametMap.put(3, new String("enable"));
+            else
+                parametMap.put(3, new String("disable"));
+            PosDbManager.executeUpdate("insert into banktb(uuid,name,status) values(?,?,?)", (HashMap<Integer, Object>) parametMap);
+            map.put("bankList", new BankList(WebUI.UIMode.TABLELIST).generateHTMLString());
         }
 
         return AjaxActionComplete(map);

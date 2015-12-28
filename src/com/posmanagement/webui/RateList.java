@@ -52,7 +52,7 @@ public class RateList {
         for (int index = 0; index < dbRet.size(); ++index) {
             if (dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0) {
                 uiContainer.addElement(new UIContainer("option", dbRet.get(index).get("RATE").toString())
-                                        .addAttribute("value", dbRet.get(index).get("RID").toString()));
+                                        .addAttribute("value", dbRet.get(index).get("UUID").toString()));
             }
         }
 

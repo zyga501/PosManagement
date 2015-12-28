@@ -31,7 +31,7 @@ public class SwingTimeList {
             htmlString += new UIContainer("tr")
                     .addAttribute("class", "text-c odd")
                     .addAttribute("role", "row")
-                    .addElement("td", dbRet.get(index).get("SWINGTIME").toString())
+                    .addElement("td", dbRet.get(index).get("NAME").toString())
                     .addElement(new UIContainer("td")
                                     .addElement(
                                             new UIContainer("input")
@@ -40,17 +40,17 @@ public class SwingTimeList {
                                     )
                     )
                     .addElement(new UIContainer("td")
-                            .addElement(
-                                    new UIContainer("input")
-                                            .addAttribute("type", "time")
-                                            .addAttribute("value", dbRet.get(index).get("ENDTIME").toString())
+                                    .addElement(
+                                            new UIContainer("input")
+                                                    .addAttribute("type", "time")
+                                                    .addAttribute("value", dbRet.get(index).get("ENDTIME").toString())
                             )
                     )
                     .addElement(new UIContainer("td")
-                            .addElement(
-                                    new UIContainer("input")
-                                            .addAttribute("type", "checkbox")
-                                            .addAttribute("checked", "checked", dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0)
+                                    .addElement(
+                                            new UIContainer("input")
+                                                    .addAttribute("type", "checkbox")
+                                                    .addAttribute("checked", "checked", dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0)
                             )
                     );
         }
@@ -65,8 +65,8 @@ public class SwingTimeList {
         UIContainer uiContainer = new UIContainer();
         for (int index = 0; index < dbRet.size(); ++index) {
             if (dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0) {
-                uiContainer.addElement(new UIContainer("option", dbRet.get(index).get("SWINGTIME").toString())
-                                        .addAttribute("value", dbRet.get(index).get("SWINGCODE").toString()));
+                uiContainer.addElement(new UIContainer("option", dbRet.get(index).get("NAME").toString())
+                                        .addAttribute("value", dbRet.get(index).get("UUID").toString()));
             }
         }
 

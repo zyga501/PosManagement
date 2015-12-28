@@ -1,6 +1,7 @@
 package com.posmanagement.action;
 
 import com.posmanagement.utils.PosDbManager;
+import com.posmanagement.utils.UUIDUtils;
 import com.posmanagement.webui.RateList;
 import com.posmanagement.webui.WebUI;
 
@@ -57,12 +58,13 @@ public class RateAction extends AjaxActionSupport {
             try {
                 Double.parseDouble(rate);
                 Map parametMap = new HashMap();
-                parametMap.put(1, rate);
+                parametMap.put(1, UUIDUtils.generaterUUID());
+                parametMap.put(2, rate);
                 if (rateEnabled != null)
-                    parametMap.put(2, new String("enable"));
+                    parametMap.put(3, new String("enable"));
                 else
-                    parametMap.put(2, new String("disable"));
-                PosDbManager.executeUpdate("insert into ratetb(rate,status) values(?,?)", (HashMap<Integer, Object>) parametMap);
+                    parametMap.put(3, new String("disable"));
+                PosDbManager.executeUpdate("insert into ratetb(uuid,rate,status) values(?,?,?)", (HashMap<Integer, Object>) parametMap);
                 map.put("rateList", new RateList(WebUI.UIMode.TABLELIST).generateHTMLString());
             }
             catch (NumberFormatException exception) {

@@ -1,11 +1,11 @@
 package com.posmanagement.action;
 
 import com.posmanagement.utils.PosDbManager;
+import com.posmanagement.utils.UUIDUtils;
 import com.posmanagement.webui.RuleList;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class RuleAction extends AjaxActionSupport {
     private final static String RULEMANAGER = "ruleManager";
@@ -22,7 +22,7 @@ public class RuleAction extends AjaxActionSupport {
 
     public String AddRule() throws Exception {
         Map parametMap = new HashMap();
-        parametMap.put(1, UUID.randomUUID().toString().toUpperCase());
+        parametMap.put(1, UUIDUtils.generaterUUID());
         parametMap.put(2, (String) getParameter("bankCode"));
         parametMap.put(3, (String) getParameter("posServer"));
         parametMap.put(4, (String) getParameter("swingTime"));

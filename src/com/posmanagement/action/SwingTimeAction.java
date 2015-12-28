@@ -1,6 +1,7 @@
 package com.posmanagement.action;
 
 import com.posmanagement.utils.PosDbManager;
+import com.posmanagement.utils.UUIDUtils;
 import com.posmanagement.webui.SwingTimeList;
 import com.posmanagement.webui.WebUI;
 
@@ -67,20 +68,21 @@ public class SwingTimeAction extends AjaxActionSupport {
         else {
             try {
                 Map parametMap = new HashMap();
-                parametMap.put(1, swingTime);
+                parametMap.put(1, UUIDUtils.generaterUUID());
+                parametMap.put(2, swingTime);
                 Time _startTime = Time.valueOf(startTime);
                 Time _endTime = Time.valueOf(endTime);
                 if (_startTime.after(_endTime)) {
                     map.put("errorMessage", getText("addswingtime.endTimeEarlierThanStartTime"));
                     return AjaxActionComplete(map);
                 }
-                parametMap.put(2, _startTime);
-                parametMap.put(3, _endTime);
+                parametMap.put(3, _startTime);
+                parametMap.put(4, _endTime);
                 if (timeEnabled != null)
-                    parametMap.put(4, new String("enable"));
+                    parametMap.put(5, new String("enable"));
                 else
-                    parametMap.put(4, new String("disable"));
-                PosDbManager.executeUpdate("insert into swingtimetb(swingTime,startTime,endTime,status) values(?,?,?,?)", (HashMap<Integer, Object>) parametMap);
+                    parametMap.put(5, new String("disable"));
+                PosDbManager.executeUpdate("insert into swingtimetb(uuid,name,startTime,endTime,status) values(?,?,?,?,?)", (HashMap<Integer, Object>) parametMap);
                 map.put("swingTimeList", new SwingTimeList(WebUI.UIMode.TABLELIST).generateHTMLString());
             }
             catch (IllegalArgumentException illegalException) {

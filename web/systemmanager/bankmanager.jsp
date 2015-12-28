@@ -36,8 +36,8 @@
                     <table class="table table-border table-bordered table-bg table-hover table-sort">
                         <thead>
                         <tr class="text-c">
-                            <th width="80"><s:text name="bankmanager.bankcode" /></th>
                             <th width="80"><s:text name="bankmanager.bankname" /></th>
+                            <th width="80"><s:text name="bankmanager.enabled" /></th>
                         </tr>
                         </thead>
                         <tbody id="bankList">

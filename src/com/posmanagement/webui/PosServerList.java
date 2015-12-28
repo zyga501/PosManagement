@@ -31,7 +31,7 @@ public class PosServerList {
             htmlString += new UIContainer("tr")
                     .addAttribute("class", "text-c odd")
                     .addAttribute("role", "row")
-                    .addElement("td", dbRet.get(index).get("SERVERNAME").toString())
+                    .addElement("td", dbRet.get(index).get("NAME").toString())
                     .addElement(new UIContainer("td")
                             .addElement(
                                     new UIContainer("input")
@@ -51,8 +51,8 @@ public class PosServerList {
         UIContainer uiContainer = new UIContainer();
         for (int index = 0; index < dbRet.size(); ++index) {
             if (dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0) {
-                uiContainer.addElement(new UIContainer("option", dbRet.get(index).get("SERVERNAME").toString())
-                                        .addAttribute("value", dbRet.get(index).get("SERVERCODE").toString()));
+                uiContainer.addElement(new UIContainer("option", dbRet.get(index).get("NAME").toString())
+                                        .addAttribute("value", dbRet.get(index).get("UUID").toString()));
             }
         }
 

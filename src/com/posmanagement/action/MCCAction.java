@@ -1,6 +1,7 @@
 package com.posmanagement.action;
 
 import com.posmanagement.utils.PosDbManager;
+import com.posmanagement.utils.UUIDUtils;
 import com.posmanagement.webui.MCCList;
 import com.posmanagement.webui.WebUI;
 
@@ -57,12 +58,13 @@ public class MCCAction extends AjaxActionSupport {
             try {
                 Double.parseDouble(mccCode);
                 Map parametMap = new HashMap();
-                parametMap.put(1, mccCode);
+                parametMap.put(1, UUIDUtils.generaterUUID());
+                parametMap.put(2, mccCode);
                 if (mccEnabled != null)
-                    parametMap.put(2, new String("enable"));
+                    parametMap.put(3, new String("enable"));
                 else
-                    parametMap.put(2, new String("disable"));
-                PosDbManager.executeUpdate("insert into mcctb(mcc,status) values(?,?)", (HashMap<Integer, Object>) parametMap);
+                    parametMap.put(3, new String("disable"));
+                PosDbManager.executeUpdate("insert into mcctb(uuid,mcc,status) values(?,?,?)", (HashMap<Integer, Object>) parametMap);
                 map.put("mccList", new MCCList(WebUI.UIMode.TABLELIST).generateHTMLString());
             }
             catch (NumberFormatException exception) {

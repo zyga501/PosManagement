@@ -58,6 +58,7 @@
                             <th><s:text name="posmanager.rate"/></th>
                             <th><s:text name="posmanager.posserver"/></th>
                             <th><s:text name="posmanager.mcc"/></th>
+                            <th><s:text name="billmanager.status"/></th>
                         </tr>
                         </thead>
                         <tbody id="posList">

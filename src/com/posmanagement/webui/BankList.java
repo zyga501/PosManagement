@@ -49,7 +49,7 @@ public class BankList {
             return new String("");
 
         UIContainer uiContainer = new UIContainer();
-        uiContainer.addElement("option");
+        ;
         for (int index = 0; index < dbRet.size(); ++index) {
             uiContainer.addElement(new UIContainer("option", dbRet.get(index).get("NAME").toString())
                                     .addAttribute("value", dbRet.get(index).get("UUID").toString()));

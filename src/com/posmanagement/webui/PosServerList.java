@@ -49,6 +49,7 @@ public class PosServerList {
             return new String("");
 
         UIContainer uiContainer = new UIContainer();
+        ;
         for (int index = 0; index < dbRet.size(); ++index) {
             if (dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0) {
                 uiContainer.addElement(new UIContainer("option", dbRet.get(index).get("NAME").toString())

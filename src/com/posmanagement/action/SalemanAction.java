@@ -4,6 +4,7 @@ import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.webui.SalemanInfo;
 import com.posmanagement.webui.SalemanList;
 import com.posmanagement.webui.TellerList;
+import com.posmanagement.webui.WebUI;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +16,25 @@ public class SalemanAction extends AjaxActionSupport {
     private String salemanID;
     private String salemanName;
     private String tellerID;
+    private String uiMode;
+
+    private String newid;
+
+    public String getNewid() {
+        return newid;
+    }
+
+    public void setNewid(String newid) {
+        this.newid = newid;
+    }
+
+    public String getUiMode() {
+        return uiMode;
+    }
+
+    public void setUiMode(String uiMode) {
+        this.uiMode = uiMode;
+    }
 
     public String getSalemanList() {
         return salemanList;
@@ -43,10 +63,17 @@ public class SalemanAction extends AjaxActionSupport {
             map.put("salemanInfo", new SalemanInfo(salemanID).generateHTMLString());
             map.put("tellerList", new TellerList(salemanID).generateHTMLString());
         }
-
         return AjaxActionComplete(map);
     }
 
+    public String FetchSalemanList() throws Exception {
+        Map map = new HashMap();
+        if (uiMode != null && uiMode.compareTo("SELECTLIST") == 0) {
+            map.put("salemanList", new SalemanList().generateListHTMLString());
+        }
+
+        return AjaxActionComplete(map);
+    }
     public String UpdateInfo() throws Exception {
         Map map = new HashMap();
         map.put("ErrorMessage", new String("UnImple"));

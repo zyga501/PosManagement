@@ -46,6 +46,6 @@ public class BillList {
     }
 
     private ArrayList<HashMap<String, Object>> fetchBillList() throws Exception {
-        return PosDbManager.executeSql("select * from billtb");
+        return PosDbManager.executeSql("select billtb.*,banktb.name bankname from billtb inner join banktb on banktb.uuid=billtb.bankuuid");
     }
 }

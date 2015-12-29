@@ -76,7 +76,8 @@ public class CardAction extends AjaxActionSupport {
         Map para= new HashMap();
         para.put(1,newid);
         try {
-            ArrayList<HashMap<String, Object>> hashMaps = PosDbManager.executeSql("select * from cardtb where cardno=?",( HashMap<Integer, Object>) para);
+            ArrayList<HashMap<String, Object>> hashMaps = PosDbManager.executeSql("select cardtb.*,banktb.name bankname,userinfo.unick salesman  from cardtb inner join banktb " +
+                    "on cardtb.bankuuid=banktb.uuid inner join userinfo on userinfo.uname=cardtb.salesmanuname  where cardno=?",( HashMap<Integer, Object>) para);
             if (hashMaps.size()<=0) return "";
             cardmanager = new HashMap();
             for (Object keyName:hashMaps.get(0).keySet())
@@ -134,10 +135,10 @@ public class CardAction extends AjaxActionSupport {
                     para.put(i++,((String[])cardmanager.get(key))[0] );
                 }
                 para.put(i,newid);
-                if (!PosDbManager.executeUpdate("update cardtb set inserttime=?,cardserial=?,cardno=?,bankname=?,creditamount=?," +
+                if (!PosDbManager.executeUpdate("update cardtb set inserttime=?,cardserial=?,cardno=?,bankuuid=?,creditamount=?," +
                         "tempamount=?,templimitdate=?,useamount=?,billdate=?,pin=?,telpwd=?,tradepwd=?,enchashmentpwd=?," +
                         "billafterdate=?,lastrepaymentdate=?,billemail=?,status=?,commissioncharge=?,cardmaster=?,identityno=?,"+
-                        "cmaddress=?,cmtel=?,cmseccontact=?,salesman=?,memos=?  where cardno=?",(HashMap<Integer, Object>)  para))
+                        "cmaddress=?,cmtel=?,cmseccontact=?,salesmanuname=?,memos=?  where cardno=?",(HashMap<Integer, Object>)  para))
                     map.put("errorMessage", getText("addrate.rateFormatError"));
                 else
                     map.put("cardList", new CardList().generateHTMLString());
@@ -167,10 +168,10 @@ public class CardAction extends AjaxActionSupport {
                     System.out.print("'"+((String[])cardmanager.get(key))[0]+"',");
                     para.put(i++,((String[])cardmanager.get(key))[0] );
                 }
-                if (!PosDbManager.executeUpdate("insert into cardtb(inserttime,cardserial,cardno,bankname,creditamount," +
+                if (!PosDbManager.executeUpdate("insert into cardtb(inserttime,cardserial,cardno,bankuuid,creditamount," +
                         "tempamount,templimitdate,useamount,billdate,pin,telpwd,tradepwd,enchashmentpwd," +
                         "billafterdate,lastrepaymentdate,billemail,status,commissioncharge,cardmaster,identityno," +
-                        "cmaddress,cmtel,cmseccontact,salesman,memos) values(?,?," +
+                        "cmaddress,cmtel,cmseccontact,salesmanuname,memos) values(?,?," +
                         "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",(HashMap<Integer, Object>)  para))
                     map.put("errorMessage", getText("addrate.rateFormatError"));
                 else

@@ -17,11 +17,11 @@ public class LogManager {
         LOGONIN,
     }
 
-    public void writeLoginTrack(int userID, String location, String datatime) throws Exception {
+    public void writeLoginTrack(String userID, String location, String datatime) throws Exception {
         Map parametsMap = new HashMap();
         parametsMap.put(1, userID);
         parametsMap.put(2, LogType.LOGONIN.ordinal());
-        parametsMap.put(3, String.format("User:%d Login:%s DateTime:%s", userID, location, datatime));
+        parametsMap.put(3, String.format("User:%s Login:%s DateTime:%s", userID, location, datatime));
         writeToDB(parametsMap);
     }
 

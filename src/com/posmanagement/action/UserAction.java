@@ -119,7 +119,7 @@ public class UserAction extends AjaxActionSupport{
                 return LOGINFAILURE;
             }
 
-            int userID = Integer.parseInt(dbRet.get(0).get("UID").toString());
+            String userID = (dbRet.get(0).get("UID").toString());
             session.setAttribute("userID", userID);
             session.setAttribute("userName", userName);
             session.setAttribute("userNick", dbRet.get(0).get("UNICK"));
@@ -226,7 +226,7 @@ public class UserAction extends AjaxActionSupport{
         return AjaxActionComplete(resultMap);
     }
 
-    private void logLoginTrack(int userID, String location) throws Exception {
+    private void logLoginTrack(String userID, String location) throws Exception {
         Map parametMap = new HashMap();
         Date now = new Date();
         parametMap.put(1, location);

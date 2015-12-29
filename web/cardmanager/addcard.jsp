@@ -36,7 +36,6 @@
                         $('.input').val("");
                         $('#Message').html("<s:text name="addasset.addassetSuccess" />");
                         $('#newid').val(json.newid);
-                       // $("#upfile").css("display","");
                         ajaxFileUpload();
                         parent.refreshcardList(json.cardList);
                     }

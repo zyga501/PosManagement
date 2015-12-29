@@ -1,5 +1,6 @@
 package com.posmanagement.action;
 
+import com.posmanagement.policy.SwingCardPolicy;
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.webui.BillList;
 import java.text.ParseException;
@@ -18,6 +19,7 @@ public class BillAction extends AjaxActionSupport {
     private String billDate;
     private String billamount;
     private String status;
+    private String billNO;
 
     public String getStatus() {
         return status;
@@ -62,31 +64,45 @@ public class BillAction extends AjaxActionSupport {
         return billList;
     }
 
+    public void setBillNO(String _billNO) {
+        billNO = _billNO;
+    }
+
     public String Init() throws Exception {
         billList = new BillList().generateHTMLString();
         return BILLMANAGER;
     }
 
     public String editBill(){
-        if ( null==cardno) return "";
+        if (null == cardno) {
+            return AjaxActionComplete();
+        }
         Map map = new HashMap();
         Map para = new HashMap();
         String sqlString="";
         try {
-        if (null!=billamount ){
+            if (null != billamount ){
             Float.parseFloat(billamount);
             para.put(1,billamount);
             sqlString="update billtb set billamount=? where cardno=?";
         }
-        else if (null!=status ){
+        else if (null != status ){
             para.put(1,status);
             sqlString="update billtb set status=? where cardno=?";
         }
-        else return "";
+        else {
+            return "";
+        }
+
+        if (!generateSwingCard()) {
+            return AjaxActionComplete();
+        }
+
         para.put(2,cardno);
-            if (PosDbManager.executeUpdate(sqlString,(HashMap<Integer, Object>)para))
+        if (PosDbManager.executeUpdate(sqlString,(HashMap<Integer, Object>)para))
                 map.put("successMessage",getText("BillAction.InfoSuccess") );
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             map.put("errorMessage", getText("BillAction.InfoError"));
             e.printStackTrace();
         }
@@ -126,5 +142,34 @@ public class BillAction extends AjaxActionSupport {
             map.put("errorMessage", getText("AssetAction.InfoError"));
             e.printStackTrace();
         }
+    }
+
+    private boolean generateSwingCard() throws Exception {
+        Map map = new HashMap();
+        if (billNO == null || billNO.length() <= 0) {
+            return false;
+        }
+
+        SwingCardPolicy swingCardPolicy = new SwingCardPolicy("");
+        SwingCardPolicy.SwingList swingList = swingCardPolicy.generateSwingList(billNO);
+        if (swingList == null) {
+            return false;
+        }
+
+        for (int index = 0; index < swingList.swingCardList.size(); ++index) {
+            Map parametMap = new HashMap();
+            parametMap.put(1, swingList.billYear);
+            parametMap.put(2, swingList.billMonth);
+            parametMap.put(3, swingList.cardNO);
+            parametMap.put(4, swingList.cardMaster);
+            parametMap.put(5, swingList.swingCardList.get(index).money);
+            parametMap.put(6, swingList.swingCardList.get(index).swingDate);
+            parametMap.put(7, swingList.swingCardList.get(index).ruleUUID);
+            PosDbManager.executeUpdate("insert into swingcard(billyear,billmonth,cardno,cardmaster,amount,sdatetm,ruleUUID) " +
+                            "values(?,?,?,?,?,?,?)",
+                    (HashMap<Integer, Object>)parametMap);
+        }
+
+        return true;
     }
 }

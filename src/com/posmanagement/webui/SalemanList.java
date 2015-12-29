@@ -32,9 +32,8 @@ public class SalemanList {
             return new String("");
 
         UIContainer uiContainer = new UIContainer();
-        uiContainer.addElement("option");
         for (int index = 0; index < dbRet.size(); ++index) {
-           // if (dbRet.get(index).get("ENABLED").toString().compareTo("on") == 0)
+            if (dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0)
             {
                 uiContainer.addElement(new UIContainer("option", dbRet.get(index).get("UNICK").toString())
                         .addAttribute("value", dbRet.get(index).get("UNAME").toString()));

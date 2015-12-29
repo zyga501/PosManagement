@@ -37,22 +37,22 @@ public class RuleList {
     }
 
     private ArrayList<HashMap<String, Object>> fetchRuleList() throws Exception {
-        return PosDbManager.executeSql("SELECT\n" +
-                "ruletb.uuid,\n" +
-                "banktb.name bankname,\n" +
-                "posservertb.name posservername,\n" +
-                "swingtimetb.name swingtimename,\n" +
-                "ruletb.minswingmoney,\n" +
-                "ruletb.maxswingmoney,\n" +
-                "industrytb.name industryname,\n" +
-                "ruletb.ruleusefre,\n" +
-                "ruletb.ruleuseinterval,\n" +
-                "ruletb.`status`\n" +
-                "FROM\n" +
-                "ruletb\n" +
-                "INNER JOIN banktb ON banktb.uuid = ruletb.bankuuid\n" +
-                "INNER JOIN posservertb ON posservertb.uuid = ruletb.posserveruuid\n" +
-                "INNER JOIN industrytb ON ruletb.industryuuid = industrytb.uuid\n" +
-                "INNER JOIN swingtimetb ON swingtimetb.uuid = ruletb.swingtimeuuid\n");
+        return PosDbManager.executeSql("SELECT " +
+                "ruletb.uuid, " +
+                "banktb.name bankname, " +
+                "posservertb.name posservername, " +
+                "swingtimetb.name swingtimename, " +
+                "ruletb.minswingmoney, " +
+                "ruletb.maxswingmoney, " +
+                "industrytb.name industryname, " +
+                "ruletb.ruleusefre, " +
+                "ruletb.ruleuseinterval, " +
+                "ruletb.`status` " +
+                "FROM " +
+                "ruletb " +
+                "INNER JOIN banktb ON banktb.uuid = ruletb.bankuuid " +
+                "INNER JOIN posservertb ON posservertb.uuid = ruletb.posserveruuid " +
+                "INNER JOIN industrytb ON ruletb.industryuuid = industrytb.uuid " +
+                "INNER JOIN swingtimetb ON swingtimetb.uuid = ruletb.swingtimeuuid ");
     }
 }

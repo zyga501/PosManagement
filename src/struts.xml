@@ -93,6 +93,7 @@
         </action>
         <action name="POS!*" class="com.posmanagement.action.POSAction" method="{1}">
             <result name="posManager">./cardmanager/posmanager.jsp</result>
+            <result name="fetchPOS">./cardmanager/addpos.jsp</result>
         </action>
         <action name="Menu!*" class="com.posmanagement.action.MenuAction" method="{1}">
             <result name="salemanManager" type="redirectAction">Saleman!Init</result>

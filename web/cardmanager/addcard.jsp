@@ -90,6 +90,19 @@
             return false;
         }
 
+        function fetchSalemanList() {
+            $.ajax({
+                type: 'post',
+                url: 'Saleman!FetchSalemanList',
+                data: "uiMode=SELECTLIST",
+                dataType : "json",
+                success: function(data) {
+                    var json = eval("(" + data + ")");
+                    $("#salesman").html(json.salemanList);
+                    $("#salesman").val("<s:property value="cardmanager.salesmanuname"/>");
+                }
+            });
+        }
         function fetchBankList() {
             $.ajax({
                 type: 'post',
@@ -99,13 +112,14 @@
                 success: function (data) {
                     var json = eval("(" + data + ")");
                     $("#bankName").html(json.bankList);
-                    $("#bankName").val("<s:property value="cardmanager.bankname"/>");
+                    $("#bankName").val("<s:property value="cardmanager.bankuuid"/>");
                 }
             });
         }
 
         $(function () {
             fetchBankList();
+            fetchSalemanList();
         })
     </script>
 </head>
@@ -151,7 +165,11 @@
                     <td><s:text name="cardmanager.cmaddress"/></td><td><input id=cmaddress name=cardmanager.cmaddress type="text" value="<s:property value="cardmanager.cmaddress"/>" placeholder="<s:text name="cardmanager.cmaddress"/>" class="input-text size-S"></td>
                     <td><s:text name="cardmanager.cmtel"/></td><td><input id=cmtel name=cardmanager.cmtel type="text" value="<s:property value="cardmanager.cmtel"/>" placeholder="<s:text name="cardmanager.cmtel"/>" class="input-text size-S"></td>
                     <td><s:text name="cardmanager.cmseccontact"/></td><td><input id=cmseccontact name=cardmanager.cmseccontact type="text" value="<s:property value="cardmanager.cmseccontact"/>" placeholder="<s:text name="cardmanager.cmseccontact"/>" class="input-text size-S"></td>
-                    <td><s:text name="cardmanager.salesman"/></td><td><input id=salesman name=cardmanager.salesman type="text" value="<s:property value="cardmanager.salesman"/>" placeholder="<s:text name="cardmanager.salesman"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.salesman"/></td>
+                    <td>
+                        <select id="salesman" name="cardmanager.salesman" style="width: 100%">
+                        </select>
+                    </td>
                 </tr>
                 <tr class="text-c">
                     <td><s:text name="cardmanager.memos"/></td>

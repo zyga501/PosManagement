@@ -1,21 +1,48 @@
 package com.posmanagement.action;
 
 import com.posmanagement.utils.PosDbManager;
+import com.posmanagement.utils.UUIDUtils;
 import com.posmanagement.webui.BillList;
 import com.posmanagement.webui.PosList;
+import com.posmanagement.webui.WebUI;
 
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class POSAction extends AjaxActionSupport {
     public final static String POSMANAGER = "posManager";
+    private final static String FETCHPOS = "fetchPOS";
 
     private String posList;
     private String status;
+    private String newid;
+    private Map posManager;
+
+    public Map getPosManager() {
+        return posManager;
+    }
+
+    public void setPosManager(Map posManager) {
+        this.posManager = posManager;
+    }
+
+    public String getPosList() {
+        return posList;
+    }
+
+    public void setPosList(String posList) {
+        this.posList = posList;
+    }
+
+    public String getNewid() {
+        return newid;
+    }
+
+    public void setNewid(String newid) {
+        this.newid = newid;
+    }
 
     public String getStatus() {
         return status;
@@ -26,68 +53,96 @@ public class POSAction extends AjaxActionSupport {
     }
 
     public String Init() throws Exception {
-        posList = new PosList().generateHTMLString();
+        posList = new PosList(WebUI.UIMode.TABLELIST).generateHTMLString();
         return POSMANAGER;
     }
-/*
-    public String editPos(){
-        if ( null==cardno) return "";
-        Map map = new HashMap();
-        Map para = new HashMap();
-        String sqlString="";
+
+    public String FetchPOS(){
+        if (null==newid || (newid.equals(""))) return "";
+        Map para= new HashMap();
+        para.put(1,newid);
         try {
-        if (null!=billamount ){
-            Float.parseFloat(billamount);
-            para.put(1,billamount);
-            sqlString="update billtb set billamount=? where cardno=?";
-        }
-        else if (null!=status ){
-            para.put(1,status);
-            sqlString="update billtb set status=? where cardno=?";
-        }
-        else return "";
-        para.put(2,cardno);
-            if (PosDbManager.executeUpdate(sqlString,(HashMap<Integer, Object>)para))
-                map.put("successMessage",getText("BillAction.InfoSuccess") );
-        } catch (Exception e) {
-            map.put("errorMessage", getText("BillAction.InfoError"));
+            ArrayList<HashMap<String, Object>> hashMaps = PosDbManager.executeSql("SELECT * from postb where uuid=? ",( HashMap<Integer, Object>) para);
+            if (hashMaps.size()<=0) return "";
+            posManager = new HashMap();
+            for (Object keyName:hashMaps.get(0).keySet())
+                posManager.put(keyName.toString().toLowerCase(),hashMaps.get(0).get(keyName));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+        return FETCHPOS;
+    }
+    public String editPos(){
+        Map map = new HashMap();
+        if (null==newid)
+        {
+            map.put("errorMessage", "error");
+            return AjaxActionComplete(map);
+        }
+            Map parametMap = new HashMap();
+            try {
+                parametMap.put(1, (String) getParameter("salesman"));
+                parametMap.put(2, (String) getParameter("posname"));
+                parametMap.put(3, (String) getParameter("industryname"));
+                parametMap.put(4, (String) getParameter("rate"));
+                parametMap.put(5, (String) getParameter("corporation"));
+                parametMap.put(6, (String) getParameter("topqk"));
+                parametMap.put(7, (String) getParameter("mcc"));
+                parametMap.put(8, (String) getParameter("posserver"));
+                parametMap.put(9, (String) getParameter("recipientbank"));
+                parametMap.put(10, (String) getParameter("recipientaccount"));
+                parametMap.put(11, (String) getParameter("startdatetm"));
+                parametMap.put(12, (String) getParameter("usecount"));
+                parametMap.put(13, (String) getParameter("useamount"));
+                parametMap.put(14, (String) getParameter("status"));
+                parametMap.put(15, (String) getParameter("newid"));
+
+                    if (PosDbManager.executeUpdate("update postb set salesmanuname=?, posname=?,industryuuid=?,rateuuid=?,corporation=?,topqk=?,mccuuid=?," +
+                            "posserveruuid=?,recipientbankuuid=?,recipientaccount=?,startdatetm=?,usecount=?," +
+                            "useamount=?,status=? where uuid=?", (HashMap<Integer, Object>)parametMap)) {
+                       // map.put("errorMessage","error");
+                    }
+            }
+            catch (Exception exception) {
+                exception.printStackTrace();
+                map.put("errorMessage", "error");
+            }
+
         return AjaxActionComplete(map);
     }
 
-    public void addPos(){
-        if (null==billDate) return ;
+    public String addPos(){
         Map map = new HashMap();
-        Date billd= null ;
+        Map parametMap = new HashMap();
+        newid =UUIDUtils.generaterUUID();
+        parametMap.put(1, newid);
+        parametMap.put(2, (String) getParameter("posname"));
+        parametMap.put(3, (String) getParameter("industryname"));
+        parametMap.put(4, (String) getParameter("rate"));
+        parametMap.put(5, (String) getParameter("corporation"));
+        parametMap.put(6, (String) getParameter("topqk"));
+        parametMap.put(7, (String) getParameter("mcc"));
+        parametMap.put(8, (String) getParameter("posserver"));
+        parametMap.put(9, (String) getParameter("recipientbank"));
+        parametMap.put(10, (String) getParameter("recipientaccount"));
+        parametMap.put(11, (String) getParameter("startdatetm"));
+        parametMap.put(12, (String) getParameter("usecount"));
+        parametMap.put(13, (String) getParameter("useamount"));
+        parametMap.put(14, (String) getParameter("status"));
+        parametMap.put(15, (String) getParameter("salesman"));
+
         try {
-            billd = (new SimpleDateFormat("yyyy-MM-dd")).parse(billDate);
-        } catch (ParseException e) {
-            map.put("errorMessage", getText("AssetAction.InfoError"));
-            e.printStackTrace();
-            return;
-        }
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(billd);
-        int day=cal.get(Calendar.DATE);
-        int month=cal.get(Calendar.MONTH);
-        int year=cal.get(Calendar.YEAR);
-        String wherestr ="";
-        if (null!=bankName && (!bankName.equals("")))
-            wherestr = "  and bankname= '"+bankName+"'";
-        else  if (null!=cardno && (!cardno.equals("")))
-            wherestr = "  and cardno= '"+cardno+"'";
-        String sqlString= "insert into billtb (bankname,cardno,billdate,billamount,lastrepaymentdate) " +
-                "select bankname,cardno,'" + (new SimpleDateFormat("yyyy-MM-dd")).format(billd)+"',creditamount,date_add('"+
-        (new SimpleDateFormat("yyyy-MM-dd")).format(billd)+"',INTERVAL billafterdate DAY ) from cardtb a where status='enable' and billdate=" + day + wherestr+" and  not exists " +
-                "(select 1 from billtb b where a.cardno=b.cardno and b.billdate='" + (new SimpleDateFormat("yyyy-MM-dd")).format(billd)+"')";
-        System.out.println(sqlString);
-        try {
-            if (PosDbManager.executeUpdate(sqlString))
-            map.put("billList",  new BillList().generateHTMLString());
+            if (PosDbManager.executeUpdate("insert into postb(uuid,posname,industryuuid,rateuuid,corporation,topqk,mccuuid," +
+                    "posserveruuid,recipientbankuuid,recipientaccount,startdatetm,usecount,useamount,status,salesmanuuid)" +
+                    "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>)parametMap)) {
+                map.put("posList", new PosList(WebUI.UIMode.SELECTLIST).generateHTMLString());
+            }
         } catch (Exception e) {
-            map.put("errorMessage", getText("AssetAction.InfoError"));
             e.printStackTrace();
         }
-    }*/
+
+        return AjaxActionComplete(map);
+    }
 }

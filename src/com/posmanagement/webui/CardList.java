@@ -42,6 +42,7 @@ public class CardList {
     }
 
     private ArrayList<HashMap<String, Object>> fetchCardList() throws Exception {
-        return PosDbManager.executeSql("select cid, cardno,cardmaster,cmtel,billdate,salesman from cardtb");
+        return PosDbManager.executeSql("select cardtb.uuid, cardno,cardmaster,cmtel,billdate,userinfo.unick salesman from cardtb inner join banktb " +
+                "on cardtb.bankuuid=banktb.uuid inner join userinfo on userinfo.uname=cardtb.salesmanuname");
     }
 }

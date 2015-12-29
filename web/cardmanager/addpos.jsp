@@ -24,7 +24,7 @@
             $('#Message').html("");
             $.ajax({
                 type: 'post',
-                url: 'Card!AddCard',
+                url: 'POS!addPos',
                 dataType:"json",
                 data:$("form").serialize(),
                 success: function (data) {
@@ -36,7 +36,7 @@
                         $('.input').val("");
                         $('#Message').html("<s:text name="addasset.addassetSuccess" />");
                         $('#newid').val(json.newid);
-                        parent.refreshcardList(json.cardList);
+                        parent.refreshposList(json.posList);
                     }
                 }
             })
@@ -46,7 +46,7 @@
             $('#Message').html("");
             $.ajax({
                 type: 'post',
-                url: 'Card!editCard',
+                url: 'POS!editPos',
                 dataType:"json",
                 data:$("form").serialize(),
                 success: function (data) {
@@ -57,8 +57,7 @@
                     else {
                         $('.input').val("");
                         $('#Message').html("<s:text name="global.dosuccess" />");
-                        ajaxFileUpload();
-                        parent.refreshcardList(json.cardList);
+                        parent.refreshposList(json.posList);
                     }
                 }
             })
@@ -132,12 +131,12 @@
         function fetchSalemanList() {
             $.ajax({
                 type: 'post',
-                url: 'User!FetchSalemanList',
+                url: 'Saleman!FetchSalemanList',
                 data: "uiMode=SELECTLIST",
                 dataType : "json",
                 success: function(data) {
                     var json = eval("(" + data + ")");
-                    $("#salesman").html(json.userList);
+                    $("#salesman").html(json.salemanList);
                 }
             });
         }
@@ -156,7 +155,7 @@
         <div style="height:auto; overflow:auto;">
             <table class="table table-border table-bordered table-bg table-hover table-sort">
                 <tr class="text-c">
-                    <td><s:text name="posmanager.posname"/></td><td><input name="posname" type="text" placeholder="<s:text name="posmanager.posname" />" class="input-text size-S"></td>
+                    <td><s:text name="posmanager.posname"/></td><td><input name="posname"  type="text"  value="<s:property value="posManager.posname"/>" placeholder="<s:text name="posmanager.posname" />" class="input-text size-S"></td>
                 </tr>
                 <tr class="text-c">
                     <td><s:text name="posmanager.industryname"/></td>
@@ -168,15 +167,15 @@
                 <tr class="text-c">
                     <td><s:text name="posmanager.rate"/></td>
                     <td>
-                    <select id="rate" name="mratecc" style="width: 100%">
+                    <select id="rate" name="rate" style="width: 100%">
                     </select>
                     </td>
                 </tr>
                 <tr class="text-c">
-                    <td><s:text name="posmanager.corporation"/></td><td><input name="corporation" type="text" placeholder="<s:text name="posmanager.corporation" />" class="input-text size-S"></td>
+                    <td><s:text name="posmanager.corporation"/></td><td><input name="corporation" type="text"  value="<s:property value="posManager.corporation"/>" placeholder="<s:text name="posmanager.corporation" />" class="input-text size-S"></td>
                 </tr>
                 <tr class="text-c">
-                    <td><s:text name="posmanager.topqk"/></td><td><input name="topqk" type="text" placeholder="<s:text name="posmanager.topqk" />" class="input-text size-S"></td>
+                    <td><s:text name="posmanager.topqk"/></td><td><input name="topqk" type="text"  value="<s:property value="posManager.topqk"/>" placeholder="<s:text name="posmanager.topqk" />" class="input-text size-S"></td>
                 </tr>
                 <tr class="text-c">
                     <td><s:text name="posmanager.mcc"/></td>
@@ -192,22 +191,22 @@
                 </td>
                 </tr>
                 <tr class="text-c">
-                    <td><s:text name="posmanager.recipientbank"/></td><td><input name="recipientbank" type="text" placeholder="<s:text name="posmanager.recipientbank" />" class="input-text size-S"></td>
+                    <td><s:text name="posmanager.recipientbank"/></td><td><input name="recipientbank" type="text"  value="<s:property value="posManager.recipientbank"/>" placeholder="<s:text name="posmanager.recipientbank" />" class="input-text size-S"></td>
                 </tr>
                 <tr class="text-c">
-                    <td><s:text name="posmanager.recipientaccount"/></td><td><input name="recipientaccount" type="text" placeholder="<s:text name="posmanager.recipientaccount" />" class="input-text size-S"></td>
+                    <td><s:text name="posmanager.recipientaccount"/></td><td><input name="recipientaccount" type="text"  value="<s:property value="posManager.recipientaccount"/>" placeholder="<s:text name="posmanager.recipientaccount" />" class="input-text size-S"></td>
                 </tr>
                 <tr class="text-c">
-                    <td><s:text name="posmanager.startdatetm"/></td><td><input name="startdatetm" type="text" placeholder="<s:text name="posmanager.startdatetm" />" class="input-text size-S"></td>
+                    <td><s:text name="posmanager.startdatetm"/></td><td><input name="startdatetm" type="text"  value="<s:property value="posManager.startdatetm"/>" placeholder="<s:text name="posmanager.startdatetm" />" class="input-text size-S"></td>
                 </tr>
                 <tr class="text-c">
-                    <td><s:text name="posmanager.usecount"/></td><td><input name="usecount" type="text" placeholder="<s:text name="posmanager.usecount" />" class="input-text size-S"></td>
+                    <td><s:text name="posmanager.usecount"/></td><td><input name="usecount" type="text"  value="<s:property value="posManager.usecount"/>" placeholder="<s:text name="posmanager.usecount" />" class="input-text size-S"></td>
                 </tr>
                 <tr class="text-c">
-                    <td><s:text name="posmanager.useamount"/></td><td><input name="useamount" type="text" placeholder="<s:text name="posmanager.useamount" />" class="input-text size-S"></td>
+                    <td><s:text name="posmanager.useamount"/></td><td><input name="useamount" type="text"  value="<s:property value="posManager.useamount"/>" placeholder="<s:text name="posmanager.useamount" />" class="input-text size-S"></td>
                 </tr>
                 <tr class="text-c">
-                    <td><s:text name="posmanager.status"/></td><td><input name="status" type="text" placeholder="<s:text name="posmanager.status" />" class="input-text size-S"></td>
+                    <td><s:text name="posmanager.status"/></td><td><input name="status" type="checkbox"  <s:if  test="posManager.status =='enable'">checked</s:if><s:else></s:else> > </td>
                 </tr>
                 <tr class="text-c">
                     <td><s:text name="posmanager.salesman"/></td><td>
@@ -224,10 +223,10 @@
         </div>
         <div class="row">
             <div class="formControls" align="center">
-                <input type="button" class="btn btn-success radius size-M" value="<s:text name="addasset.submit" />" onclick="addCard();">
+                <input type="button" class="btn btn-success radius size-M" value="<s:text name="addasset.submit" />" onclick="addPOS();">
             </div>
         </div>
-        <input type="hidden" id="newid" name="newid" value="<s:property value="newid"/>">
+        <input type="hidden" id="newid" name="newid" value="<s:property value="posManager.uuid"/>">
     </form>
 </div>
 </body>

@@ -15,7 +15,6 @@ public class PosServerAction extends AjaxActionSupport {
     private String posServer;
     private String posServerEnabled;
     private String uiMode;
-
     public String getPosServerList() {
         return posServerList;
     }

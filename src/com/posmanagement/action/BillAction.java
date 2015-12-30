@@ -161,11 +161,13 @@ public class BillAction extends AjaxActionSupport {
             parametMap.put(1, swingList.billYear);
             parametMap.put(2, swingList.billMonth);
             parametMap.put(3, swingList.cardNO);
-            parametMap.put(4, swingList.cardMaster);
-            parametMap.put(5, swingList.swingCardList.get(index).money);
-            parametMap.put(6, swingList.swingCardList.get(index).swingDate);
+            parametMap.put(4, swingList.swingCardList.get(index).money);
+            parametMap.put(5, swingList.swingCardList.get(index).swingDate);
+            if (swingList.swingCardList.get(index).posUUID == null)
+                swingList.swingCardList.get(index).posUUID = new String();
+            parametMap.put(6, swingList.swingCardList.get(index).posUUID);
             parametMap.put(7, swingList.swingCardList.get(index).ruleUUID);
-            PosDbManager.executeUpdate("insert into swingcard(billyear,billmonth,cardno,cardmaster,amount,sdatetm,ruleUUID) " +
+            PosDbManager.executeUpdate("insert into swingcard(billyear,billmonth,cardno,amount,sdatetm,posuuid,ruleuuid) " +
                             "values(?,?,?,?,?,?,?)",
                     (HashMap<Integer, Object>)parametMap);
         }

@@ -46,18 +46,18 @@ public class SwingCardList {
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("CARDMASTER")))
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("AMOUNT")))
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("SDATETM")))
-                    .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("MACHINENO")))
-                    .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("MACHINENAME")))
+                    .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("POSUUID")))
+                    .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("POSNAME")))
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("SWINGSTATUS")))
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("TELLER")))
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("REALSDATETM")))
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("SALESMAN")))
                     .addElement(new UIContainer("td").addElement(new UIContainer("input")
-                            .addAttribute("class" ,StringUtils.convertNullableString(dbRet.get(index).get("STATUS")).equals("enable")?"btn btn-success radius":"btn btn-danger radius")
+                            .addAttribute("class" ,StringUtils.convertNullableString(dbRet.get(index).get("VALIDSTATUS")).equals("enable")?"btn btn-success radius":"btn btn-danger radius")
                             .addAttribute("type","button")
-                            .addAttribute("title" ,StringUtils.convertNullableString(dbRet.get(index).get("STATUS")).equals("enable")?"已开启":"未开启")
+                            .addAttribute("title" ,StringUtils.convertNullableString(dbRet.get(index).get("VALIDSTATUS")).equals("enable")?"已开启":"未开启")
                             .addAttribute("datav", StringUtils.convertNullableString(dbRet.get(index).get("ID")))
-                            .addAttribute("value" ,StringUtils.convertNullableString(dbRet.get(index).get("STATUS")).equals("enable")?"Y":"N")));
+                            .addAttribute("value" ,StringUtils.convertNullableString(dbRet.get(index).get("VALIDSTATUS")).equals("enable")?"Y":"N")));
         }
         return htmlString;
     }
@@ -80,7 +80,24 @@ public class SwingCardList {
     }
 
     private ArrayList<HashMap<String, Object>> fetchPosServerList() throws Exception {
-        return PosDbManager.executeSql("select * from swingcard ");
+        return PosDbManager.executeSql("SELECT\n" +
+                "swingcard.billyear,\n" +
+                "swingcard.billmonth,\n" +
+                "swingcard.cardno,\n" +
+                "cardtb.cardmaster,\n" +
+                "swingcard.amount,\n" +
+                "swingcard.sdatetm,\n" +
+                "postb.uuid posuuid,\n" +
+                "postb.posname,\n" +
+                "swingcard.telleruuid,\n" +
+                "swingcard.realsdatetm,\n" +
+                "swingcard.salesmanuuid,\n" +
+                "swingcard.validstatus\n" +
+                "FROM\n" +
+                "swingcard\n" +
+                "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno\n" +
+                "INNER JOIN postb ON postb.uuid = swingcard.posuuid\n" +
+                "ORDER BY swingcard.sdatetm");
     }
 
     private WebUI.UIMode uiMode;

@@ -16,7 +16,6 @@ public class SwingCardPolicy {
 
     public class SwingList {
         public String cardNO;
-        public String cardMaster;
         public int billYear;
         public int billMonth;
         public ArrayList<SwingCardInfo> swingCardList;
@@ -41,6 +40,7 @@ public class SwingCardPolicy {
         public double minSwingMoney;
         public double maxSwingMoney;
         public String industryUUID;
+        public String rateUUID;
         public int ruleUseFre;
         public double ruleUseInterval;
         public double ruleCoolDown;
@@ -48,7 +48,6 @@ public class SwingCardPolicy {
 
     private class CardInfo {
         public String cardNO;
-        public String cardMaster;
         public double creditAmount;
         public int repayNum;
         public int repayInterval;
@@ -60,6 +59,7 @@ public class SwingCardPolicy {
         public double money;
         public Date swingDate;
         public Time swingTime;
+        public String posUUID;
     }
 
     public class RepayInfo {
@@ -125,6 +125,10 @@ public class SwingCardPolicy {
                     ruleInfo.ruleUseFre--;
                     swingCardInfo.ruleUUID = ruleInfo.ruleUUID;
                     swingCardInfo.swingDate = new Date(billInfo.billDate.getTime() + (int)curDate * 24 * 60 * 60 * 1000);
+                    ArrayList<HashMap<String, Object>> posList = fetchPosList(ruleInfo);
+                    if (posList.size() > 0) {
+                        swingCardInfo.posUUID = posList.get(0).get("UUID").toString();
+                    }
                     swingCardList.add(swingCardInfo);
                 }
             }
@@ -134,7 +138,6 @@ public class SwingCardPolicy {
                 swingList.billYear = billInfo.billDate.getYear() + 1900;
                 swingList.billMonth = billInfo.billDate.getMonth();
                 swingList.cardNO = cardInfo.cardNO;
-                swingList.cardMaster = cardInfo.cardMaster;
                 swingList.swingCardList = swingCardList;
                 swingList.repayList = repayList;
                 return swingList;
@@ -229,6 +232,7 @@ public class SwingCardPolicy {
                 "ruletb.minswingmoney,\n" +
                 "ruletb.maxswingmoney,\n" +
                 "ruletb.industryuuid,\n" +
+                "ruletb.rateuuid,\n" +
                 "ruletb.ruleusefre,\n" +
                 "ruletb.ruleuseinterval\n" +
                 "FROM\n" +
@@ -252,6 +256,7 @@ public class SwingCardPolicy {
                 ruleInfo.swingEndTime = Time.valueOf(sqlRuleInfo.get("ENDTIME").toString());
                 ruleInfo.minSwingMoney = Double.parseDouble(sqlRuleInfo.get("MINSWINGMONEY").toString());
                 ruleInfo.maxSwingMoney = Double.parseDouble(sqlRuleInfo.get("MAXSWINGMONEY").toString());
+                ruleInfo.rateUUID = sqlRuleInfo.get("RATEUUID").toString();
                 ruleInfo.ruleUseFre = Integer.parseInt(sqlRuleInfo.get("RULEUSEFRE").toString());
                 ruleInfo.ruleUseInterval = Double.parseDouble(sqlRuleInfo.get("RULEUSEINTERVAL").toString());
                 ruleInfo.ruleCoolDown = COOLDOWNFIXED;
@@ -271,12 +276,18 @@ public class SwingCardPolicy {
 
         CardInfo cardInfo = new CardInfo();
         cardInfo.cardNO = sqlCardInfo.get(0).get("CARDNO").toString();
-        cardInfo.cardMaster = sqlCardInfo.get(0).get("CARDMASTER").toString();
         cardInfo.creditAmount = Double.parseDouble(sqlCardInfo.get(0).get("CREDITAMOUNT").toString());
         cardInfo.repayNum = Integer.parseInt(sqlCardInfo.get(0).get("REPAYNUM").toString());
         cardInfo.repayInterval = Integer.parseInt(sqlCardInfo.get(0).get("REPAYINTERVAL").toString());
         cardInfo.repayCoolDown = COOLDOWNFIXED;
         return cardInfo;
+    }
+
+    private ArrayList<HashMap<String, Object>> fetchPosList(RuleInfo ruleInfo) throws Exception {
+        return (ArrayList<HashMap<String, Object>>)PosDbManager.executeSql("select * from postb where " +
+                "industryuuid='" + ruleInfo.industryUUID +
+                "' and posserveruuid='" + ruleInfo.posServerUUID +
+                "' and rateuuid='" + ruleInfo.rateUUID + "'");
     }
 
     private String salemanID;

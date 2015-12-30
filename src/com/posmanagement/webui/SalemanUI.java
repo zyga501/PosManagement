@@ -7,13 +7,44 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TellerInfo {
-    public TellerInfo(String _tellerID) {
-        tellerID = _tellerID;
+public class SalemanUI {
+    public String generateTable() throws Exception {
+        ArrayList<HashMap<String, Object>> dbRet = fetchSalemanList();
+        if (dbRet.size() <= 0)
+            return new String("");
+
+        UIContainer uiTable = new UIContainer("table")
+                .addAttribute("class", "table table-border table-bordered table-hover");
+        for (int index = 0; index < dbRet.size(); ++index) {
+            uiTable.addElement(new UIContainer("tr")
+                    .addAttribute("class", "text-c odd")
+                    .addAttribute("role", "row")
+                    .addAttribute("onclick", "clickSaleman('" + dbRet.get(index).get("UID") + "')")
+                    .addElement("td", String.valueOf(index+1))
+                    .addElement("td", dbRet.get(index).get("UNICK").toString())
+                    .addElement("td", dbRet.get(index).get("UNAME").toString()));
+        }
+        return uiTable.generateUI() ;
     }
 
-    public String generateHTMLString() throws Exception {
-        ArrayList<HashMap<String, Object>> dbRet = fetchTellerInfo();
+    public String generateSelect() throws Exception {
+        ArrayList<HashMap<String, Object>> dbRet = fetchSalemanList();
+        if (dbRet.size() <= 0)
+            return new String("");
+
+        UIContainer uiContainer = new UIContainer();
+        for (int index = 0; index < dbRet.size(); ++index) {
+            if (dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0)
+            {
+                uiContainer.addElement(new UIContainer("option", dbRet.get(index).get("UNICK").toString())
+                        .addAttribute("value", dbRet.get(index).get("UNAME").toString()));
+            }
+        }
+        return uiContainer.generateUI();
+    }
+
+    public String generateInfoTable(String salemanID) throws Exception {
+        ArrayList<HashMap<String, Object>> dbRet = fetchSalemanInfo(salemanID);
         if (dbRet.size() != 1)
             return new String("");
 
@@ -24,13 +55,13 @@ public class TellerInfo {
                                 .addElement(new UIContainer("td", "用户名称")
                                         .addElement(new UIContainer("input")
                                                 .addAttribute("type", "hidden")
-                                                .addAttribute("id", "tellerID")
-                                                .addAttribute("name", "tellerID")
+                                                .addAttribute("id", "salemanID")
+                                                .addAttribute("name", "salemanID")
                                                 .addAttribute("value", StringUtils.convertNullableString(dbRet.get(0).get("UID")))))
                                 .addElement(new UIContainer("td")
                                         .addElement(new UIContainer("input")
                                                 .addAttribute("type", "text")
-                                                .addAttribute("name", "tellerNickName")
+                                                .addAttribute("name", "salemanName")
                                                 .addAttribute("class", "input-text radius")
                                                 .addAttribute("value", StringUtils.convertNullableString(dbRet.get(0).get("UNICK"))))))
                         .addElement(new UIContainer("tr")
@@ -50,13 +81,21 @@ public class TellerInfo {
                                                 .addAttribute("class", "input-text radius")
                                                 .addAttribute("value", StringUtils.convertNullableString(dbRet.get(0).get("STATUS"))))))
                         .addElement(new UIContainer("tr")
-                                .addElement("td", "所属业务员")
+                                .addElement("td", "费用情况")
                                 .addElement(new UIContainer("td")
                                         .addElement(new UIContainer("input")
                                                 .addAttribute("type", "text")
-                                                .addAttribute("name", "saleManID")
+                                                .addAttribute("name", "feeQK")
                                                 .addAttribute("class", "input-text radius")
-                                                .addAttribute("value", StringUtils.convertNullableString(dbRet.get(0).get("SALESMAN"))))))
+                                                .addAttribute("value", StringUtils.convertNullableString(dbRet.get(0).get("FEEQK"))))))
+                        .addElement(new UIContainer("tr")
+                                .addElement("td", "支付情况")
+                                .addElement(new UIContainer("td")
+                                        .addElement(new UIContainer("input")
+                                                .addAttribute("type", "text")
+                                                .addAttribute("name", "paymentTM")
+                                                .addAttribute("class", "input-text radius")
+                                                .addAttribute("value", StringUtils.convertNullableString(dbRet.get(0).get("PAYMENTTM"))))))
                         .addElement(new UIContainer("tr")
                                 .addElement("td", "联系情况")
                                 .addElement(new UIContainer("td")
@@ -68,12 +107,14 @@ public class TellerInfo {
                 ).generateUI();
     }
 
-    private ArrayList<HashMap<String, Object>> fetchTellerInfo() throws Exception {
+    private ArrayList<HashMap<String, Object>> fetchSalemanInfo(String salemanID) throws Exception {
         Map parametMap = new HashMap<Integer, Object>();
-        parametMap.put(1, tellerID);
-        return PosDbManager.executeSql("select * from userinfo a,tellertb b where a.uid=b.uid and b.uid=?",
+        parametMap.put(1, salemanID);
+        return PosDbManager.executeSql("select * from userinfo a,salesmantb b where a.uid=b.uid and b.uid=?",
                 (HashMap<Integer, Object>) parametMap);
     }
 
-    private String tellerID;
+    private ArrayList<HashMap<String, Object>> fetchSalemanList() throws Exception {
+        return PosDbManager.executeSql("select * from userinfo a,salesmantb b where a.uid=b.uid");
+    }
 }

@@ -2,8 +2,7 @@ package com.posmanagement.action;
 
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.utils.UUIDUtils;
-import com.posmanagement.webui.SwingTimeList;
-import com.posmanagement.webui.WebUI;
+import com.posmanagement.webui.SwingTimeUI;
 
 import java.sql.Time;
 import java.util.HashMap;
@@ -44,17 +43,17 @@ public class SwingTimeAction extends AjaxActionSupport {
     }
 
     public String Init() throws Exception {
-        swingTimeList = new SwingTimeList(WebUI.UIMode.TABLELIST).generateHTMLString();
+        swingTimeList = new SwingTimeUI().generateTable();
         return SWINGTIMEMANAGER;
     }
 
     public String FetchSwingTimeList() throws Exception {
         Map map = new HashMap();
         if (uiMode != null && uiMode.compareTo("SELECTLIST") == 0) {
-            map.put("swingTimeList", new SwingTimeList(WebUI.UIMode.SELECTLIST).generateHTMLString());
+            map.put("swingTimeList", new SwingTimeUI().generateSelect());
         }
         else {
-            map.put("swingTimeList", new SwingTimeList(WebUI.UIMode.TABLELIST).generateHTMLString());
+            map.put("swingTimeList", new SwingTimeUI().generateTable());
         }
 
         return AjaxActionComplete(map);
@@ -83,7 +82,7 @@ public class SwingTimeAction extends AjaxActionSupport {
                 else
                     parametMap.put(5, new String("disable"));
                 PosDbManager.executeUpdate("insert into swingtimetb(uuid,name,startTime,endTime,status) values(?,?,?,?,?)", (HashMap<Integer, Object>) parametMap);
-                map.put("swingTimeList", new SwingTimeList(WebUI.UIMode.TABLELIST).generateHTMLString());
+                map.put("swingTimeList", new SwingTimeUI().generateTable());
             }
             catch (IllegalArgumentException illegalException) {
                 map.put("errorMessage", getText("addswingtime.timeFormatError"));

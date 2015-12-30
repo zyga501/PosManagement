@@ -2,8 +2,7 @@ package com.posmanagement.action;
 
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.utils.UUIDUtils;
-import com.posmanagement.webui.IndustryList;
-import com.posmanagement.webui.WebUI;
+import com.posmanagement.webui.IndustryUI;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,17 +32,17 @@ public class IndustryAction extends AjaxActionSupport{
     }
 
     public String Init() throws Exception {
-        industryList = new IndustryList(WebUI.UIMode.TABLELIST).generateHTMLString();
+        industryList = new IndustryUI().generateIndustryTable();
         return INDUSTRYMANAGER;
     }
 
     public String FetchIndustryList() throws Exception {
         Map map = new HashMap();
         if (uiMode != null && uiMode.compareTo("SELECTLIST") == 0) {
-            map.put("industryList", new IndustryList(WebUI.UIMode.SELECTLIST).generateHTMLString());
+            map.put("industryList", new IndustryUI().generateIndustrySelectList());
         }
         else {
-            map.put("industryList", new IndustryList(WebUI.UIMode.TABLELIST).generateHTMLString());
+            map.put("industryList", new IndustryUI().generateIndustryTable());
         }
 
         return AjaxActionComplete(map);
@@ -63,7 +62,7 @@ public class IndustryAction extends AjaxActionSupport{
             else
                 parametMap.put(3, new String("disable"));
             PosDbManager.executeUpdate("insert into industrytb(uuid,name,status) values(?,?,?)", (HashMap<Integer, Object>) parametMap);
-            map.put("industryList", new IndustryList(WebUI.UIMode.TABLELIST).generateHTMLString());
+            map.put("industryList", new IndustryUI().generateIndustryTable());
         }
 
         return AjaxActionComplete(map);

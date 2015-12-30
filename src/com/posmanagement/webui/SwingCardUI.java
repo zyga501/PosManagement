@@ -6,24 +6,9 @@ import com.posmanagement.utils.StringUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class SwingCardList {
-    public SwingCardList(WebUI.UIMode _uidMode) {
-        uiMode = _uidMode;
-    }
-
-    public String generateHTMLString() throws Exception {
-        switch (uiMode) {
-            case TABLELIST:
-                return generateTableList();
-            case SELECTLIST:
-                return generateSelectList();
-        }
-
-        return "";
-    }
-
-    public String generateTableList() throws Exception {
-        ArrayList<HashMap<String, Object>> dbRet = fetchPosServerList();
+public class SwingCardUI {
+    public String generateDetail() throws Exception {
+        ArrayList<HashMap<String, Object>> dbRet = fetchSwingCardDetail();
         if (dbRet.size() <= 0)
             return new String("");
 
@@ -62,24 +47,24 @@ public class SwingCardList {
         return htmlString;
     }
 
-    public String generateSelectList() throws Exception {
-        ArrayList<HashMap<String, Object>> dbRet = fetchPosServerList();
-        if (dbRet.size() <= 0)
-            return new String("");
-
-        UIContainer uiContainer = new UIContainer();
-        uiContainer.addElement("option","");
-        for (int index = 0; index < dbRet.size(); ++index) {
-            if (StringUtils.convertNullableString(dbRet.get(index).get("STATUS")).compareTo("enable") == 0) {
-                uiContainer.addElement(new UIContainer("option" ,StringUtils.convertNullableString(dbRet.get(index).get("SERVERNAME")))
-                                        .addAttribute("value" ,StringUtils.convertNullableString(dbRet.get(index).get("SERVERCODE"))));
-            }
-        }
-
-        return uiContainer.generateUI();
+    private ArrayList<HashMap<String, Object>> fetchSwingCardSummary() throws Exception {
+        return PosDbManager.executeSql("SELECT\n" +
+                "swingcard.billyear,\n" +
+                "swingcard.billmonth,\n" +
+                "swingcard.cardno,\n" +
+                "cardtb.cardmaster\n" +
+                "FROM\n" +
+                "swingcard\n" +
+                "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno\n" +
+                "GROUP BY\n" +
+                "swingcard.billyear,\n" +
+                "swingcard.billmonth,\n" +
+                "swingcard.cardno\n" +
+                "ORDER BY\n" +
+                "swingcard.sdatetm");
     }
 
-    private ArrayList<HashMap<String, Object>> fetchPosServerList() throws Exception {
+    private ArrayList<HashMap<String, Object>> fetchSwingCardDetail() throws Exception {
         return PosDbManager.executeSql("SELECT\n" +
                 "swingcard.billyear,\n" +
                 "swingcard.billmonth,\n" +
@@ -99,6 +84,4 @@ public class SwingCardList {
                 "INNER JOIN postb ON postb.uuid = swingcard.posuuid\n" +
                 "ORDER BY swingcard.sdatetm");
     }
-
-    private WebUI.UIMode uiMode;
 }

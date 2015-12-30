@@ -5,23 +5,8 @@ import com.posmanagement.utils.PosDbManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class IndustryList {
-    public IndustryList(WebUI.UIMode _uidMode) {
-        uiMode = _uidMode;
-    }
-
-    public String generateHTMLString() throws Exception {
-        switch (uiMode) {
-            case TABLELIST:
-                return generateTableList();
-            case SELECTLIST:
-                return generateSelectList();
-        }
-
-        return "";
-    }
-
-    public String generateTableList() throws Exception {
+public class IndustryUI {
+    public String generateIndustryTable() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchIndustryList();
         if (dbRet.size() <= 0)
             return new String("");
@@ -43,7 +28,7 @@ public class IndustryList {
         return htmlString;
     }
 
-    public String generateSelectList() throws Exception {
+    public String generateIndustrySelectList() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchIndustryList();
         if (dbRet.size() <= 0)
             return new String("");
@@ -62,6 +47,4 @@ public class IndustryList {
     private ArrayList<HashMap<String, Object>> fetchIndustryList() throws Exception {
         return PosDbManager.executeSql("select * from industrytb");
     }
-
-    private WebUI.UIMode uiMode;
 }

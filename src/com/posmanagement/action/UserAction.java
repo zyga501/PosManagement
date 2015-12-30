@@ -4,8 +4,8 @@ import com.opensymphony.xwork2.ActionContext;
 import com.posmanagement.utils.LogManager;
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.utils.UUIDUtils;
-import com.posmanagement.webui.SalemanList;
-import com.posmanagement.webui.TellerList;
+import com.posmanagement.webui.SalemanUI;
+import com.posmanagement.webui.TellerUI;
 import com.posmanagement.webui.UserMenu;
 import org.apache.struts2.ServletActionContext;
 
@@ -101,7 +101,7 @@ public class UserAction extends AjaxActionSupport{
                 .get(ServletActionContext.HTTP_REQUEST);
         HttpSession session = request.getSession(true);
 
-        // Disabled Now
+        // Disable Now
         //if (!verifyCode.toUpperCase().equals(session.getAttribute("verifyCode"))) {
         //    loginErrorMessage = getText("UserAction.verifyCodeError");
         //    session.removeAttribute("verifyCode");
@@ -216,11 +216,11 @@ public class UserAction extends AjaxActionSupport{
         Map resultMap = new HashMap();
         if ("1".equals(userType)) {
             PosDbManager.executeUpdate("insert into salesmantb(uid) values('" + UUID + "')");
-            resultMap.put("userList", new SalemanList().generateHTMLString());
+            resultMap.put("userList", new SalemanUI().generateTable());
         }
         else if ("2".equals(userType)) {
             PosDbManager.executeUpdate("insert into tellertb(uid) values('" + UUID + "')");
-            resultMap.put("userList", new TellerList().generateHTMLString());
+            resultMap.put("userList", new TellerUI().generateTable(null, false));
         }
 
         return AjaxActionComplete(resultMap);
@@ -240,7 +240,7 @@ public class UserAction extends AjaxActionSupport{
 
     public String FetchSalemanList() throws Exception {
         Map map = new HashMap();
-        map.put("userList", new SalemanList().generateListHTMLString());
+        map.put("userList", new SalemanUI().generateSelect());
 
         return AjaxActionComplete(map);
     }

@@ -5,7 +5,7 @@ import com.posmanagement.utils.PosDbManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class RuleList {
+public class RuleUI {
     public String generateHTMLString() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchRuleList();
         if (dbRet.size() <= 0)

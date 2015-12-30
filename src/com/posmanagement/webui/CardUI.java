@@ -5,8 +5,8 @@ import com.posmanagement.utils.PosDbManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class CardList {
-    public String generateHTMLString() throws Exception {
+public class CardUI {
+    public String generateCardTable() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchCardList();
         if (dbRet.size() <= 0)
             return new String("");

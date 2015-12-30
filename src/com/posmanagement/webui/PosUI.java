@@ -1,28 +1,12 @@
 package com.posmanagement.webui;
 
 import com.posmanagement.utils.PosDbManager;
-import com.posmanagement.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class PosList {
-    private WebUI.UIMode uiMode;
-    public PosList(WebUI.UIMode _uidMode) {
-        uiMode = _uidMode;
-    }
-
-    public String generateHTMLString() throws Exception {
-        switch (uiMode) {
-            case TABLELIST:
-                return generateTableList();
-            case SELECTLIST:
-                return generateSelectList();
-        }
-
-        return "";
-    }
-    public String generateSelectList() throws Exception {
+public class PosUI {
+    public String generateSelect() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchPosList();
         if (dbRet.size() <= 0)
             return new String("");
@@ -40,7 +24,7 @@ public class PosList {
     }
 
 
-    public String generateTableList() throws Exception {
+    public String generateTable() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchPosList();
         if (dbRet.size() <= 0)
             return new String("");

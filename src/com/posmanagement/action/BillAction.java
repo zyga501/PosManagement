@@ -2,7 +2,7 @@ package com.posmanagement.action;
 
 import com.posmanagement.policy.SwingCardPolicy;
 import com.posmanagement.utils.PosDbManager;
-import com.posmanagement.webui.BillList;
+import com.posmanagement.webui.BillUI;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -69,7 +69,7 @@ public class BillAction extends AjaxActionSupport {
     }
 
     public String Init() throws Exception {
-        billList = new BillList().generateHTMLString();
+        billList = new BillUI().generateBillTable();
         return BILLMANAGER;
     }
 
@@ -137,7 +137,7 @@ public class BillAction extends AjaxActionSupport {
         System.out.println(sqlString);
         try {
             if (PosDbManager.executeUpdate(sqlString))
-            map.put("billList",  new BillList().generateHTMLString());
+            map.put("billList",  new BillUI().generateBillTable());
         } catch (Exception e) {
             map.put("errorMessage", getText("AssetAction.InfoError"));
             e.printStackTrace();

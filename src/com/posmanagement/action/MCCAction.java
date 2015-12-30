@@ -2,8 +2,7 @@ package com.posmanagement.action;
 
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.utils.UUIDUtils;
-import com.posmanagement.webui.MCCList;
-import com.posmanagement.webui.WebUI;
+import com.posmanagement.webui.MCCUI;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,17 +32,17 @@ public class MCCAction extends AjaxActionSupport {
     }
 
     public String Init() throws Exception{
-        mccList = new MCCList(WebUI.UIMode.TABLELIST).generateHTMLString();
+        mccList = new MCCUI().generateMCCTable();
         return MCCMANAGER;
     }
 
     public String FetchMCCList() throws Exception {
         Map map = new HashMap();
         if (uiMode != null && uiMode.compareTo("SELECTLIST") == 0) {
-            map.put("mccList", new MCCList(WebUI.UIMode.SELECTLIST).generateHTMLString());
+            map.put("mccList", new MCCUI().generateMCCSelectList());
         }
         else {
-            map.put("mccList", new MCCList(WebUI.UIMode.TABLELIST).generateHTMLString());
+            map.put("mccList", new MCCUI().generateMCCTable());
         }
 
         return AjaxActionComplete(map);
@@ -65,7 +64,7 @@ public class MCCAction extends AjaxActionSupport {
                 else
                     parametMap.put(3, new String("disable"));
                 PosDbManager.executeUpdate("insert into mcctb(uuid,mcc,status) values(?,?,?)", (HashMap<Integer, Object>) parametMap);
-                map.put("mccList", new MCCList(WebUI.UIMode.TABLELIST).generateHTMLString());
+                map.put("mccList", new MCCUI().generateMCCTable());
             }
             catch (NumberFormatException exception) {
                 map.put("errorMessage", getText("addmcc.mccCodeFormatError"));

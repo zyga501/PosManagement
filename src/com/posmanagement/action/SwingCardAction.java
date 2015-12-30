@@ -1,7 +1,6 @@
 package com.posmanagement.action;
 
-import com.posmanagement.webui.SwingCardList;
-import com.posmanagement.webui.WebUI;
+import com.posmanagement.webui.SwingCardUI;
 
 public class SwingCardAction extends AjaxActionSupport {
     private final static String SWINGCARDMANAGER = "swingCardManager";
@@ -27,7 +26,7 @@ public class SwingCardAction extends AjaxActionSupport {
     }
 
     public String Init() throws Exception {
-        swingCardList = new SwingCardList(WebUI.UIMode.TABLELIST).generateHTMLString();
+        swingCardList = new SwingCardUI().generateDetail();
         return SWINGCARDMANAGER;
     }
 }

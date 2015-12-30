@@ -2,16 +2,14 @@ package com.posmanagement.action;
 
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.utils.UUIDUtils;
-import com.posmanagement.webui.BillList;
-import com.posmanagement.webui.PosList;
-import com.posmanagement.webui.WebUI;
+import com.posmanagement.webui.PosUI;
 
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-public class POSAction extends AjaxActionSupport {
+public class PosAction extends AjaxActionSupport {
     public final static String POSMANAGER = "posManager";
     private final static String FETCHPOS = "fetchPOS";
 
@@ -53,7 +51,7 @@ public class POSAction extends AjaxActionSupport {
     }
 
     public String Init() throws Exception {
-        posList = new PosList(WebUI.UIMode.TABLELIST).generateHTMLString();
+        posList = new PosUI().generateTable();
         return POSMANAGER;
     }
 
@@ -137,7 +135,7 @@ public class POSAction extends AjaxActionSupport {
             if (PosDbManager.executeUpdate("insert into postb(uuid,posname,industryuuid,rateuuid,corporation,topqk,mccuuid," +
                     "posserveruuid,recipientbankuuid,recipientaccount,startdatetm,usecount,useamount,status,salesmanuuid)" +
                     "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>)parametMap)) {
-                map.put("posList", new PosList(WebUI.UIMode.SELECTLIST).generateHTMLString());
+                map.put("posList", new PosUI().generateSelect());
             }
         } catch (Exception e) {
             e.printStackTrace();

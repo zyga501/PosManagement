@@ -2,7 +2,7 @@ package com.posmanagement.action;
 
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.utils.Readconfig;
-import com.posmanagement.webui.CardList;
+import com.posmanagement.webui.CardUI;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -67,7 +67,7 @@ public class CardAction extends AjaxActionSupport {
     }
 
     public String Init() throws Exception {
-        cardList = new CardList().generateHTMLString();
+        cardList = new CardUI().generateCardTable();
         return CARDMANAGER;
     }
 
@@ -141,7 +141,7 @@ public class CardAction extends AjaxActionSupport {
                         "cmaddress=?,cmtel=?,cmseccontact=?,salesmanuname=?,memos=?  where cardno=?",(HashMap<Integer, Object>)  para))
                     map.put("errorMessage", getText("addrate.rateFormatError"));
                 else
-                    map.put("cardList", new CardList().generateHTMLString());
+                    map.put("cardList", new CardUI().generateCardTable());
                 map.put("newid",para.get(3));
             }
             catch (NumberFormatException exception) {
@@ -175,7 +175,7 @@ public class CardAction extends AjaxActionSupport {
                         "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",(HashMap<Integer, Object>)  para))
                     map.put("errorMessage", getText("addrate.rateFormatError"));
                 else
-                    map.put("cardList", new CardList().generateHTMLString());
+                    map.put("cardList", new CardUI().generateCardTable());
                 map.put("newid",para.get(3));
             }
             catch (NumberFormatException exception) {
@@ -190,7 +190,7 @@ public class CardAction extends AjaxActionSupport {
         if (null==cardno || cardno.trim().equals(""))
             return "";
         Map map = new HashMap();
-        map.put("cardMaster", new CardList().generateMasterString(cardno));
+        map.put("cardMaster", new CardUI().generateMasterString(cardno));
         return AjaxActionComplete(map);
     }
 }

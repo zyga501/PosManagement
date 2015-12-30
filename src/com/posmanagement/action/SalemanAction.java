@@ -1,10 +1,8 @@
 package com.posmanagement.action;
 
 import com.posmanagement.utils.PosDbManager;
-import com.posmanagement.webui.SalemanInfo;
-import com.posmanagement.webui.SalemanList;
-import com.posmanagement.webui.TellerList;
-import com.posmanagement.webui.WebUI;
+import com.posmanagement.webui.SalemanUI;
+import com.posmanagement.webui.TellerUI;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,15 +51,15 @@ public class SalemanAction extends AjaxActionSupport {
     }
 
     public String Init() throws Exception {
-        salemanList = new SalemanList().generateHTMLString();
+        salemanList = new SalemanUI().generateTable();
         return SALEMANMANAGE;
     }
 
     public String FetchInfo() throws Exception {
         Map map = new HashMap();
         if (salemanID != null && salemanID.length() > 0) {
-            map.put("salemanInfo", new SalemanInfo(salemanID).generateHTMLString());
-            map.put("tellerList", new TellerList(salemanID).generateHTMLString());
+            map.put("salemanInfo", new SalemanUI().generateInfoTable(salemanID));
+            map.put("tellerList", new TellerUI().generateTable(salemanID, false));
         }
         return AjaxActionComplete(map);
     }
@@ -69,7 +67,7 @@ public class SalemanAction extends AjaxActionSupport {
     public String FetchSalemanList() throws Exception {
         Map map = new HashMap();
         if (uiMode != null && uiMode.compareTo("SELECTLIST") == 0) {
-            map.put("salemanList", new SalemanList().generateListHTMLString());
+            map.put("salemanList", new SalemanUI().generateSelect());
         }
 
         return AjaxActionComplete(map);
@@ -93,7 +91,7 @@ public class SalemanAction extends AjaxActionSupport {
             if (!PosDbManager.executeUpdate("update tellertb set salesman=? where uid=?", (HashMap<Integer, Object>) parametMap)) {
                 map.put("ErrorMessage", getText("SalemanAction.AddTellerError"));
             }
-            map.put("tellerList", new TellerList(salemanID).generateHTMLString());
+            map.put("tellerList", new TellerUI().generateTable(salemanID, false));
         }
 
         return AjaxActionComplete(map);

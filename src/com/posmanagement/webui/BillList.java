@@ -21,12 +21,11 @@ public class BillList {
                     .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("CARDNO")))
                     .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("BILLDATE")))
                     .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("LASTREPAYMENTDATE")))
-                    .addElement(new UIContainer("td")//StringUtils.convertNullableString(dbRet.get(index).get("BILLAMOUNT")).equals("")?"&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp":""
+                    .addElement(new UIContainer("td")
                             .addElement(new UIContainer("label",StringUtils.convertNullableString(dbRet.get(index).get("BILLAMOUNT")).equals("")?"0":dbRet.get(index).get("BILLAMOUNT").toString())
                             .addAttribute("name","billamount")
                             .addAttribute("datav",StringUtils.convertNullableString(dbRet.get(index).get("CARDNO")))
                             .addAttribute("style","display:inline-block;width:30")))
-                   // .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("BILLAMOUNT")))
                     .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("CANUSEAMOUNT")))
                     .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("BILLHADPAY")))
                     .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("BILLNOPAY")))
@@ -40,7 +39,8 @@ public class BillList {
                         .addAttribute("type","button")
                             .addAttribute("title", dbRet.get(index).get("STATUS").equals("enable")?"已开启":"未开启")
                             .addAttribute("datav", StringUtils.convertNullableString(dbRet.get(index).get("CARDNO")))
-                                    .addAttribute("value", dbRet.get(index).get("STATUS").equals("enable")?"Y":"N")));
+                                    .addAttribute("value", dbRet.get(index).get("STATUS").equals("enable")?"Y":"N")
+                            .addAttribute("onclick", "clickBill(this,'" + StringUtils.convertNullableString(dbRet.get(index).get("UUID")) + "')")));
         }
         return htmlString;
     }

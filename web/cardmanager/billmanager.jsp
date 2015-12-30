@@ -21,6 +21,36 @@
                 fix: false,
                 content: "./cardmanager/addbill.jsp"
             });}
+
+        function clickBill(button, billNO) {
+            var val = button.value;
+            if (val == "N") {
+                layer.confirm('确定启用？', {
+                    btn: ['yes', 'no'] //按钮
+                }, function () {
+                    button.value = "Y";
+                    button.setAttribute("class", "btn btn-success radius");
+                    layer.msg('你选择了YES', {icon: 1});
+                    $.ajax({
+                        type: 'post',
+                        url: 'Bill!editBill',
+                        data: {status:"enable" , cardno:$(button).attr("datav"),billNO:billNO},
+                        success: function (data) {
+                            var json = eval("(" + data + ")");
+                            if (json.successMessage) {
+                                button.value = "Y";
+                                button.setAttribute("class", "btn btn-success radius");
+                                layer.msg(json.successMessage);
+                            }
+                            else if (json.errorMessage)
+                                layer.msg(json.errorMessage);
+                        }
+                    });
+                }, function () {
+                });
+            }
+        }
+
         function refreshBillList(billList) {
             $('#billList').html(billList);
         }
@@ -71,53 +101,25 @@
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.admin.js"></script>
 <script type="text/javascript">
     $().ready( function(){
-        $("input[type=button]").on("click", function() {
-                    var val = this.value;
-                    var obj = this;
-                    if (val == "N") {
-                        layer.confirm('确定启用？', {
-                            btn: ['yes', 'no'] //按钮
-                        }, function () {
-                            layer.msg('你选择了YES', {icon:1});
-                            $.ajax({
-                                type: 'post',
-                                url: 'Bill!editBill',
-                                data: {status:"enable" , cardno:$(obj).attr("datav")},
-                                success: function (data) {
-                                    var json = eval("(" + data + ")");
-                                    if (json.successMessage) {
-                                        obj.value = "Y";
-                                        obj.setAttribute("class", "btn btn-success radius");
-                                        layer.msg(json.successMessage);
-                                    }
-                                    else if (json.errorMessage)
-                                        layer.msg(json.errorMessage);
-                                }
-                            });
-                        }, function () {
-                        });
+        $("label[name=billamount]").on("click", function() {
+            var name = prompt("输入新的金额",this.innerHTML);
+            if (name==null) return ;
+            var obj = this;
+            $.ajax({
+                type: 'post',
+                url: 'Bill!editBill',
+                data: {billamount:name , cardno:$(obj).attr("datav")},
+                success: function (data) {
+                    var json = eval("(" + data + ")");
+                    if (json.successMessage) {
+                        obj.innerHTML = name ;
+                        layer.msg(json.successMessage, {icon: 1});
                     }
+                    else if (json.errorMessage)
+                        layer.msg(json.errorMessage, {icon:2});
                 }
-        )
-                $("label[name=billamount]").on("click", function() {
-                    var name = prompt("输入新的金额",this.innerHTML);
-                    if (name==null) return ;
-                    var obj = this;
-                    $.ajax({
-                        type: 'post',
-                        url: 'Bill!editBill',
-                        data: {billamount:name , cardno:$(obj).attr("datav")},
-                        success: function (data) {
-                            var json = eval("(" + data + ")");
-                            if (json.successMessage) {
-                                obj.innerHTML = name ;
-                                layer.msg(json.successMessage, {icon: 1});
-                            }
-                            else if (json.errorMessage)
-                                layer.msg(json.errorMessage, {icon:2});
-                        }
-                    });
-                })
+            });
+        })
     }
     )
 

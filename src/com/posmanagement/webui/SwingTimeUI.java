@@ -5,23 +5,8 @@ import com.posmanagement.utils.PosDbManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class SwingTimeList {
-    public SwingTimeList(WebUI.UIMode _uiMode) {
-        uiMode = _uiMode;
-    }
-
-    public String generateHTMLString() throws Exception {
-        switch (uiMode) {
-            case TABLELIST:
-                return generateTableList();
-            case SELECTLIST:
-                return generateSelectList();
-        }
-
-        return "";
-    }
-
-    public String generateTableList() throws Exception {
+public class SwingTimeUI {
+    public String generateTable() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchSwingTimeList();
         if (dbRet.size() <= 0)
             return new String("");
@@ -57,7 +42,7 @@ public class SwingTimeList {
         return htmlString;
     }
 
-    public String generateSelectList() throws Exception {
+    public String generateSelect() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchSwingTimeList();
         if (dbRet.size() <= 0)
             return new String("");
@@ -76,6 +61,4 @@ public class SwingTimeList {
     private ArrayList<HashMap<String, Object>> fetchSwingTimeList() throws Exception {
         return PosDbManager.executeSql("select * from swingtimetb");
     }
-
-    private WebUI.UIMode uiMode;
 }

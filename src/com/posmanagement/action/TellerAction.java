@@ -1,7 +1,6 @@
 package com.posmanagement.action;
 
-import com.posmanagement.webui.TellerInfo;
-import com.posmanagement.webui.TellerList;
+import com.posmanagement.webui.TellerUI;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,14 +20,14 @@ public class TellerAction extends AjaxActionSupport {
     }
 
     public String Init() throws Exception {
-        tellerList = new TellerList().generateHTMLString();
+        tellerList = new TellerUI().generateTable(null, false);
         return TELLERMANAGE;
     }
 
     public String FetchInfo() throws Exception {
         Map map = new HashMap();
         if (tellerID != null && tellerID.length() > 0) {
-            map.put("tellerInfo", new TellerInfo(tellerID).generateHTMLString());
+            map.put("tellerInfo", new TellerUI().generateInfoTable(tellerID));
         }
 
         return AjaxActionComplete(map);
@@ -36,7 +35,7 @@ public class TellerAction extends AjaxActionSupport {
 
     public String FetchUnAssignTeller() throws Exception {
         Map map = new HashMap();
-        map.put("tellerList", new TellerList(true).generateHTMLString());
+        map.put("tellerList", new TellerUI().generateTable(null, true));
         return AjaxActionComplete(map);
     }
 

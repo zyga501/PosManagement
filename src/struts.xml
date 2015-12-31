@@ -91,7 +91,7 @@
             <result name="swingCardManager">./cardmanager/swingcardmanager.jsp</result>
             <result name="">./cardmanager/swingcardmanager.jsp</result>
         </action>
-        <action name="POS!*" class="com.posmanagement.action.POSAction" method="{1}">
+        <action name="POS!*" class="com.posmanagement.action.PosAction" method="{1}">
             <result name="posManager">./cardmanager/posmanager.jsp</result>
             <result name="fetchPOS">./cardmanager/addpos.jsp</result>
         </action>

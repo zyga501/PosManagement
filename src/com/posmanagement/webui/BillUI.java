@@ -6,8 +6,8 @@ import com.posmanagement.utils.StringUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class BillList {
-    public String generateHTMLString() throws Exception {
+public class BillUI {
+    public String generateBillTable() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchBillList();
         if (dbRet.size() <= 0)
             return new String("");

@@ -5,23 +5,8 @@ import com.posmanagement.utils.PosDbManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class BankList {
-    public BankList(WebUI.UIMode _uimode) {
-        uiMode = _uimode;
-    }
-
-    public String generateHTMLString() throws Exception {
-        switch (uiMode) {
-            case TABLELIST:
-                return generateTableList();
-            case SELECTLIST:
-                return generateSelectList();
-        }
-
-        return "";
-    }
-
-    public String generateTableList() throws Exception {
+public class BankUI {
+    public String generateBankTable() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchBankList();
         if (dbRet.size() <= 0)
             return new String("");
@@ -43,7 +28,7 @@ public class BankList {
         return htmlString;
     }
 
-    public String generateSelectList() throws Exception {
+    public String generateBankSelectList() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchBankList();
         if (dbRet.size() <= 0)
             return new String("");
@@ -61,6 +46,4 @@ public class BankList {
     private ArrayList<HashMap<String, Object>> fetchBankList() throws Exception {
         return PosDbManager.executeSql("select * from banktb");
     }
-
-    private WebUI.UIMode uiMode;
 }

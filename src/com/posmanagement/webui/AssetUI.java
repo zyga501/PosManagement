@@ -5,8 +5,8 @@ import com.posmanagement.utils.PosDbManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class AssetList {
-    public String generateHTMLString() throws Exception {
+public class AssetUI {
+    public String generateAssetTable() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchAssetList();
         if (dbRet.size() <= 0)
             return new String("");

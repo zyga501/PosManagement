@@ -2,7 +2,7 @@ package com.posmanagement.action;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.posmanagement.utils.PosDbManager;
-import com.posmanagement.webui.AssetList;
+import com.posmanagement.webui.AssetUI;
 import org.apache.struts2.ServletActionContext;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +22,7 @@ public class AssetAction extends AjaxActionSupport {
     }
 
     public String Init() throws Exception {
-        assetList = new AssetList().generateHTMLString();
+        assetList = new AssetUI().generateAssetTable();
         return ASSETMANAGER;
     }
 
@@ -50,7 +50,7 @@ public class AssetAction extends AjaxActionSupport {
             parametMap.put(9, session.getAttribute("userID"));
             PosDbManager.executeUpdate("insert into assettb(cardmaster,bankuuid,cardno,firstbalance,ebanksignpwd,ebankcashpwd," +
                     "ebanktransferpwd,atmcashpwd,salesman) values(?,?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>)parametMap);
-            map.put("assetList", new AssetList().generateHTMLString());
+            map.put("assetList", new AssetUI().generateAssetTable());
         }
         catch (Exception exception) {
             map.put("errorMessage", getText("AssetAction.InfoError"));

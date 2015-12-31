@@ -2,7 +2,7 @@ package com.posmanagement.action;
 
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.utils.UUIDUtils;
-import com.posmanagement.webui.RuleList;
+import com.posmanagement.webui.RuleUI;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +16,7 @@ public class RuleAction extends AjaxActionSupport {
     }
 
     public String Init() throws Exception {
-        ruleList = new RuleList().generateHTMLString();
+        ruleList = new RuleUI().generateHTMLString();
         return RULEMANAGER;
     }
 
@@ -42,7 +42,7 @@ public class RuleAction extends AjaxActionSupport {
         if (PosDbManager.executeUpdate("insert into ruletb(uuid,bankuuid,posserveruuid,swingtimeuuid," +
                 "minswingmoney,maxswingmoney,industryuuid,ruleusefre,ruleuseinterval,status)" +
                 "values(?,?,?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>)parametMap)) {
-            map.put("ruleList", new RuleList().generateHTMLString());
+            map.put("ruleList", new RuleUI().generateHTMLString());
         }
 
         return AjaxActionComplete(map);

@@ -2,8 +2,7 @@ package com.posmanagement.action;
 
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.utils.UUIDUtils;
-import com.posmanagement.webui.RateList;
-import com.posmanagement.webui.WebUI;
+import com.posmanagement.webui.RateUI;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,17 +32,17 @@ public class RateAction extends AjaxActionSupport {
     }
 
     public String Init() throws Exception {
-        rateList = new RateList(WebUI.UIMode.TABLELIST).generateHTMLString();
+        rateList = new RateUI().generateTable();
         return RATEMANAGER;
     }
 
     public String FetchRateList() throws Exception {
         Map map = new HashMap();
         if (uiMode != null && uiMode.compareTo("SELECTLIST") == 0) {
-            map.put("rateList", new RateList(WebUI.UIMode.SELECTLIST).generateHTMLString());
+            map.put("rateList", new RateUI().generateSelect());
         }
         else {
-            map.put("rateList", new RateList(WebUI.UIMode.TABLELIST).generateHTMLString());
+            map.put("rateList", new RateUI().generateTable());
         }
 
         return AjaxActionComplete(map);
@@ -65,7 +64,7 @@ public class RateAction extends AjaxActionSupport {
                 else
                     parametMap.put(3, new String("disable"));
                 PosDbManager.executeUpdate("insert into ratetb(uuid,rate,status) values(?,?,?)", (HashMap<Integer, Object>) parametMap);
-                map.put("rateList", new RateList(WebUI.UIMode.TABLELIST).generateHTMLString());
+                map.put("rateList", new RateUI().generateTable());
             }
             catch (NumberFormatException exception) {
                 map.put("errorMessage", getText("addrate.rateFormatError"));

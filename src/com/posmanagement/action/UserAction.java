@@ -90,7 +90,7 @@ public class UserAction extends AjaxActionSupport{
         HttpSession session = request.getSession(true);
         if (session.getAttribute("userID") == null)
             return LOGINFAILURE;
-        userMenu = new UserMenu(Integer.parseInt(session.getAttribute("userID").toString())).generateHTMLString();
+        userMenu = new UserMenu(session.getAttribute("userID").toString()).generateHTMLString();
         userNickName = session.getAttribute("userNick").toString();
         return MAGEPAGELOADED;
     }

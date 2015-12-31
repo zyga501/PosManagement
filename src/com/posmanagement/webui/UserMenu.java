@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UserMenu {
-    public UserMenu(int userID) {
+    public UserMenu(String userID) {
         userID_ = userID;
     }
 
@@ -31,7 +31,6 @@ public class UserMenu {
         }
         return htmlString;
     }
-
     private String generateSubMenu(int pid) throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchMenuByPid(pid);
         if (dbRet.size() <= 0)
@@ -67,9 +66,15 @@ public class UserMenu {
 
     private ArrayList<HashMap<String, Object>> fetchMenuByPid(int pid) throws Exception {
         Map parametMap = new HashMap();
-        parametMap.put(1,pid);
-        return PosDbManager.executeSql("select * from menutree where preid=? order by menuorder", (HashMap<Integer, Object>)parametMap);
+        parametMap.put(1,userID_);
+        parametMap.put(2,pid);
+        return PosDbManager.executeSql("select distinct aa.* from menutree aa, (select a.id,d.id as pid " +
+                " from menutree d inner join  menutree a " +
+                "  on d.id=a.preid inner join permission b on a.webpath =b.actionname  " +
+                " inner join permissiondetail c on c.pid=b.pid inner join userinfo e on e.rid=c.rid  where  " +
+                "  e.uid=?) b where aa.preid=? and (aa.id=b.id or aa.id =b.pid)" +
+                " order by menuorder", (HashMap<Integer, Object>)parametMap);
+       // return PosDbManager.executeSql("select * from menutree where preid=? order by menuorder", (HashMap<Integer, Object>)parametMap);
     }
-
-    private int userID_; // TODO for role
+    private String userID_; // TODO for role
 }

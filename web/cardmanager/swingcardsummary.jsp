@@ -15,50 +15,36 @@
     <link href="<%=request.getContextPath()%>/skin/default/skin.css" rel="stylesheet" type="text/css" id="skin"/>
     <title></title>
     <script type="text/javascript">
-
-        function editSwingCard() {
+        function clickDetail(cardNo, billYear, billMonth) {
             var index = layer.open({
                 type: 2,
-                title: "<s:text name="global.edit"/>",
-                fix:false,area: ['310px', '500px'],
+                title: "刷卡明细",
+                fix: true,
                 maxmin: false,
-                content: "SwingCard!FetchSwingCard?"+$("form").serialize()
+                content: "SwingCard!InitDetail?CardNO=" + cardNo + "&billYear=" + billYear + "&billMonth=" + billMonth
             });
-        }
-        function refreshswingCardList(swingCardList) {
-            $('#swingCardList').html(swingCardList);
+            layer.full(index);
         }
     </script>
 </head>
 <body style="overflow: hidden">
 <div align="center">
     <div class="panel panel-default" >
-        <div class="panel-header"><s:text name="swingcard.paneltitle"/><span style="float:right;">
-            <a href="javascript:void(0);" class="btn btn-warning  radius size-S " onclick="editpos()">
-                <s:text name="global.edit"/></a></span></div>
         <div class="panel-body" id="parentIframe">
             <form>
                 <div style="height:100%; overflow:auto;">
                     <table class="table table-border table-bordered table-bg table-hover table-sort">
                         <thead>
                         <tr class="text-c">
-                            <th></th>
-                            <th><s:text name="swingcard.thedate"/></th>
-                            <th><s:text name="swingcard.cardno"/></th>
-                            <th><s:text name="swingcard.cardmaster"/></th>
-                            <th><s:text name="swingcard.amount"/></th>
-                            <th><s:text name="swingcard.sdatetm"/></th>
-                            <th><s:text name="swingcard.machineno"/></th>
-                            <th><s:text name="swingcard.machinename"/></th>
-                            <th><s:text name="swingcard.swingstatus"/></th>
-                            <th><s:text name="swingcard.teller"/></th>
-                            <th><s:text name="swingcard.realsdatetm"/></th>
-                            <th><s:text name="swingcard.salesman"/></th>
-                            <th><s:text name="swingcard.validstatus"/></th>
+                            <th><s:text name="swingcardsummary.thedate"/></th>
+                            <th><s:text name="swingcardsummary.cardno"/></th>
+                            <th><s:text name="swingcardsummary.cardmaster"/></th>
+                            <th><s:text name="swingcardsummary.amount"/></th>
+                            <th><s:text name="swingcardsummary.operation"/></th>
                         </tr>
                         </thead>
-                        <tbody id="swingCardList">
-                        <s:property value="swingCardList" escape="false"/>
+                        <tbody id="swingCardSummary">
+                            <s:property value="swingCardSummary" escape="false"/>
                         </tbody>
                     </table>
                 </div>

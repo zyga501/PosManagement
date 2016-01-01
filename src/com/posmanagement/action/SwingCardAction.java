@@ -4,29 +4,26 @@ import com.posmanagement.webui.SwingCardUI;
 
 public class SwingCardAction extends AjaxActionSupport {
     private final static String SWINGCARDMANAGER = "swingCardManager";
+    private final static String SWINGCARDDETAIL = "swingCardDetail";
 
-    private String swingCardList;
-    private String status;
+    private String swingCardSummary;
+    private String swingCardDetail;
 
-    public String getStatus() {
-        return status;
+    public String getSwingCardSummary() {
+        return swingCardSummary;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getSwingCardList() {
-
-        return swingCardList;
-    }
-
-    public void setSwingCardList(String swingCardList) {
-        this.swingCardList = swingCardList;
+    public String getSwingCardDetail() {
+        return swingCardDetail;
     }
 
     public String Init() throws Exception {
-        swingCardList = new SwingCardUI().generateDetail();
+        swingCardSummary = new SwingCardUI().generateSummary();
         return SWINGCARDMANAGER;
+    }
+
+    public String InitDetail() throws Exception {
+        swingCardDetail = new SwingCardUI().generateDetail();
+        return SWINGCARDDETAIL;
     }
 }

@@ -88,8 +88,8 @@
             <result name="billManager">./cardmanager/billmanager.jsp</result>
         </action>
         <action name="SwingCard!*" class="com.posmanagement.action.SwingCardAction" method="{1}">
-            <result name="swingCardManager">./cardmanager/swingcardmanager.jsp</result>
-            <result name="">./cardmanager/swingcardmanager.jsp</result>
+            <result name="swingCardManager">./cardmanager/swingcardsummary.jsp</result>
+            <result name="swingCardDetail">./cardmanager/swingcarddetail.jsp</result>
         </action>
         <action name="POS!*" class="com.posmanagement.action.PosAction" method="{1}">
             <result name="posManager">./cardmanager/posmanager.jsp</result>

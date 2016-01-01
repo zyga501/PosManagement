@@ -14,6 +14,7 @@ public abstract class AjaxActionSupport extends ActionSupport {
     public void validate() {
         // lazyvalidate
         ActionContext context = ActionContext.getContext();
+        String actionName = context.getName();
         parameterMap = context.getParameters();
     }
 

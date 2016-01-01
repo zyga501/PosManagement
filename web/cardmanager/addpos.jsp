@@ -73,7 +73,7 @@
                 success: function (data) {
                     var json = eval("(" + data + ")");
                     $("#bankName").html(json.bankList);
-                    $("#bankName").val("<s:property value="cardmanager.bankname"/>");
+                    $("#bankName").val("<s:property value="posManager.bankuuid"/>");
                 }
             });
         }
@@ -87,6 +87,7 @@
                 success: function(data) {
                     var json = eval("(" + data + ")");
                     $("#industryname").html(json.industryList);
+                    $("#industryname").val("<s:property value="posManager.industryuuid"/>");
                 }
             });
         }
@@ -100,6 +101,7 @@
                 success: function(data) {
                     var json = eval("(" + data + ")");
                     $("#rate").html(json.rateList);
+                    $("#rate").val("<s:property value="posManager.rateuuid"/>");
                 }
             });
         }
@@ -113,6 +115,7 @@
                 success: function(data) {
                     var json = eval("(" + data + ")");
                     $("#mcc").html(json.mccList);
+                    $("#mcc").val("<s:property value="posManager.mccuuid"/>");
                 }
             });
         }
@@ -125,6 +128,7 @@
                 success: function(data) {
                     var json = eval("(" + data + ")");
                     $("#posserver").html(json.posServerList);
+                    $("#posserver").val("<s:property value="posManager.posserveruuid"/>");
                 }
             });
         }

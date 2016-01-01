@@ -22,7 +22,7 @@ public class SalemanUI {
                     .addAttribute("onclick", "clickSaleman('" + dbRet.get(index).get("UID") + "')")
                     .addElement("td", String.valueOf(index+1))
                     .addElement("td", dbRet.get(index).get("UNICK").toString())
-                    .addElement("td", dbRet.get(index).get("UNAME").toString()));
+                    .addElement("td", dbRet.get(index).get("UID").toString()));
         }
         return uiTable.generateUI() ;
     }
@@ -37,7 +37,7 @@ public class SalemanUI {
             if (dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0)
             {
                 uiContainer.addElement(new UIContainer("option", dbRet.get(index).get("UNICK").toString())
-                        .addAttribute("value", dbRet.get(index).get("UNAME").toString()));
+                        .addAttribute("value", dbRet.get(index).get("UID").toString()));
             }
         }
         return uiContainer.generateUI();

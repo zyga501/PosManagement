@@ -1,6 +1,7 @@
 package com.posmanagement.action;
 
 import com.posmanagement.utils.PosDbManager;
+import com.posmanagement.utils.StringUtils;
 import com.posmanagement.utils.UUIDUtils;
 import com.posmanagement.webui.PosUI;
 
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PosAction extends AjaxActionSupport {
+public class POSAction extends AjaxActionSupport {
     public final static String POSMANAGER = "posManager";
     private final static String FETCHPOS = "fetchPOS";
 
@@ -94,10 +95,10 @@ public class PosAction extends AjaxActionSupport {
                 parametMap.put(11, (String) getParameter("startdatetm"));
                 parametMap.put(12, (String) getParameter("usecount"));
                 parametMap.put(13, (String) getParameter("useamount"));
-                parametMap.put(14, (String) getParameter("status"));
+                parametMap.put(14,StringUtils.convertNullableString( getParameter("status")).equals("on")?"enable":"disable");
                 parametMap.put(15, (String) getParameter("newid"));
 
-                    if (PosDbManager.executeUpdate("update postb set salesmanuname=?, posname=?,industryuuid=?,rateuuid=?,corporation=?,topqk=?,mccuuid=?," +
+                    if (PosDbManager.executeUpdate("update postb set salesmanuuid=?, posname=?,industryuuid=?,rateuuid=?,corporation=?,topqk=?,mccuuid=?," +
                             "posserveruuid=?,recipientbankuuid=?,recipientaccount=?,startdatetm=?,usecount=?," +
                             "useamount=?,status=? where uuid=?", (HashMap<Integer, Object>)parametMap)) {
                        // map.put("errorMessage","error");
@@ -128,7 +129,7 @@ public class PosAction extends AjaxActionSupport {
         parametMap.put(11, (String) getParameter("startdatetm"));
         parametMap.put(12, (String) getParameter("usecount"));
         parametMap.put(13, (String) getParameter("useamount"));
-        parametMap.put(14, (String) getParameter("status"));
+        parametMap.put(14, StringUtils.convertNullableString(getParameter("status")).equals("on")?"enable":"disable");
         parametMap.put(15, (String) getParameter("salesman"));
 
         try {

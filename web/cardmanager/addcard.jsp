@@ -98,7 +98,7 @@
                 success: function(data) {
                     var json = eval("(" + data + ")");
                     $("#salesman").html(json.salemanList);
-                    $("#salesman").val("<s:property value="cardmanager.salesmanuname"/>");
+                    $("#salesman").val("<s:property value="cardmanager.salesmanuuid"/>");
                 }
             });
         }

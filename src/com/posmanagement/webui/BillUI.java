@@ -7,8 +7,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class BillUI {
+    public BillUI(String userID){userID_=userID;}
     public String generateBillTable() throws Exception {
-        ArrayList<HashMap<String, Object>> dbRet = fetchBillList();
+        ArrayList<HashMap<String, Object>> dbRet = fetchBillList(userID_);
         if (dbRet.size() <= 0)
             return new String("");
 
@@ -24,7 +25,7 @@ public class BillUI {
                     .addElement(new UIContainer("td")
                             .addElement(new UIContainer("label",StringUtils.convertNullableString(dbRet.get(index).get("BILLAMOUNT")).equals("")?"0":dbRet.get(index).get("BILLAMOUNT").toString())
                             .addAttribute("name","billamount")
-                            .addAttribute("datav",StringUtils.convertNullableString(dbRet.get(index).get("CARDNO")))
+                            .addAttribute("datav",StringUtils.convertNullableString(dbRet.get(index).get("UUID")))
                             .addAttribute("style","display:inline-block;width:30")))
                     .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("CANUSEAMOUNT")))
                     .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("BILLHADPAY")))
@@ -38,14 +39,20 @@ public class BillUI {
                         .addAttribute("class", dbRet.get(index).get("STATUS").equals("enable")?"btn btn-success radius":"btn btn-danger radius")
                         .addAttribute("type","button")
                             .addAttribute("title", dbRet.get(index).get("STATUS").equals("enable")?"已开启":"未开启")
-                            .addAttribute("datav", StringUtils.convertNullableString(dbRet.get(index).get("CARDNO")))
+                            .addAttribute("datav", StringUtils.convertNullableString(dbRet.get(index).get("UUID")))
                                     .addAttribute("value", dbRet.get(index).get("STATUS").equals("enable")?"Y":"N")
                             .addAttribute("onclick", "clickBill(this,'" + StringUtils.convertNullableString(dbRet.get(index).get("UUID")) + "')")));
         }
         return htmlString;
     }
 
-    private ArrayList<HashMap<String, Object>> fetchBillList() throws Exception {
-        return PosDbManager.executeSql("select billtb.*,banktb.name bankname from billtb inner join banktb on banktb.uuid=billtb.bankuuid");
+    private ArrayList<HashMap<String, Object>> fetchBillList(String uid) throws Exception {
+        if (null==userID_ || userID_.equals(""))
+            return PosDbManager.executeSql("select billtb.*,banktb.name bankname from billtb inner join banktb on banktb.uuid=billtb.bankuuid");
+        else
+            return PosDbManager.executeSql("select billtb.*,banktb.name bankname from billtb inner join banktb on " +
+                    "banktb.uuid=billtb.bankuuid ");//todo 
     }
+
+    private String userID_; // TODO for role
 }

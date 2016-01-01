@@ -1,5 +1,6 @@
 package com.posmanagement.action;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.posmanagement.policy.SwingCardPolicy;
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.webui.BillUI;
@@ -69,14 +70,15 @@ public class BillAction extends AjaxActionSupport {
     }
 
     public String Init() throws Exception {
-        billList = new BillUI().generateBillTable();
+        if (ActionContext.getContext().getSession().get("userName").toString().equals("admin"))
+            billList = new BillUI("").generateBillTable();
+        else
+            billList = new BillUI(ActionContext.getContext().getSession().get("userID").toString()).generateBillTable();
         return BILLMANAGER;
     }
 
     public String editBill(){
-        if (null == cardno) {
-            return AjaxActionComplete();
-        }
+
         Map map = new HashMap();
         Map para = new HashMap();
         String sqlString="";
@@ -84,11 +86,11 @@ public class BillAction extends AjaxActionSupport {
             if (null != billamount ){
             Float.parseFloat(billamount);
             para.put(1,billamount);
-            sqlString="update billtb set billamount=? where cardno=?";
+            sqlString="update billtb set billamount=? where UUID=?";
         }
         else if (null != status ){
             para.put(1,status);
-            sqlString="update billtb set status=? where cardno=?";
+            sqlString="update billtb set status=? where UUID=?";
         }
         else {
             return "";
@@ -98,7 +100,7 @@ public class BillAction extends AjaxActionSupport {
             return AjaxActionComplete();
         }
 
-        para.put(2,cardno);
+        para.put(2,billNO);
         if (PosDbManager.executeUpdate(sqlString,(HashMap<Integer, Object>)para))
                 map.put("successMessage",getText("BillAction.InfoSuccess") );
         }
@@ -137,7 +139,7 @@ public class BillAction extends AjaxActionSupport {
         System.out.println(sqlString);
         try {
             if (PosDbManager.executeUpdate(sqlString))
-            map.put("billList",  new BillUI().generateBillTable());
+            map.put("billList",  new BillUI(ActionContext.getContext().getSession().get("userID").toString()).generateBillTable());
         } catch (Exception e) {
             map.put("errorMessage", getText("AssetAction.InfoError"));
             e.printStackTrace();

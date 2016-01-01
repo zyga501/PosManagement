@@ -34,7 +34,7 @@
                     $.ajax({
                         type: 'post',
                         url: 'Bill!editBill',
-                        data: {status:"enable" , cardno:$(button).attr("datav"),billNO:billNO},
+                        data: {status:"enable" , billNO:billNO},
                         success: function (data) {
                             var json = eval("(" + data + ")");
                             if (json.successMessage) {
@@ -108,7 +108,7 @@
             $.ajax({
                 type: 'post',
                 url: 'Bill!editBill',
-                data: {billamount:name , cardno:$(obj).attr("datav")},
+                data: {billamount:name , billNO:$(obj).attr("datav")},
                 success: function (data) {
                     var json = eval("(" + data + ")");
                     if (json.successMessage) {

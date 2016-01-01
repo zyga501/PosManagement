@@ -42,7 +42,8 @@ public class CardUI {
     }
 
     private ArrayList<HashMap<String, Object>> fetchCardList() throws Exception {
-        return PosDbManager.executeSql("select cardtb.uuid, cardno,cardmaster,cmtel,billdate,userinfo.unick salesman from cardtb inner join banktb " +
-                "on cardtb.bankuuid=banktb.uuid inner join userinfo on userinfo.uname=cardtb.salesmanuname");
+        return PosDbManager.executeSql("select cardtb.uuid, cardno,cardmaster,cmtel,billdate,userinfo.unick salesman " +
+                "from cardtb inner join banktb " +
+                "on cardtb.bankuuid=banktb.uuid inner join userinfo on userinfo.uid=cardtb.salesmanuuid");
     }
 }

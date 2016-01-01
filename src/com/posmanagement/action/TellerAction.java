@@ -1,5 +1,6 @@
 package com.posmanagement.action;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.posmanagement.webui.TellerUI;
 
 import java.util.HashMap;
@@ -20,7 +21,11 @@ public class TellerAction extends AjaxActionSupport {
     }
 
     public String Init() throws Exception {
-        tellerList = new TellerUI().generateTable(null, false);
+        ActionContext ctx = ActionContext.getContext();
+        if (ctx.getSession().get("userName").toString().equals("admin"))
+            tellerList = new TellerUI().generateTable(null, false);
+        else
+            tellerList = new TellerUI().generateTable(ctx.getSession().get("userID").toString(), false);
         return TELLERMANAGE;
     }
 

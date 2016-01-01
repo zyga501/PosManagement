@@ -82,7 +82,7 @@ public class PosUI {
                 "INNER JOIN posservertb ON posservertb.uuid = POSTB.posserveruuid  " +
                 "INNER JOIN industrytb ON POSTB.industryuuid = industrytb.uuid  " +
                 "INNER JOIN ratetb ON POSTB.rateuuid = ratetb.uuid " +
-                "INNER JOIN userinfo ON POSTB.salesmanuname = userinfo.uname  " +
+                "INNER JOIN userinfo ON POSTB.salesmanuuid = userinfo.uid  " +
                 "INNER JOIN mcctb ON mcctb.uuid = POSTB.mccuuid  ");
     }
 }

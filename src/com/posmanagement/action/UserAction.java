@@ -125,7 +125,7 @@ public class UserAction extends AjaxActionSupport{
             session.setAttribute("userNick", dbRet.get(0).get("UNICK"));
             session.setAttribute("lastLocation", dbRet.get(0).get("LASTLOCATION"));
             session.setAttribute("lastTime", dbRet.get(0).get("LASTTIME"));
-            session.setAttribute("userType", 0);
+            session.setAttribute("roleId", dbRet.get(0).get("RID"));
 
             logLoginTrack(userID, request.getRemoteAddr() );
         }
@@ -198,7 +198,7 @@ public class UserAction extends AjaxActionSupport{
         HttpServletRequest request = (HttpServletRequest) ctx
                 .get(ServletActionContext.HTTP_REQUEST);
         HttpSession session = request.getSession(false);
-        if (!session.getAttribute("userName").toString().toLowerCase().equals("admin")) return AjaxActionComplete();
+       // if (!session.getAttribute("userName").toString().toLowerCase().equals("admin")) return AjaxActionComplete();
         ArrayList<HashMap<String, Object>> dbRet = PosDbManager.executeSql(
                 "select 1 from userinfo where uname='" + userName + "'");
         if (dbRet.size()>0) return AjaxActionComplete();
@@ -206,24 +206,41 @@ public class UserAction extends AjaxActionSupport{
         Map parametMap = new HashMap<Integer, Object>();
         String UUID = UUIDUtils.generaterUUID();
         parametMap.put(1, UUID);
-        parametMap.put(2, userName);
-        parametMap.put(3,userPwd);
-        parametMap.put(4,userNickName);
+      //  parametMap.put(2, userName);
+        parametMap.put(2,userPwd);
+        parametMap.put(3,userNickName);
+        if (session.getAttribute("userName").toString().toLowerCase().equals("admin")) {
+             parametMap.put(4, userName);
+            if (PosDbManager.executeUpdate("insert into userinfo(uid,upwd,unick,uname) values(?,?,?,?)", (HashMap<Integer, Object>) parametMap)) {
+                PosDbManager.executeUpdate("insert into salesmantb(uid) values('" + UUID + "')");
+                Map resultMap = new HashMap();
+                resultMap.put("userList", new SalemanUI().generateTable());
+                return AjaxActionComplete(resultMap);
+            }
+        }
+        else { //if salesman-role select ?,?,?, from tellertb a where a.salesman=?session.getAttribute("userID").toString()
+            parametMap.put(4, session.getAttribute("userName").toString());
+            parametMap.put(5, session.getAttribute("userID").toString());
+            if (PosDbManager.executeUpdate("insert into userinfo(uid,upwd,unick,uname) select ?,?,?,CONCAT(?,count(*))" +
+                    " from tellertb a where a.salesman=?", (HashMap<Integer, Object>) parametMap)){
+                PosDbManager.executeUpdate("insert into tellertb(uid,salesman) values('" + UUID + "','"+session.getAttribute("userID").toString()+"')");
+                Map resultMap = new HashMap();
+                resultMap.put("userList", new TellerUI().generateTable(session.getAttribute("userID").toString(), false));
+                return AjaxActionComplete(resultMap);
+            }
+        }
 
-        if  (!PosDbManager.executeUpdate("insert into userinfo(uid,uname,upwd,unick) values(?,?,?,?)", (HashMap<Integer, Object>) parametMap))
-            return AjaxActionComplete();
-
-        Map resultMap = new HashMap();
+        return AjaxActionComplete();
+       /* Map resultMap = new HashMap();
         if ("1".equals(userType)) {
             PosDbManager.executeUpdate("insert into salesmantb(uid) values('" + UUID + "')");
             resultMap.put("userList", new SalemanUI().generateTable());
         }
         else if ("2".equals(userType)) {
-            PosDbManager.executeUpdate("insert into tellertb(uid) values('" + UUID + "')");
-            resultMap.put("userList", new TellerUI().generateTable(null, false));
+            PosDbManager.executeUpdate("insert into tellertb(uid,salesman) values('" + UUID + ","+session.getAttribute("userID").toString()+"')");
+            resultMap.put("userList", new TellerUI().generateTable(session.getAttribute("userID").toString(), false));
         }
-
-        return AjaxActionComplete(resultMap);
+        return AjaxActionComplete(resultMap);*/
     }
 
     private void logLoginTrack(String userID, String location) throws Exception {

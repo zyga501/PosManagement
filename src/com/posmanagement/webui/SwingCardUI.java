@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SwingCardUI {
+    public SwingCardUI(String uid){userID_=uid;}
     public String generateSummary() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchSwingCardSummary();
         if (dbRet.size() <= 0)
@@ -54,55 +55,110 @@ public class SwingCardUI {
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("AMOUNT")))
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("SDATETM")))
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("POSNAME")))
-                    .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("SWINGSTATUS")))
-                    .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("TELLER")))
+                    .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("UNICK")))
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("REALSDATETM")))
+                    //.addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("SWINGSTATUS")))
+                    .addElement(new UIContainer("td")
+                            .addElement(
+                                    new UIContainer("input")
+                                            .addAttribute("type", "checkbox")
+                                            .addAttribute("value", StringUtils.convertNullableString(dbRet.get(index).get("ID")))
+                                            .addAttribute("checked", "checked", StringUtils.convertNullableString(dbRet.get(index).get("VALIDSTATUS")).compareTo("enable") == 0)
+                            )
+                    )
                     .addElement(new UIContainer("td").addElement(new UIContainer("input")
-                            .addAttribute("class" ,StringUtils.convertNullableString(dbRet.get(index).get("VALIDSTATUS")).equals("enable")?"btn btn-success radius":"btn btn-danger radius")
+                            .addAttribute("class" ,StringUtils.convertNullableString(dbRet.get(index).get("SWINGSTATUS")).equals("enable")?"btn btn-success radius":"btn btn-danger radius")
                             .addAttribute("type","button")
-                            .addAttribute("title" ,StringUtils.convertNullableString(dbRet.get(index).get("VALIDSTATUS")).equals("enable")?"已开启":"未开启")
+                            .addAttribute("title" ,StringUtils.convertNullableString(dbRet.get(index).get("SWINGSTATUS")).equals("enable")?"已刷":"未刷")
                             .addAttribute("datav", StringUtils.convertNullableString(dbRet.get(index).get("ID")))
-                            .addAttribute("value" ,StringUtils.convertNullableString(dbRet.get(index).get("VALIDSTATUS")).equals("enable")?"Y":"N")));
+                            .addAttribute("value" ,StringUtils.convertNullableString(dbRet.get(index).get("SWINGSTATUS")).equals("enable")?"Y":"N")
+                            .addAttribute("onclick", "clickswing(this,'" + StringUtils.convertNullableString(dbRet.get(index).get("ID")) + "')")));
         }
         return htmlString;
     }
 
     private ArrayList<HashMap<String, Object>> fetchSwingCardSummary() throws Exception {
-        return PosDbManager.executeSql("SELECT\n" +
-                "swingcard.billyear,\n" +
-                "swingcard.billmonth,\n" +
-                "swingcard.cardno,\n" +
-                "Sum(swingcard.amount) AS amount,\n" +
-                "cardtb.cardmaster\n" +
-                "FROM\n" +
-                "swingcard\n" +
-                "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno\n" +
-                "GROUP BY\n" +
-                "swingcard.billyear,\n" +
-                "swingcard.billmonth,\n" +
-                "swingcard.cardno\n" +
-                "ORDER BY\n" +
-                "swingcard.billyear ASC,\n" +
+        if (null==userID_ || userID_.equals(""))
+        return PosDbManager.executeSql("SELECT " +
+                "swingcard.billyear, " +
+                "swingcard.billmonth, " +
+                "swingcard.cardno, " +
+                "swingcard.VALIDSTATUS, " +
+                "Sum(swingcard.amount) AS amount, " +
+                "cardtb.cardmaster " +
+                "FROM " +
+                "swingcard " +
+                "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno " +
+                "GROUP BY " +
+                "swingcard.billyear, " +
+                "swingcard.billmonth, " +
+                "swingcard.cardno " +
+                "ORDER BY " +
+                "swingcard.billyear ASC, " +
                 "swingcard.billmonth ASC");
+        else
+            return PosDbManager.executeSql("SELECT " +
+                    "swingcard.billyear, " +
+                    "swingcard.billmonth, " +
+                    "swingcard.cardno, " +
+                    "swingcard.VALIDSTATUS, " +
+                    "Sum(swingcard.amount) AS amount, " +
+                    "cardtb.cardmaster " +
+                    "FROM " +
+                    "swingcard " +
+                    "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno " +
+                    "where cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
+                    " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"') " +
+                    "GROUP BY " +
+                    "swingcard.billyear, " +
+                    "swingcard.billmonth, " +
+                    "swingcard.cardno  ORDER BY " +
+                    "swingcard.billyear ASC, " +
+                    "swingcard.billmonth ASC");
     }
 
     private ArrayList<HashMap<String, Object>> fetchSwingCardDetail() throws Exception {
-        return PosDbManager.executeSql("SELECT\n" +
-                "swingcard.billyear,\n" +
-                "swingcard.billmonth,\n" +
-                "swingcard.cardno,\n" +
-                "cardtb.cardmaster,\n" +
-                "swingcard.amount,\n" +
-                "swingcard.sdatetm,\n" +
-                "postb.posname,\n" +
-                "swingcard.telleruuid,\n" +
-                "swingcard.realsdatetm,\n" +
-                "swingcard.salesmanuuid,\n" +
-                "swingcard.validstatus\n" +
-                "FROM\n" +
-                "swingcard\n" +
-                "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno\n" +
-                "INNER JOIN postb ON postb.uuid = swingcard.posuuid\n" +
+        if (null==userID_ || userID_.equals(""))
+        return PosDbManager.executeSql("SELECT swingcard.id," +
+                "swingcard.billyear, " +
+                "swingcard.billmonth, " +
+                "swingcard.cardno, " +
+                "cardtb.cardmaster, " +
+                "swingcard.amount, " +
+                "swingcard.sdatetm, " +
+                "postb.posname, " +
+                "swingcard.userid, " +
+                "userinfo.unick, " +
+                "swingcard.realsdatetm, " +
+                "swingcard.validstatus " +
+                "FROM " +
+                "swingcard " +
+                "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno " +
+                "INNER JOIN postb ON postb.uuid = swingcard.posuuid " +
+                "left JOIN userinfo ON userinfo.uid = swingcard.userid " +
                 "ORDER BY swingcard.sdatetm");
+        else
+            return PosDbManager.executeSql("SELECT swingcard.id," +
+                    "swingcard.billyear, " +
+                    "swingcard.billmonth, " +
+                    "swingcard.cardno, " +
+                    "cardtb.cardmaster, " +
+                    "swingcard.amount, " +
+                    "swingcard.sdatetm, " +
+                    "postb.posname, " +
+                    "swingcard.userid, " +
+                    "userinfo.unick, " +
+                    "swingcard.realsdatetm, " +
+                    "swingcard.validstatus " +
+                    "FROM " +
+                    "swingcard " +
+                    "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno " +
+                    "INNER JOIN postb ON postb.uuid = swingcard.posuuid  " +
+                    "left JOIN userinfo ON userinfo.uid = swingcard.userid " +
+                    "where cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
+                    " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"') " +
+                    "ORDER BY swingcard.sdatetm");
     }
+
+    private String userID_; // TODO for role
 }

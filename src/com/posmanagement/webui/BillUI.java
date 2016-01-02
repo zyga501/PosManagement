@@ -9,7 +9,7 @@ import java.util.HashMap;
 public class BillUI {
     public BillUI(String userID){userID_=userID;}
     public String generateBillTable() throws Exception {
-        ArrayList<HashMap<String, Object>> dbRet = fetchBillList(userID_);
+        ArrayList<HashMap<String, Object>> dbRet = fetchBillList();
         if (dbRet.size() <= 0)
             return new String("");
 
@@ -46,12 +46,12 @@ public class BillUI {
         return htmlString;
     }
 
-    private ArrayList<HashMap<String, Object>> fetchBillList(String uid) throws Exception {
+    private ArrayList<HashMap<String, Object>> fetchBillList() throws Exception {
         if (null==userID_ || userID_.equals(""))
             return PosDbManager.executeSql("select billtb.*,banktb.name bankname from billtb inner join banktb on banktb.uuid=billtb.bankuuid");
         else
             return PosDbManager.executeSql("select billtb.*,banktb.name bankname from billtb inner join banktb on " +
-                    "banktb.uuid=billtb.bankuuid ");//todo 
+                    "banktb.uuid=billtb.bankuuid inner join  cardtb on cardtb.cardno=billtb.cardno where  cardtb.uuid='"+userID_+"'");
     }
 
     private String userID_; // TODO for role

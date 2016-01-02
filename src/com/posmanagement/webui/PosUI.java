@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class PosUI {
+    public PosUI (String UID) { userID_=UID;       }
+
     public String generateSelect() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchPosList();
         if (dbRet.size() <= 0)
@@ -67,7 +69,9 @@ public class PosUI {
     }
 
     private ArrayList<HashMap<String, Object>> fetchPosList() throws Exception {
-        return PosDbManager.executeSql("SELECT " +
+
+        if (null==userID_ || userID_.equals(""))
+           return PosDbManager.executeSql("SELECT " +
                 "POSTB.uuid, " +
                 "POSTB.posname, " +
               //  "banktb.name bankname, " +
@@ -84,5 +88,25 @@ public class PosUI {
                 "INNER JOIN ratetb ON POSTB.rateuuid = ratetb.uuid " +
                 "INNER JOIN userinfo ON POSTB.salesmanuuid = userinfo.uid  " +
                 "INNER JOIN mcctb ON mcctb.uuid = POSTB.mccuuid  ");
+        else
+            return PosDbManager.executeSql("SELECT " +
+                "POSTB.uuid, " +
+                "POSTB.posname, " +
+                //  "banktb.name bankname, " +
+                "posservertb.name posservername, " +
+                "mcctb.mcc mcc, " +
+                "industrytb.name industryname, " +
+                "POSTB.`status`," +
+                "ratetb.rate " +
+                "FROM  " +
+                "POSTB  " +
+                // "INNER JOIN banktb ON banktb.uuid = POSTB.recipientbankuuid  " +
+                "INNER JOIN posservertb ON posservertb.uuid = POSTB.posserveruuid  " +
+                "INNER JOIN industrytb ON POSTB.industryuuid = industrytb.uuid  " +
+                "INNER JOIN ratetb ON POSTB.rateuuid = ratetb.uuid " +
+                "INNER JOIN userinfo ON POSTB.salesmanuuid = userinfo.uid  " +
+                "INNER JOIN mcctb ON mcctb.uuid = POSTB.mccuuid where POSTB.salesmanuuid= '"+userID_+"'");
+
     }
+    private String userID_; // TODO for role
 }

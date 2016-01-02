@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class CardUI {
+    public CardUI(String uid){ userID_ = uid;   }
     public String generateCardTable() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchCardList();
         if (dbRet.size() <= 0)
@@ -42,8 +43,14 @@ public class CardUI {
     }
 
     private ArrayList<HashMap<String, Object>> fetchCardList() throws Exception {
-        return PosDbManager.executeSql("select cardtb.uuid, cardno,cardmaster,cmtel,billdate,userinfo.unick salesman " +
+        if (null==userID_ || userID_.equals(""))
+            return PosDbManager.executeSql("select cardtb.uuid, cardno,cardmaster,cmtel,billdate,userinfo.unick salesman " +
                 "from cardtb inner join banktb " +
                 "on cardtb.bankuuid=banktb.uuid inner join userinfo on userinfo.uid=cardtb.salesmanuuid");
+        else
+            return PosDbManager.executeSql("select cardtb.uuid, cardno,cardmaster,cmtel,billdate,userinfo.unick salesman " +
+                    "from cardtb inner join banktb " +
+                    "on cardtb.bankuuid=banktb.uuid inner join userinfo on userinfo.uid=cardtb.salesmanuuid  where cardtb.salesmanuuid='"+userID_+"'");
     }
+    private String userID_; // TODO for role
 }

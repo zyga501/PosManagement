@@ -101,24 +101,7 @@
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.admin.js"></script>
 <script type="text/javascript">
     $().ready( function(){
-        $("label[name=billamount]").on("click", function() {
-            var name = prompt("输入新的金额",this.innerHTML);
-            if (name==null) return ;
-            var obj = this;
-            $.ajax({
-                type: 'post',
-                url: 'Bill!editBill',
-                data: {billamount:name , billNO:$(obj).attr("datav")},
-                success: function (data) {
-                    var json = eval("(" + data + ")");
-                    if (json.successMessage) {
-                        obj.innerHTML = name ;
-                        layer.msg(json.successMessage, {icon: 1});
-                    }
-                    else if (json.errorMessage)
-                        layer.msg(json.errorMessage, {icon:2});
-                }
-            });
+        $("label[name=billamount]").on("click", function() {clickbtswing();
         })
     }
     )

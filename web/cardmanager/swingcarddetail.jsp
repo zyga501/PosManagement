@@ -15,13 +15,66 @@
     <link href="<%=request.getContextPath()%>/skin/default/skin.css" rel="stylesheet" type="text/css" id="skin"/>
     <title></title>
     <script type="text/javascript">
+        function  changestatus(){
+            var swingid="";
+            var swingidno="";
+            $("input[type='checkbox']:checkbox").each(function(){
+                if($(this).prop("checked")){
+                    swingid +="'"+ $(this).val()+"',"
+                }
+                else {
+                    swingidno +="'"+ $(this).val()+"',"
+                }
+            })
+            $.ajax({
+                type: 'post',
+                url: 'SwingCard!enableDetail',
+                data: {swingIdList:swingid,swingIdNOList:swingidno},
+                success: function (data) {
+                    var json = eval("(" + data + ")");
+                    if (json.successMessage) {
+                        layer.msg(json.successMessage);
+                    }
+                    else if (json.errorMessage)
+                        layer.msg(json.errorMessage);
+                }
+            });
+        }
+        function clickswing(button, swingid) {
+            var val = button.value;
+            if (val == "N") {
+                layer.confirm('确定启用？', {
+                    btn: ['yes', 'no'] //按钮
+                }, function () {
+                    button.value = "Y";
+                    button.setAttribute("class", "btn btn-success radius");
+                    layer.msg('你选择了YES', {icon: 1});
+                    $.ajax({
+                        type: 'post',
+                        url: 'SwingCard!editDetail',
+                        data: {status:"enable" , swingId:swingid},
+                        success: function (data) {
+                            var json = eval("(" + data + ")");
+                            if (json.successMessage) {
+                                button.value = "Y";
+                                button.setAttribute("class", "btn btn-success radius");
+                                layer.msg(json.successMessage);
+                            }
+                            else if (json.errorMessage)
+                                layer.msg(json.errorMessage);
+                        }
+                    });
+                }, function () {
+                });
+            }
+        }
     </script>
 </head>
 <body style="overflow: hidden">
 <div align="center">
     <div class="panel panel-default" >
         <div class="panel-header"><s:text name="swingcarddetail.paneltitle"/><span style="float:right;">
-            <a href="javascript:void(0);" class="btn btn-warning  radius size-S " onclick="editpos()">
+            <a href="javascript:void(0);" class="btn btn-warning  radius size-S " onclick="changestatus()">
                 <s:text name="global.edit"/></a></span></div>
         <div class="panel-body" id="parentIframe">
             <form>
@@ -35,10 +88,10 @@
                             <th><s:text name="swingcarddetail.amount"/></th>
                             <th><s:text name="swingcarddetail.sdatetm"/></th>
                             <th><s:text name="swingcarddetail.machinename"/></th>
-                            <th><s:text name="swingcarddetail.swingstatus"/></th>
                             <th><s:text name="swingcarddetail.teller"/></th>
                             <th><s:text name="swingcarddetail.realsdatetm"/></th>
                             <th><s:text name="swingcarddetail.validstatus"/></th>
+                            <th><s:text name="swingcarddetail.swingstatus"/></th>
                         </tr>
                         </thead>
                         <tbody id="swingCardDetail">
@@ -54,5 +107,11 @@
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/layer/1.9.3/layer.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.admin.js"></script>
+<script type="text/javascript">
+    $().ready( function(){
+           // $("input[type='checkbox']").on("click", function() {changestatus();});
+        }
+    )
+</script>
 </body>
 </html>

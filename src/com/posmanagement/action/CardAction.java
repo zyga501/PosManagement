@@ -69,7 +69,10 @@ public class CardAction extends AjaxActionSupport {
     }
 
     public String Init() throws Exception {
-        cardList = new CardUI().generateCardTable();
+        if (ActionContext.getContext().getSession().get("userName").toString().equals("admin"))
+          cardList = new CardUI("").generateCardTable();
+        else
+            cardList = new CardUI(ActionContext.getContext().getSession().get("userID").toString()).generateCardTable();
         return CARDMANAGER;
     }
 
@@ -144,8 +147,12 @@ public class CardAction extends AjaxActionSupport {
                         "billafterdate=?,lastrepaymentdate=?,billemail=?,status=?,commissioncharge=?,cardmaster=?,identityno=?,"+
                         "cmaddress=?,cmtel=?,cmseccontact=?,memos=?  where cardno=?",(HashMap<Integer, Object>)  para))
                     map.put("errorMessage", getText("addrate.rateFormatError"));
-                else
-                    map.put("cardList", new CardUI().generateCardTable());
+                else{
+                    if (ActionContext.getContext().getSession().get("userName").toString().equals("admin"))
+                        cardList = new CardUI("").generateCardTable();
+                    else
+                        cardList = new CardUI(ActionContext.getContext().getSession().get("userID").toString()).generateCardTable();
+                }
                 map.put("newid",para.get(3));
             }
             catch (NumberFormatException exception) {
@@ -180,8 +187,12 @@ public class CardAction extends AjaxActionSupport {
                         "cmaddress,cmtel,cmseccontact,memos) values(?," +
                         "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",(HashMap<Integer, Object>)  para))
                     map.put("errorMessage", getText("addrate.rateFormatError"));
-                else
-                    map.put("cardList", new CardUI().generateCardTable());
+                else {
+                    if (ActionContext.getContext().getSession().get("userName").toString().equals("admin"))
+                        map.put("cardList", new CardUI("").generateCardTable());
+                    else
+                        map.put("cardList", new CardUI(ActionContext.getContext().getSession().get("userID").toString()).generateCardTable());
+                }
                 map.put("newid",para.get(3));
             }
             catch (NumberFormatException exception) {
@@ -196,7 +207,7 @@ public class CardAction extends AjaxActionSupport {
         if (null==cardno || cardno.trim().equals(""))
             return "";
         Map map = new HashMap();
-        map.put("cardMaster", new CardUI().generateMasterString(cardno));
+        map.put("cardMaster", new CardUI(ActionContext.getContext().getSession().get("userID").toString()).generateMasterString(cardno));
         return AjaxActionComplete(map);
     }
 }

@@ -1,5 +1,6 @@
 package com.posmanagement.action;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.utils.StringUtils;
 import com.posmanagement.utils.UUIDUtils;
@@ -52,7 +53,10 @@ public class POSAction extends AjaxActionSupport {
     }
 
     public String Init() throws Exception {
-        posList = new PosUI().generateTable();
+        if (ActionContext.getContext().getSession().get("userName").toString().equals("admin"))
+            posList = new PosUI("").generateTable();
+        else
+            posList = new PosUI(ActionContext.getContext().getSession().get("userID").toString()).generateTable();
         return POSMANAGER;
     }
 
@@ -136,7 +140,7 @@ public class POSAction extends AjaxActionSupport {
             if (PosDbManager.executeUpdate("insert into postb(uuid,posname,industryuuid,rateuuid,corporation,topqk,mccuuid," +
                     "posserveruuid,recipientbankuuid,recipientaccount,startdatetm,usecount,useamount,status,salesmanuuid)" +
                     "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>)parametMap)) {
-                map.put("posList", new PosUI().generateSelect());
+                map.put("posList", new PosUI(ActionContext.getContext().getSession().get("userID").toString()).generateSelect());
             }
         } catch (Exception e) {
             e.printStackTrace();

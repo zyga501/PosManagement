@@ -1,9 +1,9 @@
 package com.posmanagement.action;
 
-import com.opensymphony.xwork2.ActionContext;
 import com.posmanagement.policy.SwingCardPolicy;
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.webui.BillUI;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -83,7 +83,7 @@ public class BillAction extends AjaxActionSupport {
         Map para = new HashMap();
         String sqlString="";
         try {
-            if (null != billamount ){
+            if (null != billamount ) {
             Float.parseFloat(billamount);
             para.put(1,billamount);
             sqlString="update billtb set billamount=? where UUID=?";
@@ -171,6 +171,17 @@ public class BillAction extends AjaxActionSupport {
             parametMap.put(7, swingList.swingCardList.get(index).ruleUUID);
             PosDbManager.executeUpdate("insert into swingcard(billyear,billmonth,cardno,amount,sdatetm,posuuid,ruleuuid) " +
                             "values(?,?,?,?,?,?,?)",
+                    (HashMap<Integer, Object>)parametMap);
+        }
+
+        for (int index = 0; index < swingList.repayList.size(); ++index) {
+            Map parametMap = new HashMap();
+            parametMap.put(1, swingList.repayYear);
+            parametMap.put(2, swingList.repayMonth);
+            parametMap.put(3, swingList.repayList.get(index).money);
+            parametMap.put(4, swingList.repayList.get(index).repayDate);
+            PosDbManager.executeUpdate("insert into repaytb(repayyear,repaymonth,trademoney,thedate) " +
+                            "values(?,?,?,?)",
                     (HashMap<Integer, Object>)parametMap);
         }
 

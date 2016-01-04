@@ -82,20 +82,19 @@
                     <table class="table table-border table-bordered table-bg table-hover table-sort">
                         <thead>
                         <tr class="text-c">
-                            <th><s:text name="swingcarddetail.thedate"/></th>
-                            <th><s:text name="swingcarddetail.cardno"/></th>
-                            <th><s:text name="swingcarddetail.cardmaster"/></th>
-                            <th><s:text name="swingcarddetail.amount"/></th>
-                            <th><s:text name="swingcarddetail.sdatetm"/></th>
-                            <th><s:text name="swingcarddetail.machinename"/></th>
-                            <th><s:text name="swingcarddetail.teller"/></th>
-                            <th><s:text name="swingcarddetail.realsdatetm"/></th>
-                            <th><s:text name="swingcarddetail.validstatus"/></th>
-                            <th><s:text name="swingcarddetail.swingstatus"/></th>
+                            <th><s:text name="repaydetail.thedate"/></th>
+                            <th><s:text name="repaydetail.cardno"/></th>
+                            <th><s:text name="repaydetail.cardmaster"/></th>
+                            <th><s:text name="repaydetail.amount"/></th>
+                            <th><s:text name="repaydetail.sdatetm"/></th>
+                            <th><s:text name="repaydetail.teller"/></th>
+                            <th><s:text name="repaydetail.realsdatetm"/></th>
+                            <th><s:text name="repaydetail.validstatus"/></th>
+                            <th><s:text name="repaydetail.repaystatus"/></th>
                         </tr>
                         </thead>
-                        <tbody id="swingCardDetail">
-                        <s:property value="swingCardDetail" escape="false"/>
+                        <tbody id="repayDetail">
+                        <s:property value="repayDetail" escape="false"/>
                         </tbody>
                     </table>
                 </div>

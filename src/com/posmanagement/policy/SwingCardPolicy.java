@@ -1,6 +1,7 @@
 package com.posmanagement.policy;
 
 import com.posmanagement.utils.PosDbManager;
+
 import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
@@ -18,6 +19,8 @@ public class SwingCardPolicy {
         public String cardNO;
         public int billYear;
         public int billMonth;
+        public int repayYear;
+        public int repayMonth;
         public ArrayList<SwingCardInfo> swingCardList;
         public ArrayList<RepayInfo> repayList;
     }
@@ -80,83 +83,84 @@ public class SwingCardPolicy {
         if (cardInfo == null) {
             return null;
         }
-        ArrayList<HashMap<String, Object>> sqlRuleList = fetchRuleList(billInfo.bankUUID);
-        if (sqlRuleList.size() <= 0) {
+        ArrayList<RuleInfo> ruleList = fetchRuleList(billInfo.bankUUID);
+        if (ruleList.size() <= 0) {
+            return null;
+        }
+        double dateLimit = (billInfo.lastRepayDate.getTime() - billInfo.billDate.getTime()) / (24 * 60 * 60 * 1000);
+        if (dateLimit < 0) {
             return null;
         }
 
-        double dateLimit = (billInfo.lastRepayDate.getTime() - billInfo.billDate.getTime()) / (24 * 60 * 60 * 1000);
-        int reTryCount = RETRYCOUNT;
-        while (reTryCount-- != 0) {
-            ArrayList<RuleInfo> ruleList = convertRuleList(sqlRuleList);
-            double currentBillAmount = billInfo.billAmount;
-            double canuseAmount = cardInfo.creditAmount;
-            ArrayList<SwingCardInfo> swingCardList = new ArrayList<SwingCardInfo>();
-            ArrayList<RepayInfo> repayList = new ArrayList<RepayInfo>();
-            double curDate = 0.0;
-            while (currentBillAmount > 0.0 && curDate++ < dateLimit) {
-                RuleInfo ruleInfo = nextRule(ruleList);
-                if (ruleInfo == null) {
-                    break;
-                }
+        double remainBillAmount = billInfo.billAmount;
+        double canUseAmount = billInfo.canUseAmount;
+        ArrayList<SwingCardInfo> swingCardList = new ArrayList<SwingCardInfo>();
+        ArrayList<RepayInfo> repayList = new ArrayList<RepayInfo>();
+        double curDate = random.nextDouble() * cardInfo.repayInterval + 1;
 
-                SwingCardInfo swingCardInfo = generateSwingInfo(ruleInfo);
-                cardInfo.repayCoolDown--;
-                if (swingCardInfo.money > canuseAmount) {
-                    RepayInfo repayInfo = generateRepayInfo(cardInfo);
+        while (curDate < dateLimit) {
+            RuleInfo ruleInfo = nextRule(ruleList);
+            if (ruleInfo == null) {
+                break;
+            }
+
+            double nextDateLimit = nextDateLimit(cardInfo);
+            try {
+                SwingCardInfo swingCardInfo = generateSwingInfo(ruleInfo, billInfo, curDate);
+                if (swingCardInfo.money > canUseAmount) {
+                    RepayInfo repayInfo = generateRepayInfo(cardInfo, billInfo, curDate);
                     if (repayInfo == null)
                         continue;
-                    canuseAmount += repayInfo.money;
-                    repayInfo.repayDate = new Date(billInfo.billDate.getTime() + (int)curDate * 24 * 60 * 60 * 1000);
+                    updateCardInfo(cardInfo, nextDateLimit);
+                    canUseAmount += repayInfo.money;
+                    remainBillAmount -= repayInfo.money;
                     repayList.add(repayInfo);
                 }
 
-                if (swingCardInfo.money < canuseAmount) {
-                    if (currentBillAmount < swingCardInfo.money) {
-                        if (currentBillAmount < ruleInfo.minSwingMoney) {
-                            continue;
-                        }
-                        swingCardInfo.money = currentBillAmount;
-                    }
-
-                    canuseAmount -= swingCardInfo.money;
-                    currentBillAmount -= swingCardInfo.money;
-                    ruleInfo.ruleCoolDown = ruleInfo.ruleUseInterval + COOLDOWNFIXED;
-                    ruleInfo.ruleUseFre--;
-                    swingCardInfo.ruleUUID = ruleInfo.ruleUUID;
-                    swingCardInfo.swingDate = new Date(billInfo.billDate.getTime() + (int)curDate * 24 * 60 * 60 * 1000);
-                    ArrayList<HashMap<String, Object>> posList = fetchPosList(ruleInfo);
-                    if (posList.size() > 0) {
-                        swingCardInfo.posUUID = posList.get(0).get("UUID").toString();
-                    }
+                if (swingCardInfo.money < canUseAmount) {
+                    updateRuleInfo(ruleInfo, nextDateLimit);
+                    canUseAmount -= swingCardInfo.money;
                     swingCardList.add(swingCardInfo);
                 }
             }
-
-            if (currentBillAmount <= 0.0) {
-                SwingList swingList = new SwingList();
-                swingList.billYear = billInfo.billDate.getYear() + 1900;
-                swingList.billMonth = billInfo.billDate.getMonth();
-                swingList.cardNO = cardInfo.cardNO;
-                swingList.swingCardList = swingCardList;
-                swingList.repayList = repayList;
-                return swingList;
+            finally {
+                curDate += nextDateLimit;
             }
         }
 
-        return null;
+        repayList.add(generateLastRepay(remainBillAmount, billInfo, curDate));
+
+        return generateSwingList(billInfo, cardInfo, swingCardList, repayList);
     }
 
-    private SwingCardInfo generateSwingInfo(RuleInfo ruleInfo) {
+    private SwingList generateSwingList(BillInfo billInfo, CardInfo cardInfo, ArrayList<SwingCardInfo> swingCardList, ArrayList<RepayInfo> repayList) {
+        SwingList swingList = new SwingList();
+        swingList.billYear = billInfo.billDate.getYear() + 1900;
+        swingList.billMonth = billInfo.billDate.getMonth();
+        swingList.repayYear = billInfo.lastRepayDate.getYear() + 1900;
+        swingList.repayMonth = billInfo.lastRepayDate.getMonth();
+        swingList.cardNO = cardInfo.cardNO;
+        swingList.swingCardList = swingCardList;
+        swingList.repayList = repayList;
+        return swingList;
+    }
+
+    private SwingCardInfo generateSwingInfo(RuleInfo ruleInfo, BillInfo billInfo, double curDate) throws Exception {
         SwingCardInfo swingCardInfo = new SwingCardInfo();
-        swingCardInfo.money = (int)(random.nextDouble() * (ruleInfo.maxSwingMoney - ruleInfo.minSwingMoney) + ruleInfo.minSwingMoney);
+        swingCardInfo.money = (long)(random.nextDouble() * (ruleInfo.maxSwingMoney - ruleInfo.minSwingMoney) + ruleInfo.minSwingMoney);
         swingCardInfo.swingTime = new Time((long)(random.nextDouble() * ((ruleInfo.swingEndTime.getTime()) - ruleInfo.swingStartTime.getTime())  + ruleInfo.swingStartTime.getTime())) ;
+        swingCardInfo.ruleUUID = ruleInfo.ruleUUID;
+        swingCardInfo.swingDate = new Date(billInfo.billDate.getTime() + (long)curDate * 24 * 60 * 60 * 1000);
+        ArrayList<HashMap<String, Object>> posList = fetchPosList(ruleInfo);
+        if (posList.size() > 0) {
+            swingCardInfo.posUUID = posList.get(random.nextInt(posList.size())).get("UUID").toString();
+        }
         return swingCardInfo;
     }
 
-    private RepayInfo generateRepayInfo(CardInfo cardInfo) {
+    private RepayInfo generateRepayInfo(CardInfo cardInfo, BillInfo billInfo, double curDate) {
         if (cardInfo.repayNum < 2) {
-            throw new IllegalArgumentException("Repay Number Can not be less then 2!");
+            return null;
         }
 
         if (cardInfo.repayCoolDown > 0.0) {
@@ -173,8 +177,26 @@ public class SwingCardPolicy {
         }
 
         RepayInfo repayInfo = new RepayInfo();
-        repayInfo.money = cardInfo.creditAmount * rate;
+        repayInfo.money = ((long)(billInfo.billAmount * rate / 100) * 100);
+        repayInfo.repayDate = new Date(billInfo.billDate.getTime() + (long)curDate * 24 * 60 * 60 * 1000);
         return repayInfo;
+    }
+
+    private RepayInfo generateLastRepay(double remainMoney, BillInfo billInfo, double curDate) {
+        RepayInfo repayInfo = new RepayInfo();
+        repayInfo.money = remainMoney;
+        repayInfo.repayDate = new Date(billInfo.billDate.getTime() + (long)curDate * 24 * 60 * 60 * 1000);
+        return repayInfo;
+    }
+
+    private void updateCardInfo(CardInfo cardInfo, double nextDateLimit) {
+        cardInfo.repayCoolDown -= nextDateLimit;
+        cardInfo.repayNum--;
+    }
+
+    private void updateRuleInfo(RuleInfo ruleInfo, double nextDateLimit) {
+        ruleInfo.ruleCoolDown = ruleInfo.ruleUseInterval - nextDateLimit;
+        ruleInfo.ruleUseFre--;
     }
 
     private RuleInfo nextRule(ArrayList<RuleInfo> ruleList) {
@@ -204,6 +226,10 @@ public class SwingCardPolicy {
         }
     }
 
+    private double nextDateLimit(CardInfo cardInfo) {
+        return (Double.max((long)(random.nextDouble() * cardInfo.repayInterval * NEXTDATEFIXEDLIMIT), 0.5) * 10) / 10;
+    }
+
     private BillInfo fetchBillInfo(String billNumber) throws Exception {
         return convertBillInfo(PosDbManager.executeSql("select * from billtb where uuid=" + billNumber));
     }
@@ -222,8 +248,8 @@ public class SwingCardPolicy {
         return billInfo;
     }
 
-    private ArrayList<HashMap<String, Object>> fetchRuleList(String bankUUID) throws Exception {
-        return (ArrayList<HashMap<String, Object>>)PosDbManager.executeSql("SELECT\n" +
+    private ArrayList<RuleInfo> fetchRuleList(String bankUUID) throws Exception {
+        return convertRuleList((ArrayList<HashMap<String, Object>>)PosDbManager.executeSql("SELECT\n" +
                 "ruletb.uuid,\n" +
                 "ruletb.bankuuid,\n" +
                 "swingtimetb.startTime,\n" +
@@ -238,7 +264,7 @@ public class SwingCardPolicy {
                 "FROM\n" +
                 "ruletb\n" +
                 "INNER JOIN swingtimetb ON swingtimetb.uuid = ruletb.swingtimeuuid\n" +
-                "where bankuuid='" + bankUUID + "'");
+                "where bankuuid='" + bankUUID + "'"));
     }
 
     private ArrayList<RuleInfo> convertRuleList(ArrayList<HashMap<String, Object>> ruleList) {
@@ -259,7 +285,7 @@ public class SwingCardPolicy {
                 ruleInfo.rateUUID = sqlRuleInfo.get("RATEUUID").toString();
                 ruleInfo.ruleUseFre = Integer.parseInt(sqlRuleInfo.get("RULEUSEFRE").toString());
                 ruleInfo.ruleUseInterval = Double.parseDouble(sqlRuleInfo.get("RULEUSEINTERVAL").toString());
-                ruleInfo.ruleCoolDown = COOLDOWNFIXED;
+                ruleInfo.ruleCoolDown = 0.0;
                 ruleInfoList.add(ruleInfo);
             }
         }
@@ -279,7 +305,7 @@ public class SwingCardPolicy {
         cardInfo.creditAmount = Double.parseDouble(sqlCardInfo.get(0).get("CREDITAMOUNT").toString());
         cardInfo.repayNum = Integer.parseInt(sqlCardInfo.get(0).get("REPAYNUM").toString());
         cardInfo.repayInterval = Integer.parseInt(sqlCardInfo.get(0).get("REPAYINTERVAL").toString());
-        cardInfo.repayCoolDown = COOLDOWNFIXED;
+        cardInfo.repayCoolDown = 0.0;
         return cardInfo;
     }
 
@@ -292,7 +318,6 @@ public class SwingCardPolicy {
 
     private String salemanID;
     private static Random random = new Random();
-    private final int RETRYCOUNT = 5;
-    private final double COOLDOWNFIXED = -0.5;
-    private final double REPAYFIXEDLIMIT = 0.4;
+    private final double REPAYFIXEDLIMIT = 0.3;
+    private final double NEXTDATEFIXEDLIMIT = 1.3;
 }

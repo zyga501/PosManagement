@@ -70,10 +70,10 @@ public class BillAction extends AjaxActionSupport {
     }
 
     public String Init() throws Exception {
-        if (ActionContext.getContext().getSession().get("userName").toString().equals("admin"))
+        if (getSession().get("userName").toString().equals("admin"))
             billList = new BillUI("").generateBillTable();
         else
-            billList = new BillUI(ActionContext.getContext().getSession().get("userID").toString()).generateBillTable();
+            billList = new BillUI(getSession().get("userID").toString()).generateBillTable();
         return BILLMANAGER;
     }
 
@@ -139,7 +139,7 @@ public class BillAction extends AjaxActionSupport {
         System.out.println(sqlString);
         try {
             if (PosDbManager.executeUpdate(sqlString))
-            map.put("billList",  new BillUI(ActionContext.getContext().getSession().get("userID").toString()).generateBillTable());
+            map.put("billList",  new BillUI(getSession().get("userID").toString()).generateBillTable());
         } catch (Exception e) {
             map.put("errorMessage", getText("AssetAction.InfoError"));
             e.printStackTrace();

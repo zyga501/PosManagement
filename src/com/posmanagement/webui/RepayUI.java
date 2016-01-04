@@ -6,10 +6,10 @@ import com.posmanagement.utils.StringUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class SwingCardUI {
-    public SwingCardUI(String uid){userID_=uid;}
+public class RepayUI {
+    public RepayUI(String uid){userID_=uid;}
     public String generateSummary() throws Exception {
-        ArrayList<HashMap<String, Object>> dbRet = fetchSwingCardSummary();
+        ArrayList<HashMap<String, Object>> dbRet = fetchRepaySummary();
         if (dbRet.size() <= 0)
             return new String("");
 
@@ -39,7 +39,7 @@ public class SwingCardUI {
     }
 
     public String generateDetail() throws Exception {
-        ArrayList<HashMap<String, Object>> dbRet = fetchSwingCardDetail();
+        ArrayList<HashMap<String, Object>> dbRet = fetchRepayDetail();
         if (dbRet.size() <= 0)
             return new String("");
 
@@ -77,89 +77,90 @@ public class SwingCardUI {
         return htmlString;
     }
 
-    private ArrayList<HashMap<String, Object>> fetchSwingCardSummary() throws Exception {
+    private ArrayList<HashMap<String, Object>> fetchRepaySummary() throws Exception {
         if (null==userID_ || userID_.equals(""))
         return PosDbManager.executeSql("SELECT " +
-                "swingcard.billyear, " +
-                "swingcard.billmonth, " +
-                "swingcard.cardno, " +
-                "swingcard.VALIDSTATUS, " +
-                "Sum(swingcard.amount) AS amount, " +
+                "repayment.thedate, " +
+                "repayment.incardno, " +
+                "repayment.outcardno, " +
+                "repayment.VALIDSTATUS, " +
+                "repayment.tradestatus, " +
+                "Sum(repayment.trademoney) AS amount, " +
                 "cardtb.cardmaster " +
                 "FROM " +
-                "swingcard " +
-                "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno " +
+                "repayment " +
+                "INNER JOIN cardtb ON cardtb.cardno = repayment.incardno " +
                 "GROUP BY " +
-                "swingcard.billyear, " +
-                "swingcard.billmonth, " +
-                "swingcard.cardno " +
+                "repayment.billyear, " +
+                "repayment.billmonth, " +
+                "repayment.cardno " +
                 "ORDER BY " +
-                "swingcard.billyear ASC, " +
-                "swingcard.billmonth ASC");
+                "repayment.thedate ASC, " +
+                "repayment.incardno ASC");
         else
             return PosDbManager.executeSql("SELECT " +
-                    "swingcard.billyear, " +
-                    "swingcard.billmonth, " +
-                    "swingcard.cardno, " +
-                    "swingcard.VALIDSTATUS, " +
-                    "Sum(swingcard.amount) AS amount, " +
+                    "repayment.billyear, " +
+                    "repayment.billmonth, " +
+                    "repayment.cardno, " +
+                    "repayment.VALIDSTATUS, " +
+                    "Sum(repayment.amount) AS amount, " +
                     "cardtb.cardmaster " +
                     "FROM " +
-                    "swingcard " +
-                    "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno " +
+                    "repayment " +
+                    "INNER JOIN cardtb ON cardtb.cardno = repayment.cardno " +
                     "where cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
                     " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"') " +
                     "GROUP BY " +
-                    "swingcard.billyear, " +
-                    "swingcard.billmonth, " +
-                    "swingcard.cardno  ORDER BY " +
-                    "swingcard.billyear ASC, " +
-                    "swingcard.billmonth ASC");
+                    "repayment.billyear, " +
+                    "repayment.billmonth, " +
+                    "repayment.cardno  ORDER BY " +
+                    "repayment.billyear ASC, " +
+                    "repayment.billmonth ASC");
     }
 
-    private ArrayList<HashMap<String, Object>> fetchSwingCardDetail() throws Exception {
+    private ArrayList<HashMap<String, Object>> fetchRepayDetail() throws Exception {
         if (null==userID_ || userID_.equals(""))
-        return PosDbManager.executeSql("SELECT swingcard.id," +
-                "swingcard.billyear, " +
-                "swingcard.billmonth, " +
-                "swingcard.cardno, " +
+        return PosDbManager.executeSql("SELECT repayment.id," +
+                "repayment.billyear, " +
+                "repayment.billmonth, " +
+                "repayment.cardno, " +
                 "cardtb.cardmaster, " +
-                "swingcard.amount, " +
-                "swingcard.sdatetm, " +
+                "repayment.amount, " +
+                "repayment.sdatetm, " +
                 "postb.posname, " +
-                "swingcard.userid, " +
+                "repayment.userid, " +
                 "userinfo.unick, " +
-                "swingcard.realsdatetm, " +
-                "swingcard.validstatus, " +
-                "swingcard.SWINGSTATUS " +
+                "repayment.realsdatetm, " +
+                "repayment.validstatus, " +
+                "repayment.SWINGSTATUS " +
                 "FROM " +
-                "swingcard " +
-                "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno " +
-                "INNER JOIN postb ON postb.uuid = swingcard.posuuid " +
-                "left JOIN userinfo ON userinfo.uid = swingcard.userid " +
-                "ORDER BY swingcard.sdatetm");
+                "repayment " +
+                "INNER JOIN cardtb ON cardtb.cardno = repayment.cardno " +
+                "INNER JOIN postb ON postb.uuid = repayment.posuuid " +
+                "left JOIN userinfo ON userinfo.uid = repayment.userid " +
+                "ORDER BY repayment.sdatetm");
         else
-            return PosDbManager.executeSql("SELECT swingcard.id," +
-                    "swingcard.billyear, " +
-                    "swingcard.billmonth, " +
-                    "swingcard.cardno, " +
+            return PosDbManager.executeSql("SELECT repayment.id," +
+                    "repayment.billyear, " +
+                    "repayment.billmonth, " +
+                    "repayment.cardno, " +
                     "cardtb.cardmaster, " +
-                    "swingcard.amount, " +
-                    "swingcard.sdatetm, " +
+                    "repayment.amount, " +
+                    "repayment.sdatetm, " +
                     "postb.posname, " +
-                    "swingcard.userid, " +
+                    "repayment.userid, " +
                     "userinfo.unick, " +
-                    "swingcard.realsdatetm, " +
-                    "swingcard.validstatus, " +
-                    "swingcard.SWINGSTATUS " +
+                    "repayment.realsdatetm, " +
+                    "repayment.validstatus, " +
+                    "repayment.SWINGSTATUS " +
                     "FROM " +
-                    "swingcard " +
-                    "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno " +
-                    "INNER JOIN postb ON postb.uuid = swingcard.posuuid  " +
-                    "left JOIN userinfo ON userinfo.uid = swingcard.userid " +
+                    "repayment " +
+                    "INNER JOIN cardtb ON cardtb.cardno = repayment.cardno " +
+                    "INNER JOIN postb ON postb.uuid = repayment.posuuid  " +
+                    "left JOIN userinfo ON userinfo.uid = repayment.userid " +
                     "where cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
                     " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"') " +
-                    "ORDER BY swingcard.sdatetm");
+                    "ORDER BY repayment.sdatetm");
     }
 
     private String userID_; // TODO for role

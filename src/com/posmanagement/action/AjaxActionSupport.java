@@ -3,7 +3,11 @@ package com.posmanagement.action;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import net.sf.json.JSONObject;
+import org.apache.struts2.ServletActionContext;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Map;
 
 public abstract class AjaxActionSupport extends ActionSupport {
@@ -30,10 +34,12 @@ public abstract class AjaxActionSupport extends ActionSupport {
         return null;
     }
 
+    public Map<String, Object> getSession(){
+        return ActionContext.getContext().getSession();
+    }
     public String getAjaxActionResult() {
         return ajaxActionResult;
     }
-
     public String AjaxActionComplete() {
         return AJAXACTIONCOMPLETED;
     }

@@ -1,42 +1,40 @@
 package com.posmanagement.action;
 
-import com.opensymphony.xwork2.ActionContext;
 import com.posmanagement.utils.PosDbManager;
-import com.posmanagement.webui.SwingCardUI;
+import com.posmanagement.webui.RepayUI;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SwingCardAction extends AjaxActionSupport {
-    private final static String SWINGCARDMANAGER = "swingCardManager";
-    private final static String SWINGCARDDETAIL = "swingCardDetail";
+public class RepayAction extends AjaxActionSupport {
+    private final static String REPAYMANAGER = "repayManager";
+    private final static String REPAYDETAIL = "repayDetail";
 
-    private String swingCardSummary;
-    private String swingCardDetail;
+    private String repaySummary;
+    private String repayDetail;
 
     public String getSwingCardSummary() {
-        return swingCardSummary;
+        return repaySummary;
     }
 
     public String getSwingCardDetail() {
-        return swingCardDetail;
+        return repayDetail;
     }
 
     public String Init() throws Exception {
         if (getSession().get("userName").toString().equals("admin"))
-            swingCardSummary = new SwingCardUI("").generateSummary();
+            repaySummary = new RepayUI("").generateSummary();
         else
-            swingCardSummary = new SwingCardUI(getSession().get("userID").toString()).generateSummary();
-        return SWINGCARDMANAGER;
+            repaySummary = new RepayUI(getSession().get("userID").toString()).generateSummary();
+        return REPAYMANAGER;
     }
 
     public String InitDetail() throws Exception {
         if (getSession().get("userName").toString().equals("admin"))
-            swingCardDetail = new SwingCardUI("").generateDetail();
+            repayDetail = new RepayUI("").generateDetail();
         else
-            swingCardDetail = new SwingCardUI(getSession().get("userID").toString()).generateDetail();
-        return SWINGCARDDETAIL;
+            repayDetail = new RepayUI(getSession().get("userID").toString()).generateDetail();
+        return REPAYDETAIL;
     }
 
     public String editDetail() throws Exception{

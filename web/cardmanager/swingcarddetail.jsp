@@ -70,7 +70,7 @@
         }
     </script>
 </head>
-<body style="overflow: hidden">
+<body >
 <div align="center">
     <div class="panel panel-default" >
         <div class="panel-header"><s:text name="swingcarddetail.paneltitle"/><span style="float:right;">

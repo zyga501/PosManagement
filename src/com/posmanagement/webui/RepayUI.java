@@ -80,7 +80,7 @@ public class RepayUI {
     private ArrayList<HashMap<String, Object>> fetchRepaySummary() throws Exception {
         if (null==userID_ || userID_.equals(""))
         return PosDbManager.executeSql("SELECT " +
-                "repayment.thedate, " +
+                " left(repayment.thedate,10) as thedate, " +
                 "repayment.incardno, " +
                 "repayment.outcardno, " +
                 "repayment.VALIDSTATUS, " +
@@ -91,31 +91,37 @@ public class RepayUI {
                 "repayment " +
                 "INNER JOIN cardtb ON cardtb.cardno = repayment.incardno " +
                 "GROUP BY " +
-                "repayment.billyear, " +
-                "repayment.billmonth, " +
-                "repayment.cardno " +
+                        "repayment.incardno, " +
+                        "repayment.outcardno, " +
+                        "repayment.VALIDSTATUS, " +
+                        "repayment.tradestatus, " +
+                        "cardtb.cardmaster " +
                 "ORDER BY " +
                 "repayment.thedate ASC, " +
                 "repayment.incardno ASC");
         else
             return PosDbManager.executeSql("SELECT " +
-                    "repayment.billyear, " +
-                    "repayment.billmonth, " +
-                    "repayment.cardno, " +
+                    "repayment.incardno, " +
+                    "repayment.outcardno, " +
                     "repayment.VALIDSTATUS, " +
-                    "Sum(repayment.amount) AS amount, " +
+                    "repayment.tradestatus, " +
+                    "Sum(repayment.trademoney) AS amount, " +
                     "cardtb.cardmaster " +
                     "FROM " +
                     "repayment " +
-                    "INNER JOIN cardtb ON cardtb.cardno = repayment.cardno " +
+                    "INNER JOIN cardtb ON cardtb.cardno = repayment.incardno " +
                     "where cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
                     " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"') " +
                     "GROUP BY " +
-                    "repayment.billyear, " +
-                    "repayment.billmonth, " +
-                    "repayment.cardno  ORDER BY " +
-                    "repayment.billyear ASC, " +
-                    "repayment.billmonth ASC");
+                            "repayment.incardno, " +
+                            "repayment.outcardno, " +
+                            "repayment.VALIDSTATUS, " +
+                            "repayment.tradestatus, " +
+                            "Sum(repayment.trademoney) AS amount, " +
+                            "cardtb.cardmaster " +
+                    " ORDER BY " +
+                    "repayment.thedate ASC, " +
+                    "repayment.incardno ASC");
     }
 
     private ArrayList<HashMap<String, Object>> fetchRepayDetail() throws Exception {

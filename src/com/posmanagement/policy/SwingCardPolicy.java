@@ -128,7 +128,9 @@ public class SwingCardPolicy {
             }
         }
 
-        repayList.add(generateLastRepay(remainBillAmount, billInfo, dateLimit));
+        if (remainBillAmount > 0.0) {
+            repayList.add(generateLastRepay(remainBillAmount, billInfo, dateLimit));
+        }
 
         return generateSwingList(billInfo, cardInfo, swingCardList, repayList);
     }
@@ -140,6 +142,9 @@ public class SwingCardPolicy {
         swingList.repayYear = billInfo.lastRepayDate.getYear() + 1900;
         swingList.repayMonth = billInfo.lastRepayDate.getMonth() + 1;
         swingList.cardNO = cardInfo.cardNO;
+        if (swingCardList.size() == 0) {
+            swingCardList.add(new SwingCardInfo());
+        }
         swingList.swingCardList = swingCardList;
         swingList.repayList = repayList;
         return swingList;
@@ -159,12 +164,12 @@ public class SwingCardPolicy {
     }
 
     private RepayInfo generateRepayInfo(CardInfo cardInfo, BillInfo billInfo, double curDate) {
-        if (cardInfo.repayNum < 2) {
+        if (cardInfo.repayCoolDown > 0.0) {
             return null;
         }
 
-        if (cardInfo.repayCoolDown > 0.0) {
-            return null;
+        if (cardInfo.repayNum < 1) {
+            throw new IllegalArgumentException("RepayNum cannot less than 1!");
         }
 
         double fixedLimit = random.nextDouble() * REPAYFIXEDLIMIT;
@@ -174,6 +179,10 @@ public class SwingCardPolicy {
         }
         else {
             rate -= rate * fixedLimit;
+        }
+
+        if (cardInfo.repayNum == 1) {
+            rate = 1.0;
         }
 
         RepayInfo repayInfo = new RepayInfo();

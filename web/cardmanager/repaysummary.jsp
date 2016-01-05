@@ -15,13 +15,13 @@
     <link href="<%=request.getContextPath()%>/skin/default/skin.css" rel="stylesheet" type="text/css" id="skin"/>
     <title></title>
     <script type="text/javascript">
-        function clickDetail(cardNo, billYear, billMonth) {
+        function clickDetail(cardNo, repayYear, repayMonth) {
             var index = layer.open({
                 type: 2,
                 title: "还卡明细",
                 fix: true,
                 maxmin: false,
-                content: "Repayment!InitDetail?CardNO=" + cardNo + "&billYear=" + billYear + "&billMonth=" + billMonth
+                content: "Repay!InitDetail?CardNO=" + cardNo + "&repayYear=" + repayYear + "&repayMonth=" + repayMonth
             });
             layer.full(index);
         }
@@ -36,17 +36,15 @@
                     <table class="table table-border table-bordered table-bg table-hover table-sort">
                         <thead>
                         <tr class="text-c">
-                            <th><s:text name="repayment.thedate"/></th>
-                            <th><s:text name="repayment.incardno"/></th>
-                            <th><s:text name="repayment.outcardno"/></th>
-                            <th><s:text name="repayment.trademoney"/></th>
-                            <th><s:text name="repayment.tradetime"/></th>
-                            <th><s:text name="repayment.tradestatus"/></th>
-                            <th><s:text name="repayment.validstatus"/></th>
+                            <th><s:text name="repaysummary.thedate"/></th>
+                            <th><s:text name="repaysummary.cardno"/></th>
+                            <th><s:text name="repaysummary.cardmaster"/></th>
+                            <th><s:text name="repaysummary.amount"/></th>
+                            <th><s:text name="repaysummary.operation"/></th>
                         </tr>
                         </thead>
-                        <tbody id="repaymentSummary">
-                            <s:property value="repaymentSummary" escape="false"/>
+                        <tbody id="repaySummary">
+                            <s:property value="repaySummary" escape="false"/>
                         </tbody>
                     </table>
                 </div>

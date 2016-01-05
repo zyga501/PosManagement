@@ -2,6 +2,7 @@ package com.posmanagement.action;
 
 import com.posmanagement.policy.SwingCardPolicy;
 import com.posmanagement.utils.PosDbManager;
+import com.posmanagement.utils.UUIDUtils;
 import com.posmanagement.webui.BillUI;
 
 import java.text.ParseException;
@@ -70,10 +71,10 @@ public class BillAction extends AjaxActionSupport {
     }
 
     public String Init() throws Exception {
-        if (getSession().get("userName").toString().equals("admin"))
+        if (super.getUserName().equals("admin"))
             billList = new BillUI("").generateBillTable();
         else
-            billList = new BillUI(getSession().get("userID").toString()).generateBillTable();
+            billList = new BillUI(super.getUserID()).generateBillTable();
         return BILLMANAGER;
     }
 
@@ -129,17 +130,18 @@ public class BillAction extends AjaxActionSupport {
         int year=cal.get(Calendar.YEAR);
         String wherestr ="";
         if (null!=bankName && (!bankName.equals("")))
-            wherestr = "  and bankname= '"+bankName+"'";
+            wherestr = "  and bankuuid= '"+bankName+"'";
         else  if (null!=cardno && (!cardno.equals("")))
             wherestr = "  and cardno= '"+cardno+"'";
-        String sqlString= "insert into billtb (bankname,cardno,billdate,billamount,lastrepaymentdate) " +
-                "select bankname,cardno,'" + (new SimpleDateFormat("yyyy-MM-dd")).format(billd)+"',creditamount,date_add('"+
-        (new SimpleDateFormat("yyyy-MM-dd")).format(billd)+"',INTERVAL billafterdate DAY ) from cardtb a where status='enable' and billdate=" + day + wherestr+" and  not exists " +
+        String sqlString= "insert into billtb (uuid,bankuuid,cardno,billdate,billamount,lastrepaymentdate) " +
+                "select '"+ UUIDUtils.generaterUUID()+"', bankuuid,cardno,'" + (new SimpleDateFormat("yyyy-MM-dd")).format(billd)+"',creditamount,date_add('"+
+                (new SimpleDateFormat("yyyy-MM-dd")).format(billd)+"',INTERVAL billafterdate DAY ) from cardtb a " +
+                " where a.status='enable'  and billdate=" + day + wherestr+" and  not exists " +
                 "(select 1 from billtb b where a.cardno=b.cardno and b.billdate='" + (new SimpleDateFormat("yyyy-MM-dd")).format(billd)+"')";
         System.out.println(sqlString);
         try {
             if (PosDbManager.executeUpdate(sqlString))
-            map.put("billList",  new BillUI(getSession().get("userID").toString()).generateBillTable());
+            map.put("billList",  new BillUI(super.getUserID()).generateBillTable());
         } catch (Exception e) {
             map.put("errorMessage", getText("AssetAction.InfoError"));
             e.printStackTrace();
@@ -164,7 +166,7 @@ public class BillAction extends AjaxActionSupport {
             parametMap.put(2, swingList.billMonth);
             parametMap.put(3, swingList.cardNO);
             parametMap.put(4, swingList.swingCardList.get(index).money);
-            parametMap.put(5, swingList.swingCardList.get(index).swingDate);
+            parametMap.put(5, swingList.swingCardList.get(index).swingDate + "/" + swingList.swingCardList.get(index).swingTime);
             if (swingList.swingCardList.get(index).posUUID == null)
                 swingList.swingCardList.get(index).posUUID = new String();
             parametMap.put(6, swingList.swingCardList.get(index).posUUID);
@@ -180,8 +182,9 @@ public class BillAction extends AjaxActionSupport {
             parametMap.put(2, swingList.repayMonth);
             parametMap.put(3, swingList.repayList.get(index).money);
             parametMap.put(4, swingList.repayList.get(index).repayDate);
-            PosDbManager.executeUpdate("insert into repaytb(repayyear,repaymonth,trademoney,thedate) " +
-                            "values(?,?,?,?)",
+            parametMap.put(5, swingList.cardNO);
+            PosDbManager.executeUpdate("insert into repaytb(repayyear,repaymonth,trademoney,thedate,cardno) " +
+                            "values(?,?,?,?,?)",
                     (HashMap<Integer, Object>)parametMap);
         }
 

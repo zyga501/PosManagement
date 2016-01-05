@@ -22,18 +22,18 @@ public class RepayAction extends AjaxActionSupport {
     }
 
     public String Init() throws Exception {
-        if (getSession().get("userName").toString().equals("admin"))
+        if (super.getUserName().equals("admin"))
             repaySummary = new RepayUI("").generateSummary();
         else
-            repaySummary = new RepayUI(getSession().get("userID").toString()).generateSummary();
+            repaySummary = new RepayUI(super.getUserID()).generateSummary();
         return REPAYMANAGER;
     }
 
     public String InitDetail() throws Exception {
-        if (getSession().get("userName").toString().equals("admin"))
+        if (super.getUserName().equals("admin"))
             repayDetail = new RepayUI("").generateDetail();
         else
-            repayDetail = new RepayUI(getSession().get("userID").toString()).generateDetail();
+            repayDetail = new RepayUI(super.getUserID()).generateDetail();
         return REPAYDETAIL;
     }
 
@@ -45,7 +45,7 @@ public class RepayAction extends AjaxActionSupport {
         else {
             Map para =new HashMap();
             para.put(1,"enable");
-            para.put(2,getSession().get("userID").toString());
+            para.put(2,super.getUserID());
             para.put(3,getParameter("repayId"));
             if (PosDbManager.executeUpdate("update repaytb set tradestatus=?,userid=?,tradetime=now() where id=?",(HashMap<Integer, Object>)para))
                 map.put("successMessage",getText("BillAction.InfoSuccess") );
@@ -63,7 +63,7 @@ public class RepayAction extends AjaxActionSupport {
             Map para =new HashMap();
             if (!getParameter("repayIdList").equals("")) {
                 para.put(1, "enable");
-                para.put(2, getSession().get("userID").toString());
+                para.put(2, super.getUserID());
                 PosDbManager.executeUpdate("update repaytb a inner join  cardtb b on a.cardno=b.cardno inner join  salesmantb c " +
                         "on c.uid=b.salesmanuuid set a.VALIDSTATUS=? where c.uid=? and  a.id in ("+
                         getParameter("repayIdList").toString().substring(0, getParameter("repayIdList").toString().length() - 1)+")", (HashMap<Integer, Object>) para);
@@ -74,7 +74,7 @@ public class RepayAction extends AjaxActionSupport {
             if (!getParameter("repayIdNOList").equals("")) {
                 para.clear();
                 para.put(1, "disable");
-                para.put(2, getSession().get("userID").toString());
+                para.put(2, super.getUserID());
                 PosDbManager.executeUpdate("update repaytb a inner join  cardtb b on a.cardno=b.cardno inner join  salesmantb c " +
                         "on c.uid=b.salesmanuuid set a.VALIDSTATUS=? where c.uid=? and  a.id in ("+
                         getParameter("repayIdNOList").toString().substring(0, getParameter("repayIdNOList").toString().length() - 1)+")", (HashMap<Integer, Object>) para);

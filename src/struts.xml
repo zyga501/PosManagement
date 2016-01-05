@@ -58,6 +58,7 @@
         </action>
         <action name="Bank!*" class="com.posmanagement.action.BankAction" method="{1}">
             <result name="bankManager">./systemmanager/bankmanager.jsp</result>
+            <result name="addBank">./systemmanager/addbank.jsp</result>
         </action>
         <action name="SwingTime!*" class="com.posmanagement.action.SwingTimeAction" method="{1}">
             <result name="swingTimeManager">./systemmanager/swingtimemanager.jsp</result>

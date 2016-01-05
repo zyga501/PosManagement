@@ -8,10 +8,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
     <meta http-equiv="Cache-Control" content="no-siteapp" />
-    <link href="../css/H-ui.min.css" rel="stylesheet" type="text/css" />
-    <link href="../css/H-ui.admin.css" rel="stylesheet" type="text/css" />
-    <link href="../css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
-    <link href="../skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
+    <link href="<%=request.getContextPath()%>/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+    <link href="<%=request.getContextPath()%>/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+    <link href="<%=request.getContextPath()%>/css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
+    <link href="<%=request.getContextPath()%>/skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
     <title><s:text name="bankmanager.title" /></title>
     <script type="text/javascript">
         function addBank(){
@@ -21,6 +21,16 @@
                 fix: false,
                 content: "./systemmanager/addbank.jsp"
             });}
+
+        function editBank(val) {
+            var index = layer.open({
+                type: 2,
+                title: "<s:text name="global.edit"/>",area: ['310px', '220px'],
+                fix: true,
+                maxmin: false,
+                content: "Bank!FetchBank?UUID=" + val
+            });
+        }
         function refreshBankList(bankList) {
             $('#bankList').html(bankList);
         }
@@ -29,7 +39,10 @@
 <body style="overflow: hidden">
 <div align="center">
     <div class="panel panel-default" style="float: left;width: 44%">
-        <div class="panel-header"><s:text name="bankmanager.paneltitle" /><span style="float:right;" ><a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addBank()"><s:text name="bankmanager.add" /></a></span></div>
+        <div class="panel-header"><s:text name="cardmanager.paneltitle"/><span style="float:right;">
+            <a href="javascript:void(0);" class="btn btn-warning  radius size-S " onclick="editBank()">
+                <s:text name="bankmanager.paneltitle" />
+            <span style="float:right;" ><a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addBank()"><s:text name="bankmanager.add" /></a></span></div>
         <div class="panel-body" id="parentIframe">
             <form>
                 <div style="height:80%; overflow:auto;">
@@ -49,9 +62,17 @@
         </div>
     </div>
 </div>
-<script type="text/javascript" src="../js/jquery/1.9.1/jquery.min.js"></script>
-<script type="text/javascript" src="../js/layer/1.9.3/layer.js"></script>
-<script type="text/javascript" src="../js/H-ui.js"></script>
-<script type="text/javascript" src="../js/H-ui.admin.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/layer/1.9.3/layer.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.admin.js"></script>
+<script type="text/javascript" >
+    $().ready( function(){
+                $("tr").click(function() {alert($(this).attr("value"));
+                    editBank($(this).attr("value"));
+                })
+            }
+    )
+</script>
 </body>
 </html>

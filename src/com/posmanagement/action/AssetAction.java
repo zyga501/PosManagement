@@ -1,12 +1,8 @@
 package com.posmanagement.action;
 
-import com.opensymphony.xwork2.ActionContext;
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.webui.AssetUI;
-import org.apache.struts2.ServletActionContext;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -43,11 +39,7 @@ public class AssetAction extends AjaxActionSupport {
             parametMap.put(6, getParameter("cashPwd").toString());
             parametMap.put(7, getParameter("transferPwd").toString());
             parametMap.put(8, getParameter("atmCashPwd").toString());
-            ActionContext ctx = ActionContext.getContext();
-            HttpServletRequest request = (HttpServletRequest) ctx
-                    .get(ServletActionContext.HTTP_REQUEST);
-            HttpSession session = request.getSession(false);
-            parametMap.put(9, session.getAttribute("userID"));
+            parametMap.put(9, super.getUserID().isEmpty());
             PosDbManager.executeUpdate("insert into assettb(cardmaster,bankuuid,cardno,firstbalance,ebanksignpwd,ebankcashpwd," +
                     "ebanktransferpwd,atmcashpwd,salesman) values(?,?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>)parametMap);
             map.put("assetList", new AssetUI().generateAssetTable());

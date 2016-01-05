@@ -1,16 +1,12 @@
 package com.posmanagement.action;
 
-import com.opensymphony.xwork2.ActionContext;
 import com.posmanagement.utils.LogManager;
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.utils.UUIDUtils;
 import com.posmanagement.webui.SalemanUI;
 import com.posmanagement.webui.TellerUI;
 import com.posmanagement.webui.UserMenu;
-import org.apache.struts2.ServletActionContext;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Date;
@@ -84,23 +80,14 @@ public class UserAction extends AjaxActionSupport{
     }
 
     public String InitMainPage() throws Exception {
-        ActionContext ctx = ActionContext.getContext();
-        HttpServletRequest request = (HttpServletRequest) ctx
-                .get(ServletActionContext.HTTP_REQUEST);
-        HttpSession session = request.getSession(true);
-        if (session.getAttribute("userID") == null)
+        if (super.getUserID().isEmpty())
             return LOGINFAILURE;
-        userMenu = new UserMenu(session.getAttribute("userID").toString()).generateHTMLString();
-        userNickName = session.getAttribute("userNick").toString();
+        userMenu = new UserMenu(super.getUserID()).generateHTMLString();
+        userNickName = super.getAttribute("userNick");
         return MAGEPAGELOADED;
     }
 
     public String Login() throws Exception {
-        ActionContext ctx = ActionContext.getContext();
-        HttpServletRequest request = (HttpServletRequest) ctx
-                .get(ServletActionContext.HTTP_REQUEST);
-        HttpSession session = request.getSession(true);
-
         // Disable Now
         //if (!verifyCode.toUpperCase().equals(session.getAttribute("verifyCode"))) {
         //    loginErrorMessage = getText("UserAction.verifyCodeError");
@@ -120,48 +107,42 @@ public class UserAction extends AjaxActionSupport{
             }
 
             String userID = (dbRet.get(0).get("UID").toString());
-            session.setAttribute("userID", userID);
-            session.setAttribute("userName", userName);
-            session.setAttribute("userNick", dbRet.get(0).get("UNICK"));
-            session.setAttribute("lastLocation", dbRet.get(0).get("LASTLOCATION"));
-            session.setAttribute("lastTime", dbRet.get(0).get("LASTTIME"));
-            session.setAttribute("roleId", dbRet.get(0).get("RID"));
+            super.setUserID(userID);
+            super.setUserName(userName);
+            super.setAttribute("userNick", dbRet.get(0).get("UNICK").toString());
+            super.setAttribute("lastLocation", dbRet.get(0).get("LASTLOCATION").toString());
+            super.setAttribute("lastTime", dbRet.get(0).get("LASTTIME").toString());
+            super.setAttribute("roleId", dbRet.get(0).get("RID").toString());
 
-            logLoginTrack(userID, request.getRemoteAddr() );
+            logLoginTrack(userID, super.getRequest().getRemoteAddr() );
         }
         catch (Exception e){
-            session.removeAttribute("verifyCode");
+            super.removeAttribute("verifyCode");
             return LOGINFAILURE;
         }
 
-        session.removeAttribute("verifyCode");
+        super.removeAttribute("verifyCode");
         return LOGINSUCCESS;
     }
 
     public String Logout() throws Exception {
-        ActionContext ctx = ActionContext.getContext();
-        HttpServletRequest request = (HttpServletRequest) ctx.get(ServletActionContext.HTTP_REQUEST);
-        HttpSession session = request.getSession(false);
+        HttpSession session = super.getRequest().getSession(false);
         if (null!=session)
             session.invalidate();
         return LOGOUT;
     }
 
     public String FetchPersonInfo() throws Exception {
-        ActionContext ctx = ActionContext.getContext();
-        HttpServletRequest request = (HttpServletRequest) ctx
-                        .get(ServletActionContext.HTTP_REQUEST);
-        HttpSession session = request.getSession(false);
         try {
             Map parametMap = new HashMap();
-            parametMap.put(1,session.getAttribute("userName"));
+            parametMap.put(1, super.getUserName());
             ArrayList<HashMap<String, Object>> dbRet = PosDbManager.executeSql("select * from userinfo a left outer join usertrack b on a.uid=b.uid where uname=?", (HashMap<Integer, Object>) parametMap);
             if (null == dbRet || dbRet.size() < 1){
                 return LOGINFAILURE;
             }
             personInfo = dbRet.get(0);
             userLastLoginInfo = String.format(getText("UserAction.userLastLoginInfo"),
-                    session.getAttribute("lastLocation").toString(), session.getAttribute("lastTime").toString());
+                    super.getAttribute("lastLocation"), super.getAttribute("lastTime"));
         }
         catch (Exception e){
             return LOGINFAILURE;
@@ -170,9 +151,6 @@ public class UserAction extends AjaxActionSupport{
     }
 
     public void  ModifyPassword() throws Exception {
-        ActionContext ctx = ActionContext.getContext();
-        HttpServletResponse response = (HttpServletResponse) ctx
-                        .get(ServletActionContext.HTTP_RESPONSE);
         String rtMsg = new String("");
         try {
             Map parametMap = new HashMap();
@@ -187,18 +165,13 @@ public class UserAction extends AjaxActionSupport{
         catch (Exception e){
             return ;
         }
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(rtMsg);
-        response.getWriter().flush();
-        response.getWriter().close();
+        super.getResponse().setCharacterEncoding("UTF-8");
+        super.getResponse().getWriter().write(rtMsg);
+        super.getResponse().getWriter().flush();
+        super.getResponse().getWriter().close();
     }
 
     public String Register() throws Exception {
-        ActionContext ctx = ActionContext.getContext();
-        HttpServletRequest request = (HttpServletRequest) ctx
-                .get(ServletActionContext.HTTP_REQUEST);
-        HttpSession session = request.getSession(false);
-       // if (!session.getAttribute("userName").toString().toLowerCase().equals("admin")) return AjaxActionComplete();
         ArrayList<HashMap<String, Object>> dbRet = PosDbManager.executeSql(
                 "select 1 from userinfo where uname='" + userName + "'");
         if (dbRet.size()>0) return AjaxActionComplete();
@@ -206,10 +179,9 @@ public class UserAction extends AjaxActionSupport{
         Map parametMap = new HashMap<Integer, Object>();
         String UUID = UUIDUtils.generaterUUID();
         parametMap.put(1, UUID);
-      //  parametMap.put(2, userName);
         parametMap.put(2,userPwd);
         parametMap.put(3,userNickName);
-        if (session.getAttribute("userName").toString().toLowerCase().equals("admin")) {
+        if (super.getUserName().toLowerCase().equals("admin")) {
              parametMap.put(4, userName);
             if (PosDbManager.executeUpdate("insert into userinfo(uid,upwd,unick,uname) values(?,?,?,?)", (HashMap<Integer, Object>) parametMap)) {
                 PosDbManager.executeUpdate("insert into salesmantb(uid) values('" + UUID + "')");
@@ -218,29 +190,19 @@ public class UserAction extends AjaxActionSupport{
                 return AjaxActionComplete(resultMap);
             }
         }
-        else { //if salesman-role select ?,?,?, from tellertb a where a.salesman=?session.getAttribute("userID").toString()
-            parametMap.put(4, session.getAttribute("userName").toString());
-            parametMap.put(5, session.getAttribute("userID").toString());
+        else {
+            parametMap.put(4, super.getUserName());
+            parametMap.put(5, super.getUserID());
             if (PosDbManager.executeUpdate("insert into userinfo(uid,upwd,unick,uname) select ?,?,?,CONCAT(?,count(*))" +
                     " from tellertb a where a.salesman=?", (HashMap<Integer, Object>) parametMap)){
-                PosDbManager.executeUpdate("insert into tellertb(uid,salesman) values('" + UUID + "','"+session.getAttribute("userID").toString()+"')");
+                PosDbManager.executeUpdate("insert into tellertb(uid,salesman) values('" + UUID + "','"+super.getUserID()+"')");
                 Map resultMap = new HashMap();
-                resultMap.put("userList", new TellerUI().generateTable(session.getAttribute("userID").toString(), false));
+                resultMap.put("userList", new TellerUI().generateTable(super.getUserID(), false));
                 return AjaxActionComplete(resultMap);
             }
         }
 
         return AjaxActionComplete();
-       /* Map resultMap = new HashMap();
-        if ("1".equals(userType)) {
-            PosDbManager.executeUpdate("insert into salesmantb(uid) values('" + UUID + "')");
-            resultMap.put("userList", new SalemanUI().generateTable());
-        }
-        else if ("2".equals(userType)) {
-            PosDbManager.executeUpdate("insert into tellertb(uid,salesman) values('" + UUID + ","+session.getAttribute("userID").toString()+"')");
-            resultMap.put("userList", new TellerUI().generateTable(session.getAttribute("userID").toString(), false));
-        }
-        return AjaxActionComplete(resultMap);*/
     }
 
     private void logLoginTrack(String userID, String location) throws Exception {

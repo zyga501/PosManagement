@@ -1,10 +1,8 @@
 package com.posmanagement.action;
 
-import com.opensymphony.xwork2.ActionContext;
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.webui.SwingCardUI;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,18 +22,18 @@ public class SwingCardAction extends AjaxActionSupport {
     }
 
     public String Init() throws Exception {
-        if (getSession().get("userName").toString().equals("admin"))
+        if (super.getUserName().equals("admin"))
             swingCardSummary = new SwingCardUI("").generateSummary();
         else
-            swingCardSummary = new SwingCardUI(getSession().get("userID").toString()).generateSummary();
+            swingCardSummary = new SwingCardUI(super.getUserID()).generateSummary();
         return SWINGCARDMANAGER;
     }
 
     public String InitDetail() throws Exception {
-        if (getSession().get("userName").toString().equals("admin"))
+        if (super.getUserName().equals("admin"))
             swingCardDetail = new SwingCardUI("").generateDetail();
         else
-            swingCardDetail = new SwingCardUI(getSession().get("userID").toString()).generateDetail();
+            swingCardDetail = new SwingCardUI(super.getUserID()).generateDetail();
         return SWINGCARDDETAIL;
     }
 
@@ -47,7 +45,7 @@ public class SwingCardAction extends AjaxActionSupport {
         else {
             Map para =new HashMap();
             para.put(1,"enable");
-            para.put(2,getSession().get("userID").toString());
+            para.put(2,super.getUserID());
             para.put(3,getParameter("swingId"));
             if (PosDbManager.executeUpdate("update swingcard set swingstatus=?,userid=?,realsdatetm=now() where id=?",(HashMap<Integer, Object>)para))
                 map.put("successMessage",getText("BillAction.InfoSuccess") );
@@ -64,7 +62,7 @@ public class SwingCardAction extends AjaxActionSupport {
             Map para =new HashMap();
             if (!getParameter("swingIdList").equals("")) {
                 para.put(1, "enable");
-                para.put(2, getSession().get("userID").toString());
+                para.put(2, super.getUserID());
               //  para.put(3, getParameter("swingIdList").toString().substring(0, getParameter("swingIdList").toString().length() - 1));
                 PosDbManager.executeUpdate("update swingcard a inner join  cardtb b on a.cardno=b.cardno inner join  salesmantb c " +
                         "on c.uid=b.salesmanuuid set a.VALIDSTATUS=? where c.uid=? and  a.id in ("+
@@ -76,7 +74,7 @@ public class SwingCardAction extends AjaxActionSupport {
             if (!getParameter("swingIdNOList").equals("")) {
                 para.clear();
                 para.put(1, "disable");
-                para.put(2, getSession().get("userID").toString());
+                para.put(2, super.getUserID());
                // para.put(3, getParameter("swingIdNOList").toString().substring(0, getParameter("swingIdNOList").toString().length() - 1));
                 PosDbManager.executeUpdate("update swingcard a inner join  cardtb b on a.cardno=b.cardno inner join  salesmantb c " +
                         "on c.uid=b.salesmanuuid set a.VALIDSTATUS=? where c.uid=? and  a.id in ("+

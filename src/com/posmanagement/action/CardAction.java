@@ -1,6 +1,5 @@
 package com.posmanagement.action;
 
-import com.opensymphony.xwork2.ActionContext;
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.utils.Readconfig;
 import com.posmanagement.webui.CardUI;
@@ -69,10 +68,10 @@ public class CardAction extends AjaxActionSupport {
     }
 
     public String Init() throws Exception {
-        if (getSession().get("userName").toString().equals("admin"))
+        if (super.getUserName().equals("admin"))
           cardList = new CardUI("").generateCardTable();
         else
-            cardList = new CardUI(getSession().get("userID").toString()).generateCardTable();
+            cardList = new CardUI(super.getUserID()).generateCardTable();
         return CARDMANAGER;
     }
 
@@ -148,10 +147,10 @@ public class CardAction extends AjaxActionSupport {
                         "cmaddress=?,cmtel=?,cmseccontact=?,memos=?  where cardno=?",(HashMap<Integer, Object>)  para))
                     map.put("errorMessage", getText("addrate.rateFormatError"));
                 else{
-                    if (getSession().get("userName").toString().equals("admin"))
+                    if (super.getUserName().equals("admin"))
                         cardList = new CardUI("").generateCardTable();
                     else
-                        cardList = new CardUI(getSession().get("userID").toString()).generateCardTable();
+                        cardList = new CardUI(super.getUserID()).generateCardTable();
                 }
                 map.put("newid",para.get(3));
             }
@@ -176,7 +175,7 @@ public class CardAction extends AjaxActionSupport {
                         "billemail,status,commissioncharge,cardmaster,identityno,cmaddress,cmtel,cmseccontact," +
                         "memos")).split(",");
                 para.put(i++, UUID.randomUUID().toString());
-                para.put(i++, getSession().get("userID").toString());
+                para.put(i++, super.getUserID());
                 for (String key : strary) {
                     System.out.print("'"+((String[])cardmanager.get(key))[0]+"',");
                     para.put(i++,((String[])cardmanager.get(key))[0] );
@@ -188,10 +187,10 @@ public class CardAction extends AjaxActionSupport {
                         "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",(HashMap<Integer, Object>)  para))
                     map.put("errorMessage", getText("addrate.rateFormatError"));
                 else {
-                    if (getSession().get("userName").toString().equals("admin"))
+                    if (super.getUserName().equals("admin"))
                         map.put("cardList", new CardUI("").generateCardTable());
                     else
-                        map.put("cardList", new CardUI(getSession().get("userID").toString()).generateCardTable());
+                        map.put("cardList", new CardUI(super.getUserID()).generateCardTable());
                 }
                 map.put("newid",para.get(3));
             }
@@ -207,7 +206,7 @@ public class CardAction extends AjaxActionSupport {
         if (null==cardno || cardno.trim().equals(""))
             return "";
         Map map = new HashMap();
-        map.put("cardMaster", new CardUI(getSession().get("userID").toString()).generateMasterString(cardno));
+        map.put("cardMaster", new CardUI(super.getUserID()).generateMasterString(cardno));
         return AjaxActionComplete(map);
     }
 }

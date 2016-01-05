@@ -231,7 +231,7 @@ public class SwingCardPolicy {
     }
 
     private BillInfo fetchBillInfo(String billNumber) throws Exception {
-        return convertBillInfo(PosDbManager.executeSql("select * from billtb where uuid=" + billNumber));
+        return convertBillInfo(PosDbManager.executeSql("select * from billtb where uuid='" + billNumber + "'"));
     }
 
     private BillInfo convertBillInfo(ArrayList<HashMap<String, Object>> sqlBillInfo) throws Exception {

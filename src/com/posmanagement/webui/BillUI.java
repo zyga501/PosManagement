@@ -51,7 +51,7 @@ public class BillUI {
             return PosDbManager.executeSql("select billtb.*,banktb.name bankname from billtb inner join banktb on banktb.uuid=billtb.bankuuid");
         else
             return PosDbManager.executeSql("select billtb.*,banktb.name bankname from billtb inner join banktb on " +
-                    "banktb.uuid=billtb.bankuuid inner join  cardtb on cardtb.cardno=billtb.cardno where  cardtb.uuid='"+userID_+"'");
+                    "banktb.uuid=billtb.bankuuid inner join  cardtb on cardtb.cardno=billtb.cardno where  cardtb.salesmanuuid='"+userID_+"'");
     }
 
     private String userID_; // TODO for role

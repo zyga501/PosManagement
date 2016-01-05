@@ -8,11 +8,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
     <meta http-equiv="Cache-Control" content="no-siteapp" />
-    <link href="../css/H-ui.min.css" rel="stylesheet" type="text/css" />
-    <link href="../css/H-ui.admin.css" rel="stylesheet" type="text/css" />
-    <link href="../css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
-    <link href="../skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
-    <script type="text/javascript" src="../js/jquery/1.9.1/jquery.min.js"></script>
+    <link href="<%=request.getContextPath()%>/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+    <link href="<%=request.getContextPath()%>/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+    <link href="<%=request.getContextPath()%>/css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
+    <link href="<%=request.getContextPath()%>/skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
+    <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery/1.9.1/jquery.min.js"></script>
     <title><s:text name="addbank.title" /></title>
     <script type="text/javascript">
         function addBank() {
@@ -44,13 +44,14 @@
                 <tr class="text-c odd" role="row">
                     <td><s:text name="addbank.bankname" /></td>
                     <td>
-                        <input id="bankName" name="bankName" type="text" placeholder="<s:text name="addbank.bankname" />" class="input-text size-S">
+                        <input id="bankName" name="bankName" type="text" placeholder="<s:text name="addbank.bankname" />"
+                               value="${bankList.NAME}" class="input-text size-S">
                     </td>
                 </tr>
                 <tr class="text-c odd" role="row">
                     <td><s:text name="addbank.enabled" /></td>
-                    <td>
-                        <input id="bankEnabled" name="bankEnabled" type="checkbox" class="check-box size-S">
+                        <input id="bankEnabled" name="bankEnabled" type="checkbox" class="check-box size-S"
+                        value="<s:property test="${bankList.status==true}">true" </s:property> >
                     </td>
                 </tr>
             </table>

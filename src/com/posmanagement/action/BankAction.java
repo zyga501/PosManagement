@@ -4,11 +4,13 @@ import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.utils.UUIDUtils;
 import com.posmanagement.webui.BankUI;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class BankAction extends AjaxActionSupport {
     private final static String BANKMANAGER = "bankManager";
+    private final static String ADDBANK  = "addBank";
 
     private String bankList;
     private String bankName;
@@ -46,6 +48,23 @@ public class BankAction extends AjaxActionSupport {
         }
 
         return AjaxActionComplete(map);
+    }
+
+
+    public String FetchBank() throws Exception {
+        Map map = new HashMap();
+        if (null!=getParameter("UUID")&&(!getParameter("UUID").equals(""))) {
+                Map parametMap = new HashMap();
+                parametMap.put(1, getParameter("UUID"));
+                ArrayList<HashMap<String, Object>> dbRet = PosDbManager.executeSql("select  * from banktb where uuid=?",(HashMap<Integer, Object>) parametMap);
+                if (dbRet.size()>0){
+                        map.put("uuid",getParameter("UUID"));
+                        map.put("name",dbRet.get(0).get("NAME"));
+                        map.put("status",dbRet.get(0).get("STATUS").toString().toLowerCase().equals("enable")?"true":"false");
+                        super.setAttribute("bankproperty",map);
+                    }
+            }
+        return ADDBANK;
     }
 
     public String AddBank() throws Exception {

@@ -8,6 +8,7 @@ import org.apache.struts2.ServletActionContext;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.Map;
 
 interface UserSession
@@ -27,6 +28,11 @@ public abstract class AjaxActionSupport extends ActionSupport implements UserSes
     private final static String AJAXACTIONCOMPLETED = "ajaxActionCompleted";
     private String ajaxActionResult;
     private Map parameterMap;
+    private ArrayList<String> skipAction = new ArrayList<String>() {{
+        add("user!login");
+        add("user!logout");
+        add("auth!generateverifycode");
+        }};
 
     public HttpServletResponse getResponse() {
         return (HttpServletResponse) ActionContext.getContext().get(ServletActionContext.HTTP_RESPONSE);
@@ -79,7 +85,7 @@ public abstract class AjaxActionSupport extends ActionSupport implements UserSes
         // lazyvalidate
         ActionContext context = ActionContext.getContext();
         String actionName = context.getName();
-        if (getUserID().isEmpty() && (!actionName.toLowerCase().equals("user!login")) && (!actionName.toLowerCase().equals("user!logout"))) {
+        if (getUserID().isEmpty() && !skipAction.contains(actionName.toLowerCase())) {
             try {
                 getResponse().sendRedirect(getRequest().getContextPath()+"/login.jsp");
                 throw new Exception();

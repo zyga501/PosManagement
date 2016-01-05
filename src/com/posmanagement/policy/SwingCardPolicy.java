@@ -128,7 +128,7 @@ public class SwingCardPolicy {
             }
         }
 
-        repayList.add(generateLastRepay(remainBillAmount, billInfo, curDate));
+        repayList.add(generateLastRepay(remainBillAmount, billInfo, dateLimit));
 
         return generateSwingList(billInfo, cardInfo, swingCardList, repayList);
     }
@@ -136,9 +136,9 @@ public class SwingCardPolicy {
     private SwingList generateSwingList(BillInfo billInfo, CardInfo cardInfo, ArrayList<SwingCardInfo> swingCardList, ArrayList<RepayInfo> repayList) {
         SwingList swingList = new SwingList();
         swingList.billYear = billInfo.billDate.getYear() + 1900;
-        swingList.billMonth = billInfo.billDate.getMonth();
+        swingList.billMonth = billInfo.billDate.getMonth() + 1;
         swingList.repayYear = billInfo.lastRepayDate.getYear() + 1900;
-        swingList.repayMonth = billInfo.lastRepayDate.getMonth();
+        swingList.repayMonth = billInfo.lastRepayDate.getMonth() + 1;
         swingList.cardNO = cardInfo.cardNO;
         swingList.swingCardList = swingCardList;
         swingList.repayList = repayList;

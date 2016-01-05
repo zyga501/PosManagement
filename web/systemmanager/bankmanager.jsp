@@ -19,9 +19,8 @@
                 type: 2,
                 title: "添加银行",area: ['310px', '220px'],
                 fix: false,
-                content: "./systemmanager/addbank.jsp"
+                content: "Bank!FetchBank"
             });}
-
         function editBank(val) {
             var index = layer.open({
                 type: 2,
@@ -36,16 +35,14 @@
         }
     </script>
 </head>
-<body style="overflow: hidden">
+<body >
 <div align="center">
     <div class="panel panel-default" style="float: left;width: 44%">
-        <div class="panel-header"><s:text name="cardmanager.paneltitle"/><span style="float:right;">
-            <a href="javascript:void(0);" class="btn btn-warning  radius size-S " onclick="editBank()">
-                <s:text name="bankmanager.paneltitle" />
+        <div class="panel-header"><s:text name="bankmanager.paneltitle"/>
             <span style="float:right;" ><a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addBank()"><s:text name="bankmanager.add" /></a></span></div>
         <div class="panel-body" id="parentIframe">
             <form>
-                <div style="height:80%; overflow:auto;">
+                <div >
                     <table class="table table-border table-bordered table-bg table-hover table-sort">
                         <thead>
                         <tr class="text-c">
@@ -54,7 +51,7 @@
                         </tr>
                         </thead>
                         <tbody id="bankList">
-                            <s:property value="bankList" escape="false" />
+                        <s:property value="bankList" escape="false" />
                         </tbody>
                     </table>
                 </div>

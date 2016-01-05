@@ -19,7 +19,11 @@
             $('#Message').html("");
             $.ajax({
                 type: 'post',
+                <% if (null ==request.getAttribute("bankproperty")){%>
                 url: 'Bank!AddBank',
+                <%} else {%>
+                url: 'Bank!EditBank',
+                <%}%>
                 dataType:"json",
                 data:$("form").serialize(),
                 success: function (data) {
@@ -35,38 +39,61 @@
                 }
             })
         }
+        /*  function editBank() {
+         $('#Message').html("");
+         $.ajax({
+         type: 'post',
+         url: 'Bank!EditBank',
+         dataType:"json",
+         data:$("form").serialize(),
+         success: function (data) {
+         var json = eval("(" + data + ")");
+         if (json.errorMessage != null) {
+         $('#Message').html(json.errorMessage);
+         }
+         else {
+         $('.input').val("");
+         $('#Message').html("< s:text name="addbank.addBankSuccess" />");
+         parent.refreshBankList(json.bankList);
+         }
+         }
+         })
+         }*/
     </script>
 </head>
 <body scroll="no">
-    <div>
-        <form class="form form-horizontal">
-            <table class="table table-border table-bordered table-bg table-hover table-sort">
-                <tr class="text-c odd" role="row">
-                    <td><s:text name="addbank.bankname" /></td>
-                    <td>
-                        <input id="bankName" name="bankName" type="text" placeholder="<s:text name="addbank.bankname" />"
-                               value="${bankList.NAME}" class="input-text size-S">
-                    </td>
-                </tr>
-                <tr class="text-c odd" role="row">
-                    <td><s:text name="addbank.enabled" /></td>
-                        <input id="bankEnabled" name="bankEnabled" type="checkbox" class="check-box size-S"
-                        value="<s:property test="${bankList.status==true}">true" </s:property> >
-                    </td>
-                </tr>
-            </table>
-            <div class="row">
-                <div class="formControls col-8 col-offset-3">
-                    <div id="Message" style="color:#ff0000;font-size: 12px;height: 12px">
-                    </div>
+<div>
+    <form class="form form-horizontal">
+        <input id="uuid" name="uuid" type="hidden"
+               value="${bankproperty.uuid}" >
+        <table class="table table-border table-bordered table-bg table-hover table-sort">
+            <tr class="text-c odd" role="row">
+                <td><s:text name="addbank.bankname" /></td>
+                <td>
+                    <input id="bankName" name="bankName" type="text" placeholder="<s:text name="addbank.bankname" />"
+                           value="${bankproperty.name}" class="input-text size-S">
+                </td>
+            </tr>
+            <tr class="text-c odd" role="row">
+                <td><s:text name="addbank.enabled" /></td>
+                <td>
+                    <input id="bankEnabled" name="bankEnabled" type="checkbox" class="check-box size-S"
+                    ${bankproperty.status} >
+                </td>
+            </tr>
+        </table>
+        <div class="row">
+            <div class="formControls col-8 col-offset-3">
+                <div id="Message" style="color:#ff0000;font-size: 12px;height: 12px">
                 </div>
             </div>
-            <div class="row">
-                <div class="formControls col-8 col-offset-3" align="center">
-                    <input type="button" class="btn btn-success radius size-M" value="<s:text name="addbank.submit" />" onclick="addBank()">
-                </div>
+        </div>
+        <div class="row">
+            <div class="formControls col-8 col-offset-3" align="center">
+                <input type="button" class="btn btn-success radius size-M" value="<s:text name="addbank.submit" />" onclick="addBank()">
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
+</div>
 </body>
 </html>

@@ -60,11 +60,27 @@ public class BankAction extends AjaxActionSupport {
                 if (dbRet.size()>0){
                         map.put("uuid",getParameter("UUID"));
                         map.put("name",dbRet.get(0).get("NAME"));
-                        map.put("status",dbRet.get(0).get("STATUS").toString().toLowerCase().equals("enable")?"true":"false");
+                        map.put("status",dbRet.get(0).get("STATUS").toString().toLowerCase().equals("enable")?"checked":"");
                         super.setAttribute("bankproperty",map);
                     }
             }
         return ADDBANK;
+    }
+
+    public String EditBank() throws Exception {
+        Map map = new HashMap();
+        if (bankName.length() == 0) {
+            map.put("errorMessage", getText("addbank.BankNameError"));
+        }
+        else {
+            Map parametMap = new HashMap();
+            parametMap.put(1, bankEnabled!=null?"enable":"disable");
+            parametMap.put(2, getParameter("uuid"));
+            PosDbManager.executeUpdate("update banktb set  status=? where uuid=? ", (HashMap<Integer, Object>) parametMap);
+            map.put("bankList", new BankUI().generateBankTable());
+        }
+
+        return AjaxActionComplete(map);
     }
 
     public String AddBank() throws Exception {

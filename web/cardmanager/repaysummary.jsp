@@ -30,6 +30,7 @@
 <body style="overflow: hidden">
 <div align="center">
     <div class="panel panel-default" >
+        <div class="panel-header"><s:text name="repaysummary.paneltitle" /></div>
         <div class="panel-body" id="parentIframe">
             <form>
                 <div style="height:100%; overflow:auto;">

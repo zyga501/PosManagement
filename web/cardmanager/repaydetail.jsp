@@ -15,31 +15,6 @@
     <link href="<%=request.getContextPath()%>/skin/default/skin.css" rel="stylesheet" type="text/css" id="skin"/>
     <title></title>
     <script type="text/javascript">
-        function  changestatus(){
-            var repayid="";
-            var repayidno="";
-            $("input[type='checkbox']:checkbox").each(function(){
-                if($(this).prop("checked")){
-                    repayid +="'"+ $(this).val()+"',"
-                }
-                else {
-                    repayidno +="'"+ $(this).val()+"',"
-                }
-            })
-            $.ajax({
-                type: 'post',
-                url: 'Repay!enableDetail',
-                data: {repayIdList:repayid,repayIdNOList:repayidno},
-                success: function (data) {
-                    var json = eval("(" + data + ")");
-                    if (json.successMessage) {
-                        layer.msg(json.successMessage);
-                    }
-                    else if (json.errorMessage)
-                        layer.msg(json.errorMessage);
-                }
-            });
-        }
         function clickrepay(button, repayid) {
             var val = button.value;
             if (val == "N") {
@@ -73,9 +48,7 @@
 <body style="overflow: hidden">
 <div align="center">
     <div class="panel panel-default" >
-        <div class="panel-header"><s:text name="repaydetail.paneltitle"/><span style="float:right;">
-            <a href="javascript:void(0);" class="btn btn-warning  radius size-S " onclick="changestatus()">
-                <s:text name="global.edit"/></a></span></div>
+        <div class="panel-header"><s:text name="repaydetail.paneltitle"/></div>
         <div class="panel-body" id="parentIframe">
             <form>
                 <div style="height:auto; overflow:auto;">

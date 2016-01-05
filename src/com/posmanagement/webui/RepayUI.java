@@ -30,16 +30,16 @@ public class RepayUI {
                                         .addAttribute("value", "查看明细")
                                         .addAttribute("class", "btn radius")
                                         .addAttribute("onclick", "clickDetail('" + dbRet.get(index).get("CARDNO") +
-                                                "','" + dbRet.get(index).get("BILLYEAR") +
-                                                "','" + dbRet.get(index).get("BILLMONTH") + "')")
+                                                "','" + dbRet.get(index).get("REPAYYEAR") +
+                                                "','" + dbRet.get(index).get("REPAYMONTH") + "')")
                                 )
                     );
         }
         return htmlString;
     }
 
-    public String generateDetail() throws Exception {
-        ArrayList<HashMap<String, Object>> dbRet = fetchRepayDetail();
+    public String generateDetail(String cardNO, String repayYear, String repayMonth) throws Exception {
+        ArrayList<HashMap<String, Object>> dbRet = fetchRepayDetail(cardNO, repayYear, repayMonth);
         if (dbRet.size() <= 0)
             return new String("");
 
@@ -102,11 +102,11 @@ public class RepayUI {
                 "repaytb.thedate ASC");
     }
 
-    private ArrayList<HashMap<String, Object>> fetchRepayDetail() throws Exception {
-        String whereSql = "";
+    private ArrayList<HashMap<String, Object>> fetchRepayDetail(String cardNO, String repayYear, String repayMonth) throws Exception {
+        String whereSql = "where repaytb.cardno='" + cardNO + "' and repayyear='" + repayYear + "' and repaymonth='"+ repayMonth + "' ";
         if (null != userID_ && userID_.length() != 0)
-            whereSql += "where cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
-                    " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"') ";
+            whereSql += " and (cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
+                    " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"')) ";
 
         return PosDbManager.executeSql("SELECT repaytb.id," +
                 "repaytb.repayyear, " +

@@ -38,8 +38,8 @@ public class SwingCardUI {
         return htmlString;
     }
 
-    public String generateDetail() throws Exception {
-        ArrayList<HashMap<String, Object>> dbRet = fetchSwingCardDetail();
+    public String generateDetail(String cardNO, String billYear, String billMonth) throws Exception {
+        ArrayList<HashMap<String, Object>> dbRet = fetchSwingCardDetail(cardNO, billYear, billMonth);
         if (dbRet.size() <= 0)
             return new String("");
 
@@ -77,7 +77,10 @@ public class SwingCardUI {
     }
 
     private ArrayList<HashMap<String, Object>> fetchSwingCardSummary() throws Exception {
-        if (null==userID_ || userID_.equals(""))
+        String whereSql = "";
+        if (null != userID_ && userID_.length() != 0)
+            whereSql = "where cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
+                    " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"') ";
         return PosDbManager.executeSql("SELECT " +
                 "swingcard.billyear, " +
                 "swingcard.billmonth, " +
@@ -88,56 +91,21 @@ public class SwingCardUI {
                 "FROM " +
                 "swingcard " +
                 "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno " +
+                whereSql +
                 "GROUP BY " +
                 "swingcard.billyear, " +
                 "swingcard.billmonth, " +
-                "swingcard.cardno " +
-                "ORDER BY " +
+                "swingcard.cardno  ORDER BY " +
                 "swingcard.billyear ASC, " +
                 "swingcard.billmonth ASC");
-        else
-            return PosDbManager.executeSql("SELECT " +
-                    "swingcard.billyear, " +
-                    "swingcard.billmonth, " +
-                    "swingcard.cardno, " +
-                    "swingcard.VALIDSTATUS, " +
-                    "Sum(swingcard.amount) AS amount, " +
-                    "cardtb.cardmaster " +
-                    "FROM " +
-                    "swingcard " +
-                    "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno " +
-                    "where cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
-                    " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"') " +
-                    "GROUP BY " +
-                    "swingcard.billyear, " +
-                    "swingcard.billmonth, " +
-                    "swingcard.cardno  ORDER BY " +
-                    "swingcard.billyear ASC, " +
-                    "swingcard.billmonth ASC");
     }
 
-    private ArrayList<HashMap<String, Object>> fetchSwingCardDetail() throws Exception {
-        if (null==userID_ || userID_.equals(""))
-        return PosDbManager.executeSql("SELECT swingcard.id," +
-                "swingcard.billyear, " +
-                "swingcard.billmonth, " +
-                "swingcard.cardno, " +
-                "cardtb.cardmaster, " +
-                "swingcard.amount, " +
-                "swingcard.sdatetm, " +
-                "postb.posname, " +
-                "swingcard.userid, " +
-                "userinfo.unick, " +
-                "swingcard.realsdatetm, " +
-                "swingcard.validstatus, " +
-                "swingcard.SWINGSTATUS " +
-                "FROM " +
-                "swingcard " +
-                "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno " +
-                "INNER JOIN postb ON postb.uuid = swingcard.posuuid " +
-                "left JOIN userinfo ON userinfo.uid = swingcard.userid " +
-                "ORDER BY swingcard.sdatetm");
-        else
+    private ArrayList<HashMap<String, Object>> fetchSwingCardDetail(String cardNO, String billYear, String billMonth) throws Exception {
+        String whereSql = "where swingcard.cardno='" + cardNO + "' and billyear='" + billYear + "' and billmonth='"+ billMonth + "' ";
+        if (null != userID_ && userID_.length() != 0)
+            whereSql = "and (cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
+                    " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"')) ";
+
             return PosDbManager.executeSql("SELECT swingcard.id," +
                     "swingcard.billyear, " +
                     "swingcard.billmonth, " +
@@ -156,8 +124,7 @@ public class SwingCardUI {
                     "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno " +
                     "INNER JOIN postb ON postb.uuid = swingcard.posuuid  " +
                     "left JOIN userinfo ON userinfo.uid = swingcard.userid " +
-                    "where cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
-                    " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"') " +
+                    whereSql +
                     "ORDER BY swingcard.sdatetm");
     }
 

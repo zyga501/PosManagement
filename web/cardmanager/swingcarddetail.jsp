@@ -73,9 +73,7 @@
 <body >
 <div align="center">
     <div class="panel panel-default" >
-        <div class="panel-header"><s:text name="swingcarddetail.paneltitle"/><span style="float:right;">
-            <a href="javascript:void(0);" class="btn btn-warning  radius size-S " onclick="changestatus()">
-                <s:text name="global.edit"/></a></span></div>
+        <div class="panel-header"><s:text name="swingcarddetail.paneltitle"/></div>
         <div class="panel-body" id="parentIframe">
             <form>
                 <div style="height:auto; overflow:auto;">

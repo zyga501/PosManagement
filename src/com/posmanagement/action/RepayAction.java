@@ -31,9 +31,9 @@ public class RepayAction extends AjaxActionSupport {
 
     public String InitDetail() throws Exception {
         if (super.getUserName().equals("admin"))
-            repayDetail = new RepayUI("").generateDetail();
+            repayDetail = new RepayUI("").generateDetail(getParameter("CardNO").toString(), getParameter("repayYear").toString(), getParameter("repayMonth").toString());
         else
-            repayDetail = new RepayUI(super.getUserID()).generateDetail();
+            repayDetail = new RepayUI(super.getUserID()).generateDetail(getParameter("CardNO").toString(), getParameter("repayYear").toString(), getParameter("repayMonth").toString());
         return REPAYDETAIL;
     }
 

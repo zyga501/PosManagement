@@ -31,9 +31,9 @@ public class SwingCardAction extends AjaxActionSupport {
 
     public String InitDetail() throws Exception {
         if (super.getUserName().equals("admin"))
-            swingCardDetail = new SwingCardUI("").generateDetail();
+            swingCardDetail = new SwingCardUI("").generateDetail(getParameter("CardNO").toString(), getParameter("billYear").toString(), getParameter("billMonth").toString());
         else
-            swingCardDetail = new SwingCardUI(super.getUserID()).generateDetail();
+            swingCardDetail = new SwingCardUI(super.getUserID()).generateDetail(getParameter("CardNO").toString(), getParameter("billYear").toString(), getParameter("billMonth").toString());
         return SWINGCARDDETAIL;
     }
 

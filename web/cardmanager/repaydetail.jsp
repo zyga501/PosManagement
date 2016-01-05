@@ -16,20 +16,20 @@
     <title></title>
     <script type="text/javascript">
         function  changestatus(){
-            var swingid="";
-            var swingidno="";
+            var repayid="";
+            var repayidno="";
             $("input[type='checkbox']:checkbox").each(function(){
                 if($(this).prop("checked")){
-                    swingid +="'"+ $(this).val()+"',"
+                    repayid +="'"+ $(this).val()+"',"
                 }
                 else {
-                    swingidno +="'"+ $(this).val()+"',"
+                    repayidno +="'"+ $(this).val()+"',"
                 }
             })
             $.ajax({
                 type: 'post',
-                url: 'SwingCard!enableDetail',
-                data: {swingIdList:swingid,swingIdNOList:swingidno},
+                url: 'Repay!enableDetail',
+                data: {repayIdList:repayid,repayIdNOList:repayidno},
                 success: function (data) {
                     var json = eval("(" + data + ")");
                     if (json.successMessage) {
@@ -40,7 +40,7 @@
                 }
             });
         }
-        function clickswing(button, swingid) {
+        function clickrepay(button, repayid) {
             var val = button.value;
             if (val == "N") {
                 layer.confirm('确定启用？', {
@@ -51,8 +51,8 @@
                     layer.msg('你选择了YES', {icon: 1});
                     $.ajax({
                         type: 'post',
-                        url: 'SwingCard!editDetail',
-                        data: {status:"enable" , swingId:swingid},
+                        url: 'Repay!editDetail',
+                        data: {status:"enable" , repayId:repayid},
                         success: function (data) {
                             var json = eval("(" + data + ")");
                             if (json.successMessage) {
@@ -73,7 +73,7 @@
 <body style="overflow: hidden">
 <div align="center">
     <div class="panel panel-default" >
-        <div class="panel-header"><s:text name="swingcarddetail.paneltitle"/><span style="float:right;">
+        <div class="panel-header"><s:text name="repaydetail.paneltitle"/><span style="float:right;">
             <a href="javascript:void(0);" class="btn btn-warning  radius size-S " onclick="changestatus()">
                 <s:text name="global.edit"/></a></span></div>
         <div class="panel-body" id="parentIframe">

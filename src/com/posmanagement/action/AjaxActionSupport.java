@@ -19,6 +19,13 @@ public abstract class AjaxActionSupport extends ActionSupport {
         // lazyvalidate
         ActionContext context = ActionContext.getContext();
         String actionName = context.getName();
+        if ((null == ServletActionContext.getRequest().getSession().getAttribute("userID"))&&(!actionName.toLowerCase().equals("user!login")))
+            try {
+                ServletActionContext.getResponse().sendRedirect(ServletActionContext.getRequest().getContextPath()+"/login.jsp");
+                throw new Exception();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         parameterMap = context.getParameters();
     }
 

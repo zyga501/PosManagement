@@ -70,7 +70,7 @@ public class RepayUI {
                             .addAttribute("title" ,StringUtils.convertNullableString(dbRet.get(index).get("TRADESTATUS")).equals("enable")?"已刷":"未刷")
                             .addAttribute("datav", StringUtils.convertNullableString(dbRet.get(index).get("ID")))
                             .addAttribute("value" ,StringUtils.convertNullableString(dbRet.get(index).get("TRADESTATUS")).equals("enable")?"Y":"N")
-                            .addAttribute("onclick", "clickswing(this,'" + StringUtils.convertNullableString(dbRet.get(index).get("ID")) + "')")));
+                            .addAttribute("onclick", "clickrepay(this,'" + StringUtils.convertNullableString(dbRet.get(index).get("ID")) + "')")));
         }
         return htmlString;
     }
@@ -81,24 +81,24 @@ public class RepayUI {
             whereSql += "where cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
                     " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"') ";
 
-        return PosDbManager.executeSql("SELECT\n" +
-                "repaytb.repayyear,\n" +
-                "repaytb.repaymonth,\n" +
-                "repaytb.thedate,\n" +
-                "cardtb.cardno,\n" +
-                "cardtb.cardmaster,\n" +
-                "SUM(repaytb.trademoney) trademoney\n" +
-                "FROM\n" +
-                "repaytb\n" +
-                "INNER JOIN cardtb ON cardtb.cardno = repaytb.cardno\n" +
+        return PosDbManager.executeSql("SELECT " +
+                "repaytb.repayyear, " +
+                "repaytb.repaymonth, " +
+                "repaytb.thedate, " +
+                "cardtb.cardno, " +
+                "cardtb.cardmaster, " +
+                "SUM(repaytb.trademoney) trademoney " +
+                "FROM " +
+                "repaytb " +
+                "INNER JOIN cardtb ON cardtb.cardno = repaytb.cardno " +
                 whereSql +
-                "GROUP BY\n" +
-                "repaytb.repayyear,\n" +
-                "repaytb.repaymonth,\n" +
-                "repaytb.cardno\n" +
-                "ORDER BY\n" +
-                "repaytb.repayyear ASC,\n" +
-                "repaytb.repaymonth ASC,\n" +
+                "GROUP BY " +
+                "repaytb.repayyear, " +
+                "repaytb.repaymonth, " +
+                "repaytb.cardno " +
+                "ORDER BY " +
+                "repaytb.repayyear ASC, " +
+                "repaytb.repaymonth ASC, " +
                 "repaytb.thedate ASC");
     }
 

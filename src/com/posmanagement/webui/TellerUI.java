@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TellerUI {
+public class TellerUI extends WebUI {
     public String generateTable(String salemanID, boolean unassigned) throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchTellerList(salemanID, unassigned);
         if (dbRet.size() <= 0)

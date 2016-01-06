@@ -5,7 +5,7 @@ import com.posmanagement.utils.PosDbManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class BankUI {
+public class BankUI extends WebUI {
     public String generateBankTable() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchBankList();
         if (dbRet.size() <= 0)
@@ -18,12 +18,7 @@ public class BankUI {
                     .addAttribute("role", "row")
                     .addAttribute("value", dbRet.get(index).get("UUID").toString())
                     .addElement("td", dbRet.get(index).get("NAME").toString())
-                    .addElement(new UIContainer("td")
-                            .addElement(
-                                    new UIContainer("input")
-                                            .addAttribute("type", "checkbox")
-                                            .addAttribute("checked", "checked", dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0)
-                            )
+                    .addElement("td", getText(dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0 ? "global.enable" : "global.disable")
                     );
         }
         return htmlString;

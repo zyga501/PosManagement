@@ -5,7 +5,7 @@ import com.posmanagement.utils.PosDbManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class RuleUI {
+public class RuleUI extends WebUI {
     public String generateHTMLString() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchRuleList();
         if (dbRet.size() <= 0)
@@ -26,12 +26,7 @@ public class RuleUI {
                             .addElement("td", dbRet.get(index).get("MCC").toString())
                             .addElement("td", dbRet.get(index).get("RULEUSEFRE").toString())
                             .addElement("td", dbRet.get(index).get("RULEUSEINTERVAL").toString())
-                            .addElement(new UIContainer("td")
-                                        .addElement(
-                                                new UIContainer("input")
-                                                .addAttribute("type", "checkbox")
-                                                .addAttribute("checked", "checked", dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0)
-                                        )
+                            .addElement("td", getText(dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0 ? "global.enable" : "global.disable")
                             );
         }
         return htmlString;

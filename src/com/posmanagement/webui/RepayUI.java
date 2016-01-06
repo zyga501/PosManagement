@@ -6,7 +6,7 @@ import com.posmanagement.utils.StringUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class RepayUI {
+public class RepayUI extends WebUI {
     public RepayUI(String uid){userID_=uid;}
     public String generateSummary() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchRepaySummary();

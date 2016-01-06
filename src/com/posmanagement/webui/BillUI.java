@@ -6,7 +6,7 @@ import com.posmanagement.utils.StringUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class BillUI {
+public class BillUI extends WebUI {
     public BillUI(String userID){userID_=userID;}
     public String generateBillTable() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchBillList();

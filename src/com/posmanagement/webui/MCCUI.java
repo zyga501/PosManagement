@@ -5,7 +5,7 @@ import com.posmanagement.utils.PosDbManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MCCUI {
+public class MCCUI extends WebUI {
     public String generateMCCTable() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchMCCList();
         if (dbRet.size() <= 0)
@@ -17,12 +17,7 @@ public class MCCUI {
                     .addAttribute("class", "text-c odd")
                     .addAttribute("role", "row")
                     .addElement("td", dbRet.get(index).get("MCC").toString())
-                    .addElement(new UIContainer("td")
-                                    .addElement(
-                                    new UIContainer("input")
-                                            .addAttribute("type", "checkbox")
-                                            .addAttribute("checked", "checked", dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0)
-                                    )
+                    .addElement("td", getText(dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0 ? "global.enable" : "global.disable")
                     );
         }
         return htmlString;

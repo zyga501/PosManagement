@@ -47,7 +47,7 @@
                         <thead>
                         <tr class="text-c">
                             <th width="80"><s:text name="bankmanager.bankname" /></th>
-                            <th width="80"><s:text name="bankmanager.enabled" /></th>
+                            <th width="80"><s:text name="global.status" /></th>
                         </tr>
                         </thead>
                         <tbody id="bankList">

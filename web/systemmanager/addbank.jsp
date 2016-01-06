@@ -75,7 +75,7 @@
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
-                <td><s:text name="addbank.enabled" /></td>
+                <td><s:text name="global.status" /></td>
                 <td>
                     <input id="bankEnabled" name="bankEnabled" type="checkbox" class="check-box size-S"
                     ${bankproperty.status} >

@@ -48,7 +48,7 @@
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
-                <td><s:text name="addmcc.enabled" /></td>
+                <td><s:text name="global.status" /></td>
                 <td>
                     <input id="mccEnabled" name="mccEnabled" type="checkbox" class="check-box size-S">
                 </td>

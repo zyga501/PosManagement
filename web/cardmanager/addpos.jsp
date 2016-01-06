@@ -210,7 +210,7 @@
                     <td><s:text name="posmanager.useamount"/></td><td><input name="useamount" type="text"  value="<s:property value="posManager.useamount"/>" placeholder="<s:text name="posmanager.useamount" />" class="input-text size-S"></td>
                 </tr>
                 <tr class="text-c">
-                    <td><s:text name="posmanager.status"/></td><td><input name="status" type="checkbox"  <s:if  test="posManager.status =='enable'">checked</s:if><s:else></s:else> > </td>
+                    <td><s:text name="global.status"/></td><td><input name="status" type="checkbox"  <s:if  test="posManager.status =='enable'">checked</s:if><s:else></s:else> > </td>
                 </tr>
                 <tr class="text-c">
                     <td><s:text name="posmanager.salesman"/></td><td>

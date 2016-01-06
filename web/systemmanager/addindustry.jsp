@@ -48,7 +48,7 @@
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
-                <td><s:text name="addindustry.enabled" /></td>
+                <td><s:text name="global.status" /></td>
                 <td>
                     <input id="industryEnabled" name="industryEnabled" type="checkbox" class="check-box size-S">
                 </td>

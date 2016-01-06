@@ -48,7 +48,7 @@
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
-                <td><s:text name="addposserver.enabled" /></td>
+                <td><s:text name="global.status" /></td>
                 <td>
                     <input id="posServerEnabled" name="posServerEnabled" type="checkbox" class="check-box size-S">
                 </td>

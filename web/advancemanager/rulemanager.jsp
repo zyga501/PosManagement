@@ -46,7 +46,7 @@
                             <th><s:text name="rulemanager.mcc" /></th>
                             <th><s:text name="rulemanager.ruleusefre" /></th>
                             <th><s:text name="rulemanager.ruleuseinterval" /></th>
-                            <th><s:text name="rulemanager.status" /></th>
+                            <th><s:text name="global.status" /></th>
                         </tr>
                         </thead>
                         <tbody id="ruleList">

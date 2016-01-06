@@ -235,7 +235,7 @@
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
-                <td><s:text name="addrule.status" /></td>
+                <td><s:text name="global.status" /></td>
                 <td>
                     <input id="status" name="status" type="checkbox" class="check-box size-S">
                 </td>

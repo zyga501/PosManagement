@@ -37,7 +37,7 @@
                         <thead>
                         <tr class="text-c">
                             <th width="80"><s:text name="ratemanager.rate" /></th>
-                            <th width="80"><s:text name="ratemanager.enabled" /></th>
+                            <th width="80"><s:text name="global.status" /></th>
                         </tr>
                         </thead>
                         <tbody id="rateList">

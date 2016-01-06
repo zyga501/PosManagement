@@ -48,10 +48,10 @@ public class BillUI {
 
     private ArrayList<HashMap<String, Object>> fetchBillList() throws Exception {
         if (null==userID_ || userID_.equals(""))
-            return PosDbManager.executeSql("select billtb.*,banktb.name bankname from billtb inner join banktb on banktb.uuid=billtb.bankuuid");
+            return PosDbManager.executeSql("select billtb.*,banktb.name bankname from billtb inner join banktb on banktb.uuid=billtb.bankuuid  order by billtb.BILLDATE desc");
         else
             return PosDbManager.executeSql("select billtb.*,banktb.name bankname from billtb inner join banktb on " +
-                    "banktb.uuid=billtb.bankuuid inner join  cardtb on cardtb.cardno=billtb.cardno where  cardtb.salesmanuuid='"+userID_+"'");
+                    "banktb.uuid=billtb.bankuuid inner join  cardtb on cardtb.cardno=billtb.cardno where  cardtb.salesmanuuid='"+userID_+"' order by billtb.BILLDATE desc");
     }
 
     private String userID_; // TODO for role

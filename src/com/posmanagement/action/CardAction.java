@@ -135,7 +135,7 @@ public class CardAction extends AjaxActionSupport {
                 String[] strary=(new String("cardno,bankname,creditamount,tempamount,templimitdate," +
                         "useamount,billdate,pin,telpwd,tradepwd,enchashmentpwd,billafterdate,lastrepaymentdate," +
                         "billemail,status,commissioncharge,cardmaster,identityno,cmaddress,cmtel,cmseccontact," +
-                        "memos")).split(",");
+                        "memos,repaylimit,repaynum,repayinterval")).split(",");
                 for (String key : strary) {
                     System.out.print("'"+((String[])cardmanager.get(key))[0]+"',");
                     para.put(i++,((String[])cardmanager.get(key))[0] );
@@ -144,7 +144,7 @@ public class CardAction extends AjaxActionSupport {
                 if (!PosDbManager.executeUpdate("update cardtb set cardno=?,bankuuid=?,creditamount=?," +
                         "tempamount=?,templimitdate=?,useamount=?,billdate=?,pin=?,telpwd=?,tradepwd=?,enchashmentpwd=?," +
                         "billafterdate=?,lastrepaymentdate=?,billemail=?,status=?,commissioncharge=?,cardmaster=?,identityno=?,"+
-                        "cmaddress=?,cmtel=?,cmseccontact=?,memos=?  where cardno=?",(HashMap<Integer, Object>)  para))
+                        "cmaddress=?,cmtel=?,cmseccontact=?,memos=?,repaylimit=?,repaynum=?,repayinterval=?  where cardno=?",(HashMap<Integer, Object>)  para))
                     map.put("errorMessage", getText("addrate.rateFormatError"));
                 else{
                     if (super.getUserName().equals("admin"))

@@ -32,6 +32,7 @@
         }
         function refreshBankList(bankList) {
             $('#bankList').html(bankList);
+            init();
         }
     </script>
 </head>
@@ -64,12 +65,14 @@
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.admin.js"></script>
 <script type="text/javascript" >
-    $().ready( function(){
-                $("tr").click(function() {alert($(this).attr("value"));
-                    editBank($(this).attr("value"));
-                })
-            }
+    $().ready(
+            init()
     )
+    function init(){
+        $("tr").click(function() {
+            editBank($(this).attr("value"));
+        })
+    }
 </script>
 </body>
 </html>

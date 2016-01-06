@@ -44,6 +44,7 @@ public class SwingCardPolicy {
         public double maxSwingMoney;
         public String industryUUID;
         public String rateUUID;
+        public String mccUUID;
         public int ruleUseFre;
         public double ruleUseInterval;
         public double ruleCoolDown;
@@ -282,6 +283,7 @@ public class SwingCardPolicy {
                 "ruletb.maxswingmoney,\n" +
                 "ruletb.industryuuid,\n" +
                 "ruletb.rateuuid,\n" +
+                "ruletb.mccuuid,\n" +
                 "ruletb.ruleusefre,\n" +
                 "ruletb.ruleuseinterval\n" +
                 "FROM\n" +
@@ -306,6 +308,7 @@ public class SwingCardPolicy {
                 ruleInfo.minSwingMoney = Double.parseDouble(sqlRuleInfo.get("MINSWINGMONEY").toString());
                 ruleInfo.maxSwingMoney = Double.parseDouble(sqlRuleInfo.get("MAXSWINGMONEY").toString());
                 ruleInfo.rateUUID = sqlRuleInfo.get("RATEUUID").toString();
+                ruleInfo.mccUUID = sqlRuleInfo.get("MCCUUID").toString();
                 ruleInfo.ruleUseFre = Integer.parseInt(sqlRuleInfo.get("RULEUSEFRE").toString());
                 ruleInfo.ruleUseInterval = Double.parseDouble(sqlRuleInfo.get("RULEUSEINTERVAL").toString());
                 ruleInfo.ruleCoolDown = 0.0;
@@ -336,7 +339,9 @@ public class SwingCardPolicy {
         return (ArrayList<HashMap<String, Object>>)PosDbManager.executeSql("select * from postb where " +
                 "industryuuid='" + ruleInfo.industryUUID +
                 "' and posserveruuid='" + ruleInfo.posServerUUID +
-                "' and rateuuid='" + ruleInfo.rateUUID + "'");
+                "' and rateuuid='" + ruleInfo.rateUUID +
+                "' and mccuuid='" + ruleInfo.mccUUID +
+                "'");
     }
 
     private String salemanID;

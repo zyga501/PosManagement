@@ -36,13 +36,14 @@
                     <table class="table table-border table-bordered table-bg table-hover table-sort">
                         <thead>
                         <tr class="text-c">
-                            <th><s:text name="rulemanager.ruleno" /></th>
                             <th><s:text name="rulemanager.bankname" /></th>
                             <th><s:text name="rulemanager.posserver" /></th>
                             <th><s:text name="rulemanager.swingtime" /></th>
                             <th><s:text name="rulemanager.minswingmoney" /></th>
                             <th><s:text name="rulemanager.maxswingmoney" /></th>
                             <th><s:text name="rulemanager.industryname" /></th>
+                            <th><s:text name="rulemanager.rate" /></th>
+                            <th><s:text name="rulemanager.mcc" /></th>
                             <th><s:text name="rulemanager.ruleusefre" /></th>
                             <th><s:text name="rulemanager.ruleuseinterval" /></th>
                             <th><s:text name="rulemanager.status" /></th>

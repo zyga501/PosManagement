@@ -172,7 +172,7 @@
                     <input id="industryInterval" name="industryInterval" type="text" placeholder="<s:text name="addrule.industryinterval" />" class="input-text size-S">
                 </td>
             </tr>
-            <tr class="text-c odd" role="row" style="display: none">
+            <tr class="text-c odd" role="row">
                 <td><s:text name="addrule.rate" /></td>
                 <td>
                     <select id="rateUUID" name="rateUUID">
@@ -191,7 +191,7 @@
                     <input id="rateInterval" name="rateInterval" type="text" placeholder="<s:text name="addrule.rateinterval" />" class="input-text size-S">
                 </td>
             </tr>
-            <tr class="text-c odd" role="row" style="display: none">
+            <tr class="text-c odd" role="row">
                 <td><s:text name="addrule.mcc" /></td>
                 <td>
                     <select id="mccUUID" name="mccUUID">

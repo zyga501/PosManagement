@@ -103,7 +103,7 @@ public class SwingCardUI extends WebUI {
     private ArrayList<HashMap<String, Object>> fetchSwingCardDetail(String cardNO, String billYear, String billMonth) throws Exception {
         String whereSql = "where swingcard.cardno='" + cardNO + "' and billyear='" + billYear + "' and billmonth='"+ billMonth + "' ";
         if (null != userID_ && userID_.length() != 0)
-            whereSql = "and (cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
+            whereSql += "and (cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
                     " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"')) ";
 
             return PosDbManager.executeSql("SELECT swingcard.id," +

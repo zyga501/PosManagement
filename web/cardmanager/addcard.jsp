@@ -119,6 +119,7 @@
         $(function () {
             fetchBankList();
             fetchSalemanList();
+            $("#sfqy").val("<s:property value="cardmanager.status"/>");
         })
     </script>
 </head>
@@ -155,7 +156,12 @@
                     <td><s:text name="cardmanager.billemail"/></td><td><input id=billemail name=cardmanager.billemail type="text" value="<s:property value="cardmanager.billemail"/>" placeholder="<s:text name="cardmanager.billemail"/>" class="input-text size-S"></td>
                 </tr>
                 <tr class="text-c">
-                    <td><s:text name="cardmanager.status"/></td><td><input id=sfqy name=cardmanager.status type="text" value="<s:property value="cardmanager.status"/>" placeholder="<s:text name="cardmanager.status"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.status"/></td>
+                    <td><select id=sfqy name=cardmanager.status style="width:100%" >
+                        <option value="disable">禁用</option>
+                        <option value="enable">开启</option>
+                        </select>
+                    </td>
                     <td><s:text name="cardmanager.commissioncharge"/></td><td><input id=commissioncharge name=cardmanager.commissioncharge type="text" value="<s:property value="cardmanager.commissioncharge"/>" placeholder="<s:text name="cardmanager.commissioncharge"/>" class="input-text size-S"></td>
                     <td><s:text name="cardmanager.cardmaster"/></td><td><input id=cardmaster name=cardmanager.cardmaster type="text" value="<s:property value="cardmanager.cardmaster"/>" placeholder="<s:text name="cardmanager.cardmaster"/>" class="input-text size-S"></td>
                     <td><s:text name="cardmanager.identityno"/></td><td><input id=identityno name=cardmanager.identityno type="text" value="<s:property value="cardmanager.identityno"/>" placeholder="<s:text name="cardmanager.identityno"/>" class="input-text size-S"></td>
@@ -169,6 +175,11 @@
                         <select id="salesman" name="cardmanager.salesman" style="width: 100%">
                         </select>
                     </td>
+                </tr>
+                <tr class="text-c">
+                    <td><s:text name="cardmanager.repaylimit"/></td><td><input id=repaylimit name=cardmanager.repaylimit type="text" value="<s:property value="cardmanager.repaylimit"/>" placeholder="<s:text name="cardmanager.repaylimit"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.repaynum"/></td><td><input id=repaynum name=cardmanager.repaynum type="text" value="<s:property value="cardmanager.repaynum"/>" placeholder="<s:text name="cardmanager.repaynum"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.repayinterval"/></td><td><input id=repayinterval name=cardmanager.repayinterval type="text" value="<s:property value="cardmanager.repayinterval"/>" placeholder="<s:text name="cardmanager.repayinterval"/>" class="input-text size-S"></td>
                 </tr>
                 <tr class="text-c">
                     <td><s:text name="cardmanager.memos"/></td>

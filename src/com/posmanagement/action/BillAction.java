@@ -77,19 +77,44 @@ public class BillAction extends AjaxActionSupport {
             billList = new BillUI(super.getUserID()).generateBillTable();
         return BILLMANAGER;
     }
+    public String modifyBill() {
+        Map map = new HashMap();
+        Map para = new HashMap();
+        String sqlString = "";
+        try {
+            if (null != billamount) {
+                Float.parseFloat(billamount);
+                para.put(1, billamount);
+                para.put(2,billNO);
+                sqlString = "update billtb set billamount=? where UUID=?";
+            } else {
+                return "";
+            }
+            if (PosDbManager.executeUpdate(sqlString,(HashMap<Integer, Object>)para))
+                map.put("successMessage",getText("BillAction.InfoSuccess") );
+        }
+        catch (Exception e) {
+            map.put("errorMessage", getText("BillAction.InfoError"));
+            e.printStackTrace();
+            return AjaxActionComplete(map);
+        }
+        return AjaxActionComplete(map);
+    }
 
-    public String editBill(){
+
+        public String editBill(){
 
         Map map = new HashMap();
         Map para = new HashMap();
         String sqlString="";
         try {
-            if (null != billamount ) {
-            Float.parseFloat(billamount);
-            para.put(1,billamount);
-            sqlString="update billtb set billamount=? where UUID=?";
-        }
-        else if (null != status ){
+//            if (null != billamount ) {
+//            Float.parseFloat(billamount);
+//            para.put(1,billamount);
+//            sqlString="update billtb set billamount=? where UUID=?";
+//        }
+//        else
+            if (null != status ){
             para.put(1,status);
             sqlString="update billtb set status=? where UUID=?";
         }

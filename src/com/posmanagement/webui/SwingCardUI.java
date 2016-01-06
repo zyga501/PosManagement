@@ -79,7 +79,7 @@ public class SwingCardUI {
     private ArrayList<HashMap<String, Object>> fetchSwingCardSummary() throws Exception {
         String whereSql = "";
         if (null != userID_ && userID_.length() != 0)
-            whereSql = "where cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
+            whereSql += "where cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
                     " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"') ";
         return PosDbManager.executeSql("SELECT " +
                 "swingcard.billyear, " +

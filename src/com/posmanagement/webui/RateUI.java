@@ -17,6 +17,7 @@ public class RateUI extends WebUI {
                     .addAttribute("class", "text-c odd")
                     .addAttribute("role", "row")
                     .addElement("td", dbRet.get(index).get("RATE").toString())
+                    .addElement("td", dbRet.get(index).get("MAXFEE").toString())
                     .addElement("td", getText(dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0 ? "global.enable" : "global.disable")
                     );
         }

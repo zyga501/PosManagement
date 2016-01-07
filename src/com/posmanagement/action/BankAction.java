@@ -61,7 +61,7 @@ public class BankAction extends AjaxActionSupport {
                         map.put("uuid",getParameter("UUID"));
                         map.put("name",dbRet.get(0).get("NAME"));
                         map.put("status",dbRet.get(0).get("STATUS").toString().toLowerCase().equals("enable")?"checked":"");
-                    getRequest().setAttribute("bankproperty",map);
+                        getRequest().setAttribute("bankproperty",map);
                     }
             }
         return ADDBANK;

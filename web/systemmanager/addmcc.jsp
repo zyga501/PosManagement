@@ -29,7 +29,7 @@
                     }
                     else {
                         $('.input').val("");
-                        $('#Message').html("<s:text name="addmcc.addMCCSuccess" />");
+                        $('#Message').html("<s:text name="global.addSuccess" />");
                         parent.refreshMCCList(json.mccList);
                     }
                 }

@@ -31,7 +31,7 @@
                     }
                     else {
                         $('.input').val("");
-                        $('#Message').html("<s:text name="addswingtime.addCardSuccess" />");
+                        $('#Message').html("<s:text name="global.addSuccess" />");
                         parent.refreshSwingTimeList(json.swingTimeList);
                     }
                 }

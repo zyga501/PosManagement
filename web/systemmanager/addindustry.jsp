@@ -29,7 +29,7 @@
                     }
                     else {
                         $('.input').val("");
-                        $('#Message').html("<s:text name="addindustry.addIndustrySuccess" />");
+                        $('#Message').html("<s:text name="global.addSuccess" />");
                         parent.refreshIndustryList(json.industryList);
                     }
                 }

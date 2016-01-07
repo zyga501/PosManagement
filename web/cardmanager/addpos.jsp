@@ -34,7 +34,7 @@
                     }
                     else {
                         $('.input').val("");
-                        $('#Message').html("<s:text name="addasset.addassetSuccess" />");
+                        $('#Message').html("<s:text name="global.addSuccess" />");
                         $('#newid').val(json.newid);
                         parent.refreshposList(json.posList);
                     }

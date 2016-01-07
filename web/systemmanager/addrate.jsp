@@ -29,7 +29,7 @@
                     }
                     else {
                         $('.input').val("");
-                        $('#Message').html("<s:text name="addrate.addRateSuccess" />");
+                        $('#Message').html("<s:text name="global.addSuccess" />");
                         parent.refreshRateList(json.rateList);
                     }
                 }

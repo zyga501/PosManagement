@@ -28,7 +28,7 @@
                     }
                     else {
                         $('.input').val("");
-                        $('#Message').html("<s:text name="addasset.addassetSuccess" />");
+                        $('#Message').html("<s:text name="global.addSuccess" />");
                         parent.refreshRuleList(json.ruleList);
                     }
                 }
@@ -121,117 +121,117 @@
     <form class="form form-horizontal">
         <table class="table table-border table-bordered table-bg table-hover table-sort">
             <tr class="text-c odd" role="row">
-                <td><s:text name="addrule.bankname" /></td>
+                <td><s:text name="rule.bankname" /></td>
                 <td>
                     <select id="bankUUID" name="bankUUID">
                     </select>
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
-                <td><s:text name="addrule.posserver" /></td>
+                <td><s:text name="rule.posserver" /></td>
                 <td>
                     <select id="posServerUUID" name="posServerUUID">
                     </select>
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
-                <td><s:text name="addrule.swingtime" /></td>
+                <td><s:text name="rule.swingtime" /></td>
                 <td>
                     <select id="swingTimeUUID" name="swingTimeUUID">
                     </select>
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
-                <td><s:text name="addrule.minswingmoney" /></td>
+                <td><s:text name="rule.minswingmoney" /></td>
                 <td>
-                    <input id="minSwingMoney" name="minSwingMoney" type="text" placeholder="<s:text name="addrule.minswingmoney" />" class="input-text size-S">
+                    <input id="minSwingMoney" name="minSwingMoney" type="text" placeholder="<s:text name="rule.minswingmoney" />" class="input-text size-S">
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
-                <td><s:text name="addrule.maxswingmoney" /></td>
+                <td><s:text name="rule.maxswingmoney" /></td>
                 <td>
-                    <input id="maxSwingMoney" name="maxSwingMoney" type="text" placeholder="<s:text name="addrule.maxswingmoney" />" class="input-text size-S">
+                    <input id="maxSwingMoney" name="maxSwingMoney" type="text" placeholder="<s:text name="rule.maxswingmoney" />" class="input-text size-S">
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
-                <td><s:text name="addrule.industryname" /></td>
+                <td><s:text name="rule.industryname" /></td>
                 <td>
                     <select id="industryUUID" name="industryUUID">
                     </select>
                 </td>
             </tr>
             <tr class="text-c odd" role="row" style="display: none">
-                <td><s:text name="addrule.industryfre" /></td>
+                <td><s:text name="rule.industryfre" /></td>
                 <td>
-                    <input id="industryFre" name="industryFre" type="text" placeholder="<s:text name="addrule.industryfre" />" class="input-text size-S">
+                    <input id="industryFre" name="industryFre" type="text" placeholder="<s:text name="rule.industryfre" />" class="input-text size-S">
                 </td>
             </tr>
             <tr class="text-c odd" role="row" style="display: none">
-                <td><s:text name="addrule.industryinterval" /></td>
+                <td><s:text name="rule.industryinterval" /></td>
                 <td>
-                    <input id="industryInterval" name="industryInterval" type="text" placeholder="<s:text name="addrule.industryinterval" />" class="input-text size-S">
+                    <input id="industryInterval" name="industryInterval" type="text" placeholder="<s:text name="rule.industryinterval" />" class="input-text size-S">
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
-                <td><s:text name="addrule.rate" /></td>
+                <td><s:text name="rule.rate" /></td>
                 <td>
                     <select id="rateUUID" name="rateUUID">
                     </select>
                 </td>
             </tr>
             <tr class="text-c odd" role="row" style="display: none">
-                <td><s:text name="addrule.ratefre" /></td>
+                <td><s:text name="rule.ratefre" /></td>
                 <td>
-                    <input id="rateFre" name="rateFre" type="text" placeholder="<s:text name="addrule.ratefre" />" class="input-text size-S">
+                    <input id="rateFre" name="rateFre" type="text" placeholder="<s:text name="rule.ratefre" />" class="input-text size-S">
                 </td>
             </tr>
             <tr class="text-c odd" role="row" style="display: none">
-                <td><s:text name="addrule.rateinterval" /></td>
+                <td><s:text name="rule.rateinterval" /></td>
                 <td>
-                    <input id="rateInterval" name="rateInterval" type="text" placeholder="<s:text name="addrule.rateinterval" />" class="input-text size-S">
+                    <input id="rateInterval" name="rateInterval" type="text" placeholder="<s:text name="rule.rateinterval" />" class="input-text size-S">
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
-                <td><s:text name="addrule.mcc" /></td>
+                <td><s:text name="rule.mcc" /></td>
                 <td>
                     <select id="mccUUID" name="mccUUID">
                     </select>
                 </td>
             </tr>
             <tr class="text-c odd" role="row" style="display: none">
-                <td><s:text name="addrule.mccfre" /></td>
+                <td><s:text name="rule.mccfre" /></td>
                 <td>
-                    <input id="mccFre" name="mccFre" type="text" placeholder="<s:text name="addrule.mccfre" />" class="input-text size-S">
+                    <input id="mccFre" name="mccFre" type="text" placeholder="<s:text name="rule.mccfre" />" class="input-text size-S">
                 </td>
             </tr>
             <tr class="text-c odd" role="row" style="display: none">
-                <td><s:text name="addrule.mccinterval" /></td>
+                <td><s:text name="rule.mccinterval" /></td>
                 <td>
-                    <input id="mccInterval" name="mccInterval" type="text" placeholder="<s:text name="addrule.mccinterval" />" class="input-text size-S">
+                    <input id="mccInterval" name="mccInterval" type="text" placeholder="<s:text name="rule.mccinterval" />" class="input-text size-S">
                 </td>
             </tr>
             <tr class="text-c odd" role="row" style="display: none">
-                <td><s:text name="addrule.usefre" /></td>
+                <td><s:text name="rule.usefre" /></td>
                 <td>
-                    <input id="useFre" name="useFre" type="text" placeholder="<s:text name="addrule.usefre" />" class="input-text size-S">
+                    <input id="useFre" name="useFre" type="text" placeholder="<s:text name="rule.usefre" />" class="input-text size-S">
                 </td>
             </tr>
             <tr class="text-c odd" role="row" style="display: none">
-                <td><s:text name="addrule.useinterval" /></td>
+                <td><s:text name="rule.useinterval" /></td>
                 <td>
-                    <input id="useInterval" name="useInterval" type="text" placeholder="<s:text name="addrule.useinterval" />" class="input-text size-S">
+                    <input id="useInterval" name="useInterval" type="text" placeholder="<s:text name="rule.useinterval" />" class="input-text size-S">
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
-                <td><s:text name="addrule.ruleusefre" /></td>
+                <td><s:text name="rule.ruleusefre" /></td>
                 <td>
-                    <input id="ruleUseFre" name="ruleUseFre" type="text" placeholder="<s:text name="addrule.ruleusefre" />" class="input-text size-S">
+                    <input id="ruleUseFre" name="ruleUseFre" type="text" placeholder="<s:text name="rule.ruleusefre" />" class="input-text size-S">
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
-                <td><s:text name="addrule.ruleuseinterval" /></td>
+                <td><s:text name="rule.ruleuseinterval" /></td>
                 <td>
-                    <input id="ruleUseInterval" name="ruleUseInterval" type="text" placeholder="<s:text name="addrule.ruleuseinterval" />" class="input-text size-S">
+                    <input id="ruleUseInterval" name="ruleUseInterval" type="text" placeholder="<s:text name="rule.ruleuseinterval" />" class="input-text size-S">
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
@@ -249,7 +249,7 @@
         </div>
         <div class="row">
             <div class="formControls col-8 col-offset-3" align="center">
-                <input type="button" class="btn btn-success radius size-M" value="<s:text name="addrule.submit" />" onclick="addRule()">
+                <input type="button" class="btn btn-success radius size-M" value="<s:text name="global.submit" />" onclick="addRule()">
             </div>
         </div>
     </form>

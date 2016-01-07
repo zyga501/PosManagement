@@ -33,7 +33,7 @@
                     }
                     else {
                         $('.input').val("");
-                        $('#Message').html("<s:text name="addbank.addBankSuccess" />");
+                        $('#Message').html("<s:text name="global.addSuccess" />");
                         parent.refreshBankList(json.bankList);
                     }
                 }
@@ -90,7 +90,7 @@
         </div>
         <div class="row">
             <div class="formControls col-8 col-offset-3" align="center">
-                <input type="button" class="btn btn-success radius size-M" value="<s:text name="addbank.submit" />" onclick="addBank()">
+                <input type="button" class="btn btn-success radius size-M" value="<s:text name="global.submit" />" onclick="addBank()">
             </div>
         </div>
     </form>

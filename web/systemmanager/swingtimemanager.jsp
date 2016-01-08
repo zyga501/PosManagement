@@ -39,7 +39,7 @@
                             <th width="80"><s:text name="swingtimemanager.swingTime" /></th>
                             <th width="80"><s:text name="swingtimemanager.startTime" /></th>
                             <th width="80"><s:text name="swingtimemanager.endTime" /></th>
-                            <th width="80"><s:text name="swingtimemanager.enabled" /></th>
+                            <th width="80"><s:text name="global.status" /></th>
                         </tr>
                         </thead>
                         <tbody id="swingTimeList">

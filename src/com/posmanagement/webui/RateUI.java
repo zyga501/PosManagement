@@ -5,7 +5,7 @@ import com.posmanagement.utils.PosDbManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class RateUI {
+public class RateUI extends WebUI {
     public String generateTable() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchRateList();
         if (dbRet.size() <= 0)
@@ -17,12 +17,8 @@ public class RateUI {
                     .addAttribute("class", "text-c odd")
                     .addAttribute("role", "row")
                     .addElement("td", dbRet.get(index).get("RATE").toString())
-                    .addElement(new UIContainer("td")
-                            .addElement(
-                                    new UIContainer("input")
-                                            .addAttribute("type", "checkbox")
-                                            .addAttribute("checked", "checked", dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0)
-                            )
+                    .addElement("td", dbRet.get(index).get("MAXFEE").toString())
+                    .addElement("td", getText(dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0 ? "global.enable" : "global.disable")
                     );
         }
         return htmlString;

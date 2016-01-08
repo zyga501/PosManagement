@@ -29,7 +29,7 @@
                     }
                     else {
                         $('.input').val("");
-                        $('#Message').html("<s:text name="addmcc.addMCCSuccess" />");
+                        $('#Message').html("<s:text name="global.addSuccess" />");
                         parent.refreshMCCList(json.mccList);
                     }
                 }
@@ -48,7 +48,7 @@
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
-                <td><s:text name="addmcc.enabled" /></td>
+                <td><s:text name="global.status" /></td>
                 <td>
                     <input id="mccEnabled" name="mccEnabled" type="checkbox" class="check-box size-S">
                 </td>

@@ -28,7 +28,7 @@
                     }
                     else {
                         $('.input').val("");
-                        $('#Message').html("<s:text name="addasset.addassetSuccess" />");
+                        $('#Message').html("<s:text name="global.addSuccess" />");
                         parent.refreshAssetList(json.assetList);
                     }
                 }

@@ -1,6 +1,7 @@
 package com.posmanagement.action;
 
 import com.posmanagement.utils.PosDbManager;
+import com.posmanagement.utils.StringUtils;
 import com.posmanagement.utils.UUIDUtils;
 import com.posmanagement.webui.RateUI;
 
@@ -11,24 +12,9 @@ public class RateAction extends AjaxActionSupport {
     private final static String RATEMANAGER = "rateManager";
 
     private String rateList;
-    private String rate;
-    private String rateEnabled;
-    private String uiMode;
 
     public String getRateList() {
         return rateList;
-    }
-
-    public void setRate(String _rate) {
-        rate = _rate;
-    }
-
-    public void setRateEnabled(String _rateEnabled) {
-        rateEnabled = _rateEnabled;
-    }
-
-    public void setUiMode(String _uiMode) {
-        uiMode = _uiMode;
     }
 
     public String Init() throws Exception {
@@ -38,7 +24,7 @@ public class RateAction extends AjaxActionSupport {
 
     public String FetchRateList() throws Exception {
         Map map = new HashMap();
-        if (uiMode != null && uiMode.compareTo("SELECTLIST") == 0) {
+        if (StringUtils.convertNullableString(getParameter("uiMode")).compareTo("SELECTLIST") == 0) {
             map.put("rateList", new RateUI().generateSelect());
         }
         else {
@@ -50,25 +36,22 @@ public class RateAction extends AjaxActionSupport {
 
     public String AddRate() throws Exception {
         Map map = new HashMap();
-        if (rate.length() == 0) {
-            map.put("errorMessage", getText("addrate.rateError"));
+        try {
+            String rate = StringUtils.convertNullableString(getParameter("rate"));
+            String maxFee = StringUtils.convertNullableString(getParameter("maxFee"));
+            Double.parseDouble(rate);
+            Double.parseDouble(maxFee);
+            Map parametMap = new HashMap();
+            parametMap.put(1, UUIDUtils.generaterUUID());
+            parametMap.put(2, rate);
+            parametMap.put(3, maxFee);
+            parametMap.put(4, StringUtils.convertNullableString(getParameter("rateEnable")).compareTo("on") == 0 ?
+                    new String("enable") : new String("disable"));
+            PosDbManager.executeUpdate("insert into ratetb(uuid,rate,maxfee,status) values(?,?,?,?)", (HashMap<Integer, Object>) parametMap);
+            map.put("rateList", new RateUI().generateTable());
         }
-        else {
-            try {
-                Double.parseDouble(rate);
-                Map parametMap = new HashMap();
-                parametMap.put(1, UUIDUtils.generaterUUID());
-                parametMap.put(2, rate);
-                if (rateEnabled != null)
-                    parametMap.put(3, new String("enable"));
-                else
-                    parametMap.put(3, new String("disable"));
-                PosDbManager.executeUpdate("insert into ratetb(uuid,rate,status) values(?,?,?)", (HashMap<Integer, Object>) parametMap);
-                map.put("rateList", new RateUI().generateTable());
-            }
-            catch (NumberFormatException exception) {
-                map.put("errorMessage", getText("addrate.rateFormatError"));
-            }
+        catch (NumberFormatException exception) {
+            map.put("errorMessage", getText("global.inputError"));
         }
 
         return AjaxActionComplete(map);

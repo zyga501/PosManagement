@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserMenu {
+public class UserMenu extends WebUI {
     public UserMenu(String userID) {
         userID_ = userID;
     }

@@ -29,7 +29,7 @@
                     }
                     else {
                         $('.input').val("");
-                        $('#Message').html("<s:text name="addindustry.addIndustrySuccess" />");
+                        $('#Message').html("<s:text name="global.addSuccess" />");
                         parent.refreshIndustryList(json.industryList);
                     }
                 }
@@ -48,7 +48,7 @@
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
-                <td><s:text name="addindustry.enabled" /></td>
+                <td><s:text name="global.status" /></td>
                 <td>
                     <input id="industryEnabled" name="industryEnabled" type="checkbox" class="check-box size-S">
                 </td>

@@ -29,19 +29,21 @@ public class RuleAction extends AjaxActionSupport {
         parametMap.put(5, (String) getParameter("minSwingMoney"));
         parametMap.put(6, (String) getParameter("maxSwingMoney"));
         parametMap.put(7, (String) getParameter("industryUUID"));
-        parametMap.put(8, (String) getParameter("ruleUseFre"));
-        parametMap.put(9, (String) getParameter("ruleUseInterval"));
+        parametMap.put(8, (String) getParameter("rateUUID"));
+        parametMap.put(9, (String) getParameter("mccUUID"));
+        parametMap.put(10, (String) getParameter("ruleUseFre"));
+        parametMap.put(11, (String) getParameter("ruleUseInterval"));
         if (getParameter("status") != null && getParameter("status").toString().compareTo("on") == 0) {
-            parametMap.put(10, "enable");
+            parametMap.put(12, "enable");
         }
         else {
-            parametMap.put(10, "disable");
+            parametMap.put(12, "disable");
         }
 
         Map map = new HashMap();
         if (PosDbManager.executeUpdate("insert into ruletb(uuid,bankuuid,posserveruuid,swingtimeuuid," +
-                "minswingmoney,maxswingmoney,industryuuid,ruleusefre,ruleuseinterval,status)" +
-                "values(?,?,?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>)parametMap)) {
+                "minswingmoney,maxswingmoney,industryuuid,rateuuid,mccuuid,ruleusefre,ruleuseinterval,status)" +
+                "values(?,?,?,?,?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>)parametMap)) {
             map.put("ruleList", new RuleUI().generateHTMLString());
         }
 

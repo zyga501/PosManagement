@@ -31,7 +31,7 @@
                     }
                     else {
                         $('.input').val("");
-                        $('#Message').html("<s:text name="addswingtime.addCardSuccess" />");
+                        $('#Message').html("<s:text name="global.addSuccess" />");
                         parent.refreshSwingTimeList(json.swingTimeList);
                     }
                 }
@@ -62,7 +62,7 @@
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
-                <td><s:text name="addswingtime.enabled" /></td>
+                <td><s:text name="global.status" /></td>
                 <td>
                     <input id="timeEnabled" name="timeEnabled" type="checkbox" class="check-box size-S">
                 </td>

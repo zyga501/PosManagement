@@ -2,7 +2,7 @@ package com.posmanagement.webui;
 
 import java.util.*;
 
-public class UIContainer {
+public class UIContainer extends WebUI {
     public UIContainer() {
     }
 

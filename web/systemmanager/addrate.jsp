@@ -29,7 +29,7 @@
                     }
                     else {
                         $('.input').val("");
-                        $('#Message').html("<s:text name="addrate.addRateSuccess" />");
+                        $('#Message').html("<s:text name="global.addSuccess" />");
                         parent.refreshRateList(json.rateList);
                     }
                 }
@@ -48,7 +48,13 @@
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
-                <td><s:text name="addrate.enabled" /></td>
+                <td><s:text name="addrate.maxfee" /></td>
+                <td>
+                    <input id="maxFee" name="maxFee" type="text" placeholder="<s:text name="addrate.maxfee" />" class="input-text size-S">
+                </td>
+            </tr>
+            <tr class="text-c odd" role="row">
+                <td><s:text name="global.status" /></td>
                 <td>
                     <input id="rateEnabled" name="rateEnabled" type="checkbox" class="check-box size-S">
                 </td>
@@ -56,7 +62,7 @@
         </table>
         <div class="row">
             <div class="formControls col-8 col-offset-3">
-                <div id="Message" style="color:#ff0000;font-size: 12px;height: 12px">
+                <div id="Message" style="color:#ff0000;font-size: 12px;height: 12px; text-align: center">
                 </div>
             </div>
         </div>

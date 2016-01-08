@@ -5,7 +5,7 @@ import com.posmanagement.utils.PosDbManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class IndustryUI {
+public class IndustryUI extends WebUI {
     public String generateIndustryTable() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchIndustryList();
         if (dbRet.size() <= 0)
@@ -17,12 +17,7 @@ public class IndustryUI {
                             .addAttribute("class", "text-c odd")
                             .addAttribute("role", "row")
                             .addElement("td", dbRet.get(index).get("NAME").toString())
-                            .addElement(new UIContainer("td")
-                                        .addElement(
-                                                new UIContainer("input")
-                                                    .addAttribute("type", "checkbox")
-                                                    .addAttribute("checked", "checked", dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0)
-                                        )
+                            .addElement("td", getText(dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0 ? "global.enable" : "global.disable")
                             );
         }
         return htmlString;

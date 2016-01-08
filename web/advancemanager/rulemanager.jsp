@@ -29,23 +29,31 @@
 <body>
 <div align="center">
     <div class="panel panel-default" style="float: left;width: 100%">
-        <div class="panel-header"><s:text name="rulemanager.paneltitle" /><span style="float:right;" ><a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addRule()"><s:text name="rulemanager.add" /></a></span></div>
+        <div class="panel-header">
+            <s:text name="rulemanager.paneltitle" />
+            <span style="float:right;" >
+                <a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addRule()">
+                    <s:text name="global.add" />
+                </a>
+            </span>
+        </div>
         <div class="panel-body" id="parentIframe">
             <form>
                 <div style="height:80%; overflow:auto;">
                     <table class="table table-border table-bordered table-bg table-hover table-sort">
                         <thead>
                         <tr class="text-c">
-                            <th><s:text name="rulemanager.ruleno" /></th>
-                            <th><s:text name="rulemanager.bankname" /></th>
-                            <th><s:text name="rulemanager.posserver" /></th>
-                            <th><s:text name="rulemanager.swingtime" /></th>
-                            <th><s:text name="rulemanager.minswingmoney" /></th>
-                            <th><s:text name="rulemanager.maxswingmoney" /></th>
-                            <th><s:text name="rulemanager.industryname" /></th>
-                            <th><s:text name="rulemanager.ruleusefre" /></th>
-                            <th><s:text name="rulemanager.ruleuseinterval" /></th>
-                            <th><s:text name="rulemanager.status" /></th>
+                            <th><s:text name="rule.bankname" /></th>
+                            <th><s:text name="rule.posserver" /></th>
+                            <th><s:text name="rule.swingtime" /></th>
+                            <th><s:text name="rule.minswingmoney" /></th>
+                            <th><s:text name="rule.maxswingmoney" /></th>
+                            <th><s:text name="rule.industryname" /></th>
+                            <th><s:text name="rule.rate" /></th>
+                            <th><s:text name="rule.mcc" /></th>
+                            <th><s:text name="rule.ruleusefre" /></th>
+                            <th><s:text name="rule.ruleuseinterval" /></th>
+                            <th><s:text name="global.status" /></th>
                         </tr>
                         </thead>
                         <tbody id="ruleList">

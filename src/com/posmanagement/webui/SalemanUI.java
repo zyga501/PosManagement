@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SalemanUI {
+public class SalemanUI extends WebUI {
     public String generateTable() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchSalemanList();
         if (dbRet.size() <= 0)

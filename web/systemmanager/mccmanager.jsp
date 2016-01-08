@@ -37,7 +37,7 @@
                         <thead>
                         <tr class="text-c">
                             <th width="80"><s:text name="mccmanager.mcc" /></th>
-                            <th width="80"><s:text name="mccmanager.enabled" /></th>
+                            <th width="80"><s:text name="global.status" /></th>
                         </tr>
                         </thead>
                         <tbody id="mccList">

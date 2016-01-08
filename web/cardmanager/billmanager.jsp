@@ -83,7 +83,7 @@
                             <th><s:text name="billmanager.lastteller" /></th>
                             <th><s:text name="billmanager.salesman" /></th>
                             <th><s:text name="billmanager.expired" /></th>
-                            <th><s:text name="billmanager.status" /></th>
+                            <th><s:text name="global.status" /></th>
                         </tr>
                         </thead>
                         <tbody id="billList">

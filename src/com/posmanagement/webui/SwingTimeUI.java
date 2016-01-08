@@ -5,7 +5,7 @@ import com.posmanagement.utils.PosDbManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class SwingTimeUI {
+public class SwingTimeUI extends WebUI {
     public String generateTable() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchSwingTimeList();
         if (dbRet.size() <= 0)
@@ -31,12 +31,7 @@ public class SwingTimeUI {
                                                     .addAttribute("value", dbRet.get(index).get("ENDTIME").toString())
                             )
                     )
-                    .addElement(new UIContainer("td")
-                                    .addElement(
-                                            new UIContainer("input")
-                                                    .addAttribute("type", "checkbox")
-                                                    .addAttribute("checked", "checked", dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0)
-                            )
+                    .addElement("td", getText(dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0 ? "global.enable" : "global.disable")
                     );
         }
         return htmlString;

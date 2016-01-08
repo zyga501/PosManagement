@@ -5,7 +5,7 @@ import com.posmanagement.utils.PosDbManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class CardUI {
+public class CardUI extends WebUI {
     public CardUI(String uid){ userID_ = uid;   }
     public String generateCardTable() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchCardList();

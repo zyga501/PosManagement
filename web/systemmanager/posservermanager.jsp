@@ -37,7 +37,7 @@
                         <thead>
                         <tr class="text-c">
                             <th width="80"><s:text name="posservermanager.bankname" /></th>
-                            <th width="80"><s:text name="posservermanager.enabled" /></th>
+                            <th width="80"><s:text name="global.status" /></th>
                         </tr>
                         </thead>
                         <tbody id="posServerList">

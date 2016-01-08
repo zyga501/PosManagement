@@ -17,7 +17,7 @@
         function addRate(){
             var index = layer.open({
                 type: 2,
-                title: "添加费率",area: ['310px', '220px'],
+                title: "添加费率",area: ['310px', '240px'],
                 fix: false,
                 content: "./systemmanager/addrate.jsp"
             });}
@@ -37,7 +37,8 @@
                         <thead>
                         <tr class="text-c">
                             <th width="80"><s:text name="ratemanager.rate" /></th>
-                            <th width="80"><s:text name="ratemanager.enabled" /></th>
+                            <th width="80"><s:text name="ratemanager.maxfee" /></th>
+                            <th width="80"><s:text name="global.status" /></th>
                         </tr>
                         </thead>
                         <tbody id="rateList">

@@ -29,7 +29,7 @@
                     }
                     else {
                         $('input').val("");
-                        $('#Message').html("<s:text name="addposserver.addSuccess" />");
+                        $('#Message').html("<s:text name="global.addSuccess" />");
                         parent.refreshAssetList(json.assetList);
                     }
                 }

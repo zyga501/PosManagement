@@ -5,7 +5,7 @@ import com.posmanagement.utils.PosDbManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class PosServerUI {
+public class PosServerUI extends WebUI {
     public String generateTable() throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchPosServerList();
         if (dbRet.size() <= 0)
@@ -17,12 +17,7 @@ public class PosServerUI {
                     .addAttribute("class", "text-c odd")
                     .addAttribute("role", "row")
                     .addElement("td", dbRet.get(index).get("NAME").toString())
-                    .addElement(new UIContainer("td")
-                            .addElement(
-                                    new UIContainer("input")
-                                            .addAttribute("type", "checkbox")
-                                            .addAttribute("checked", "checked", dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0)
-                            )
+                    .addElement("td", getText(dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0 ? "global.enable" : "global.disable")
                     );
         }
         return htmlString;

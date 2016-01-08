@@ -5,7 +5,7 @@ import com.posmanagement.utils.PosDbManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class PosUI {
+public class PosUI extends WebUI {
     public PosUI (String UID) { userID_=UID;       }
 
     public String generateSelect() throws Exception {
@@ -49,12 +49,7 @@ public class PosUI {
                     .addElement("td", dbRet.get(index).get("RATE").toString())
                     .addElement("td", dbRet.get(index).get("POSSERVERNAME").toString())
                     .addElement("td", dbRet.get(index).get("MCC").toString())
-                    .addElement(new UIContainer("td")
-                            .addElement(
-                                    new UIContainer("input")
-                                            .addAttribute("type", "checkbox")
-                                            .addAttribute("checked", "checked", dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0)
-                            )
+                    .addElement("td", getText(dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0 ? "global.enable" : "global.disable")
                     );
         }
         return htmlString;

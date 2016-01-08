@@ -1,6 +1,7 @@
 package com.posmanagement.action;
 
 import com.posmanagement.utils.PosDbManager;
+import com.posmanagement.utils.StringUtils;
 import com.posmanagement.utils.UUIDUtils;
 import com.posmanagement.webui.BankUI;
 
@@ -61,7 +62,7 @@ public class BankAction extends AjaxActionSupport {
                         map.put("uuid",getParameter("UUID"));
                         map.put("name",dbRet.get(0).get("NAME"));
                         map.put("status",dbRet.get(0).get("STATUS").toString().toLowerCase().equals("enable")?"checked":"");
-                    getRequest().setAttribute("bankproperty",map);
+                        getRequest().setAttribute("bankproperty",map);
                     }
             }
         return ADDBANK;
@@ -85,19 +86,21 @@ public class BankAction extends AjaxActionSupport {
 
     public String AddBank() throws Exception {
         Map map = new HashMap();
-        if (bankName.length() == 0) {
-            map.put("errorMessage", getText("addbank.BankNameError"));
-        }
-        else {
+        try {
+            String bankName = StringUtils.convertNullableString(getParameter("bankName"));
+            if (bankName.length() <= 0) {
+                throw new IllegalArgumentException();
+            }
             Map parametMap = new HashMap();
             parametMap.put(1, UUIDUtils.generaterUUID());
             parametMap.put(2, bankName);
-            if (bankEnabled != null)
-                parametMap.put(3, new String("enable"));
-            else
-                parametMap.put(3, new String("disable"));
+            parametMap.put(3, StringUtils.convertNullableString(getParameter("bankEnabled")).compareTo("on") == 0 ?
+                    new String("enable") : new String("disable"));
             PosDbManager.executeUpdate("insert into banktb(uuid,name,status) values(?,?,?)", (HashMap<Integer, Object>) parametMap);
             map.put("bankList", new BankUI().generateBankTable());
+        }
+        catch (IllegalArgumentException exception) {
+            map.put("errorMessage", getText("global.inputError"));
         }
 
         return AjaxActionComplete(map);

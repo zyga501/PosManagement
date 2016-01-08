@@ -40,15 +40,15 @@
 <div align="center">
     <div class="panel panel-default" style="float: left;width: 44%">
         <div class="panel-header"><s:text name="bankmanager.paneltitle"/>
-            <span style="float:right;" ><a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addBank()"><s:text name="bankmanager.add" /></a></span></div>
+            <span style="float:right;" ><a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addBank()"><s:text name="global.add" /></a></span></div>
         <div class="panel-body" id="parentIframe">
             <form>
                 <div >
                     <table class="table table-border table-bordered table-bg table-hover table-sort">
                         <thead>
                         <tr class="text-c">
-                            <th width="80"><s:text name="bankmanager.bankname" /></th>
-                            <th width="80"><s:text name="bankmanager.enabled" /></th>
+                            <th width="80"><s:text name="bank.bankname" /></th>
+                            <th width="80"><s:text name="global.status" /></th>
                         </tr>
                         </thead>
                         <tbody id="bankList">

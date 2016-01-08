@@ -30,7 +30,6 @@
                 }, function () {
                     button.value = "Y";
                     button.setAttribute("class", "btn btn-success radius");
-                    layer.msg('你选择了YES', {icon: 1});
                     $.ajax({
                         type: 'post',
                         url: 'Bill!editBill',
@@ -53,6 +52,7 @@
 
         function refreshBillList(billList) {
             $('#billList').html(billList);
+            $("label[name=billamount]").on("click", function() {clickbtswing(this)});
         }
 
     </script>
@@ -63,7 +63,7 @@
         <div class="panel-header"><s:text name="billmanager.paneltitle" />
             <span style="float:right;" >
              <a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addBill()">
-                <s:text name="billmanager.makebill" /></a></span></div>
+                 <s:text name="billmanager.makebill" /></a></span></div>
         <div class="panel-body" id="parentIframe">
             <form>
                 <div style="height:80%; overflow:auto;">
@@ -83,11 +83,11 @@
                             <th><s:text name="billmanager.lastteller" /></th>
                             <th><s:text name="billmanager.salesman" /></th>
                             <th><s:text name="billmanager.expired" /></th>
-                            <th><s:text name="global.status" /></th>
+                            <th><s:text name="billmanager.status" /></th>
                         </tr>
                         </thead>
                         <tbody id="billList">
-                            <s:property value="billList" escape="false" />
+                        <s:property value="billList" escape="false" />
                         </tbody>
                     </table>
                 </div>
@@ -101,31 +101,31 @@
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.admin.js"></script>
 <script type="text/javascript">
     $().ready( function(){
-        $("label[name=billamount]").on("click", function() {
-            var name = prompt("输入新的金额",this.innerHTML);
-            if (name==null) return ;
-            var obj = this;
-            $.ajax({
-                type: 'post',
-                url: 'Bill!modifyBill',
-                data: {billamount:name , billNO:$(obj).attr("datav")},
-                success: function (data) {
-                    var json = eval("(" + data + ")");
-                    if (json.successMessage) {
-                        obj.innerHTML = name ;
-                        layer.msg(json.successMessage, {icon: 1});
-                    }
-                    else if (json.errorMessage)
-                        layer.msg(json.errorMessage, {icon:2});
-                }
-            });
-        })
-    }
+                $("label[name=billamount]").on("click", function() {clickbtswing(this)
+//            var name = prompt("输入新的金额",this.innerHTML);
+//            if (name==null) return ;
+//            var obj = this;
+//            $.ajax({
+//                type: 'post',
+//                url: 'Bill!modifyBill',
+//                data: {billamount:name , billNO:$(obj).attr("datav")},
+//                success: function (data) {
+//                    var json = eval("(" + data + ")");
+//                    if (json.successMessage) {
+//                        obj.innerHTML = name ;
+//                        refreshBillList(json.billList);
+//                        layer.msg(json.successMessage, {icon: 1});
+//                    }
+//                    else if (json.errorMessage)
+//                        layer.msg(json.errorMessage, {icon:2});
+//                }
+//            });
+                })
+            }
     )
-    function  clickbtswing(){ alert($(this).attr("name"));
-        var name = prompt("输入新的金额",this.innerHTML);
+    function  clickbtswing(obj){
+        var name = prompt("输入新的金额",obj.innerHTML);
         if (name==null) return ;
-        var obj = this;
         $.ajax({
             type: 'post',
             url: 'Bill!modifyBill',
@@ -133,7 +133,7 @@
             success: function (data) {
                 var json = eval("(" + data + ")");
                 if (json.successMessage) {
-                    obj.innerHTML = name ;
+                    refreshBillList(json.billList);
                     layer.msg(json.successMessage, {icon: 1});
                 }
                 else if (json.errorMessage)

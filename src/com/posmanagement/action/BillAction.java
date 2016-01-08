@@ -85,13 +85,20 @@ public class BillAction extends AjaxActionSupport {
             if (null != billamount) {
                 Float.parseFloat(billamount);
                 para.put(1, billamount);
-                para.put(2,billNO);
-                sqlString = "update billtb set billamount=? where UUID=?";
+                para.put(2, billamount);
+                para.put(3,billNO);
+                sqlString ="update billtb a inner join cardtb b on  a.cardno=b.cardno set a.billamount=?,a.canuseamount=b.creditamount-? where a.UUID=? ";
             } else {
                 return "";
             }
-            if (PosDbManager.executeUpdate(sqlString,(HashMap<Integer, Object>)para))
-                map.put("successMessage",getText("BillAction.InfoSuccess") );
+            if (PosDbManager.executeUpdate(sqlString,(HashMap<Integer, Object>)para)) {
+                if (super.getUserName().equals("admin"))
+                    billList = new BillUI("").generateBillTable();
+                else
+                    billList = new BillUI(super.getUserID()).generateBillTable();
+                map.put("billList", billList);
+                map.put("successMessage", getText("BillAction.InfoSuccess"));
+            }
         }
         catch (Exception e) {
             map.put("errorMessage", getText("BillAction.InfoError"));
@@ -102,7 +109,7 @@ public class BillAction extends AjaxActionSupport {
     }
 
 
-        public String editBill(){
+    public String editBill(){
 
         Map map = new HashMap();
         Map para = new HashMap();
@@ -115,19 +122,19 @@ public class BillAction extends AjaxActionSupport {
 //        }
 //        else
             if (null != status ){
-            para.put(1,status);
-            sqlString="update billtb set status=? where UUID=?";
-        }
-        else {
-            return "";
-        }
+                para.put(1,status);
+                sqlString="update billtb set status=? where UUID=?";
+            }
+            else {
+                return "";
+            }
 
-        if (!generateSwingCard()) {
-            return AjaxActionComplete();
-        }
+            if (!generateSwingCard()) {
+                return AjaxActionComplete();
+            }
 
-        para.put(2,billNO);
-        if (PosDbManager.executeUpdate(sqlString,(HashMap<Integer, Object>)para))
+            para.put(2,billNO);
+            if (PosDbManager.executeUpdate(sqlString,(HashMap<Integer, Object>)para))
                 map.put("successMessage",getText("BillAction.InfoSuccess") );
         }
         catch (Exception e) {
@@ -137,16 +144,19 @@ public class BillAction extends AjaxActionSupport {
         return AjaxActionComplete(map);
     }
 
-    public void makeBill(){
-        if (null==billDate) return ;
+    public String makeBill(){
         Map map = new HashMap();
+        if (null==billDate) {
+            map.put("errorMessage", "Error Date");
+            return AjaxActionComplete(map);
+        }
         Date billd= null ;
         try {
             billd = (new SimpleDateFormat("yyyy-MM-dd")).parse(billDate);
         } catch (ParseException e) {
             map.put("errorMessage", getText("AssetAction.InfoError"));
             e.printStackTrace();
-            return;
+            return AjaxActionComplete(map);
         }
         Calendar cal = Calendar.getInstance();
         cal.setTime(billd);
@@ -166,11 +176,12 @@ public class BillAction extends AjaxActionSupport {
         System.out.println(sqlString);
         try {
             if (PosDbManager.executeUpdate(sqlString))
-            map.put("billList",  new BillUI(super.getUserID()).generateBillTable());
+                map.put("billList",  new BillUI(super.getUserID()).generateBillTable());
         } catch (Exception e) {
             map.put("errorMessage", getText("AssetAction.InfoError"));
             e.printStackTrace();
         }
+        return AjaxActionComplete(map);
     }
 
     private boolean generateSwingCard() throws Exception {

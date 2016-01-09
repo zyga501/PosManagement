@@ -45,7 +45,7 @@ public class RateAction extends AjaxActionSupport {
             parametMap.put(1, UUIDUtils.generaterUUID());
             parametMap.put(2, rate);
             parametMap.put(3, maxFee);
-            parametMap.put(4, StringUtils.convertNullableString(getParameter("rateEnable")).compareTo("on") == 0 ?
+            parametMap.put(4, StringUtils.convertNullableString(getParameter("rateEnabled")).compareTo("on") == 0 ?
                     new String("enable") : new String("disable"));
             PosDbManager.executeUpdate("insert into ratetb(uuid,rate,maxfee,status) values(?,?,?,?)", (HashMap<Integer, Object>) parametMap);
             map.put("rateList", new RateUI().generateTable());

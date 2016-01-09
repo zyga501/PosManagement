@@ -69,7 +69,7 @@ public class CardAction extends AjaxActionSupport {
 
     public String Init() throws Exception {
         if (super.getUserName().equals("admin"))
-          cardList = new CardUI("").generateCardTable();
+            cardList = new CardUI("").generateCardTable();
         else
             cardList = new CardUI(super.getUserID()).generateCardTable();
         return CARDMANAGER;
@@ -146,11 +146,13 @@ public class CardAction extends AjaxActionSupport {
                         "billafterdate=?,lastrepaymentdate=?,billemail=?,status=?,commissioncharge=?,cardmaster=?,identityno=?,"+
                         "cmaddress=?,cmtel=?,cmseccontact=?,memos=?,repaylimit=?,repaynum=?,repayinterval=?  where cardno=?",(HashMap<Integer, Object>)  para))
                     map.put("errorMessage", getText("addrate.rateFormatError"));
-                else{
+                {
                     if (super.getUserName().equals("admin"))
                         cardList = new CardUI("").generateCardTable();
                     else
                         cardList = new CardUI(super.getUserID()).generateCardTable();
+
+                    map.put("cardList",cardList);
                 }
                 map.put("newid",para.get(3));
             }

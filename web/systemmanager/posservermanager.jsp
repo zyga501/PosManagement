@@ -21,6 +21,15 @@
                 fix: false,
                 content: "./systemmanager/addposserver.jsp"
             });}
+        function editPosServer(val) {
+            var index = layer.open({
+                type: 2,
+                title: "<s:text name="global.edit"/>",area: ['310px', '220px'],
+                fix: true,
+                maxmin: false,
+                content: "PosServer!FetchPosServer?UUID=" + val
+            });
+        }
         function refreshPosServerList(posServerList) {
             $('#posServerList').html(posServerList);
         }
@@ -53,5 +62,15 @@
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/layer/1.9.3/layer.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.admin.js"></script>
+<script type="text/javascript" >
+    $().ready(
+            init()
+    )
+    function init(){
+        $("tr").click(function() {
+            editPosServer($(this).attr("value"));
+        })
+    }
+</script>
 </body>
 </html>

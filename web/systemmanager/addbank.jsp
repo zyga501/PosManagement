@@ -39,29 +39,9 @@
                 }
             })
         }
-        /*  function editBank() {
-         $('#Message').html("");
-         $.ajax({
-         type: 'post',
-         url: 'Bank!EditBank',
-         dataType:"json",
-         data:$("form").serialize(),
-         success: function (data) {
-         var json = eval("(" + data + ")");
-         if (json.errorMessage != null) {
-         $('#Message').html(json.errorMessage);
-         }
-         else {
-         $('.input').val("");
-         $('#Message').html("< s:text name="addbank.addBankSuccess" />");
-         parent.refreshBankList(json.bankList);
-         }
-         }
-         })
-         }*/
     </script>
 </head>
-<body scroll="no">
+<body >
 <div>
     <form class="form form-horizontal">
         <input id="uuid" name="uuid" type="hidden"

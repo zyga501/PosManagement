@@ -19,7 +19,11 @@
             $('#Message').html("");
             $.ajax({
                 type: 'post',
+                <% if (null ==request.getAttribute("mccproperty")){%>
                 url: 'MCC!AddMCC',
+                <%} else {%>
+                url: 'MCC!EditMCC',
+                <%}%>
                 dataType:"json",
                 data:$("form").serialize(),
                 success: function (data) {
@@ -40,17 +44,21 @@
 <body scroll="no">
 <div>
     <form class="form form-horizontal">
+        <input id="uuid" name="uuid" type="hidden"
+               value="${mccproperty.uuid}" >
         <table class="table table-border table-bordered table-bg table-hover table-sort">
             <tr class="text-c odd" role="row">
                 <td><s:text name="addmcc.mcc" /></td>
                 <td>
-                    <input id="mccCode" name="mccCode" type="text" placeholder="<s:text name="addmcc.mcc" />" class="input-text size-S">
+                    <input id="mccCode" name="mccCode" type="text" placeholder="<s:text name="addmcc.mcc" />"
+                           value="${mccproperty.mcccode}" class="input-text size-S">
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
                 <td><s:text name="global.status" /></td>
                 <td>
-                    <input id="mccEnabled" name="mccEnabled" type="checkbox" class="check-box size-S">
+                    <input id="mccEnabled" name="mccEnabled" type="checkbox" class="check-box size-S"
+                           ${mccproperty.status} >
                 </td>
             </tr>
         </table>

@@ -28,9 +28,8 @@
                         $('#Message').html(json.errorMessage);
                     }
                     else {
-                        $('input').val("");
-                        $('#Message').html("<s:text name="global.addSuccess" />");
-                        parent.refreshAssetList(json.assetList);
+                        $('#Message').html("<s:text name="addposserver.addSuccess" />");
+                        parent.refreshBillList(json.billList);
                     }
                 }
             })
@@ -44,7 +43,7 @@
                 data:{"cardno":$("#cardno").val()},
                 success: function (data) {
                     var json = eval("(" + data + ")");
-                        $('#cardMaster').val(json.cardMaster);
+                    $('#cardMaster').val(json.cardMaster);
                     $('#bankName').val("");
                 }
             })
@@ -59,6 +58,7 @@
                 success: function (data) {
                     var json = eval("(" + data + ")");
                     $("#bankName").html(json.bankList);
+                    $("#bankName").prepend("<option value=''></option>");
                 }
             });
         }

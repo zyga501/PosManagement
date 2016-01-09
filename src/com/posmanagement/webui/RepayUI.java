@@ -97,9 +97,9 @@ public class RepayUI extends WebUI {
                 "repaytb.repaymonth, " +
                 "repaytb.cardno " +
                 "ORDER BY " +
-                "repaytb.repayyear ASC, " +
-                "repaytb.repaymonth ASC, " +
-                "repaytb.thedate ASC");
+                "repaytb.repayyear desc, " +
+                "repaytb.repaymonth desc, " +
+                "repaytb.thedate desc");
     }
 
     private ArrayList<HashMap<String, Object>> fetchRepayDetail(String cardNO, String repayYear, String repayMonth) throws Exception {

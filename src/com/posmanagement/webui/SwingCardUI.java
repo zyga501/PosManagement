@@ -96,8 +96,8 @@ public class SwingCardUI extends WebUI {
                 "swingcard.billyear, " +
                 "swingcard.billmonth, " +
                 "swingcard.cardno  ORDER BY " +
-                "swingcard.billyear ASC, " +
-                "swingcard.billmonth ASC");
+                "swingcard.billyear desc, " +
+                "swingcard.billmonth desc");
     }
 
     private ArrayList<HashMap<String, Object>> fetchSwingCardDetail(String cardNO, String billYear, String billMonth) throws Exception {

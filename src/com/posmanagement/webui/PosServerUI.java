@@ -16,6 +16,7 @@ public class PosServerUI extends WebUI {
             htmlString += new UIContainer("tr")
                     .addAttribute("class", "text-c odd")
                     .addAttribute("role", "row")
+                    .addAttribute("value", dbRet.get(index).get("UUID").toString())
                     .addElement("td", dbRet.get(index).get("NAME").toString())
                     .addElement("td", getText(dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0 ? "global.enable" : "global.disable")
                     );

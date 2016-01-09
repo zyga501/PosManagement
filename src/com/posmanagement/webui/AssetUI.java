@@ -16,6 +16,7 @@ public class AssetUI {
             htmlString += new UIContainer("tr")
                             .addAttribute("class", "text-c odd")
                             .addAttribute("role", "row")
+                            .addAttribute("value", dbRet.get(index).get("UUID").toString())
                             .addElement("td", dbRet.get(index).get("CARDMASTER").toString())
                             .addElement("td", dbRet.get(index).get("BANKNAME").toString())
                             .addElement("td", dbRet.get(index).get("CARDNO").toString())

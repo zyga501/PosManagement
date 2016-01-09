@@ -1,5 +1,6 @@
 <%@ page import="java.util.Date" %>
 <%@ page import="java.sql.Time" %>
+<%@ page import="java.util.Map" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="s" uri="/struts-tags"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -21,7 +22,11 @@
             $('#Message').html("");
             $.ajax({
                 type: 'post',
+                <% if (null ==request.getAttribute("swingtimeproperty")){%>
                 url: 'SwingTime!AddSwingTime',
+                <%} else {%>
+                url: 'SwingTime!EditSwingTime',
+                <%}%>
                 dataType:"json",
                 data:$("form").serialize(),
                 success: function (data) {
@@ -39,32 +44,47 @@
         }
     </script>
 </head>
-<body scroll="no">
+<body >
 <div>
     <form class="form form-horizontal">
+        <input id="uuid" name="uuid" type="hidden"
+               value="${swingtimeproperty.uuid}" >
         <table class="table table-border table-bordered table-bg table-hover table-sort">
             <tr class="text-c odd" role="row">
                 <td><s:text name="addswingtime.timer" /></td>
                 <td>
-                    <input id="swingTime" name="swingTime" type="text" placeholder="<s:text name="addswingtime.timer" />" class="input-text size-S">
+                    <input id="swingTime" name="swingTime" type="text" placeholder="<s:text name="addswingtime.timer" />"
+                           value="${swingtimeproperty.swingtime}" class="input-text size-S">
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
                 <td><s:text name="addswingtime.startTime" /></td>
                 <td>
-                    <input id="startTime" name="startTime" type="time" class="time size-S" value="<%=new Time(new Date().getTime()).toString()%>">
+                    <input id="startTime" name="startTime" type="time" class="time size-S"
+                           <% if ( null==request.getAttribute("swingtimeproperty") || ((Map) request.getAttribute("swingtimeproperty")).get("starttime").equals("")){%>
+                           value="<%=new Time(new Date().getTime()).toString()%>"
+                           <%}else {%>
+                           value="${swingtimeproperty.starttime}"
+                           <%}%>
+                    >
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
                 <td><s:text name="addswingtime.endTime" /></td>
                 <td>
-                    <input id="endTime" name="endTime" type="time" class="time size-S" value="<%=new Time(new Date().getTime()).toString()%>" >
+                    <input id="endTime" name="endTime" type="time" class="time size-S"
+                            <% if ( null==request.getAttribute("swingtimeproperty") || ((Map) request.getAttribute("swingtimeproperty")).get("endtime").equals("")){%>
+                           value="<%=new Time(new Date().getTime()).toString()%>"
+                            <%}else {%>
+                           value="${swingtimeproperty.endtime}"
+                    <%}%>
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
                 <td><s:text name="global.status" /></td>
                 <td>
-                    <input id="timeEnabled" name="timeEnabled" type="checkbox" class="check-box size-S">
+                    <input id="timeEnabled" name="timeEnabled" type="checkbox" class="check-box size-S"
+                    ${swingtimeproperty.status}>
                 </td>
             </tr>
         </table>

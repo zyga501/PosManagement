@@ -34,7 +34,13 @@ public class SwingCardPolicy {
         public double canUseAmount;
     }
 
-    private class RuleInfo {
+    private class PolicyInfo {
+        public int useNumber;
+        public double useInterval;
+        public double coolingTime;
+    }
+
+    private class RuleInfo extends PolicyInfo {
         public String ruleUUID;
         public String bankUUID;
         public String posServerUUID;
@@ -47,15 +53,13 @@ public class SwingCardPolicy {
         public String mccUUID;
         public int ruleUseFre;
         public double ruleUseInterval;
-        public double ruleCoolDown;
     }
 
-    private class CardInfo {
+    private class CardInfo extends PolicyInfo {
         public String cardNO;
         public double creditAmount;
         public int repayNum;
         public int repayInterval;
-        public double repayCoolDown;
     }
 
     public class SwingCardInfo {
@@ -85,8 +89,16 @@ public class SwingCardPolicy {
             return null;
         }
 
+        ruleList_ = fetchRuleList(billInfo_.bankUUID);
+        if (ruleList_.size() <= 0) {
+            return null;
+        }
+
+        initPolicyInfo();
+
         double remainBillAmount = billInfo_.billAmount;
         double canUseAmount = billInfo_.canUseAmount;
+        double maxSwingAmount = generaterSwingAmount();
         ArrayList<SwingCardInfo> swingCardList = new ArrayList<SwingCardInfo>();
         ArrayList<RepayInfo> repayList = new ArrayList<RepayInfo>();
 
@@ -98,11 +110,6 @@ public class SwingCardPolicy {
             repayList.add(generateLastRepay(remainBillAmount, 0));
             remainBillAmount = 0.0;
             updateCardInfo();
-        }
-
-        ruleList_ = fetchRuleList(billInfo_.bankUUID);
-        if (ruleList_.size() <= 0) {
-            return null;
         }
 
         double dateLimit = (billInfo_.lastRepayDate.getTime() - billInfo_.billDate.getTime()) / (24 * 60 * 60 * 1000);
@@ -117,6 +124,7 @@ public class SwingCardPolicy {
                 break;
             }
 
+            boolean swingDone = true;
             double nextDateLimit = nextDateLimit();
             try {
                 SwingCardInfo swingCardInfo = generateSwingInfo(ruleInfo, curDate);
@@ -131,14 +139,21 @@ public class SwingCardPolicy {
                 }
 
                 if (swingCardInfo.money < canUseAmount) {
+                    if (maxSwingAmount < swingCardInfo.money && maxSwingAmount < ruleInfo.minSwingMoney) {
+                        swingDone = false;
+                        continue;
+                    }
                     updateRuleInfo(ruleInfo);
                     canUseAmount -= swingCardInfo.money;
+                    maxSwingAmount -= swingCardInfo.money;
                     swingCardList.add(swingCardInfo);
                 }
             }
             finally {
-                updateCoolDown(nextDateLimit);
-                curDate += nextDateLimit;
+                if (swingDone) {
+                    updateCoolingTime(nextDateLimit);
+                    curDate += nextDateLimit;
+                }
             }
         }
 
@@ -147,6 +162,22 @@ public class SwingCardPolicy {
         }
 
         return generateSwingList( swingCardList, repayList);
+    }
+
+    private void initPolicyInfo() {
+        PolicyInfo policyInfo = cardInfo_;
+        policyInfo.useNumber = cardInfo_.repayNum;
+        policyInfo.useInterval = cardInfo_.repayInterval;
+        policyInfo.coolingTime = 0.0;
+
+        Iterator<RuleInfo> iterator = ruleList_.iterator();
+        while (iterator.hasNext()) {
+            RuleInfo ruleInfo = iterator.next();
+            policyInfo = ruleInfo;
+            policyInfo.useNumber = ruleInfo.ruleUseFre;
+            policyInfo.useInterval = ruleInfo.ruleUseInterval;
+            policyInfo.coolingTime = 0.0;
+        }
     }
 
     private SwingList generateSwingList( ArrayList<SwingCardInfo> swingCardList, ArrayList<RepayInfo> repayList) {
@@ -178,12 +209,13 @@ public class SwingCardPolicy {
     }
 
     private RepayInfo generateRepayInfo(double curDate) {
-        if (cardInfo_.repayNum <= 1 || cardInfo_.repayCoolDown > 0.0) {
+        PolicyInfo policyInfo = cardInfo_;
+        if (policyInfo.useNumber <= 1 || policyInfo.coolingTime > 0.0) {
             return null;
         }
 
         double fixedLimit = random.nextDouble() * REPAYFIXEDLIMIT;
-        double rate = 1.0 / cardInfo_.repayNum;
+        double rate = 1.0 / policyInfo.useNumber;
         if (random.nextDouble() > 0.5) {
             rate += rate * fixedLimit;
         }
@@ -204,26 +236,41 @@ public class SwingCardPolicy {
         return repayInfo;
     }
 
+    private double generaterSwingAmount() {
+        double rate = 1.0;
+        if (random.nextDouble() > 0.5) {
+            rate += random.nextDouble() * SWINGAMOUNTFIXEDLIMIT;
+        }
+        else {
+            rate -= random.nextDouble() * SWINGAMOUNTFIXEDLIMIT;
+        }
+
+        return ((long)(billInfo_.billAmount * rate / 100) * 100);
+    }
+
     private void updateCardInfo() {
-        cardInfo_.repayNum--;
-        cardInfo_.repayCoolDown = cardInfo_.repayInterval;
+        PolicyInfo policyInfo = cardInfo_;
+        policyInfo.useNumber--;
+        policyInfo.coolingTime = policyInfo.useInterval;
     }
 
     private void updateRuleInfo(RuleInfo ruleInfo) {
-        ruleInfo.ruleUseFre--;
-        ruleInfo.ruleCoolDown = ruleInfo.ruleUseInterval;
+        PolicyInfo policyInfo = ruleInfo;
+        policyInfo.useNumber--;
+        policyInfo.coolingTime = policyInfo.useInterval;
     }
 
-    private void updateCoolDown(double nextDateLimit) {
-        if (cardInfo_.repayNum > 0) {
-            cardInfo_.repayCoolDown -= nextDateLimit;
+    private void updateCoolingTime(double nextDateLimit) {
+        PolicyInfo policyInfo = cardInfo_;
+        if (policyInfo.useNumber > 0) {
+            policyInfo.coolingTime -= nextDateLimit;
         }
 
         Iterator<RuleInfo> iterator = ruleList_.iterator();
         while (iterator.hasNext()) {
-            RuleInfo ruleInfo = iterator.next();
-            if (ruleInfo.ruleUseFre > 0) {
-                ruleInfo.ruleCoolDown -= nextDateLimit;
+            policyInfo = iterator.next();
+            if (policyInfo.useNumber > 0) {
+                policyInfo.coolingTime -= nextDateLimit;
             }
         }
     }
@@ -240,13 +287,13 @@ public class SwingCardPolicy {
             }
             randomList.add(randomNum);
 
-            RuleInfo ruleInfo = ruleList_.get(randomNum);
-            if (ruleInfo.ruleUseFre <= 0)
+            PolicyInfo policyInfo = ruleList_.get(randomNum);
+            if (policyInfo.useNumber <= 0)
                 continue;
-            if (ruleInfo.ruleCoolDown > 0.0)
+            if (policyInfo.coolingTime > 0.0)
                 continue;
 
-            return ruleInfo;
+            return (RuleInfo)policyInfo;
         }
     }
 
@@ -311,7 +358,6 @@ public class SwingCardPolicy {
                 ruleInfo.mccUUID = sqlRuleInfo.get("MCCUUID").toString();
                 ruleInfo.ruleUseFre = Integer.parseInt(sqlRuleInfo.get("RULEUSEFRE").toString());
                 ruleInfo.ruleUseInterval = Double.parseDouble(sqlRuleInfo.get("RULEUSEINTERVAL").toString());
-                ruleInfo.ruleCoolDown = 0.0;
                 ruleInfoList.add(ruleInfo);
             }
         }
@@ -331,7 +377,6 @@ public class SwingCardPolicy {
         cardInfo.creditAmount = Double.parseDouble(sqlCardInfo.get(0).get("CREDITAMOUNT").toString());
         cardInfo.repayNum = Integer.parseInt(sqlCardInfo.get(0).get("REPAYNUM").toString());
         cardInfo.repayInterval = Integer.parseInt(sqlCardInfo.get(0).get("REPAYINTERVAL").toString());
-        cardInfo.repayCoolDown = 0.0;
         return cardInfo;
     }
 
@@ -351,4 +396,5 @@ public class SwingCardPolicy {
     private static Random random = new Random();
     private final double REPAYFIXEDLIMIT = 0.3;
     private final double NEXTDATEFIXEDLIMIT = 1.3;
+    private final double SWINGAMOUNTFIXEDLIMIT = 0.1;
 }

@@ -19,7 +19,11 @@
             $('#Message').html("");
             $.ajax({
                 type: 'post',
+                <% if (null ==request.getAttribute("posserverproperty")){%>
                 url: 'PosServer!AddPosServer',
+                <%} else {%>
+                url: 'PosServer!EditPosServer',
+                <%}%>
                 dataType:"json",
                 data:$("form").serialize(),
                 success: function (data) {
@@ -40,17 +44,21 @@
 <body scroll="no">
 <div>
     <form class="form form-horizontal">
+        <input id="uuid" name="uuid" type="hidden"
+               value="${posserverproperty.uuid}" >
         <table class="table table-border table-bordered table-bg table-hover table-sort">
             <tr class="text-c odd" role="row">
                 <td><s:text name="addposserver.posserver" /></td>
                 <td>
-                    <input id="posServer" name="posServer" type="text" placeholder="<s:text name="addposserver.posserver" />" class="input-text size-S">
+                    <input id="posServer" name="posServer" type="text" placeholder="<s:text name="addposserver.posserver" />"
+                           value="${posserverproperty.poserver}" class="input-text size-S">
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
                 <td><s:text name="global.status" /></td>
                 <td>
-                    <input id="posServerEnabled" name="posServerEnabled" type="checkbox" class="check-box size-S">
+                    <input id="posServerEnabled" name="posServerEnabled" type="checkbox" class="check-box size-S"
+                           ${posserverproperty.status}>
                 </td>
             </tr>
         </table>

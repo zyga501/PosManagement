@@ -19,7 +19,11 @@
             $('#Message').html("");
             $.ajax({
                 type: 'post',
+                <% if (null ==request.getAttribute("industryproperty")){%>
                 url: 'Industry!AddIndustry',
+                <%} else {%>
+                url: 'Industry!EditIndustry',
+                <%}%>
                 dataType:"json",
                 data:$("form").serialize(),
                 success: function (data) {
@@ -37,20 +41,24 @@
         }
     </script>
 </head>
-<body scroll="no">
+<body>
 <div>
     <form class="form form-horizontal">
+        <input id="uuid" name="uuid" type="hidden"
+               value="${industryproperty.uuid}" >
         <table class="table table-border table-bordered table-bg table-hover table-sort">
             <tr class="text-c odd" role="row">
                 <td><s:text name="addindustry.industry" /></td>
                 <td>
-                    <input id="industryName" name="industryName" type="text" placeholder="<s:text name="addindustry.industry" />" class="input-text size-S">
+                    <input id="industryName" name="industryName" type="text" placeholder="<s:text name="addindustry.industry" />"
+                    value="${industryproperty.name}" class="input-text size-S">
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
                 <td><s:text name="global.status" /></td>
                 <td>
-                    <input id="industryEnabled" name="industryEnabled" type="checkbox" class="check-box size-S">
+                    <input id="industryEnabled" name="industryEnabled" type="checkbox" class="check-box size-S"
+                    ${industryproperty.status} >
                 </td>
             </tr>
         </table>

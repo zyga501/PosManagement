@@ -48,9 +48,9 @@
                 <s:text name="global.edit"/></a></span> <span style="float:right;">
             <a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addcard()">
                 <s:text name="global.add"/></a></span></div>
-        <div class="panel-body" id="parentIframe">
+        <div class="panel-body" id="parentIframe"  style="height:100%; overflow:auto;">
             <form>
-                <div style="height:100%; overflow:auto;">
+                <div >
                     <table class="table table-border table-bordered table-bg table-hover table-sort">
                         <thead>
                         <tr class="text-c">

@@ -19,7 +19,11 @@
             $('#Message').html("");
             $.ajax({
                 type: 'post',
+                <% if (null ==request.getAttribute("rateproperty")){%>
                 url: 'Rate!AddRate',
+                <%} else {%>
+                url: 'Rate!EditRate',
+                <%}%>
                 dataType:"json",
                 data:$("form").serialize(),
                 success: function (data) {
@@ -40,23 +44,28 @@
 <body scroll="no">
 <div>
     <form class="form form-horizontal">
+        <input id="uuid" name="uuid" type="hidden"
+               value="${rateproperty.uuid}" >
         <table class="table table-border table-bordered table-bg table-hover table-sort">
             <tr class="text-c odd" role="row">
                 <td><s:text name="addrate.rate" /></td>
                 <td>
-                    <input id="rate" name="rate" type="text" placeholder="<s:text name="addrate.rate" />" class="input-text size-S">
+                    <input id="rate" name="rate" type="text" placeholder="<s:text name="addrate.rate" />"
+                           value="${rateproperty.rate}" class="input-text size-S">
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
                 <td><s:text name="addrate.maxfee" /></td>
                 <td>
-                    <input id="maxFee" name="maxFee" type="text" placeholder="<s:text name="addrate.maxfee" />" class="input-text size-S">
+                    <input id="maxFee" name="maxFee" type="text" placeholder="<s:text name="addrate.maxfee" />"
+                           value="${rateproperty.maxfee}" class="input-text size-S">
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
                 <td><s:text name="global.status" /></td>
                 <td>
-                    <input id="rateEnabled" name="rateEnabled" type="checkbox" class="check-box size-S">
+                    <input id="rateEnabled" name="rateEnabled" type="checkbox" class="check-box size-S"
+                    ${rateproperty.status}>
                 </td>
             </tr>
         </table>

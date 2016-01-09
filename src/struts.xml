@@ -62,15 +62,19 @@
         </action>
         <action name="SwingTime!*" class="com.posmanagement.action.SwingTimeAction" method="{1}">
             <result name="swingTimeManager">./systemmanager/swingtimemanager.jsp</result>
+            <result name="addswingTime">./systemmanager/addswingtime.jsp</result>
         </action>
         <action name="MCC!*" class="com.posmanagement.action.MCCAction" method="{1}">
             <result name="mccManager">./systemmanager/mccmanager.jsp</result>
+            <result name="addmcc">./systemmanager/addmcc.jsp</result>
         </action>
         <action name="Industry!*" class="com.posmanagement.action.IndustryAction" method="{1}">
             <result name="industryManager">./systemmanager/industrymanager.jsp</result>
+            <result name="addindustry">./systemmanager/addindustry.jsp</result>
         </action>
         <action name="Rate!*" class="com.posmanagement.action.RateAction" method="{1}">
             <result name="rateManager">./systemmanager/ratemanager.jsp</result>
+            <result name="addrate">./systemmanager/addrate.jsp</result>
         </action>
         <action name="Card!*" class="com.posmanagement.action.CardAction" method="{1}">
             <result name="cardManager">./cardmanager/cardmanager.jsp</result>
@@ -78,12 +82,15 @@
         </action>
         <action name="Asset!*" class="com.posmanagement.action.AssetAction" method="{1}">
             <result name="assetManager">./cardmanager/assetmanager.jsp</result>
+            <result name="addasset">./cardmanager/addasset.jsp</result>
         </action>
         <action name="PosServer!*" class="com.posmanagement.action.PosServerAction" method="{1}">
             <result name="posServerManager">./systemmanager/posservermanager.jsp</result>
+            <result name="addposServer">./systemmanager/addposserver.jsp</result>
         </action>
         <action name="Rule!*" class="com.posmanagement.action.RuleAction" method="{1}">
             <result name="ruleManager">./advancemanager/rulemanager.jsp</result>
+            <result name="addrule">./advancemanager/addrule.jsp</result>
         </action>
         <action name="Bill!*" class="com.posmanagement.action.BillAction" method="{1}">
             <result name="billManager">./cardmanager/billmanager.jsp</result>

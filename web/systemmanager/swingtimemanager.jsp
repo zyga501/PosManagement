@@ -21,8 +21,18 @@
                 fix: false,
                 content: "./systemmanager/addswingtime.jsp"
             });}
+        function editSwingTime(val) {
+            var index = layer.open({
+                type: 2,
+                title: "<s:text name="global.edit"/>",area: ['310px', '280px'],
+                fix: true,
+                maxmin: false,
+                content: "SwingTime!FetchSwingTime?UUID=" + val
+            });
+        }
         function refreshSwingTimeList(swingTimeList) {
             $('#swingTimeList').html(swingTimeList);
+            init();
         }
     </script>
 </head>
@@ -55,5 +65,15 @@
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/layer/1.9.3/layer.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.admin.js"></script>
+<script type="text/javascript" >
+    $().ready(
+            init()
+    )
+    function init(){
+        $("tr").click(function() {
+            editSwingTime($(this).attr("value"));
+        })
+    }
+</script>
 </body>
 </html>

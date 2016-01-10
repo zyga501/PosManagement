@@ -33,9 +33,7 @@ public class RuleAction extends AjaxActionSupport {
             String mccUUID = getParameter("mccUUID").toString();
             String ruleUseFre = getParameter("ruleUseFre").toString();
             String ruleUseInterval = getParameter("ruleUseInterval").toString();
-            if (bankUUID.isEmpty() || posServerUUID.isEmpty() || swingTimeUUID.isEmpty() ||
-                    minSwingMoney.isEmpty() || maxSwingMoney.isEmpty() || industryUUID.isEmpty() ||
-                    rateUUID.isEmpty() || mccUUID.isEmpty() || ruleUseFre.isEmpty() || ruleUseInterval.isEmpty()) {
+            if (bankUUID.isEmpty()) {
                 throw new IllegalArgumentException();
             }
             Map parametMap = new HashMap();

@@ -1,6 +1,7 @@
 package com.posmanagement.webui;
 
 import com.posmanagement.utils.PosDbManager;
+import com.posmanagement.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,16 +17,16 @@ public class RuleUI extends WebUI {
             htmlString += new UIContainer("tr")
                             .addAttribute("class", "text-c odd")
                             .addAttribute("role", "row")
-                            .addElement("td", dbRet.get(index).get("BANKNAME").toString())
-                            .addElement("td", dbRet.get(index).get("POSSERVERNAME").toString())
-                            .addElement("td", dbRet.get(index).get("SWINGTIMENAME").toString())
-                            .addElement("td", dbRet.get(index).get("MINSWINGMONEY").toString())
-                            .addElement("td", dbRet.get(index).get("MAXSWINGMONEY").toString())
-                            .addElement("td", dbRet.get(index).get("INDUSTRYNAME").toString())
-                            .addElement("td", dbRet.get(index).get("RATE").toString())
-                            .addElement("td", dbRet.get(index).get("MCC").toString())
-                            .addElement("td", dbRet.get(index).get("RULEUSEFRE").toString())
-                            .addElement("td", dbRet.get(index).get("RULEUSEINTERVAL").toString())
+                            .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("BANKNAME")))
+                            .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("POSSERVERNAME")))
+                            .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("SWINGTIMENAME")))
+                            .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("MINSWINGMONEY")))
+                            .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("MAXSWINGMONEY")))
+                            .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("INDUSTRYNAME")))
+                            .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("RATE")))
+                            .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("MCC")))
+                            .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("RULEUSEFRE")))
+                            .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("RULEUSEINTERVAL")))
                             .addElement("td", getText(dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0 ? "global.enable" : "global.disable")
                             );
         }
@@ -48,11 +49,11 @@ public class RuleUI extends WebUI {
                 "ruletb.`status` " +
                 "FROM " +
                 "ruletb " +
-                "INNER JOIN banktb ON banktb.uuid = ruletb.bankuuid " +
-                "INNER JOIN posservertb ON posservertb.uuid = ruletb.posserveruuid " +
-                "INNER JOIN industrytb ON ruletb.industryuuid = industrytb.uuid " +
-                "INNER JOIN swingtimetb ON swingtimetb.uuid = ruletb.swingtimeuuid " +
-                "INNER JOIN mcctb ON mcctb.uuid = ruletb.mccuuid " +
-                "INNER JOIN ratetb ON ratetb.uuid = ruletb.rateuuid");
+                "LEFT JOIN banktb ON banktb.uuid = ruletb.bankuuid " +
+                "LEFT JOIN posservertb ON posservertb.uuid = ruletb.posserveruuid " +
+                "LEFT JOIN industrytb ON ruletb.industryuuid = industrytb.uuid " +
+                "LEFT JOIN swingtimetb ON swingtimetb.uuid = ruletb.swingtimeuuid " +
+                "LEFT JOIN mcctb ON mcctb.uuid = ruletb.mccuuid " +
+                "LEFT JOIN ratetb ON ratetb.uuid = ruletb.rateuuid");
     }
 }

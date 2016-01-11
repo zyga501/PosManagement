@@ -21,7 +21,7 @@
                 title: "刷卡明细",
                 fix: true,
                 maxmin: false,
-                content: "SwingCard!InitDetail?CardNO=" + cardNo + "&billYear=" + billYear + "&billMonth=" + billMonth
+                content: "SwingCard!InitDetail?cardNO=" + cardNo + "&billYear=" + billYear + "&billMonth=" + billMonth
             });
             layer.full(index);
         }

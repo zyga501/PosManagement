@@ -23,7 +23,8 @@ public class SwingCardUI extends WebUI {
                     .addElement("td", dbRet.get(index).get("CARDNO").toString())
                     .addElement("td", dbRet.get(index).get("CARDMASTER").toString())
                     .addElement("td", dbRet.get(index).get("AMOUNT").toString())
-                    .addElement("td", dbRet.get(index).get("VALIDSTATUS").toString().compareTo("0") == 0 ? "完结" : "未完结")
+                    .addElement("td", dbRet.get(index).get("SWINGSTATUS").toString().compareTo("0") == 0 ?
+                            getText("swingcardsummary.swingfinished") : getText("swingcardsummary.swingunfinished"))
                     .addElement(new UIContainer("td")
                                 .addElement(
                                     new UIContainer("input")
@@ -88,7 +89,7 @@ public class SwingCardUI extends WebUI {
                 "swingcard.cardno, " +
                 "Sum(swingcard.amount) AS amount, " +
                 "cardtb.cardmaster, " +
-                "COUNT(case when swingstatus!='enable' then 1 else NULL END) validstatus " +
+                "COUNT(case when swingstatus!='enable' then 1 else NULL END) swingstatus " +
                 "FROM " +
                 "swingcard " +
                 "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno " +

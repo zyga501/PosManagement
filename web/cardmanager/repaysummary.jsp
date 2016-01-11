@@ -21,7 +21,7 @@
                 title: "还卡明细",
                 fix: true,
                 maxmin: false,
-                content: "Repay!InitDetail?CardNO=" + cardNo + "&repayYear=" + repayYear + "&repayMonth=" + repayMonth
+                content: "Repay!InitDetail?cardNO=" + cardNo + "&repayYear=" + repayYear + "&repayMonth=" + repayMonth
             });
             layer.full(index);
         }
@@ -41,6 +41,7 @@
                             <th><s:text name="repaysummary.cardno"/></th>
                             <th><s:text name="repaysummary.cardmaster"/></th>
                             <th><s:text name="repaysummary.amount"/></th>
+                            <th><s:text name="repaysummary.status"/></th>
                             <th><s:text name="repaysummary.operation"/></th>
                         </tr>
                         </thead>

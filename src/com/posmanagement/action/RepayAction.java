@@ -12,6 +12,9 @@ public class RepayAction extends AjaxActionSupport {
 
     private String repaySummary;
     private String repayDetail;
+    private String cardNO;
+    private String repayYear;
+    private String repayMonth;
 
     public String getRepaySummary() {
         return repaySummary;
@@ -21,19 +24,30 @@ public class RepayAction extends AjaxActionSupport {
         return repayDetail;
     }
 
+    public String getCardNO() { return cardNO; }
+
+    public String getRepayYear() { return repayYear; }
+
+    public String getRepayMonth() { return repayMonth; }
+
     public String Init() throws Exception {
-        if (super.getUserName().equals("admin"))
-            repaySummary = new RepayUI("").generateSummary();
-        else
-            repaySummary = new RepayUI(super.getUserID()).generateSummary();
+        String userID = super.getUserID();
+        if (super.getUserName().equals("admin")) {
+            userID = "";
+        }
+        repaySummary = new RepayUI(userID).generateSummary();
         return REPAYMANAGER;
     }
 
     public String InitDetail() throws Exception {
-        if (super.getUserName().equals("admin"))
-            repayDetail = new RepayUI("").generateDetail(getParameter("CardNO").toString(), getParameter("repayYear").toString(), getParameter("repayMonth").toString());
-        else
-            repayDetail = new RepayUI(super.getUserID()).generateDetail(getParameter("CardNO").toString(), getParameter("repayYear").toString(), getParameter("repayMonth").toString());
+        String userID = super.getUserID();
+        if (super.getUserName().equals("admin")) {
+            userID = "";
+        }
+        repayDetail = new RepayUI(userID).generateDetail(getParameter("cardNO").toString(), getParameter("repayYear").toString(), getParameter("repayMonth").toString());
+        cardNO = getParameter("cardNO").toString();
+        repayYear = getParameter("repayYear").toString();
+        repayMonth = getParameter("repayMonth").toString();
         return REPAYDETAIL;
     }
 
@@ -47,42 +61,14 @@ public class RepayAction extends AjaxActionSupport {
             para.put(1,"enable");
             para.put(2,super.getUserID());
             para.put(3,getParameter("repayId"));
-            if (PosDbManager.executeUpdate("update repaytb set tradestatus=?,userid=?,tradetime=now() where id=?",(HashMap<Integer, Object>)para))
-                map.put("successMessage",getText("BillAction.InfoSuccess") );
-        }
-        return AjaxActionComplete(map);
-    }
-
-
-    public String enableDetail() throws Exception{
-        Map map =new HashMap();
-        if (null==getParameter("repayIdList")|| null==getParameter("repayIdNOList")) {
-            map.put("errorMessage", getText("BillAction.InfoErro"));
-        }
-        else {
-            Map para =new HashMap();
-            if (!getParameter("repayIdList").equals("")) {
-                para.put(1, "enable");
-                para.put(2, super.getUserID());
-                PosDbManager.executeUpdate("update repaytb a inner join  cardtb b on a.cardno=b.cardno inner join  salesmantb c " +
-                        "on c.uid=b.salesmanuuid set a.VALIDSTATUS=? where c.uid=? and  a.id in ("+
-                        getParameter("repayIdList").toString().substring(0, getParameter("repayIdList").toString().length() - 1)+")", (HashMap<Integer, Object>) para);
-                PosDbManager.executeUpdate("update repaytb a inner join  cardtb b on a.cardno=b.cardno inner join  tellertb  c " +
-                        "on c.salesman=b.salesmanuuid set a.VALIDSTATUS=? where c.uid=? and  a.id in ("+
-                        getParameter("repayIdList").toString().substring(0, getParameter("repayIdList").toString().length() - 1)+")", (HashMap<Integer, Object>) para);
+            if (PosDbManager.executeUpdate("update repaytb set tradestatus=?,userid=?,tradetime=now() where id=?",(HashMap<Integer, Object>)para)) {
+                map.put("successMessage", getText("BillAction.InfoSuccess"));
+                String userID = super.getUserID();
+                if (super.getUserName().equals("admin")) {
+                    userID = "";
+                }
+                map.put("repayDetail", new RepayUI(userID).generateDetail(getParameter("cardNO").toString(), getParameter("repayYear").toString(), getParameter("repayMonth").toString()));
             }
-            if (!getParameter("repayIdNOList").equals("")) {
-                para.clear();
-                para.put(1, "disable");
-                para.put(2, super.getUserID());
-                PosDbManager.executeUpdate("update repaytb a inner join  cardtb b on a.cardno=b.cardno inner join  salesmantb c " +
-                        "on c.uid=b.salesmanuuid set a.VALIDSTATUS=? where c.uid=? and  a.id in ("+
-                        getParameter("repayIdNOList").toString().substring(0, getParameter("repayIdNOList").toString().length() - 1)+")", (HashMap<Integer, Object>) para);
-                PosDbManager.executeUpdate("update repaytb a inner join  cardtb b on a.cardno=b.cardno inner join  tellertb  c " +
-                        "on c.salesman=b.salesmanuuid set a.VALIDSTATUS=? where c.uid=? and  a.id in ("+
-                        getParameter("repayIdNOList").toString().substring(0, getParameter("repayIdNOList").toString().length() - 1)+")", (HashMap<Integer, Object>) para);
-            }
-            map.put("successMessage",getText("BillAction.InfoSuccess") );
         }
         return AjaxActionComplete(map);
     }

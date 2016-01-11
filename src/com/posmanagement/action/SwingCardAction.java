@@ -44,8 +44,8 @@ public class SwingCardAction extends AjaxActionSupport {
         if (super.getUserName().equals("admin")) {
             userID = "";
         }
-        swingCardDetail = new SwingCardUI(userID).generateDetail(getParameter("CardNO").toString(), getParameter("billYear").toString(), getParameter("billMonth").toString());
-        cardNO = getParameter("CardNO").toString();
+        swingCardDetail = new SwingCardUI(userID).generateDetail(getParameter("cardNO").toString(), getParameter("billYear").toString(), getParameter("billMonth").toString());
+        cardNO = getParameter("cardNO").toString();
         billYear = getParameter("billYear").toString();
         billMonth = getParameter("billMonth").toString();
         return SWINGCARDDETAIL;

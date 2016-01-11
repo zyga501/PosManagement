@@ -38,7 +38,7 @@
         }
     </script>
 </head>
-<body style="overflow: hidden">
+<body >
 <div align="center">
     <div class="panel panel-default"  >
         <div class="panel-header"><s:text name="posmanager.paneltitle"/><span style="float:right;">
@@ -48,7 +48,7 @@
                 <s:text name="global.add"/></a></span></div>
         <div class="panel-body" id="parentIframe">
             <form>
-                <div style="height:100%; overflow:auto;">
+                <div >
                     <table class="table table-border table-bordered table-bg table-hover table-sort">
                         <thead>
                         <tr class="text-c">

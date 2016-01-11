@@ -30,6 +30,7 @@
                         $('.input').val("");
                         $('#Message').html("<s:text name="global.addSuccess" />");
                         parent.refreshRuleList(json.ruleList);
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));
                     }
                 }
             })

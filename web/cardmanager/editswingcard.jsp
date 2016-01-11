@@ -34,9 +34,10 @@
                     }
                     else {
                         $('.input').val("");
-                        $('#Message').html("<s:text name="addasset.addassetSuccess" />");
+                        parent.layer.msg("<s:text name="global.dosuccess" />");
                         $('#newid').val(json.newid);
                         parent.refreshcardList(json.cardList);
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));
                     }
                 }
             })

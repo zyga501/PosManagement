@@ -33,8 +33,9 @@
                     }
                     else {
                         $('.input').val("");
-                        $('#Message').html("<s:text name="global.addSuccess" />");
+                        parent.layer.msg("<s:text name="global.dosuccess" />");
                         parent.refreshBankList(json.bankList);
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));
                     }
                 }
             })

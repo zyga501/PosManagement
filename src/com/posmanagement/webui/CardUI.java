@@ -1,7 +1,9 @@
 package com.posmanagement.webui;
 
 import com.posmanagement.utils.PosDbManager;
+import com.posmanagement.utils.StringUtils;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -14,8 +16,9 @@ public class CardUI extends WebUI {
 
         String htmlString = "";
         for (int index = 0; index < dbRet.size(); ++index) {
-            htmlString += new UIContainer("tr")
-                    .addAttribute("class", "text-c odd")
+            String cardstr =  dbRet.get(index).get("CARDNO").toString();
+                    UIContainer UI = new UIContainer("tr");
+                    UI.addAttribute("class", "text-c odd")
                     .addAttribute("role", "row")
                     .addElement(new UIContainer("td")
                         .addElement(
@@ -25,11 +28,15 @@ public class CardUI extends WebUI {
                                     .addAttribute("value", dbRet.get(index).get("CARDNO").toString())
                                     .addAttribute("checked", "checked",false)
                         ))
-                    .addElement("td", dbRet.get(index).get("CARDNO").toString())
-                    .addElement("td", dbRet.get(index).get("CARDMASTER").toString())
-                    .addElement("td", dbRet.get(index).get("CMTEL").toString())
+                    .addElement("td", cardstr.substring(0,4)+"****"+cardstr.substring(cardstr.length()-4,cardstr.length()))
+                    .addElement("td", dbRet.get(index).get("CREDITAMOUNT").toString())
                     .addElement("td", dbRet.get(index).get("BILLDATE").toString())
-                    .addElement("td", dbRet.get(index).get("SALESMAN").toString());
+                    .addElement("td", dbRet.get(index).get("NAME").toString())
+                    .addElement("td", dbRet.get(index).get("CARDMASTER").toString())
+                    .addElement("td", dbRet.get(index).get("CMTEL").toString());
+            if ((null==userID_ || userID_.equals(""))|| (new StringUtils()).isAdmin(userID_))
+                    UI.addElement("td", dbRet.get(index).get("SALESMAN").toString());
+            htmlString += UI;
         }
         return htmlString;
     }
@@ -45,12 +52,13 @@ public class CardUI extends WebUI {
     private ArrayList<HashMap<String, Object>> fetchCardList() throws Exception {
         if (null==userID_ || userID_.equals(""))
             return PosDbManager.executeSql("select cardtb.uuid, cardno,cardmaster,cmtel,billdate,userinfo.unick salesman " +
-                "from cardtb inner join banktb " +
+                ",banktb.name,creditamount from cardtb inner join banktb " +
                 "on cardtb.bankuuid=banktb.uuid inner join userinfo on userinfo.uid=cardtb.salesmanuuid");
         else
             return PosDbManager.executeSql("select cardtb.uuid, cardno,cardmaster,cmtel,billdate,userinfo.unick salesman " +
-                    "from cardtb inner join banktb " +
+                    ",banktb.name,creditamount from cardtb inner join banktb " +
                     "on cardtb.bankuuid=banktb.uuid inner join userinfo on userinfo.uid=cardtb.salesmanuuid  where cardtb.salesmanuuid='"+userID_+"'");
     }
+
     private String userID_; // TODO for role
 }

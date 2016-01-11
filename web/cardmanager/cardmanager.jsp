@@ -13,6 +13,7 @@
     <link href="<%=request.getContextPath()%>/css/H-ui.admin.css" rel="stylesheet" type="text/css"/>
     <link href="<%=request.getContextPath()%>/css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css"/>
     <link href="<%=request.getContextPath()%>/skin/default/skin.css" rel="stylesheet" type="text/css" id="skin"/>
+    <link type="text/css" rel="stylesheet" href="<%=request.getContextPath()%>/js/laypage//skin/laypage.css" id="laypagecss">
     <title><s:text name="bankmanager.title"/></title>
     <script type="text/javascript">
         function addcard() {
@@ -46,8 +47,10 @@
         <div class="panel-header"><s:text name="cardmanager.paneltitle"/><span style="float:right;">
             <a href="javascript:void(0);" class="btn btn-warning  radius size-S " onclick="editcard()">
                 <s:text name="global.edit"/></a></span> <span style="float:right;">
-            <a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addcard()">
-                <s:text name="global.add"/></a></span></div>
+            <a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="
+            dosearch();">
+              2  <s:text name="global.add"/></a></span></div>
+        <div id="navigatediv"></div>
         <div class="panel-body" id="parentIframe" >
             <form>
                 <div >
@@ -56,10 +59,13 @@
                         <tr class="text-c">
                             <th><s:text name="global.sequence"/></th>
                             <th><s:text name="cardmanager.cardno"/></th>
+                            <th><s:text name="cardmanager.creditamount"/></th>
+                            <th><s:text name="cardmanager.billdate"/></th>
+                            <th><s:text name="cardmanager.bankname"/></th>
                             <th><s:text name="cardmanager.cardmaster"/></th>
                             <th><s:text name="cardmanager.cmtel"/></th>
-                            <th><s:text name="cardmanager.billdate"/></th>
-                            <th><s:text name="cardmanager.salesman"/></th>
+                            <% if (request.getSession().getAttribute("roleId").equals("e664d6f3-85f8-4bd6-bcb8-c4e053732b29")){ %>
+                            <th><s:text name="cardmanager.salesman"/></th><%}%>
                         </tr>
                         </thead>
                         <tbody id="cardList">
@@ -75,5 +81,21 @@
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/layer/1.9.3/layer.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.admin.js"></script>
+<script src="<%=request.getContextPath()%>/js/laypage/laypage.js"></script>
+<script>
+    function dosearch() {
+        laypage({
+            cont: 'navigatediv',
+            pages: ${cardList.pages},
+            skip: true,
+            skin: 'yahei',
+            jump: function (obj) {
+                alert(obj.curr);
+                refreshcardList(${cardList});
+              //  document.getElementById('biuuu_city_list').innerHTML = thisDate(obj.curr);
+            }
+        })
+    }
+</script>
 </body>
 </html>

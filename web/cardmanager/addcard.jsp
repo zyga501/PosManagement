@@ -128,8 +128,8 @@
         <div style="height:auto; overflow:auto;">
             <table class="table table-border table-bordered table-bg table-hover table-sort">
                 <tr class="text-c">
-                    <td><s:text name="cardmanager.inserttime"/></td><td><input id=inserttime name=cardmanager.inserttime type="text" value="<s:property value="cardmanager.inserttime"/>" placeholder="<s:text name="cardmanager.inserttime"/>" class="input-text size-S"></td>
-                    <td><s:text name="cardmanager.cardserial"/></td><td><input id=cardserial name=cardmanager.cardserial type="text" value="<s:property value="cardmanager.cardserial"/>" placeholder="<s:text name="cardmanager.cardserial"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.inserttime"/></td><td><input id=inserttime name=cardmanager.inserttime readonly type="text" value="<s:property value="cardmanager.inserttime"/>" placeholder="<s:text name="cardmanager.inserttime"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.cardserial"/></td><td><input id=cardserial name=cardmanager.cardserial readonly type="text" value="<s:property value="cardmanager.uuid"/>" placeholder="<s:text name="cardmanager.cardserial"/>" class="input-text size-S"></td>
                     <td><s:text name="cardmanager.cardno"/></td><td><input id=cardno name=cardmanager.cardno type="text" value="<s:property value="cardmanager.cardno"/>" placeholder="<s:text name="cardmanager.cardno"/>" class="input-text size-S"></td>
                     <td><s:text name="cardmanager.bankname"/></td>
                     <td>
@@ -156,7 +156,7 @@
                     <td><s:text name="cardmanager.billemail"/></td><td><input id=billemail name=cardmanager.billemail type="text" value="<s:property value="cardmanager.billemail"/>" placeholder="<s:text name="cardmanager.billemail"/>" class="input-text size-S"></td>
                 </tr>
                 <tr class="text-c">
-                    <td><s:text name="cardmanager.status"/></td>
+                    <td><s:text name="global.status"/></td>
                     <td><select id=sfqy name=cardmanager.status style="width:100%" >
                         <option value="disable">禁用</option>
                         <option value="enable">开启</option>

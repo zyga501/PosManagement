@@ -1,6 +1,7 @@
 package com.posmanagement.policy;
 
 import com.posmanagement.utils.PosDbManager;
+import com.posmanagement.utils.StringUtils;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -110,13 +111,14 @@ public class SwingCardPolicy {
             repayList.clear();
             double curDate = nextDateLimit(dateLimit);
             double remainBillAmount = billInfo_.billAmount;
-            while (curDate < dateLimit) {
+            while (curDate < dateLimit && remainBillAmount > 0.0) {
                 try {
                     RepayInfo repayInfo = generateRepayInfo(curDate);
                     if (repayInfo == null)
                         break;
                     if (remainBillAmount < repayInfo.money) {
-                        repayInfo.money = remainBillAmount;
+                        repayInfo.money = (long)(remainBillAmount * 10) / 10.0;
+                        remainBillAmount = 0;
                     }
                     updateRepayInfo();
                     remainBillAmount -= repayInfo.money;
@@ -194,7 +196,7 @@ public class SwingCardPolicy {
 
     private SwingCardInfo generateSwingInfo(RuleInfo ruleInfo, RepayInfo repayInfo, double canUseAmount) throws Exception {
         SwingCardInfo swingCardInfo = new SwingCardInfo();
-        swingCardInfo.money = (long)(canUseAmount * (0.8 + random.nextDouble() * SWINGAMOUNTFIXEDLIMIT) / 10) * 10;
+        swingCardInfo.money = ((long)(canUseAmount * (0.8 + random.nextDouble() * SWINGAMOUNTFIXEDLIMIT) / 10)) * 10.0;
         swingCardInfo.swingTime = new Time((long)(random.nextDouble() * ((ruleInfo.swingEndTime.getTime()) - ruleInfo.swingStartTime.getTime())  + ruleInfo.swingStartTime.getTime())) ;
         swingCardInfo.ruleUUID = ruleInfo.ruleUUID;
         swingCardInfo.swingDate = repayInfo.repayDate;
@@ -221,7 +223,7 @@ public class SwingCardPolicy {
         }
 
         RepayInfo repayInfo = new RepayInfo();
-        repayInfo.money = ((long)(billInfo_.billAmount * rate / 100) * 100);
+        repayInfo.money = ((long)(billInfo_.billAmount * rate / 10)) * 10.0;
         repayInfo.repayDate = new Date(billInfo_.billDate.getTime() + (long)curDate * ONEDAYMILLIONSECOND);
         return repayInfo;
     }
@@ -278,7 +280,7 @@ public class SwingCardPolicy {
     }
 
     private double nextDateLimit(double dateLimit) {
-        return (Double.max((long)(random.nextDouble() * dateLimit / cardInfo_.repayNum * REPAYDATEFIXEDLIMIT), cardInfo_.repayInterval) * 10) / 10;
+        return (Double.max((long)(random.nextDouble() * dateLimit / cardInfo_.repayNum * REPAYDATEFIXEDLIMIT), cardInfo_.repayInterval) * 10) / 10.0;
     }
 
     private BillInfo fetchBillInfo(String billNumber) throws Exception {
@@ -315,7 +317,7 @@ public class SwingCardPolicy {
                 "ruletb.ruleuseinterval\n" +
                 "FROM\n" +
                 "ruletb\n" +
-                "INNER JOIN swingtimetb ON swingtimetb.uuid = ruletb.swingtimeuuid\n" +
+                "LEFT JOIN swingtimetb ON swingtimetb.uuid = ruletb.swingtimeuuid\n" +
                 "where bankuuid='" + bankUUID + "'"));
     }
 
@@ -330,14 +332,14 @@ public class SwingCardPolicy {
                 ruleInfo.bankUUID = sqlRuleInfo.get("BANKUUID").toString();
                 ruleInfo.industryUUID = sqlRuleInfo.get("INDUSTRYUUID").toString();
                 ruleInfo.posServerUUID = sqlRuleInfo.get("POSSERVERUUID").toString();
-                ruleInfo.swingStartTime = Time.valueOf(sqlRuleInfo.get("STARTTIME").toString());
-                ruleInfo.swingEndTime = Time.valueOf(sqlRuleInfo.get("ENDTIME").toString());
-                ruleInfo.minSwingMoney = Double.parseDouble(sqlRuleInfo.get("MINSWINGMONEY").toString());
-                ruleInfo.maxSwingMoney = Double.parseDouble(sqlRuleInfo.get("MAXSWINGMONEY").toString());
+                ruleInfo.swingStartTime = StringUtils.convertNullableString(sqlRuleInfo.get("STARTTIME")).isEmpty() ? Time.valueOf("00:00:00") : Time.valueOf(sqlRuleInfo.get("STARTTIME").toString());
+                ruleInfo.swingEndTime = StringUtils.convertNullableString(sqlRuleInfo.get("ENDTIME")).isEmpty() ? Time.valueOf("23:59:59") : Time.valueOf(sqlRuleInfo.get("ENDTIME").toString());
+                ruleInfo.minSwingMoney = StringUtils.convertNullableString(sqlRuleInfo.get("ENDTIME")).isEmpty() ? 0.0 : Double.parseDouble(sqlRuleInfo.get("MINSWINGMONEY").toString());
+                ruleInfo.maxSwingMoney = StringUtils.convertNullableString(sqlRuleInfo.get("ENDTIME")).isEmpty() ? Double.MAX_VALUE : Double.parseDouble(sqlRuleInfo.get("MAXSWINGMONEY").toString());
                 ruleInfo.rateUUID = sqlRuleInfo.get("RATEUUID").toString();
                 ruleInfo.mccUUID = sqlRuleInfo.get("MCCUUID").toString();
-                ruleInfo.ruleUseFre = Integer.parseInt(sqlRuleInfo.get("RULEUSEFRE").toString());
-                ruleInfo.ruleUseInterval = Double.parseDouble(sqlRuleInfo.get("RULEUSEINTERVAL").toString());
+                ruleInfo.ruleUseFre = StringUtils.convertNullableString(sqlRuleInfo.get("RULEUSEFRE")).isEmpty() ? Integer.MAX_VALUE : Integer.parseInt(sqlRuleInfo.get("RULEUSEFRE").toString());
+                ruleInfo.ruleUseInterval = StringUtils.convertNullableString(sqlRuleInfo.get("RULEUSEINTERVAL")).isEmpty() ? 0 : Double.parseDouble(sqlRuleInfo.get("RULEUSEINTERVAL").toString());
                 ruleInfoList.add(ruleInfo);
             }
         }
@@ -361,12 +363,27 @@ public class SwingCardPolicy {
     }
 
     private ArrayList<HashMap<String, Object>> fetchPosList(RuleInfo ruleInfo) throws Exception {
-        return (ArrayList<HashMap<String, Object>>)PosDbManager.executeSql("select * from postb where " +
-                "industryuuid='" + ruleInfo.industryUUID +
-                "' and posserveruuid='" + ruleInfo.posServerUUID +
-                "' and rateuuid='" + ruleInfo.rateUUID +
-                "' and mccuuid='" + ruleInfo.mccUUID +
-                "'");
+        HashMap<String, String> whereMap = new HashMap<String, String>();
+        whereMap.put("industryuuid", ruleInfo.industryUUID);
+        whereMap.put("posserveruuid", ruleInfo.posServerUUID);
+        whereMap.put("rateuuid", ruleInfo.rateUUID);
+        whereMap.put("mccuuid", ruleInfo.mccUUID);
+
+        String whereSql = "";
+        for (HashMap.Entry<String, String> entry : whereMap.entrySet()) {
+            if (!whereSql.isEmpty()) {
+                whereSql += " and ";
+            }
+            if (!entry.getValue().isEmpty()) {
+                whereSql += entry.getKey() + "='" + entry.getValue() + "'";
+            }
+        }
+
+        if (!whereSql.isEmpty()) {
+            whereSql = " where " + whereSql;
+        }
+
+        return (ArrayList<HashMap<String, Object>>)PosDbManager.executeSql("select * from postb" + whereSql);
     }
 
     private String salemanID;

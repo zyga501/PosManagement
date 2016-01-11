@@ -37,7 +37,7 @@ public class RepayAction extends AjaxActionSupport {
         return REPAYDETAIL;
     }
 
-    public String editDetail() throws Exception{
+    public String EditDetail() throws Exception{
         Map map =new HashMap();
         if (null==getParameter("status") || null==getParameter("repayId")) {
             map.put("errorMessage", getText("BillAction.InfoErro"));

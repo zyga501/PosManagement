@@ -41,6 +41,7 @@
                             <th><s:text name="swingcardsummary.cardno"/></th>
                             <th><s:text name="swingcardsummary.cardmaster"/></th>
                             <th><s:text name="swingcardsummary.amount"/></th>
+                            <th><s:text name="swingcardsummary.status"/></th>
                             <th><s:text name="swingcardsummary.operation"/></th>
                         </tr>
                         </thead>

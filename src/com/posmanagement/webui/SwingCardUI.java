@@ -18,11 +18,12 @@ public class SwingCardUI extends WebUI {
             htmlString += new UIContainer("tr")
                     .addAttribute("class", "text-c odd")
                     .addAttribute("role", "row")
-                    .addElement("td" , dbRet.get(index).get("BILLYEAR").toString() + "/" +
+                    .addElement("td", dbRet.get(index).get("BILLYEAR").toString() + "/" +
                             dbRet.get(index).get("BILLMONTH").toString())
-                    .addElement("td" , dbRet.get(index).get("CARDNO").toString())
-                    .addElement("td" , dbRet.get(index).get("CARDMASTER").toString())
-                    .addElement("td" , dbRet.get(index).get("AMOUNT").toString())
+                    .addElement("td", dbRet.get(index).get("CARDNO").toString())
+                    .addElement("td", dbRet.get(index).get("CARDMASTER").toString())
+                    .addElement("td", dbRet.get(index).get("AMOUNT").toString())
+                    .addElement("td", dbRet.get(index).get("VALIDSTATUS").toString().compareTo("0") == 0 ? "完结" : "未完结")
                     .addElement(new UIContainer("td")
                                 .addElement(
                                     new UIContainer("input")
@@ -85,9 +86,9 @@ public class SwingCardUI extends WebUI {
                 "swingcard.billyear, " +
                 "swingcard.billmonth, " +
                 "swingcard.cardno, " +
-                "swingcard.VALIDSTATUS, " +
                 "Sum(swingcard.amount) AS amount, " +
-                "cardtb.cardmaster " +
+                "cardtb.cardmaster, " +
+                "COUNT(case when swingstatus!='enable' then 1 else NULL END) validstatus " +
                 "FROM " +
                 "swingcard " +
                 "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno " +

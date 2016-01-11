@@ -26,7 +26,7 @@
                     layer.msg('你选择了YES', {icon: 1});
                     $.ajax({
                         type: 'post',
-                        url: 'Repay!editDetail',
+                        url: 'Repay!EditDetail',
                         data: {status:"enable" , repayId:repayid},
                         success: function (data) {
                             var json = eval("(" + data + ")");
@@ -80,10 +80,6 @@
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.admin.js"></script>
 <script type="text/javascript">
-    $().ready( function(){
-           // $("input[type='checkbox']").on("click", function() {changestatus();});
-        }
-    )
 </script>
 </body>
 </html>

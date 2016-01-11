@@ -57,7 +57,7 @@
                     }
                     else {
                         $('.input').val("");
-                        $('#Message').html("<s:text name="global.dosuccess" />");
+                        parent.layer.msg("<s:text name="global.dosuccess" />");
                         ajaxFileUpload();
                         parent.refreshcardList(json.cardList);
                     }

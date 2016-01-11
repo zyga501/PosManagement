@@ -56,8 +56,9 @@
                     }
                     else {
                         $('.input').val("");
-                        $('#Message').html("<s:text name="global.dosuccess" />");
+                        parent.layer.msg("<s:text name="global.dosuccess" />");
                         parent.refreshposList(json.posList);
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));
                     }
                 }
             })

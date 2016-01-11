@@ -28,8 +28,9 @@
                         $('#Message').html(json.errorMessage);
                     }
                     else {
-                        $('#Message').html("<s:text name="addposserver.addSuccess" />");
+                        parent.layer.msg("<s:text name="global.dosuccess" />");
                         parent.refreshBillList(json.billList);
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));
                     }
                 }
             })

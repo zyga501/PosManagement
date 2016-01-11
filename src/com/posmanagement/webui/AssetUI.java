@@ -30,7 +30,7 @@ public class AssetUI {
     }
 
     private ArrayList<HashMap<String, Object>> fetchAssetList() throws Exception {
-        return PosDbManager.executeSql("SELECT " +
+        return PosDbManager.executeSql("SELECT assettb.uuid, " +
                 "assettb.cardmaster, " +
                 "banktb.`name` bankname, " +
                 "assettb.cardno, " +

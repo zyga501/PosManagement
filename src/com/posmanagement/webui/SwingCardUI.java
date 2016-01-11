@@ -55,8 +55,8 @@ public class SwingCardUI extends WebUI {
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("AMOUNT")))
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("SDATETM")))
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("POSNAME")))
-                    .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("UNICK")))
-                    .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("REALSDATETM")))
+                    .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("UNICK")), "○")
+                    .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("REALSDATETM")), "○")
                     .addElement(new UIContainer("td")
                             .addElement(
                                     new UIContainer("input")

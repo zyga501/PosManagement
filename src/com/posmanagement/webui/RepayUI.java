@@ -54,8 +54,8 @@ public class RepayUI extends WebUI {
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("CARDMASTER")))
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("TRADEMONEY")))
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("THEDATE")))
-                    .addElement("td" ,"")
-                    .addElement("td" ,"")
+                    .addElement("td" ,"", "○")
+                    .addElement("td" ,"", "○")
                     .addElement(new UIContainer("td")
                             .addElement(
                                     new UIContainer("input")

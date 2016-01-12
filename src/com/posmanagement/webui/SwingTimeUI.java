@@ -18,20 +18,8 @@ public class SwingTimeUI extends WebUI {
                     .addAttribute("role", "row")
                     .addAttribute("value", dbRet.get(index).get("UUID").toString())
                     .addElement("td", dbRet.get(index).get("NAME").toString())
-                    .addElement(new UIContainer("td")
-                                    .addElement(
-                                            new UIContainer("input")
-                                                    .addAttribute("type", "time")
-                                                    .addAttribute("value", dbRet.get(index).get("STARTTIME").toString())
-                                    )
-                    )
-                    .addElement(new UIContainer("td")
-                                    .addElement(
-                                            new UIContainer("input")
-                                                    .addAttribute("type", "time")
-                                                    .addAttribute("value", dbRet.get(index).get("ENDTIME").toString())
-                            )
-                    )
+                    .addElement("td",  dbRet.get(index).get("STARTTIME").toString())
+                    .addElement("td",  dbRet.get(index).get("ENDTIME").toString())
                     .addElement("td", getText(dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0 ? "global.enable" : "global.disable")
                     );
         }

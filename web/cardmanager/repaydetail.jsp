@@ -26,14 +26,15 @@
                     layer.msg('你选择了YES', {icon: 1});
                     $.ajax({
                         type: 'post',
-                        url: 'Repay!editDetail',
-                        data: {status:"enable" , repayId:repayid},
+                        url: 'Repay!EditDetail',
+                        data: {status:"enable" , repayId:repayid, cardNO:$('#cardNO').val(), repayYear:$('#repayYear').val(),repayMonth:$('#repayMonth').val()},
                         success: function (data) {
                             var json = eval("(" + data + ")");
                             if (json.successMessage) {
                                 button.value = "Y";
                                 button.setAttribute("class", "btn btn-success radius");
                                 layer.msg(json.successMessage);
+                                $('#repayDetail').html(json.repayDetail);
                             }
                             else if (json.errorMessage)
                                 layer.msg(json.errorMessage);
@@ -50,6 +51,9 @@
     <div class="panel panel-default" >
         <div class="panel-header"><s:text name="repaydetail.paneltitle"/></div>
         <div class="panel-body" id="parentIframe">
+            <input type="hidden" id="cardNO" value="<s:property value="cardNO" escape="false"/>"/>
+            <input type="hidden" id="repayYear" value="<s:property value="repayYear" escape="false"/>"/>
+            <input type="hidden" id="repayMonth" value="<s:property value="repayMonth" escape="false"/>"/>
             <form>
                 <div style="height:auto; overflow:auto;">
                     <table class="table table-border table-bordered table-bg table-hover table-sort">
@@ -80,10 +84,6 @@
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.admin.js"></script>
 <script type="text/javascript">
-    $().ready( function(){
-           // $("input[type='checkbox']").on("click", function() {changestatus();});
-        }
-    )
 </script>
 </body>
 </html>

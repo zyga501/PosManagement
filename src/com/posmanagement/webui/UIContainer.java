@@ -33,14 +33,23 @@ public class UIContainer extends WebUI {
         return this;
     }
 
+    public UIContainer addElement(String element, String value, String defaultValue) {
+        if (value == null || value.isEmpty()) {
+            value = defaultValue;
+        }
+        uiElements.add(new UIContainer(element, value));
+        return this;
+    }
+
     public UIContainer addAttribute(String attributeKey, String attributeValue) {
         uiAttributes.put(attributeKey, attributeValue);
         return this;
     }
 
     public UIContainer addAttribute(String attributeKey, String attributeValue, boolean ifNeed) {
-        if (ifNeed)
+        if (ifNeed) {
             uiAttributes.put(attributeKey, attributeValue);
+        }
         return this;
     }
 

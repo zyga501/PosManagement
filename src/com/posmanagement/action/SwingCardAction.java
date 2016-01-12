@@ -12,6 +12,9 @@ public class SwingCardAction extends AjaxActionSupport {
 
     private String swingCardSummary;
     private String swingCardDetail;
+    private String cardNO;
+    private String billYear;
+    private String billMonth;
 
     public String getSwingCardSummary() {
         return swingCardSummary;
@@ -21,23 +24,34 @@ public class SwingCardAction extends AjaxActionSupport {
         return swingCardDetail;
     }
 
+    public String getCardNO() { return cardNO; }
+
+    public String getBillYear() { return billYear; }
+
+    public String getBillMonth() { return billMonth; }
+
     public String Init() throws Exception {
-        if (super.getUserName().equals("admin"))
-            swingCardSummary = new SwingCardUI("").generateSummary();
-        else
-            swingCardSummary = new SwingCardUI(super.getUserID()).generateSummary();
+        String userID = super.getUserID();
+        if (super.getUserName().equals("admin")) {
+            userID = "";
+        }
+        swingCardSummary = new SwingCardUI(userID).generateSummary();
         return SWINGCARDMANAGER;
     }
 
     public String InitDetail() throws Exception {
-        if (super.getUserName().equals("admin"))
-            swingCardDetail = new SwingCardUI("").generateDetail(getParameter("CardNO").toString(), getParameter("billYear").toString(), getParameter("billMonth").toString());
-        else
-            swingCardDetail = new SwingCardUI(super.getUserID()).generateDetail(getParameter("CardNO").toString(), getParameter("billYear").toString(), getParameter("billMonth").toString());
+        String userID = super.getUserID();
+        if (super.getUserName().equals("admin")) {
+            userID = "";
+        }
+        swingCardDetail = new SwingCardUI(userID).generateDetail(getParameter("cardNO").toString(), getParameter("billYear").toString(), getParameter("billMonth").toString());
+        cardNO = getParameter("cardNO").toString();
+        billYear = getParameter("billYear").toString();
+        billMonth = getParameter("billMonth").toString();
         return SWINGCARDDETAIL;
     }
 
-    public String editDetail() throws Exception{
+    public String EditDetail() throws Exception{
         Map map =new HashMap();
         if (null==getParameter("status") || null==getParameter("swingId")) {
             map.put("errorMessage", getText("BillAction.InfoErro"));
@@ -47,43 +61,14 @@ public class SwingCardAction extends AjaxActionSupport {
             para.put(1,"enable");
             para.put(2,super.getUserID());
             para.put(3,getParameter("swingId"));
-            if (PosDbManager.executeUpdate("update swingcard set swingstatus=?,userid=?,realsdatetm=now() where id=?",(HashMap<Integer, Object>)para))
-                map.put("successMessage",getText("BillAction.InfoSuccess") );
-        }
-        return AjaxActionComplete(map);
-    }
-
-    public String enableDetail() throws Exception{
-        Map map =new HashMap();
-        if (null==getParameter("swingIdList")|| null==getParameter("swingIdNOList")) {
-            map.put("errorMessage", getText("BillAction.InfoErro"));
-        }
-        else {
-            Map para =new HashMap();
-            if (!getParameter("swingIdList").equals("")) {
-                para.put(1, "enable");
-                para.put(2, super.getUserID());
-              //  para.put(3, getParameter("swingIdList").toString().substring(0, getParameter("swingIdList").toString().length() - 1));
-                PosDbManager.executeUpdate("update swingcard a inner join  cardtb b on a.cardno=b.cardno inner join  salesmantb c " +
-                        "on c.uid=b.salesmanuuid set a.VALIDSTATUS=? where c.uid=? and  a.id in ("+
-                        getParameter("swingIdList").toString().substring(0, getParameter("swingIdList").toString().length() - 1)+")", (HashMap<Integer, Object>) para);
-                PosDbManager.executeUpdate("update swingcard a inner join  cardtb b on a.cardno=b.cardno inner join  tellertb  c " +
-                        "on c.salesman=b.salesmanuuid set a.VALIDSTATUS=? where c.uid=? and  a.id in ("+
-                        getParameter("swingIdList").toString().substring(0, getParameter("swingIdList").toString().length() - 1)+")", (HashMap<Integer, Object>) para);
+            if (PosDbManager.executeUpdate("update swingcard set swingstatus=?,userid=?,realsdatetm=now() where id=?",(HashMap<Integer, Object>)para)) {
+                map.put("successMessage", getText("BillAction.InfoSuccess"));
+                String userID = super.getUserID();
+                if (super.getUserName().equals("admin")) {
+                    userID = "";
+                }
+                map.put("swingCardDetail", new SwingCardUI(userID).generateDetail(getParameter("cardNO").toString(), getParameter("billYear").toString(), getParameter("billMonth").toString()));
             }
-            if (!getParameter("swingIdNOList").equals("")) {
-                para.clear();
-                para.put(1, "disable");
-                para.put(2, super.getUserID());
-               // para.put(3, getParameter("swingIdNOList").toString().substring(0, getParameter("swingIdNOList").toString().length() - 1));
-                PosDbManager.executeUpdate("update swingcard a inner join  cardtb b on a.cardno=b.cardno inner join  salesmantb c " +
-                        "on c.uid=b.salesmanuuid set a.VALIDSTATUS=? where c.uid=? and  a.id in ("+
-                        getParameter("swingIdNOList").toString().substring(0, getParameter("swingIdNOList").toString().length() - 1)+")", (HashMap<Integer, Object>) para);
-                PosDbManager.executeUpdate("update swingcard a inner join  cardtb b on a.cardno=b.cardno inner join  tellertb  c " +
-                        "on c.salesman=b.salesmanuuid set a.VALIDSTATUS=? where c.uid=? and  a.id in ("+
-                        getParameter("swingIdNOList").toString().substring(0, getParameter("swingIdNOList").toString().length() - 1)+")", (HashMap<Integer, Object>) para);
-            }
-                map.put("successMessage",getText("BillAction.InfoSuccess") );
         }
         return AjaxActionComplete(map);
     }

@@ -15,31 +15,6 @@
     <link href="<%=request.getContextPath()%>/skin/default/skin.css" rel="stylesheet" type="text/css" id="skin"/>
     <title></title>
     <script type="text/javascript">
-        function  changestatus(){
-            var swingid="";
-            var swingidno="";
-            $("input[type='checkbox']:checkbox").each(function(){
-                if($(this).prop("checked")){
-                    swingid +="'"+ $(this).val()+"',"
-                }
-                else {
-                    swingidno +="'"+ $(this).val()+"',"
-                }
-            })
-            $.ajax({
-                type: 'post',
-                url: 'SwingCard!enableDetail',
-                data: {swingIdList:swingid,swingIdNOList:swingidno},
-                success: function (data) {
-                    var json = eval("(" + data + ")");
-                    if (json.successMessage) {
-                        layer.msg(json.successMessage);
-                    }
-                    else if (json.errorMessage)
-                        layer.msg(json.errorMessage);
-                }
-            });
-        }
         function clickswing(button, swingid) {
             var val = button.value;
             if (val == "N") {
@@ -51,14 +26,15 @@
                     layer.msg('你选择了YES', {icon: 1});
                     $.ajax({
                         type: 'post',
-                        url: 'SwingCard!editDetail',
-                        data: {status:"enable" , swingId:swingid},
+                        url: 'SwingCard!EditDetail',
+                        data: {status:"enable" , swingId:swingid, cardNO:$('#cardNO').val(), billYear:$('#billYear').val(),billMonth:$('#billMonth').val()},
                         success: function (data) {
                             var json = eval("(" + data + ")");
                             if (json.successMessage) {
                                 button.value = "Y";
                                 button.setAttribute("class", "btn btn-success radius");
                                 layer.msg(json.successMessage);
+                                $('#swingCardDetail').html(json.swingCardDetail);
                             }
                             else if (json.errorMessage)
                                 layer.msg(json.errorMessage);
@@ -75,6 +51,9 @@
     <div class="panel panel-default" >
         <div class="panel-header"><s:text name="swingcarddetail.paneltitle"/></div>
         <div class="panel-body" id="parentIframe">
+            <input type="hidden" id="cardNO" value="<s:property value="cardNO" escape="false"/>"/>
+            <input type="hidden" id="billYear" value="<s:property value="billYear" escape="false"/>"/>
+            <input type="hidden" id="billMonth" value="<s:property value="billMonth" escape="false"/>"/>
             <form>
                 <div style="height:auto; overflow:auto;">
                     <table class="table table-border table-bordered table-bg table-hover table-sort">
@@ -93,7 +72,7 @@
                         </tr>
                         </thead>
                         <tbody id="swingCardDetail">
-                        <s:property value="swingCardDetail" escape="false"/>
+                            <s:property value="swingCardDetail" escape="false"/>
                         </tbody>
                     </table>
                 </div>
@@ -106,10 +85,6 @@
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.admin.js"></script>
 <script type="text/javascript">
-    $().ready( function(){
-           // $("input[type='checkbox']").on("click", function() {changestatus();});
-        }
-    )
 </script>
 </body>
 </html>

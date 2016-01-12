@@ -4,7 +4,6 @@ import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.utils.StringUtils;
 import com.posmanagement.utils.UserUtils;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -29,7 +28,7 @@ public class CardUI extends WebUI {
                                     .addAttribute("value", dbRet.get(index).get("CARDNO").toString())
                                     .addAttribute("checked", "checked",false)
                         ))
-                    .addElement("td", StringUtils.formatCardno(cardstr))
+                    .addElement("td", StringUtils.formatCardNO(cardstr))
                     .addElement("td", dbRet.get(index).get("CREDITAMOUNT").toString())
                     .addElement("td", dbRet.get(index).get("BILLDATE").toString())
                     .addElement("td", dbRet.get(index).get("NAME").toString())

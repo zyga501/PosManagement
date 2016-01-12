@@ -20,9 +20,11 @@ public class RepayUI extends WebUI {
                     .addAttribute("role", "row")
                     .addElement("td" , dbRet.get(index).get("REPAYYEAR").toString() + "/" +
                             dbRet.get(index).get("REPAYMONTH").toString())
-                    .addElement("td" , dbRet.get(index).get("CARDNO").toString())
+                    .addElement("td" , StringUtils.formatCardNO(dbRet.get(index).get("CARDNO").toString()))
                     .addElement("td" , dbRet.get(index).get("CARDMASTER").toString())
                     .addElement("td" , dbRet.get(index).get("TRADEMONEY").toString())
+                    .addElement("td", dbRet.get(index).get("TRADESTATUS").toString().compareTo("0") == 0 ?
+                            getText("repaysummary.repayfinished") : getText("repaysummary.repayunfinished"))
                     .addElement(new UIContainer("td")
                                 .addElement(
                                     new UIContainer("input")
@@ -50,12 +52,12 @@ public class RepayUI extends WebUI {
                     .addAttribute("role", "row")
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("REPAYYEAR")) + "/" +
                             StringUtils.convertNullableString(dbRet.get(index).get("REPAYMONTH")))
-                    .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("CARDNO")))
-                    .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("CARDMASTER")))
-                    .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("TRADEMONEY")))
-                    .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("THEDATE")))
-                    .addElement("td" ,"")
-                    .addElement("td" ,"")
+                    .addElement("td" , StringUtils.formatCardNO(StringUtils.convertNullableString(dbRet.get(index).get("CARDNO"))))
+                    .addElement("td" , StringUtils.convertNullableString(dbRet.get(index).get("CARDMASTER")))
+                    .addElement("td" , StringUtils.convertNullableString(dbRet.get(index).get("TRADEMONEY")))
+                    .addElement("td" , StringUtils.convertNullableString(dbRet.get(index).get("THEDATE")))
+                    .addElement("td" , StringUtils.convertNullableString(dbRet.get(index).get("UNICK")), "○")
+                    .addElement("td" , StringUtils.convertNullableString(dbRet.get(index).get("TRADETIME")), "○")
                     .addElement(new UIContainer("td")
                             .addElement(
                                     new UIContainer("input")
@@ -87,7 +89,8 @@ public class RepayUI extends WebUI {
                 "repaytb.thedate, " +
                 "cardtb.cardno, " +
                 "cardtb.cardmaster, " +
-                "SUM(repaytb.trademoney) trademoney " +
+                "SUM(repaytb.trademoney) trademoney, " +
+                "COUNT(case when tradestatus!='enable' then 1 else NULL END) tradestatus " +
                 "FROM " +
                 "repaytb " +
                 "INNER JOIN cardtb ON cardtb.cardno = repaytb.cardno " +
@@ -116,13 +119,16 @@ public class RepayUI extends WebUI {
                 "repaytb.trademoney, " +
                 "repaytb.thedate, " +
                 "repaytb.validstatus, " +
-                "repaytb.tradestatus " +
+                "repaytb.tradestatus, " +
+                "userinfo.unick, " +
+                "repaytb.tradetime " +
                 "FROM " +
                 "repaytb " +
                 "INNER JOIN cardtb ON cardtb.cardno = repaytb.cardno " +
                 "left JOIN userinfo ON userinfo.uid = repaytb.userid " +
                 whereSql +
-                "ORDER BY repaytb.thedate");
+                "ORDER BY repaytb.tradestatus," +
+                "repaytb.thedate");
     }
 
     private String userID_; // TODO for role

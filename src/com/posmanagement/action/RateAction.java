@@ -74,7 +74,6 @@ public class RateAction extends AjaxActionSupport {
             String rate = StringUtils.convertNullableString(getParameter("rate"));
             String maxFee = StringUtils.convertNullableString(getParameter("maxFee"));
             Double.parseDouble(rate);
-            Double.parseDouble(maxFee);
             Map parametMap = new HashMap();
             parametMap.put(1, UUIDUtils.generaterUUID());
             parametMap.put(2, rate);

@@ -14,7 +14,12 @@
     <link href="<%=request.getContextPath()%>/css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css"/>
     <link href="<%=request.getContextPath()%>/skin/default/skin.css" rel="stylesheet" type="text/css" id="skin"/>
     <link type="text/css" rel="stylesheet" href="<%=request.getContextPath()%>/js/laypage//skin/laypage.css" id="laypagecss">
-    <title><s:text name="bankmanager.title"/></title>
+    <title></title>
+    <style type="text/css" >
+        #searchtb tr td {
+            padding-right: 1em;
+        }
+    </style>
     <script type="text/javascript">
         function addcard() {
             var index = layer.open({
@@ -44,12 +49,18 @@
 <body >
 <div align="center">
     <div class="panel panel-default">
-        <div class="panel-header"><s:text name="cardmanager.paneltitle"/><span style="float:right;">
+        <div class="panel-header">
+            <div class="pd-5" style="width: 80%"><form id="searchform"><table id="searchtb"><tr>
+                <td><input type="text" name="cardno" placeholder="<s:text name="cardmanager.cardno"/>" class="input-text radius size-s"></td>
+                <td><input type="text" name="bankname" placeholder="<s:text name="cardmanager.bankname"/>" class="input-text radius size-s"></td>
+                <td><input type="text" name="cardmaster" placeholder="<s:text name="cardmanager.cardmaster"/>" class="input-text radius size-s"></td>
+                <% if (request.getSession().getAttribute("roleId").equals("e664d6f3-85f8-4bd6-bcb8-c4e053732b29")){ %>
+                <td><input type="text" name="salesman" placeholder="<s:text name="cardmanager.salesman"/>" class="input-text radius size-s"></td><%}%>
+                <td><a href="javascript:void(0);" class="btn btn-primary  radius size-S " onclick="dosearch()">
+                    <s:text name="global.search"/></a><span style="float:right;">
             <a href="javascript:void(0);" class="btn btn-warning  radius size-S " onclick="editcard()">
-                <s:text name="global.edit"/></a></span> <span style="float:right;">
-            <a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="
-            dosearch();">
-              2  <s:text name="global.add"/></a></span></div>
+                <s:text name="global.edit"/></a><a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="
+            addcard();"><s:text name="global.add"/></a></span></td></tr></table></form></div></div>
         <div id="navigatediv"></div>
         <div class="panel-body" id="parentIframe" >
             <form>
@@ -83,18 +94,74 @@
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.admin.js"></script>
 <script src="<%=request.getContextPath()%>/js/laypage/laypage.js"></script>
 <script>
+    $().ready
+    (laypage({
+        cont: 'navigatediv',
+        pages: ${pagecount},
+        skip: true,
+        skin: 'yahei',
+        jump: function (obj) {
+            $.ajax({
+                type: 'post',
+                url: 'Card!FetchCardList?currpage='+obj.curr,
+                dataType:"json",
+                data:$("#searchform").serialize(),
+                success: function (data) {
+                    var json = eval("(" + data + ")");
+                    if (json.errorMessage != null) {
+                        layer.msg(json.errorMessage);
+                    }
+                    else {
+                        layer.msg("<s:text name="global.dosuccess" />");
+                        refreshcardList(json.cardList);
+                    }
+                }
+            })
+        }
+    }) );
+
     function dosearch() {
-        laypage({
-            cont: 'navigatediv',
-            pages: ${cardList.pages},
-            skip: true,
-            skin: 'yahei',
-            jump: function (obj) {
-                alert(obj.curr);
-                refreshcardList(${cardList});
-              //  document.getElementById('biuuu_city_list').innerHTML = thisDate(obj.curr);
+        $.ajax({
+            type: 'post',
+            url: 'Card!FetchCardList',
+            dataType:"json",
+            data:$("#searchform").serialize(),
+            success: function (data) {
+                var json = eval("(" + data + ")");
+                if (json.errorMessage != null) {
+                    layer.msg(json.errorMessage);
+                }
+                else {
+                    layer.msg("<s:text name="global.dosuccess" />");
+                   // refreshcardList(json.cardList);
+                }
+                laypage({
+                    cont: 'navigatediv',
+                    pages: json.pagecount,
+                    skip: true,
+                    skin: 'yahei',
+                    jump: function (obj) {
+                        $.ajax({
+                            type: 'post',
+                            url: 'Card!FetchCardList?currpage='+obj.curr,
+                            dataType:"json",
+                            data:$("#searchform").serialize(),
+                            success: function (data) {
+                                var json = eval("(" + data + ")");
+                                if (json.errorMessage != null) {
+                                    layer.msg(json.errorMessage);
+                                }
+                                else {
+                                    layer.msg("<s:text name="global.dosuccess" />");
+                                    refreshcardList(json.cardList);
+                                }
+                            }
+                        })
+                    }
+                })
             }
         })
+
     }
 </script>
 </body>

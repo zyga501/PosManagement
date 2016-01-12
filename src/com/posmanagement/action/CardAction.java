@@ -82,16 +82,16 @@ public class CardAction extends AjaxActionSupport {
         Map map = new HashMap();
         int i = 0;
         if (null!=getParameter("cardno") && (!getParameter("cardno").equals(""))){
-            wherestr += "and cardno = '"+getParameter("cardno")+"'";
+            wherestr += "and cardno like '%"+getParameter("cardno")+"%'";
         }
         if (null!=getParameter("bankname")&& (!getParameter("bankname").equals(""))) {
-            wherestr += "and banktb.name = '"+getParameter("bankname")+"'";
+            wherestr += "and banktb.name like '%"+getParameter("bankname")+"%'";
         }
         if (null!=getParameter("cardmaster")&& (!getParameter("cardmaster").equals(""))){
-            wherestr += "and cardmaster  = '"+getParameter("cardmaster")+"'";
+            wherestr += "and cardmaster  like '%"+getParameter("cardmaster")+"%'";
         }
         if (null!=getParameter("salesman")&& (!getParameter("salesman").equals(""))) {
-            wherestr += "and userinfo.unick  = '"+getParameter("salesman")+"'";
+            wherestr += "and userinfo.unick  like '%"+getParameter("salesman")+"%'";
         }
 
         try {

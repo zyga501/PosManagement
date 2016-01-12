@@ -102,7 +102,6 @@ public class CardAction extends AjaxActionSupport {
                 map.put("pagecount",0);
             map.put("pagecount",Integer.parseInt(rect.get(0).get("CNT").toString())/CardUI.pagecontent+1);
             int curr = Integer.parseInt(null==getParameter("currpage")?"1":getParameter("currpage").toString());
-            map.put("pagecount",rect.get(0).get("CNT").toString());
             cardList = new CardUI("").generateCardTable(wherestr+" limit "+String.valueOf((curr-1)*CardUI.pagecontent)+","+String.valueOf((curr)*CardUI.pagecontent-1));
             map.put("cardList",cardList);
         } catch (Exception e) {

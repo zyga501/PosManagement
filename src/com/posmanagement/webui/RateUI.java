@@ -33,7 +33,7 @@ public class RateUI extends WebUI {
         UIContainer uiContainer = new UIContainer();
         for (int index = 0; index < dbRet.size(); ++index) {
             if (dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0) {
-                uiContainer.addElement(new UIContainer("option", dbRet.get(index).get("RATE").toString())
+                uiContainer.addElement(new UIContainer("option", dbRet.get(index).get("RATE").toString()+" | "+dbRet.get(index).get("MAXFEE").toString())
                                         .addAttribute("value", dbRet.get(index).get("UUID").toString()));
             }
         }

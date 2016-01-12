@@ -55,7 +55,7 @@ public class PosUI extends WebUI {
         return htmlString;
     }
 
-    public String generateMasterString(String posuuid) throws Exception {
+    public String generatePosList(String posuuid) throws Exception {
         ArrayList<HashMap<String, Object>> dbRet =  PosDbManager.executeSql("select posname from postb where uuid='"+posuuid+"'");
         if (dbRet.size() > 0)
             return dbRet.get(0).get("POSNAME").toString();
@@ -69,7 +69,7 @@ public class PosUI extends WebUI {
            return PosDbManager.executeSql("SELECT " +
                 "POSTB.uuid, " +
                 "POSTB.posname, " +
-              //  "banktb.name bankname, " +
+                "userinfo.unick salesman, " +
                 "posservertb.name posservername, " +
                 "mcctb.mcc mcc, " +
                 "industrytb.name industryname, " +
@@ -87,7 +87,7 @@ public class PosUI extends WebUI {
             return PosDbManager.executeSql("SELECT " +
                 "POSTB.uuid, " +
                 "POSTB.posname, " +
-                //  "banktb.name bankname, " +
+                "userinfo.unick salesman, " +
                 "posservertb.name posservername, " +
                 "mcctb.mcc mcc, " +
                 "industrytb.name industryname, " +

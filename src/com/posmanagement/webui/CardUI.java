@@ -2,6 +2,7 @@ package com.posmanagement.webui;
 
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.utils.StringUtils;
+import com.posmanagement.utils.UserUtils;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -9,8 +10,8 @@ import java.util.HashMap;
 
 public class CardUI extends WebUI {
     public CardUI(String uid){ userID_ = uid;   }
-    public String generateCardTable() throws Exception {
-        ArrayList<HashMap<String, Object>> dbRet = fetchCardList();
+    public String generateCardTable(String wherestr) throws Exception {
+        ArrayList<HashMap<String, Object>> dbRet = fetchCardList(wherestr);
         if (dbRet.size() <= 0)
             return new String("");
 
@@ -28,13 +29,13 @@ public class CardUI extends WebUI {
                                     .addAttribute("value", dbRet.get(index).get("CARDNO").toString())
                                     .addAttribute("checked", "checked",false)
                         ))
-                    .addElement("td", cardstr.substring(0,4)+"****"+cardstr.substring(cardstr.length()-4,cardstr.length()))
+                    .addElement("td", StringUtils.maskCardno(cardstr))
                     .addElement("td", dbRet.get(index).get("CREDITAMOUNT").toString())
                     .addElement("td", dbRet.get(index).get("BILLDATE").toString())
                     .addElement("td", dbRet.get(index).get("NAME").toString())
                     .addElement("td", dbRet.get(index).get("CARDMASTER").toString())
                     .addElement("td", dbRet.get(index).get("CMTEL").toString());
-            if ((null==userID_ || userID_.equals(""))|| (new StringUtils()).isAdmin(userID_))
+            if ((null==userID_ || userID_.equals(""))|| (new UserUtils()).isAdmin(userID_))
                     UI.addElement("td", dbRet.get(index).get("SALESMAN").toString());
             htmlString += UI;
         }
@@ -49,16 +50,18 @@ public class CardUI extends WebUI {
             return "Not exists this Card!";
     }
 
-    private ArrayList<HashMap<String, Object>> fetchCardList() throws Exception {
+    private ArrayList<HashMap<String, Object>> fetchCardList(String wherestr) throws Exception {
         if (null==userID_ || userID_.equals(""))
             return PosDbManager.executeSql("select cardtb.uuid, cardno,cardmaster,cmtel,billdate,userinfo.unick salesman " +
                 ",banktb.name,creditamount from cardtb inner join banktb " +
-                "on cardtb.bankuuid=banktb.uuid inner join userinfo on userinfo.uid=cardtb.salesmanuuid");
+                "on cardtb.bankuuid=banktb.uuid inner join userinfo on userinfo.uid=cardtb.salesmanuuid "+wherestr);
         else
             return PosDbManager.executeSql("select cardtb.uuid, cardno,cardmaster,cmtel,billdate,userinfo.unick salesman " +
                     ",banktb.name,creditamount from cardtb inner join banktb " +
-                    "on cardtb.bankuuid=banktb.uuid inner join userinfo on userinfo.uid=cardtb.salesmanuuid  where cardtb.salesmanuuid='"+userID_+"'");
+                    "on cardtb.bankuuid=banktb.uuid inner join userinfo on userinfo.uid=cardtb.salesmanuuid  where cardtb.salesmanuuid='"+
+                    userID_+"'"+ wherestr.replaceAll("where","").replaceAll("1=1",""));
     }
 
     private String userID_; // TODO for role
+    public static int pagecontent = 20;
 }

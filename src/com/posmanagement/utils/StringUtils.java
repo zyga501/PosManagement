@@ -19,14 +19,9 @@ public class StringUtils {
         return false;
     }
 
-
-    public boolean isAdmin(String UID){
-        ArrayList<HashMap<String, Object>> dbRet = null;
-        try {
-            dbRet = PosDbManager.executeSql("select 1 from userinfo where   rid ='e664d6f3-85f8-4bd6-bcb8-c4e053732b29' and  uid='"+UID+"'");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return (dbRet.size() > 0);
+    public static String maskCardno(String originStr) {
+        return originStr.substring(0,4)+"****"+originStr.substring(originStr.length()-4,originStr.length());
     }
+
+
 }

@@ -69,12 +69,47 @@ public class CardAction extends AjaxActionSupport {
 
     public String Init() throws Exception {
         if (super.getUserName().equals("admin"))
-            cardList = new CardUI("").generateCardTable();
+            cardList = new CardUI("").generateCardTable("");
         else
-            cardList = new CardUI(super.getUserID()).generateCardTable();
+            cardList = new CardUI(super.getUserID()).generateCardTable("");
+        ;
+        getRequest().setAttribute("pagecount", (cardList.split("<tr").length-1)/CardUI.pagecontent+1);
         return CARDMANAGER;
     }
 
+    public String FetchCardList(){
+        String wherestr = " where 1=1 ";
+        Map map = new HashMap();
+        int i = 0;
+        if (null!=getParameter("cardno") && (!getParameter("cardno").equals(""))){
+            wherestr += "and cardno = '"+getParameter("cardno")+"'";
+        }
+        if (null!=getParameter("bankname")&& (!getParameter("bankname").equals(""))) {
+            wherestr += "and banktb.name = '"+getParameter("bankname")+"'";
+        }
+        if (null!=getParameter("cardmaster")&& (!getParameter("cardmaster").equals(""))){
+            wherestr += "and cardmaster  = '"+getParameter("cardmaster")+"'";
+        }
+        if (null!=getParameter("salesman")&& (!getParameter("salesman").equals(""))) {
+            wherestr += "and userinfo.unick  = '"+getParameter("salesman")+"'";
+        }
+
+        try {
+            ArrayList<HashMap<String, Object>> rect = PosDbManager.executeSql("select count(*) as cnt from cardtb inner join banktb " +
+                    "on cardtb.bankuuid=banktb.uuid inner join userinfo on userinfo.uid=cardtb.salesmanuuid " +
+                    wherestr);
+            if (rect.size()<=0)
+                map.put("pagecount",0);
+            map.put("pagecount",Integer.parseInt(rect.get(0).get("CNT").toString())/CardUI.pagecontent+1);
+            int curr = Integer.parseInt(null==getParameter("currpage")?"1":getParameter("currpage").toString());
+            map.put("pagecount",rect.get(0).get("CNT").toString());
+            cardList = new CardUI("").generateCardTable(wherestr+" limit "+String.valueOf((curr-1)*CardUI.pagecontent)+","+String.valueOf((curr)*CardUI.pagecontent-1));
+            map.put("cardList",cardList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return AjaxActionComplete(map);
+    }
     public String FetchCard(){
         if (null==newid || (newid.equals(""))) return "";
         Map para= new HashMap();
@@ -148,9 +183,9 @@ public class CardAction extends AjaxActionSupport {
                     map.put("errorMessage", getText("addrate.rateFormatError"));
                 {
                     if (super.getUserName().equals("admin"))
-                        cardList = new CardUI("").generateCardTable();
+                        cardList = new CardUI("").generateCardTable("");
                     else
-                        cardList = new CardUI(super.getUserID()).generateCardTable();
+                        cardList = new CardUI(super.getUserID()).generateCardTable("");
 
                     map.put("cardList",cardList);
                 }
@@ -190,9 +225,9 @@ public class CardAction extends AjaxActionSupport {
                     map.put("errorMessage", getText("addrate.rateFormatError"));
                 else {
                     if (super.getUserName().equals("admin"))
-                        map.put("cardList", new CardUI("").generateCardTable());
+                        map.put("cardList", new CardUI("").generateCardTable(""));
                     else
-                        map.put("cardList", new CardUI(super.getUserID()).generateCardTable());
+                        map.put("cardList", new CardUI(super.getUserID()).generateCardTable(""));
                 }
                 map.put("newid",para.get(3));
             }

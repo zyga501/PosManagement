@@ -20,7 +20,7 @@ public class RepayUI extends WebUI {
                     .addAttribute("role", "row")
                     .addElement("td" , dbRet.get(index).get("REPAYYEAR").toString() + "/" +
                             dbRet.get(index).get("REPAYMONTH").toString())
-                    .addElement("td" , dbRet.get(index).get("CARDNO").toString())
+                    .addElement("td" , StringUtils.formatCardNO(dbRet.get(index).get("CARDNO").toString()))
                     .addElement("td" , dbRet.get(index).get("CARDMASTER").toString())
                     .addElement("td" , dbRet.get(index).get("TRADEMONEY").toString())
                     .addElement("td", dbRet.get(index).get("TRADESTATUS").toString().compareTo("0") == 0 ?
@@ -52,7 +52,7 @@ public class RepayUI extends WebUI {
                     .addAttribute("role", "row")
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("REPAYYEAR")) + "/" +
                             StringUtils.convertNullableString(dbRet.get(index).get("REPAYMONTH")))
-                    .addElement("td" , StringUtils.convertNullableString(dbRet.get(index).get("CARDNO")))
+                    .addElement("td" , StringUtils.formatCardNO(StringUtils.convertNullableString(dbRet.get(index).get("CARDNO"))))
                     .addElement("td" , StringUtils.convertNullableString(dbRet.get(index).get("CARDMASTER")))
                     .addElement("td" , StringUtils.convertNullableString(dbRet.get(index).get("TRADEMONEY")))
                     .addElement("td" , StringUtils.convertNullableString(dbRet.get(index).get("THEDATE")))
@@ -127,7 +127,8 @@ public class RepayUI extends WebUI {
                 "INNER JOIN cardtb ON cardtb.cardno = repaytb.cardno " +
                 "left JOIN userinfo ON userinfo.uid = repaytb.userid " +
                 whereSql +
-                "ORDER BY repaytb.thedate");
+                "ORDER BY repaytb.tradestatus," +
+                "repaytb.thedate");
     }
 
     private String userID_; // TODO for role

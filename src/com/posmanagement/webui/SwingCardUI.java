@@ -20,7 +20,7 @@ public class SwingCardUI extends WebUI {
                     .addAttribute("role", "row")
                     .addElement("td", dbRet.get(index).get("BILLYEAR").toString() + "/" +
                             dbRet.get(index).get("BILLMONTH").toString())
-                    .addElement("td", dbRet.get(index).get("CARDNO").toString())
+                    .addElement("td", StringUtils.formatCardNO(dbRet.get(index).get("CARDNO").toString()))
                     .addElement("td", dbRet.get(index).get("CARDMASTER").toString())
                     .addElement("td", dbRet.get(index).get("AMOUNT").toString())
                     .addElement("td", dbRet.get(index).get("SWINGSTATUS").toString().compareTo("0") == 0 ?
@@ -52,7 +52,7 @@ public class SwingCardUI extends WebUI {
                     .addAttribute("role", "row")
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("BILLYEAR")) + "/" +
                             StringUtils.convertNullableString(dbRet.get(index).get("BILLMONTH")))
-                    .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("CARDNO")))
+                    .addElement("td" , StringUtils.formatCardNO(StringUtils.convertNullableString(dbRet.get(index).get("CARDNO"))))
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("CARDMASTER")))
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("AMOUNT")))
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("SDATETM")))
@@ -120,14 +120,15 @@ public class SwingCardUI extends WebUI {
                     "userinfo.unick, " +
                     "swingcard.realsdatetm, " +
                     "swingcard.validstatus, " +
-                    "swingcard.SWINGSTATUS " +
+                    "swingcard.swingstatus " +
                     "FROM " +
                     "swingcard " +
                     "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno " +
                     "INNER JOIN postb ON postb.uuid = swingcard.posuuid  " +
                     "left JOIN userinfo ON userinfo.uid = swingcard.userid " +
                     whereSql +
-                    "ORDER BY swingcard.sdatetm");
+                    "ORDER BY swingcard.swingstatus, " +
+                    "swingcard.sdatetm");
     }
 
     private String userID_; // TODO for role

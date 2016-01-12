@@ -3,9 +3,6 @@ package com.posmanagement.utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Created by hammer on 2016-01-11.
- */
 public class UserUtils {
 
     public boolean isAdmin(String UID){

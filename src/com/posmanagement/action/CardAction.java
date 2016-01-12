@@ -223,10 +223,11 @@ public class CardAction extends AjaxActionSupport {
                         "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",(HashMap<Integer, Object>)  para))
                     map.put("errorMessage", getText("addrate.rateFormatError"));
                 else {
-                    if (super.getUserName().equals("admin"))
-                        map.put("cardList", new CardUI("").generateCardTable(""));
-                    else
-                        map.put("cardList", new CardUI(super.getUserID()).generateCardTable(""));
+                    String userID = super.getUserID();
+                    if (super.getUserName().equals("admin")) {
+                        userID = "";
+                    }
+                    map.put("cardList", new CardUI(userID).generateCardTable(""));
                 }
                 map.put("newid",para.get(3));
             }

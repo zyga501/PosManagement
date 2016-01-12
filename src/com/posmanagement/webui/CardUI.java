@@ -29,7 +29,7 @@ public class CardUI extends WebUI {
                                     .addAttribute("value", dbRet.get(index).get("CARDNO").toString())
                                     .addAttribute("checked", "checked",false)
                         ))
-                    .addElement("td", StringUtils.maskCardno(cardstr))
+                    .addElement("td", StringUtils.formatCardno(cardstr))
                     .addElement("td", dbRet.get(index).get("CREDITAMOUNT").toString())
                     .addElement("td", dbRet.get(index).get("BILLDATE").toString())
                     .addElement("td", dbRet.get(index).get("NAME").toString())

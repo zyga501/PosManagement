@@ -19,7 +19,7 @@ public class StringUtils {
         return false;
     }
 
-    public static String maskCardno(String originStr) {
+    public static String formatCardno(String originStr) {
         return originStr.substring(0,4)+"****"+originStr.substring(originStr.length()-4,originStr.length());
     }
 

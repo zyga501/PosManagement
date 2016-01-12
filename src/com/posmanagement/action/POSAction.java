@@ -3,6 +3,7 @@ package com.posmanagement.action;
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.utils.StringUtils;
 import com.posmanagement.utils.UUIDUtils;
+import com.posmanagement.utils.UserUtils;
 import com.posmanagement.webui.PosUI;
 
 import java.sql.SQLException;
@@ -64,10 +65,24 @@ public class POSAction extends AjaxActionSupport {
         Map para= new HashMap();
         para.put(1,newid);
         try {
-            ArrayList<HashMap<String, Object>> hashMaps = PosDbManager.executeSql("SELECT * from postb where uuid=? ",( HashMap<Integer, Object>) para);
+            ArrayList<HashMap<String, Object>> hashMaps = PosDbManager.executeSql("SELECT a.*,c.unick as salesman,(select CONCAT(COUNT(b.amount),';',SUM(b.amount))" +
+                    "  from  swingcard b where a.uuid=b.posuuid )used from postb a inner join userinfo c on" +
+                    " c.uid=a.salesmanuuid  where a.uuid=? ",( HashMap<Integer, Object>) para);
             if (hashMaps.size()<=0) return "";
             posManager = new HashMap();
             for (Object keyName:hashMaps.get(0).keySet())
+                if (keyName.toString().toLowerCase().equals("used")) {
+                    if (null!=hashMaps.get(0).get(keyName)) {
+                        String[] usevalue = hashMaps.get(0).get(keyName).toString().split(";");
+                        posManager.put("usedcount", usevalue[0]);
+                        posManager.put("usedsum", usevalue[1]);
+                    }
+                    else{
+                        posManager.put("usedcount","0" );
+                        posManager.put("usedsum", "0");
+                    }
+                }
+                else
                 posManager.put(keyName.toString().toLowerCase(),hashMaps.get(0).get(keyName));
         } catch (SQLException e) {
             e.printStackTrace();
@@ -85,26 +100,22 @@ public class POSAction extends AjaxActionSupport {
         }
             Map parametMap = new HashMap();
             try {
-                parametMap.put(1, (String) getParameter("salesman"));
-                parametMap.put(2, (String) getParameter("posname"));
-                parametMap.put(3, (String) getParameter("industryname"));
-                parametMap.put(4, (String) getParameter("rate"));
-                parametMap.put(5, (String) getParameter("corporation"));
-                parametMap.put(6, (String) getParameter("topqk"));
-                parametMap.put(7, (String) getParameter("mcc"));
-                parametMap.put(8, (String) getParameter("posserver"));
-                parametMap.put(9, (String) getParameter("recipientbank"));
-                parametMap.put(10, (String) getParameter("recipientaccount"));
-                parametMap.put(11, (String) getParameter("startdatetm"));
-                parametMap.put(12, (String) getParameter("usecount"));
-                parametMap.put(13, (String) getParameter("useamount"));
-                parametMap.put(14,StringUtils.convertNullableString( getParameter("status")).equals("on")?"enable":"disable");
-                parametMap.put(15, (String) getParameter("newid"));
+                int i = 1;
+                parametMap.put(i++, (String) getParameter("posname"));
+                parametMap.put(i++, (String) getParameter("industryname"));
+                parametMap.put(i++, (String) getParameter("rate"));
+                parametMap.put(i++, (String) getParameter("corporation"));
+                parametMap.put(i++, (String) getParameter("mcc"));
+                parametMap.put(i++, (String) getParameter("posserver"));
+                parametMap.put(i++, (String) getParameter("usecount"));
+                parametMap.put(i++, (String) getParameter("useamount"));
+                parametMap.put(i++,StringUtils.convertNullableString( getParameter("status")).equals("on")?"enable":"disable");
+                parametMap.put(i++, (String) getParameter("newid"));
 
-                    if (PosDbManager.executeUpdate("update postb set salesmanuuid=?, posname=?,industryuuid=?,rateuuid=?,corporation=?,topqk=?,mccuuid=?," +
-                            "posserveruuid=?,recipientbankuuid=?,recipientaccount=?,startdatetm=?,usecount=?," +
+                    if (PosDbManager.executeUpdate("update postb set  posname=?,industryuuid=?,rateuuid=?,corporation=?,mccuuid=?," +
+                            "posserveruuid=?,usecount=?," +
                             "useamount=?,status=? where uuid=?", (HashMap<Integer, Object>)parametMap)) {
-                       // map.put("errorMessage","error");
+                        map.put("errorMessage","error");
                     }
             }
             catch (Exception exception) {
@@ -117,34 +128,34 @@ public class POSAction extends AjaxActionSupport {
 
     public String addPos(){
         Map map = new HashMap();
-        Map parametMap = new HashMap();
-        newid =UUIDUtils.generaterUUID();
-        parametMap.put(1, newid);
-        parametMap.put(2, (String) getParameter("posname"));
-        parametMap.put(3, (String) getParameter("industryname"));
-        parametMap.put(4, (String) getParameter("rate"));
-        parametMap.put(5, (String) getParameter("corporation"));
-        parametMap.put(6, (String) getParameter("topqk"));
-        parametMap.put(7, (String) getParameter("mcc"));
-        parametMap.put(8, (String) getParameter("posserver"));
-        parametMap.put(9, (String) getParameter("recipientbank"));
-        parametMap.put(10, (String) getParameter("recipientaccount"));
-        parametMap.put(11, (String) getParameter("startdatetm"));
-        parametMap.put(12, (String) getParameter("usecount"));
-        parametMap.put(13, (String) getParameter("useamount"));
-        parametMap.put(14, StringUtils.convertNullableString(getParameter("status")).equals("on")?"enable":"disable");
-        parametMap.put(15, (String) getParameter("salesman"));
+        if ((new UserUtils()).isSalesman(getUserID())) {
+            Map parametMap = new HashMap();
+            int i = 1;
+            newid = UUIDUtils.generaterUUID();
+            parametMap.put(i++, newid);
+            parametMap.put(i++, (String) getParameter("posname"));
+            parametMap.put(i++, (String) getParameter("industryname"));
+            parametMap.put(i++, (String) getParameter("rate"));
+            parametMap.put(i++, (String) getParameter("corporation"));
+            parametMap.put(i++, (String) getParameter("mcc"));
+            parametMap.put(i++, (String) getParameter("posserver"));
+            parametMap.put(i++, (String) getParameter("usecount"));
+            parametMap.put(i++, (String) getParameter("useamount"));
+            parametMap.put(i++, StringUtils.convertNullableString(getParameter("status")).equals("on") ? "enable" : "disable");
+            parametMap.put(i++, getUserID());
 
-        try {
-            if (PosDbManager.executeUpdate("insert into postb(uuid,posname,industryuuid,rateuuid,corporation,topqk,mccuuid," +
-                    "posserveruuid,recipientbankuuid,recipientaccount,startdatetm,usecount,useamount,status,salesmanuuid)" +
-                    "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>)parametMap)) {
-                map.put("posList", new PosUI(super.getUserID()).generateSelect());
+            try {
+                if (PosDbManager.executeUpdate("insert into postb(uuid,posname,industryuuid,rateuuid,corporation,mccuuid," +
+                        "posserveruuid,usecount,useamount,status,salesmanuuid)" +
+                        "values(?,?,?,?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>) parametMap)) {
+                    map.put("posList", new PosUI(super.getUserID()).generateSelect());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-
+        else
+        map.put("errorMessage", getText("global.noright"));
         return AjaxActionComplete(map);
     }
 }

@@ -112,7 +112,6 @@
                         layer.msg(json.errorMessage);
                     }
                     else {
-                        layer.msg("<s:text name="global.dosuccess" />");
                         refreshcardList(json.cardList);
                     }
                 }
@@ -132,8 +131,6 @@
                     layer.msg(json.errorMessage);
                 }
                 else {
-                    layer.msg("<s:text name="global.dosuccess" />");
-                   // refreshcardList(json.cardList);
                 }
                 laypage({
                     cont: 'navigatediv',
@@ -152,7 +149,6 @@
                                     layer.msg(json.errorMessage);
                                 }
                                 else {
-                                    layer.msg("<s:text name="global.dosuccess" />");
                                     refreshcardList(json.cardList);
                                 }
                             }

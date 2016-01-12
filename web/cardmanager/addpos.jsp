@@ -133,24 +133,11 @@
                 }
             });
         }
-        function fetchSalemanList() {
-            $.ajax({
-                type: 'post',
-                url: 'Saleman!FetchSalemanList',
-                data: "uiMode=SELECTLIST",
-                dataType : "json",
-                success: function(data) {
-                    var json = eval("(" + data + ")");
-                    $("#salesman").html(json.salemanList);
-                }
-            });
-        }
         $(function () {
             fetchBankList();
             fetchIndustryList();
             fetchRateList();
             fetchMCCList();
-            fetchSalemanList();
             fetchPosServerList();
         })
     </script>
@@ -180,9 +167,6 @@
                     <td><s:text name="posmanager.corporation"/></td><td><input name="corporation" type="text"  value="<s:property value="posManager.corporation"/>" placeholder="<s:text name="posmanager.corporation" />" class="input-text size-S"></td>
                 </tr>
                 <tr class="text-c">
-                    <td><s:text name="posmanager.topqk"/></td><td><input name="topqk" type="text"  value="<s:property value="posManager.topqk"/>" placeholder="<s:text name="posmanager.topqk" />" class="input-text size-S"></td>
-                </tr>
-                <tr class="text-c">
                     <td><s:text name="posmanager.mcc"/></td>
                     <td>
                     <select id="mcc" name="mcc" style="width: 100%">
@@ -196,27 +180,20 @@
                 </td>
                 </tr>
                 <tr class="text-c">
-                    <td><s:text name="posmanager.recipientbank"/></td><td><input name="recipientbank" type="text"  value="<s:property value="posManager.recipientbank"/>" placeholder="<s:text name="posmanager.recipientbank" />" class="input-text size-S"></td>
-                </tr>
-                <tr class="text-c">
-                    <td><s:text name="posmanager.recipientaccount"/></td><td><input name="recipientaccount" type="text"  value="<s:property value="posManager.recipientaccount"/>" placeholder="<s:text name="posmanager.recipientaccount" />" class="input-text size-S"></td>
-                </tr>
-                <tr class="text-c">
                     <td><s:text name="posmanager.startdatetm"/></td><td><input name="startdatetm" type="text"  value="<s:property value="posManager.startdatetm"/>" placeholder="<s:text name="posmanager.startdatetm" />" class="input-text size-S"></td>
                 </tr>
                 <tr class="text-c">
-                    <td><s:text name="posmanager.usecount"/></td><td><input name="usecount" type="text"  value="<s:property value="posManager.usecount"/>" placeholder="<s:text name="posmanager.usecount" />" class="input-text size-S"></td>
+                    <td><s:text name="posmanager.usecount"/></td><td><input name="usecount" type="text"  value="<s:property value="posManager.usedcount"/>" placeholder="<s:text name="posmanager.usecount" />" class="input-text size-S"></td>
                 </tr>
                 <tr class="text-c">
-                    <td><s:text name="posmanager.useamount"/></td><td><input name="useamount" type="text"  value="<s:property value="posManager.useamount"/>" placeholder="<s:text name="posmanager.useamount" />" class="input-text size-S"></td>
+                    <td><s:text name="posmanager.useamount"/></td><td><input name="useamount" type="text"  value="<s:property value="posManager.usedsum"/>" placeholder="<s:text name="posmanager.useamount" />" class="input-text size-S"></td>
                 </tr>
                 <tr class="text-c">
                     <td><s:text name="global.status"/></td><td><input name="status" type="checkbox"  <s:if  test="posManager.status =='enable'">checked</s:if><s:else></s:else> > </td>
                 </tr>
                 <tr class="text-c">
                     <td><s:text name="posmanager.salesman"/></td><td>
-                    <select id="salesman" name="salesman" style="width: 100%">
-                    </select>
+                    <input name="salesman" type="text" readonly  value="<s:property value="posManager.salesman"/>" placeholder="<s:text name="posmanager.salesman" />" class="input-text size-S">
                 </tr>
             </table>
         </div>

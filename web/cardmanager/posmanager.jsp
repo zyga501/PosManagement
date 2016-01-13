@@ -14,6 +14,11 @@
     <link href="<%=request.getContextPath()%>/css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css"/>
     <link href="<%=request.getContextPath()%>/skin/default/skin.css" rel="stylesheet" type="text/css" id="skin"/>
     <title><s:text name="bankmanager.title"/></title>
+    <style type="text/css" >
+        #searchtb tr td {
+            padding-right: 1em;
+        }
+    </style>
     <script type="text/javascript">
         function addpos() {
             var index = layer.open({
@@ -41,11 +46,19 @@
 <body >
 <div align="center">
     <div class="panel panel-default"  >
-        <div class="panel-header"><s:text name="posmanager.paneltitle"/><span style="float:right;">
+        <div class="panel-header">
+            <div class="pd-5" style="width: 80%"><form id="searchform"><table id="searchtb"><tr>
+                <td><input type="text" name="posname" placeholder="<s:text name="posmanager.posname"/>" class="input-text radius size-s"></td>
+                <td><input type="text" name="industryname" placeholder="<s:text name="posmanager.industryname"/>" class="input-text radius size-s"></td>
+                <td><input type="text" name="rate" placeholder="<s:text name="posmanager.rate"/>" class="input-text radius size-s"></td>
+                <td><input type="text" name="posserver" placeholder="<s:text name="posmanager.posserver"/>" class="input-text radius size-s"></td>
+                <td><a href="javascript:void(0);" class="btn btn-primary  radius size-S " onclick="dosearch()">
+                    <s:text name="global.search"/></a><span style="float:right;">
             <a href="javascript:void(0);" class="btn btn-warning  radius size-S " onclick="editpos()">
                 <s:text name="global.edit"/></a></span> <span style="float:right;">
             <a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addpos()">
-                <s:text name="global.add"/></a></span></div>
+                <s:text name="global.add"/></a></span></td></tr></table></form></div></div>
+        <div id="navigatediv"></div>
         <div class="panel-body" id="parentIframe">
             <form>
                 <div >
@@ -58,6 +71,9 @@
                             <th><s:text name="posmanager.rate"/></th>
                             <th><s:text name="posmanager.posserver"/></th>
                             <th><s:text name="posmanager.mcc"/></th>
+                            <th><s:text name="posmanager.startdatetm"/></th>
+                            <th><s:text name="posmanager.usecount"/></th>
+                            <th><s:text name="posmanager.useamount"/></th>
                             <th><s:text name="global.status"/></th>
                         </tr>
                         </thead>
@@ -74,5 +90,72 @@
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/layer/1.9.3/layer.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.admin.js"></script>
+<script src="<%=request.getContextPath()%>/js/laypage/laypage.js"></script>
+<script>
+    $().ready
+    (laypage({
+        cont: 'navigatediv',
+        pages: ${pagecount},
+        skip: true,
+        skin: 'yahei',
+        jump: function (obj) {
+            $.ajax({
+                type: 'post',
+                url: 'POS!FetchPosList?currpage='+obj.curr,
+                dataType:"json",
+                data:$("#searchform").serialize(),
+                success: function (data) {
+                    var json = eval("(" + data + ")");
+                    if (json.errorMessage != null) {
+                        layer.msg(json.errorMessage);
+                    }
+                    else {
+                        refreshposList(json.posList);
+                    }
+                }
+            })
+        }
+    }) );
+
+    function dosearch() {
+        $.ajax({
+            type: 'post',
+            url: 'POS!FetchPosList',
+            dataType:"json",
+            data:$("#searchform").serialize(),
+            success: function (data) {
+                var json = eval("(" + data + ")");
+                if (json.errorMessage != null) {
+                    layer.msg(json.errorMessage);
+                }
+                else {
+                }
+                laypage({
+                    cont: 'navigatediv',
+                    pages: json.pagecount,
+                    skip: true,
+                    skin: 'yahei',
+                    jump: function (obj) {
+                        $.ajax({
+                            type: 'post',
+                            url: 'POS!FetchPosList?currpage='+obj.curr,
+                            dataType:"json",
+                            data:$("#searchform").serialize(),
+                            success: function (data) {
+                                var json = eval("(" + data + ")");
+                                if (json.errorMessage != null) {
+                                    layer.msg(json.errorMessage);
+                                }
+                                else {
+                                    refreshposList(json.posList);
+                                }
+                            }
+                        })
+                    }
+                })
+            }
+        })
+    }
+</script>
 </body>
 </html>

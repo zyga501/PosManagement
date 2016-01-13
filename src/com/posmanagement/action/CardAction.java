@@ -2,6 +2,7 @@ package com.posmanagement.action;
 
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.utils.Readconfig;
+import com.posmanagement.utils.UserUtils;
 import com.posmanagement.webui.CardUI;
 
 import java.io.File;
@@ -68,11 +69,7 @@ public class CardAction extends AjaxActionSupport {
     }
 
     public String Init() throws Exception {
-        if (super.getUserName().equals("admin"))
-            cardList = new CardUI("").generateCardTable("");
-        else
-            cardList = new CardUI(super.getUserID()).generateCardTable("");
-        ;
+        cardList = new CardUI(super.getUserID()).generateCardTable("");
         getRequest().setAttribute("pagecount", (cardList.split("<tr").length-1)/CardUI.pagecontent+1);
         return CARDMANAGER;
     }
@@ -81,16 +78,16 @@ public class CardAction extends AjaxActionSupport {
         String wherestr = " where 1=1 ";
         Map map = new HashMap();
         int i = 0;
-        if (null!=getParameter("cardno") && (!getParameter("cardno").equals(""))){
+        if (null!=getParameter("cardno") && (!getParameter("cardno").toString().trim().equals(""))){
             wherestr += "and cardno like '%"+getParameter("cardno")+"%'";
         }
-        if (null!=getParameter("bankname")&& (!getParameter("bankname").equals(""))) {
+        if (null!=getParameter("bankname")&& (!getParameter("bankname").toString().trim().equals(""))) {
             wherestr += "and banktb.name like '%"+getParameter("bankname")+"%'";
         }
-        if (null!=getParameter("cardmaster")&& (!getParameter("cardmaster").equals(""))){
+        if (null!=getParameter("cardmaster")&& (!getParameter("cardmaster").toString().trim().equals(""))){
             wherestr += "and cardmaster  like '%"+getParameter("cardmaster")+"%'";
         }
-        if (null!=getParameter("salesman")&& (!getParameter("salesman").equals(""))) {
+        if (null!=getParameter("salesman")&& (!getParameter("salesman").toString().trim().equals(""))) {
             wherestr += "and userinfo.unick  like '%"+getParameter("salesman")+"%'";
         }
 
@@ -102,13 +99,14 @@ public class CardAction extends AjaxActionSupport {
                 map.put("pagecount",0);
             map.put("pagecount",Integer.parseInt(rect.get(0).get("CNT").toString())/CardUI.pagecontent+1);
             int curr = Integer.parseInt(null==getParameter("currpage")?"1":getParameter("currpage").toString());
-            cardList = new CardUI("").generateCardTable(wherestr+" limit "+String.valueOf((curr-1)*CardUI.pagecontent)+","+CardUI.pagecontent);
+            cardList = new CardUI(super.getUserID()).generateCardTable(wherestr+" limit "+String.valueOf((curr-1)*CardUI.pagecontent)+","+CardUI.pagecontent);
             map.put("cardList",cardList);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return AjaxActionComplete(map);
     }
+
     public String FetchCard(){
         if (null==newid || (newid.equals(""))) return "";
         Map para= new HashMap();
@@ -181,11 +179,7 @@ public class CardAction extends AjaxActionSupport {
                         "cmaddress=?,cmtel=?,cmseccontact=?,memos=?,repaylimit=?,repaynum=?,repayinterval=?  where cardno=?",(HashMap<Integer, Object>)  para))
                     map.put("errorMessage", getText("addrate.rateFormatError"));
                 {
-                    if (super.getUserName().equals("admin"))
-                        cardList = new CardUI("").generateCardTable("");
-                    else
-                        cardList = new CardUI(super.getUserID()).generateCardTable("");
-
+                    cardList = new CardUI(super.getUserID()).generateCardTable("");
                     map.put("cardList",cardList);
                 }
                 map.put("newid",para.get(3));

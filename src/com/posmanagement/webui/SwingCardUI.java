@@ -2,14 +2,15 @@ package com.posmanagement.webui;
 
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.utils.StringUtils;
+import com.posmanagement.utils.UserUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SwingCardUI extends WebUI {
     public SwingCardUI(String uid){userID_=uid;}
-    public String generateSummary() throws Exception {
-        ArrayList<HashMap<String, Object>> dbRet = fetchSwingCardSummary();
+    public String generateSummary(String wherestr) throws Exception {
+        ArrayList<HashMap<String, Object>> dbRet = fetchSwingCardSummary(wherestr);
         if (dbRet.size() <= 0)
             return new String("");
 
@@ -23,7 +24,7 @@ public class SwingCardUI extends WebUI {
                     .addElement("td", StringUtils.formatCardNO(dbRet.get(index).get("CARDNO").toString()))
                     .addElement("td", dbRet.get(index).get("CARDMASTER").toString())
                     .addElement("td", dbRet.get(index).get("AMOUNT").toString())
-                    .addElement("td", dbRet.get(index).get("SWINGSTATUS").toString().compareTo("0") == 0 ?
+                    .addElement("td", dbRet.get(index).get("VALIDNUM").toString().equals(dbRet.get(index).get("TOTALNUM").toString())?
                             getText("swingcardsummary.swingfinished") : getText("swingcardsummary.swingunfinished"))
                     .addElement(new UIContainer("td")
                                 .addElement(
@@ -78,28 +79,30 @@ public class SwingCardUI extends WebUI {
         return htmlString;
     }
 
-    private ArrayList<HashMap<String, Object>> fetchSwingCardSummary() throws Exception {
-        String whereSql = "";
-        if (null != userID_ && userID_.length() != 0)
-            whereSql += "where cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
-                    " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"') ";
+    private ArrayList<HashMap<String, Object>> fetchSwingCardSummary(String wherestr) throws Exception {
+        String limitstr = wherestr.substring(wherestr.indexOf("limit"));
+        String whereSql = " where validstatus='enable'";
+        whereSql += wherestr.substring(0,wherestr.indexOf("limit")).replaceAll("where","").replaceAll("1=1","");
+        if (!(new UserUtils()).isAdmin(userID_))
+            whereSql += " and  (cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
+                    " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"')) ";
         return PosDbManager.executeSql("SELECT " +
                 "swingcard.billyear, " +
                 "swingcard.billmonth, " +
                 "swingcard.cardno, " +
                 "Sum(swingcard.amount) AS amount, " +
-                "cardtb.cardmaster, " +
-                "COUNT(case when swingstatus!='enable' then 1 else NULL END) swingstatus " +
+                "cardtb.cardmaster, count(1) as totalnum," +
+                "sum(case when swingstatus='enable' then 1 else 0 END) validnum " +
                 "FROM " +
                 "swingcard " +
                 "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno " +
                 whereSql +
-                "GROUP BY " +
+                " GROUP BY " +
                 "swingcard.billyear, " +
                 "swingcard.billmonth, " +
                 "swingcard.cardno  ORDER BY " +
                 "swingcard.billyear desc, " +
-                "swingcard.billmonth desc");
+                "swingcard.billmonth desc "+limitstr);
     }
 
     private ArrayList<HashMap<String, Object>> fetchSwingCardDetail(String cardNO, String billYear, String billMonth) throws Exception {
@@ -131,5 +134,6 @@ public class SwingCardUI extends WebUI {
                     "swingcard.sdatetm");
     }
 
-    private String userID_; // TODO for role
+    private String userID_;
+    public static int pagecontent=15;
 }

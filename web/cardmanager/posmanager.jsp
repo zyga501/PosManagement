@@ -13,7 +13,7 @@
     <link href="<%=request.getContextPath()%>/css/H-ui.admin.css" rel="stylesheet" type="text/css"/>
     <link href="<%=request.getContextPath()%>/css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css"/>
     <link href="<%=request.getContextPath()%>/skin/default/skin.css" rel="stylesheet" type="text/css" id="skin"/>
-    <title><s:text name="bankmanager.title"/></title>
+    <title></title>
     <style type="text/css" >
         #searchtb tr td {
             padding-right: 1em;

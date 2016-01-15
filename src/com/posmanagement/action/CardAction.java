@@ -162,7 +162,6 @@ public class CardAction extends AjaxActionSupport {
         else {
             Map para = new HashMap();
             try {
-                //for (int i=0;i<cardmanager.size();i++) {
                 int i=1;
                 String[] strary=(new String("cardno,bankname,creditamount,tempamount,templimitdate," +
                         "useamount,billdate,pin,telpwd,tradepwd,enchashmentpwd,billafterdate,lastrepaymentdate," +
@@ -198,7 +197,6 @@ public class CardAction extends AjaxActionSupport {
         else {
             Map para = new HashMap();
             try {
-                //for (int i=0;i<cardmanager.size();i++) {
                 int i=1;
                 String[] strary=(new String("cardno,bankname,creditamount,tempamount,templimitdate," +
                         "useamount,billdate,pin,telpwd,tradepwd,enchashmentpwd,billafterdate,lastrepaymentdate," +

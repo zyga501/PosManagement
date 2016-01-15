@@ -7,10 +7,7 @@ import com.posmanagement.webui.BillUI;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class BillAction extends AjaxActionSupport {
     public final static String BILLMANAGER = "billManager";
@@ -71,12 +68,11 @@ public class BillAction extends AjaxActionSupport {
     }
 
     public String Init() throws Exception {
-        if (super.getUserName().equals("admin"))
-            billList = new BillUI("").generateBillTable();
-        else
-            billList = new BillUI(super.getUserID()).generateBillTable();
+        billList = new BillUI(super.getUserID()).generateBillTable("");
+        getRequest().setAttribute("pagecount", (billList.split("<tr").length-1)/BillUI.pagecontent+1);
         return BILLMANAGER;
     }
+    
     public String modifyBill() {
         Map map = new HashMap();
         Map para = new HashMap();
@@ -92,10 +88,7 @@ public class BillAction extends AjaxActionSupport {
                 return "";
             }
             if (PosDbManager.executeUpdate(sqlString,(HashMap<Integer, Object>)para)) {
-                if (super.getUserName().equals("admin"))
-                    billList = new BillUI("").generateBillTable();
-                else
-                    billList = new BillUI(super.getUserID()).generateBillTable();
+                    billList = new BillUI(super.getUserID()).generateBillTable("");
                 map.put("billList", billList);
                 map.put("successMessage", getText("BillAction.InfoSuccess"));
             }
@@ -109,18 +102,11 @@ public class BillAction extends AjaxActionSupport {
     }
 
 
-    public String editBill(){
-
+    public String editBill(){ 
         Map map = new HashMap();
         Map para = new HashMap();
         String sqlString="";
         try {
-//            if (null != billamount ) {
-//            Float.parseFloat(billamount);
-//            para.put(1,billamount);
-//            sqlString="update billtb set billamount=? where UUID=?";
-//        }
-//        else
             if (null != status ){
                 para.put(1,status);
                 sqlString="update billtb set status=? where UUID=?";
@@ -128,11 +114,9 @@ public class BillAction extends AjaxActionSupport {
             else {
                 return "";
             }
-
             if (!generateSwingCard()) {
                 return AjaxActionComplete();
             }
-
             para.put(2,billNO);
             if (PosDbManager.executeUpdate(sqlString,(HashMap<Integer, Object>)para))
                 map.put("successMessage",getText("BillAction.InfoSuccess") );
@@ -146,18 +130,6 @@ public class BillAction extends AjaxActionSupport {
 
     public String makeBill(){
         Map map = new HashMap();
-//        if (null==billDate) {
-//            map.put("errorMessage", "Error Date");
-//            return AjaxActionComplete(map);
-//        }
-//        Date billd= null ;
-//        try {
-//            billd = (new SimpleDateFormat("yyyy-MM-dd")).parse(billDate);
-//        } catch (ParseException e) {
-//            map.put("errorMessage", getText("AssetAction.InfoError"));
-//            e.printStackTrace();
-//            return AjaxActionComplete(map);
-//        }
         String wherestr ="";
         if (null!=bankName && (!bankName.equals("")))
             wherestr = "  and bankuuid= '"+bankName+"'";
@@ -200,9 +172,56 @@ public class BillAction extends AjaxActionSupport {
         System.out.println(sqlString);
         try {
             if (PosDbManager.executeUpdate(sqlString))
-                map.put("billList",  new BillUI(super.getUserID()).generateBillTable());
+                map.put("billList",  new BillUI(super.getUserID()).generateBillTable(""));
         } catch (Exception e) {
             map.put("errorMessage", getText("AssetAction.InfoError"));
+            e.printStackTrace();
+        }
+        return AjaxActionComplete(map);
+    }
+
+
+    public String FetchBillList(){
+        String wherestr = " where 1=1 ";
+        Map map = new HashMap();
+        int i = 0;
+        if (null!=getParameter("cardno") && (!getParameter("cardno").toString().trim().equals(""))){
+            wherestr += "and cardtb.cardno like '%"+getParameter("cardno")+"%'";
+        }
+        if (null!=getParameter("bankname")&& (!getParameter("bankname").toString().trim().equals(""))) {
+            wherestr += "and banktb.name like '%"+getParameter("bankname")+"%'";
+        }
+        if (null!=getParameter("salesman")&& (!getParameter("salesman").toString().trim().equals(""))){
+            wherestr += "and userinfo.unick  like '%"+getParameter("salesman")+"%'";
+        }
+        if (null!=getParameter("thedate")&& (!getParameter("thedate").toString().trim().equals(""))) {
+            wherestr += "and billdate  like '%"+getParameter("thedate")+"%'";
+        }
+//        if (null!=getParameter("billstatus")&& (!getParameter("billstatus").toString().trim().equals(""))) {
+//            wherestr += "and   billtb.status "+(getParameter("billstatus").toString().equals("0")?"=0":"<>0")+" ";
+//        }
+
+        try {
+            ArrayList<HashMap<String, Object>> rect = PosDbManager.executeSql("select count(*) as cnt from   " +
+                            "billtb " +
+                            "INNER JOIN repaytb ON CONVERT(repaytb.repayyear, SIGNED)= CONVERT(SUBSTR(billtb.lastrepaymentdate,1,4), SIGNED) AND convert(repaytb.repaymonth, SIGNED)= convert(SUBSTR(billtb.lastrepaymentdate,6,2), SIGNED) " +
+                            "INNER JOIN banktb ON banktb.uuid = billtb.bankuuid  " +
+                            "inner join cardtb on cardtb.cardno=billtb.cardno "+
+                            "inner  JOIN userinfo ON userinfo.uid = cardtb.salesmanuuid  " +
+                            wherestr+
+                            " GROUP BY " +
+                            "billtb.cardno, " +
+                            "SUBSTR(billtb.lastrepaymentdate,1,4), " +
+                            "SUBSTR(billtb.lastrepaymentdate,6,2) " +
+                            "ORDER BY " +
+                            "billtb.billdate DESC  " );
+            if (rect.size()<=0)
+                map.put("pagecount",0);
+            map.put("pagecount",Integer.parseInt(rect.get(0).get("CNT").toString())/ BillUI.pagecontent+1);
+            int curr = Integer.parseInt(null==getParameter("currpage")?"1":getParameter("currpage").toString());
+            billList = new BillUI(super.getUserID()).generateBillTable(wherestr+" limit "+String.valueOf((curr-1)*BillUI.pagecontent)+","+BillUI.pagecontent);
+            map.put("billList",billList);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return AjaxActionComplete(map);

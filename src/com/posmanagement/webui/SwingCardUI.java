@@ -24,7 +24,7 @@ public class SwingCardUI extends WebUI {
                     .addElement("td", StringUtils.formatCardNO(dbRet.get(index).get("CARDNO").toString()))
                     .addElement("td", dbRet.get(index).get("CARDMASTER").toString())
                     .addElement("td", dbRet.get(index).get("AMOUNT").toString())
-                    .addElement("td", dbRet.get(index).get("VALIDNUM").toString().equals(dbRet.get(index).get("TOTALNUM").toString())?
+                    .addElement("td", dbRet.get(index).get("FINISHED").toString().equals("0")?
                             getText("swingcardsummary.swingfinished") : getText("swingcardsummary.swingunfinished"))
                     .addElement(new UIContainer("td")
                                 .addElement(
@@ -80,9 +80,16 @@ public class SwingCardUI extends WebUI {
     }
 
     private ArrayList<HashMap<String, Object>> fetchSwingCardSummary(String wherestr) throws Exception {
-        String limitstr = wherestr.substring(wherestr.indexOf("limit"));
+        String limitstr = "";
         String whereSql = " where validstatus='enable'";
-        whereSql += wherestr.substring(0,wherestr.indexOf("limit")).replaceAll("where","").replaceAll("1=1","");
+        try {
+            limitstr = wherestr.substring(wherestr.indexOf("limit"));
+            whereSql += wherestr.substring(0, wherestr.indexOf("limit")).replaceAll("where", "").replaceAll("1=1", "");
+        }
+        catch (Exception e){
+            limitstr ="";
+            whereSql = " where validstatus='enable'";
+        }
         if (!(new UserUtils()).isAdmin(userID_))
             whereSql += " and  (cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
                     " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"')) ";
@@ -91,8 +98,8 @@ public class SwingCardUI extends WebUI {
                 "swingcard.billmonth, " +
                 "swingcard.cardno, " +
                 "Sum(swingcard.amount) AS amount, " +
-                "cardtb.cardmaster, count(1) as totalnum," +
-                "sum(case when swingstatus='enable' then 1 else 0 END) validnum " +
+                "cardtb.cardmaster, (count(1) -" +
+                "sum(case when swingstatus='enable' then 1 else 0 END)) finished " +
                 "FROM " +
                 "swingcard " +
                 "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno " +

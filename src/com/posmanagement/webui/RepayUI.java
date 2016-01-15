@@ -23,7 +23,7 @@ public class RepayUI extends WebUI {
                     .addElement("td" , StringUtils.formatCardNO(dbRet.get(index).get("CARDNO").toString()))
                     .addElement("td" , dbRet.get(index).get("CARDMASTER").toString())
                     .addElement("td" , dbRet.get(index).get("TRADEMONEY").toString())
-                    .addElement("td", dbRet.get(index).get("TRADESTATUS").toString().compareTo("0") == 0 ?
+                    .addElement("td", dbRet.get(index).get("FINISHED").toString().equals("0") ?
                             getText("repaysummary.repayfinished") : getText("repaysummary.repayunfinished"))
                     .addElement(new UIContainer("td")
                                 .addElement(
@@ -90,7 +90,8 @@ public class RepayUI extends WebUI {
                 "cardtb.cardno, " +
                 "cardtb.cardmaster, " +
                 "SUM(repaytb.trademoney) trademoney, " +
-                "COUNT(case when tradestatus!='enable' then 1 else NULL END) tradestatus " +
+                "(COUNT(1) - " +
+                "sum(case when tradestatus='enable' then 1 else 0 END)) finished " +
                 "FROM " +
                 "repaytb " +
                 "INNER JOIN cardtb ON cardtb.cardno = repaytb.cardno " +

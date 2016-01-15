@@ -78,7 +78,6 @@
                         </tr>
                         </thead>
                         <tbody id="posList">
-                        <s:property value="posList" escape="false"/>
                         </tbody>
                     </table>
                 </div>

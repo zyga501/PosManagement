@@ -2,14 +2,15 @@ package com.posmanagement.webui;
 
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.utils.StringUtils;
+import com.posmanagement.utils.UserUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class BillUI extends WebUI {
     public BillUI(String userID){userID_=userID;}
-    public String generateBillTable() throws Exception {
-        ArrayList<HashMap<String, Object>> dbRet = fetchBillList();
+    public String generateBillTable(String wherestr) throws Exception {
+        ArrayList<HashMap<String, Object>> dbRet = fetchBillList(wherestr);
         if (dbRet.size() <= 0)
             return new String("");
 
@@ -39,42 +40,53 @@ public class BillUI extends WebUI {
                             .addAttribute("title", dbRet.get(index).get("STATUS").equals("enable")?"已开启":"未开启")
                             .addAttribute("datav", StringUtils.convertNullableString(dbRet.get(index).get("UUID")))
                                     .addAttribute("value", dbRet.get(index).get("STATUS").equals("enable")?"Y":"N")
-                            .addAttribute("onclick", "clickBill(this,'" + StringUtils.convertNullableString(dbRet.get(index).get("UUID")) + "')")));
+                            .addAttribute("onclick", "clickBill(this,' " + StringUtils.convertNullableString(dbRet.get(index).get("UUID")) + "')")));
         }
         return htmlString;
     }
 
-    private ArrayList<HashMap<String, Object>> fetchBillList() throws Exception {
-        String whereSql = "";
-        if (userID_ != null && !userID_.isEmpty()) {
-            whereSql = "where billtb.salesmanuuid='\"+userID_+\"'";
+    private ArrayList<HashMap<String, Object>> fetchBillList(String wherestr) throws Exception {
+        String limitstr = "";
+        String whereSql = " where 1=1 ";
+        try {
+            limitstr = wherestr.substring(wherestr.indexOf("limit"));
+            whereSql += wherestr.substring(0, wherestr.indexOf("limit")).replaceAll("where", "").replaceAll("1=1", "");
+        }
+        catch (Exception e){
+            limitstr ="";
+            whereSql = " where 1=1 ";
         }
 
-        return PosDbManager.executeSql("SELECT\n" +
-                "billtb.uuid,\n" +
-                "billtb.cardno,\n" +
-                "billtb.billamount,\n" +
-                "billtb.`status`,\n" +
-                "billtb.billdate,\n" +
-                "Sum(CASE WHEN repaytb.tradestatus='enable' then repaytb.trademoney else 0 END) AS repayamount,\n" +
-                "SUM(CASE WHEN repaytb.tradestatus='enable' then repaytb.trademoney else 0 END) + billtb.canuseamount AS canuseamount,\n" +
-                "billamount - SUM(CASE WHEN repaytb.tradestatus='enable' then repaytb.trademoney else 0 END) AS remainamount,\n" +
-                "banktb.`name` AS bankname,\n" +
-                "billtb.lastrepaymentdate,\n" +
-                "userinfo.unick AS saleman\n" +
-                "FROM\n" +
-                "billtb\n" +
-                "INNER JOIN repaytb ON CONVERT(repaytb.repayyear, SIGNED)= CONVERT(SUBSTR(billtb.lastrepaymentdate,1,4), SIGNED) AND convert(repaytb.repaymonth, SIGNED)= convert(SUBSTR(billtb.lastrepaymentdate,6,2), SIGNED)\n" +
-                "INNER JOIN banktb ON banktb.uuid = billtb.bankuuid\n" +
-                "LEFT JOIN userinfo ON userinfo.uid = billtb.salesmanuuid\n" +
+        if (!(new UserUtils()).isAdmin(userID_)) {
+            whereSql += "and billtb.salesmanuuid='"+userID_+"'";
+        }
+        return PosDbManager.executeSql("SELECT  " +
+                "billtb.uuid, " +
+                "billtb.cardno, " +
+                "billtb.billamount, " +
+                "billtb.`status`, " +
+                "billtb.billdate, " +
+                "Sum(CASE WHEN repaytb.tradestatus='enable' then repaytb.trademoney else 0 END) AS repayamount, " +
+                "SUM(CASE WHEN repaytb.tradestatus='enable' then repaytb.trademoney else 0 END) + billtb.canuseamount AS canuseamount, " +
+                "billamount - SUM(CASE WHEN repaytb.tradestatus='enable' then repaytb.trademoney else 0 END) AS remainamount, " +
+                "banktb.`name` AS bankname, " +
+                "billtb.lastrepaymentdate, " +
+                "userinfo.unick AS saleman " +
+                "FROM " +
+                "billtb " +
+                "INNER JOIN repaytb ON CONVERT(repaytb.repayyear, SIGNED)= CONVERT(SUBSTR(billtb.lastrepaymentdate,1,4), SIGNED) AND convert(repaytb.repaymonth, SIGNED)= convert(SUBSTR(billtb.lastrepaymentdate,6,2), SIGNED) " +
+                "INNER JOIN banktb ON banktb.uuid = billtb.bankuuid  " +
+                "inner join cardtb on cardtb.cardno=billtb.cardno "+
+                "inner  JOIN userinfo ON userinfo.uid = cardtb.salesmanuuid  " +
                 whereSql +
-                "GROUP BY\n" +
-                "billtb.cardno,\n" +
-                "SUBSTR(billtb.lastrepaymentdate,1,4),\n" +
-                "SUBSTR(billtb.lastrepaymentdate,6,2)\n" +
-                "ORDER BY\n" +
-                "billtb.billdate DESC");
+                "GROUP BY " +
+                "billtb.cardno, " +
+                "SUBSTR(billtb.lastrepaymentdate,1,4), " +
+                "SUBSTR(billtb.lastrepaymentdate,6,2) " +
+                "ORDER BY " +
+                "billtb.billdate DESC " +limitstr );
     }
 
     private String userID_; // TODO for role
+    public static int pagecontent=15;
 }

@@ -78,9 +78,6 @@
                             <th><s:text name="billmanager.canuseamount" /></th>
                             <th><s:text name="billmanager.billhadpay" /></th>
                             <th><s:text name="billmanager.billnopay" /></th>
-                            <th><s:text name="billmanager.lastpay" /></th>
-                            <th><s:text name="billmanager.lastpaydatetm" /></th>
-                            <th><s:text name="billmanager.lastteller" /></th>
                             <th><s:text name="billmanager.salesman" /></th>
                             <th><s:text name="billmanager.expired" /></th>
                             <th><s:text name="global.status" /></th>

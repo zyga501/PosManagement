@@ -13,7 +13,7 @@
     <link href="<%=request.getContextPath()%>/css/H-ui.admin.css" rel="stylesheet" type="text/css"/>
     <link href="<%=request.getContextPath()%>/css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css"/>
     <link href="<%=request.getContextPath()%>/skin/default/skin.css" rel="stylesheet" type="text/css" id="skin"/>
-    <link type="text/css" rel="stylesheet" href="<%=request.getContextPath()%>/js/laypage//skin/laypage.css" id="laypagecss">
+    <link type="text/css" rel="stylesheet" href="<%=request.getContextPath()%>/js/laypage/skin/laypage.css" id="laypagecss">
     <title></title>
     <style type="text/css" >
         #searchtb tr td {
@@ -80,7 +80,6 @@
                         </tr>
                         </thead>
                         <tbody id="cardList">
-                        <s:property value="cardList" escape="false"/>
                         </tbody>
                     </table>
                 </div>
@@ -94,30 +93,31 @@
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.admin.js"></script>
 <script src="<%=request.getContextPath()%>/js/laypage/laypage.js"></script>
 <script>
-    $().ready
-    (laypage({
-        cont: 'navigatediv',
-        pages: ${pagecount},
-        skip: true,
-        skin: 'yahei',
-        jump: function (obj) {
-            $.ajax({
-                type: 'post',
-                url: 'Card!FetchCardList?currpage='+obj.curr,
-                dataType:"json",
-                data:$("#searchform").serialize(),
-                success: function (data) {
-                    var json = eval("(" + data + ")");
-                    if (json.errorMessage != null) {
-                        layer.msg(json.errorMessage);
+    $().ready( function(){
+        laypage({
+            cont: 'navigatediv',
+            pages: ${pagecount},
+            skip: true,
+            skin: 'yahei',
+            jump: function (obj) {
+                $.ajax({
+                    type: 'post',
+                    url: 'Card!FetchCardList?currpage='+obj.curr,
+                    dataType:"json",
+                    data:$("#searchform").serialize(),
+                    success: function (data) {
+                        var json = eval("(" + data + ")");
+                        if (json.errorMessage != null) {
+                            layer.msg(json.errorMessage);
+                        }
+                        else {
+                            layer.msg("<s:text name="global.dosuccess" />");
+                            refreshcardList(json.cardList);
+                        }
                     }
-                    else {
-                        refreshcardList(json.cardList);
-                    }
-                }
-            })
-        }
-    }) );
+                })
+            }
+        })});
 
     function dosearch() {
         $.ajax({
@@ -131,6 +131,8 @@
                     layer.msg(json.errorMessage);
                 }
                 else {
+                    layer.msg("<s:text name="global.dosuccess" />");
+                   // refreshcardList(json.cardList);
                 }
                 laypage({
                     cont: 'navigatediv',
@@ -149,6 +151,7 @@
                                     layer.msg(json.errorMessage);
                                 }
                                 else {
+                                    layer.msg("<s:text name="global.dosuccess" />");
                                     refreshcardList(json.cardList);
                                 }
                             }

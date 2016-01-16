@@ -116,5 +116,4 @@ public class PosUI extends WebUI {
 
     }
     private String userID_; // TODO for role
-    public static int pagecontent = 15;
 }

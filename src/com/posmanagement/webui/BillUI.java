@@ -40,7 +40,7 @@ public class BillUI extends WebUI {
                             .addAttribute("title", dbRet.get(index).get("STATUS").equals("enable")?"已开启":"未开启")
                             .addAttribute("datav", StringUtils.convertNullableString(dbRet.get(index).get("UUID")))
                                     .addAttribute("value", dbRet.get(index).get("STATUS").equals("enable")?"Y":"N")
-                            .addAttribute("onclick", "clickBill(this,' " + StringUtils.convertNullableString(dbRet.get(index).get("UUID")) + "')")));
+                            .addAttribute("onclick", "clickBill(this,'" + StringUtils.convertNullableString(dbRet.get(index).get("UUID")) + "')")));
         }
         return htmlString;
     }
@@ -74,7 +74,7 @@ public class BillUI extends WebUI {
                 "userinfo.unick AS saleman " +
                 "FROM " +
                 "billtb " +
-                "INNER JOIN repaytb ON CONVERT(repaytb.repayyear, SIGNED)= CONVERT(SUBSTR(billtb.lastrepaymentdate,1,4), SIGNED) AND convert(repaytb.repaymonth, SIGNED)= convert(SUBSTR(billtb.lastrepaymentdate,6,2), SIGNED) " +
+                "LEFT JOIN repaytb ON CONVERT(repaytb.repayyear, SIGNED)= CONVERT(SUBSTR(billtb.lastrepaymentdate,1,4), SIGNED) AND convert(repaytb.repaymonth, SIGNED)= convert(SUBSTR(billtb.lastrepaymentdate,6,2), SIGNED) " +
                 "INNER JOIN banktb ON banktb.uuid = billtb.bankuuid  " +
                 "inner join cardtb on cardtb.cardno=billtb.cardno "+
                 "inner  JOIN userinfo ON userinfo.uid = cardtb.salesmanuuid  " +
@@ -88,5 +88,4 @@ public class BillUI extends WebUI {
     }
 
     private String userID_; // TODO for role
-    public static int pagecontent=15;
 }

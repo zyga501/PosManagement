@@ -31,6 +31,10 @@
             });
             layer.full(index);
         }
+
+        function refreshswingcardList(swingcardList) {
+            $('#swingCardSummary').html(swingcardList);
+        }
     </script>
 </head>
 <body style="overflow: hidden">
@@ -133,7 +137,7 @@
                                     layer.msg(json.errorMessage);
                                 }
                                 else {
-                                    refreshposList(json.posList);
+                                    refreshswingcardList(json.swingCardSummary);
                                 }
                             }
                         })

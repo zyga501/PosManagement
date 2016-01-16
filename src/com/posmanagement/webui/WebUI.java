@@ -6,12 +6,15 @@ import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.TextProviderFactory;
 import com.opensymphony.xwork2.inject.Container;
 import com.opensymphony.xwork2.util.ValueStack;
+import com.posmanagement.utils.SQLUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public class WebUI implements TextProvider, LocaleProvider {
+class Multilanguage implements TextProvider, LocaleProvider
+{
     private TextProvider getTextProvider() {
         if(this.textProvider == null) {
             TextProviderFactory tpf = new TextProviderFactory();
@@ -85,4 +88,20 @@ public class WebUI implements TextProvider, LocaleProvider {
 
     private transient TextProvider textProvider;
     private Container container;
+}
+
+public class WebUI extends Multilanguage {
+    public static int DEFAULTITEMPERPAGE = 15;
+
+    public void setUiConditions(ArrayList<SQLUtils.WhereCondition> uiConditions) {
+        uiConditions_ = uiConditions;
+    }
+
+    public void clearUIConditions() {
+        if (uiConditions_ != null) {
+            uiConditions_.clear();
+        }
+    }
+
+    ArrayList<SQLUtils.WhereCondition> uiConditions_;
 }

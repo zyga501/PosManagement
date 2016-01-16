@@ -67,7 +67,6 @@
                             <th><s:text name="swingcarddetail.machinename"/></th>
                             <th><s:text name="swingcarddetail.teller"/></th>
                             <th><s:text name="swingcarddetail.realsdatetm"/></th>
-                            <th><s:text name="swingcarddetail.validstatus"/></th>
                             <th><s:text name="swingcarddetail.swingstatus"/></th>
                         </tr>
                         </thead>

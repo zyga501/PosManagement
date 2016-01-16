@@ -5,6 +5,7 @@ import com.posmanagement.utils.StringUtils;
 import com.posmanagement.utils.UUIDUtils;
 import com.posmanagement.utils.UserUtils;
 import com.posmanagement.webui.PosUI;
+import com.posmanagement.webui.WebUI;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class POSAction extends AjaxActionSupport {
 
     public String Init() throws Exception {
         posList = new PosUI(super.getUserID()).generateTable("");
-        getRequest().setAttribute("pagecount", (posList.split("<tr").length-1)/PosUI.pagecontent+1);
+        getRequest().setAttribute("pagecount", (posList.split("<tr").length-1)/WebUI.DEFAULTITEMPERPAGE+1);
         return POSMANAGER;
     }
 
@@ -87,9 +88,9 @@ public class POSAction extends AjaxActionSupport {
                     wherestr);
             if (rect.size()<=0)
                 map.put("pagecount",0);
-            map.put("pagecount",Integer.parseInt(rect.get(0).get("CNT").toString())/PosUI.pagecontent+1);
+            map.put("pagecount",Integer.parseInt(rect.get(0).get("CNT").toString())/ WebUI.DEFAULTITEMPERPAGE+1);
             int curr = Integer.parseInt(null==getParameter("currpage")?"1":getParameter("currpage").toString());
-            posList = new PosUI(super.getUserID()).generateTable(wherestr+" limit "+String.valueOf((curr-1)*PosUI.pagecontent)+","+PosUI.pagecontent);
+            posList = new PosUI(super.getUserID()).generateTable(wherestr+" limit "+String.valueOf((curr-1)*WebUI.DEFAULTITEMPERPAGE)+","+WebUI.DEFAULTITEMPERPAGE);
             map.put("posList",posList);
         } catch (Exception e) {
             e.printStackTrace();

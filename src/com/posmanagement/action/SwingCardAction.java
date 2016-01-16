@@ -1,8 +1,10 @@
 package com.posmanagement.action;
 
 import com.posmanagement.utils.PosDbManager;
+import com.posmanagement.utils.SQLUtils;
+import com.posmanagement.utils.StringUtils;
 import com.posmanagement.webui.SwingCardUI;
-import com.posmanagement.webui.SwingCardUI;
+import com.posmanagement.webui.WebUI;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,8 +35,8 @@ public class SwingCardAction extends AjaxActionSupport {
     public String getBillMonth() { return billMonth; }
 
     public String Init() throws Exception { 
-        swingCardSummary = new SwingCardUI(super.getUserID()).generateSummary("");
-        getRequest().setAttribute("pagecount", (swingCardSummary.split("<tr").length-1)/SwingCardUI.pagecontent+1);
+        swingCardSummary = new SwingCardUI(super.getUserID()).generateSummary();
+        getRequest().setAttribute("pagecount", (swingCardSummary.split("<tr").length-1)/WebUI.DEFAULTITEMPERPAGE+1);
         return SWINGCARDMANAGER;
     }
 
@@ -72,41 +74,28 @@ public class SwingCardAction extends AjaxActionSupport {
         return AjaxActionComplete(map);
     }
 
-    public String FetchSwingList(){
-        String wherestr = " where 1=1 ";
-        Map map = new HashMap();
-        int i = 0;
-        if (null!=getParameter("cardno") && (!getParameter("cardno").toString().trim().equals(""))){
-            wherestr += "and cardno like '%"+getParameter("cardno")+"%'";
-        }
-        if (null!=getParameter("bankname")&& (!getParameter("bankname").toString().trim().equals(""))) {
-            wherestr += "and banktb.name like '%"+getParameter("bankname")+"%'";
-        }
-        if (null!=getParameter("cardmaster")&& (!getParameter("cardmaster").toString().trim().equals(""))){
-            wherestr += "and cardmaster  like '%"+getParameter("cardmaster")+"%'";
-        }
-        if (null!=getParameter("thedate")&& (!getParameter("thedate").toString().trim().equals(""))) {
-            wherestr += "and userinfo.unick  like '%"+getParameter("thedate")+"%'";
-        }
-        if (null!=getParameter("statusenable")&& (!getParameter("statusenable").toString().trim().equals(""))) {
-            wherestr += "and userinfo.unick  like '%"+getParameter("statusenable")+"%'";
-        }
+    public String FetchSwingList() throws Exception {
+        ArrayList<SQLUtils.WhereCondition> uiConditions = new ArrayList<SQLUtils.WhereCondition>() {
+            {
+                add(new SQLUtils.WhereCondition("cardtb.cardno", "like",
+                        SQLUtils.ConvertToSqlString("%" + getParameter("cardno") + "%"), !StringUtils.convertNullableString(getParameter("cardno")).trim().isEmpty()));
+                add(new SQLUtils.WhereCondition("banktb.name", "like",
+                        SQLUtils.ConvertToSqlString("%" + getParameter("bankname") + "%"), !StringUtils.convertNullableString(getParameter("bankname")).trim().isEmpty()));
+                add(new SQLUtils.WhereCondition("cardmaster", "like",
+                        SQLUtils.ConvertToSqlString("%" + getParameter("cardmaster") + "%"), !StringUtils.convertNullableString(getParameter("cardmaster")).trim().isEmpty()));
+                add(new SQLUtils.WhereCondition("billtb.billdate", "like",
+                        SQLUtils.ConvertToSqlString("%" + getParameter("thedate") + "%"), !StringUtils.convertNullableString(getParameter("thedate")).trim().isEmpty()));
+            }
+        };
 
-        try {
-            ArrayList<HashMap<String, Object>> rect = PosDbManager.executeSql("select count(*) as cnt from swingcard" +
-                    " inner join cardtb on cardtb.cardno = swingcard.cardno inner join banktb " +
-                    "on cardtb.bankuuid=banktb.uuid" +
-                    wherestr);
-            if (rect.size()<=0)
-                map.put("pagecount",0);
-            map.put("pagecount",Integer.parseInt(rect.get(0).get("CNT").toString())/ SwingCardUI.pagecontent+1);
-            int curr = Integer.parseInt(null==getParameter("currpage")?"1":getParameter("currpage").toString());
-            swingCardSummary = new SwingCardUI(super.getUserID()).generateSummary(wherestr+" limit "+String.valueOf((curr-1)*SwingCardUI.pagecontent)+","+SwingCardUI.pagecontent);
-            map.put("swingCardSummary",swingCardSummary);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Map map = new HashMap();
+        SwingCardUI swingCardUI = new SwingCardUI(super.getUserID());
+        swingCardUI.setUiConditions(uiConditions);
+        map.put("pagecount", swingCardUI.fetchSwingCardPageCount());
+        int curr = Integer.parseInt(null==getParameter("currpage")?"1":getParameter("currpage").toString());
+        swingCardSummary = swingCardUI.generateSummary(curr);
+        map.put("swingCardSummary",swingCardSummary);
+
         return AjaxActionComplete(map);
     }
-
 }

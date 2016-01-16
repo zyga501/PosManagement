@@ -2,8 +2,8 @@ package com.posmanagement.action;
 
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.utils.Readconfig;
-import com.posmanagement.utils.UserUtils;
 import com.posmanagement.webui.CardUI;
+import com.posmanagement.webui.WebUI;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -70,7 +70,7 @@ public class CardAction extends AjaxActionSupport {
 
     public String Init() throws Exception {
         cardList = new CardUI(super.getUserID()).generateCardTable("");
-        getRequest().setAttribute("pagecount", (cardList.split("<tr").length-1)/CardUI.pagecontent+1);
+        getRequest().setAttribute("pagecount", (cardList.split("<tr").length-1)/WebUI.DEFAULTITEMPERPAGE+1);
         return CARDMANAGER;
     }
 
@@ -97,9 +97,9 @@ public class CardAction extends AjaxActionSupport {
                     wherestr);
             if (rect.size()<=0)
                 map.put("pagecount",0);
-            map.put("pagecount",Integer.parseInt(rect.get(0).get("CNT").toString())/CardUI.pagecontent+1);
+            map.put("pagecount",Integer.parseInt(rect.get(0).get("CNT").toString())/ WebUI.DEFAULTITEMPERPAGE+1);
             int curr = Integer.parseInt(null==getParameter("currpage")?"1":getParameter("currpage").toString());
-            cardList = new CardUI(super.getUserID()).generateCardTable(wherestr+" limit "+String.valueOf((curr-1)*CardUI.pagecontent)+","+CardUI.pagecontent);
+            cardList = new CardUI(super.getUserID()).generateCardTable(wherestr+" limit "+String.valueOf((curr-1)*WebUI.DEFAULTITEMPERPAGE)+","+WebUI.DEFAULTITEMPERPAGE);
             map.put("cardList",cardList);
         } catch (Exception e) {
             e.printStackTrace();

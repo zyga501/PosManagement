@@ -1,6 +1,7 @@
 package com.posmanagement.webui;
 
 import com.posmanagement.utils.PosDbManager;
+import com.posmanagement.utils.SQLUtils;
 import com.posmanagement.utils.StringUtils;
 import com.posmanagement.utils.UserUtils;
 
@@ -8,9 +9,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SwingCardUI extends WebUI {
-    public SwingCardUI(String uid){userID_=uid;}
-    public String generateSummary(String wherestr) throws Exception {
-        ArrayList<HashMap<String, Object>> dbRet = fetchSwingCardSummary(wherestr);
+    public SwingCardUI(String uid) {
+        userID_=uid;
+    }
+
+    public String generateSummary() throws Exception {
+        return generateSummary(-1);
+    }
+
+    public String generateSummary(int pageIndex) throws Exception {
+        ArrayList<HashMap<String, Object>> dbRet = fetchSwingCardSummary(pageIndex);
         if (dbRet.size() <= 0)
             return new String("");
 
@@ -22,20 +30,20 @@ public class SwingCardUI extends WebUI {
                     .addElement("td", dbRet.get(index).get("BILLYEAR").toString() + "/" +
                             dbRet.get(index).get("BILLMONTH").toString())
                     .addElement("td", StringUtils.formatCardNO(dbRet.get(index).get("CARDNO").toString()))
+                    .addElement("td", dbRet.get(index).get("BANKNAME").toString())
                     .addElement("td", dbRet.get(index).get("CARDMASTER").toString())
-                    .addElement("td", dbRet.get(index).get("AMOUNT").toString())
                     .addElement("td", dbRet.get(index).get("FINISHED").toString().equals("0")?
                             getText("swingcardsummary.swingfinished") : getText("swingcardsummary.swingunfinished"))
                     .addElement(new UIContainer("td")
-                                .addElement(
+                            .addElement(
                                     new UIContainer("input")
-                                        .addAttribute("type", "button")
-                                        .addAttribute("value", "查看明细")
-                                        .addAttribute("class", "btn radius")
-                                        .addAttribute("onclick", "clickDetail('" + dbRet.get(index).get("CARDNO") +
-                                                "','" + dbRet.get(index).get("BILLYEAR") +
-                                                "','" + dbRet.get(index).get("BILLMONTH") + "')")
-                                )
+                                            .addAttribute("type", "button")
+                                            .addAttribute("value", "查看明细")
+                                            .addAttribute("class", "btn radius")
+                                            .addAttribute("onclick", "clickDetail('" + dbRet.get(index).get("CARDNO") +
+                                                    "','" + dbRet.get(index).get("BILLYEAR") +
+                                                    "','" + dbRet.get(index).get("BILLMONTH") + "')")
+                            )
                     );
         }
         return htmlString;
@@ -60,14 +68,6 @@ public class SwingCardUI extends WebUI {
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("POSNAME")))
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("UNICK")), "○")
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("REALSDATETM")), "○")
-                    .addElement(new UIContainer("td")
-                            .addElement(
-                                    new UIContainer("input")
-                                            .addAttribute("type", "checkbox")
-                                            .addAttribute("value", StringUtils.convertNullableString(dbRet.get(index).get("ID")))
-                                            .addAttribute("checked", "checked", StringUtils.convertNullableString(dbRet.get(index).get("VALIDSTATUS")).compareTo("enable") == 0)
-                            )
-                    )
                     .addElement(new UIContainer("td").addElement(new UIContainer("input")
                             .addAttribute("class" ,StringUtils.convertNullableString(dbRet.get(index).get("SWINGSTATUS")).equals("enable")?"btn btn-success radius":"btn btn-danger radius")
                             .addAttribute("type","button")
@@ -79,37 +79,70 @@ public class SwingCardUI extends WebUI {
         return htmlString;
     }
 
-    private ArrayList<HashMap<String, Object>> fetchSwingCardSummary(String wherestr) throws Exception {
-        String limitstr = "";
-        String whereSql = " where validstatus='enable'";
-        try {
-            limitstr = wherestr.substring(wherestr.indexOf("limit"));
-            whereSql += wherestr.substring(0, wherestr.indexOf("limit")).replaceAll("where", "").replaceAll("1=1", "");
+    public int fetchSwingCardPageCount() throws Exception {
+        String whereSql = SQLUtils.BuildWhereCondition(uiConditions_);
+        if (!whereSql.isEmpty()) {
+            whereSql = " where " + whereSql;
         }
-        catch (Exception e){
-            limitstr ="";
-            whereSql = " where validstatus='enable'";
-        }
+
         if (!(new UserUtils()).isAdmin(userID_))
             whereSql += " and  (cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
                     " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"')) ";
-        return PosDbManager.executeSql("SELECT " +
-                "swingcard.billyear, " +
-                "swingcard.billmonth, " +
-                "swingcard.cardno, " +
-                "Sum(swingcard.amount) AS amount, " +
-                "cardtb.cardmaster, (count(1) -" +
-                "sum(case when swingstatus='enable' then 1 else 0 END)) finished " +
+
+        ArrayList<HashMap<String, Object>> rect = PosDbManager.executeSql("SELECT count(*) as cnt " +
                 "FROM " +
                 "swingcard " +
                 "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno " +
+                "INNER JOIN billtb ON CONVERT(swingcard.billyear, SIGNED)= CONVERT(SUBSTR(billtb.billdate,1,4), SIGNED) AND convert(swingcard.billmonth, SIGNED)= convert(SUBSTR(billtb.billdate,6,2), SIGNED) AND swingcard.cardno = billtb.cardno "+
+                "INNER JOIN banktb on banktb.uuid=cardtb.bankuuid "+
                 whereSql +
                 " GROUP BY " +
                 "swingcard.billyear, " +
                 "swingcard.billmonth, " +
                 "swingcard.cardno  ORDER BY " +
                 "swingcard.billyear desc, " +
-                "swingcard.billmonth desc "+limitstr);
+                "swingcard.billmonth desc");
+        if (rect.size()<=0) {
+            return 0;
+        }
+        return Integer.parseInt(rect.get(0).get("CNT").toString())/ WebUI.DEFAULTITEMPERPAGE + 1;
+    }
+
+    private ArrayList<HashMap<String, Object>> fetchSwingCardSummary(int pageIndex) throws Exception {
+        String whereSql = SQLUtils.BuildWhereCondition(uiConditions_);
+        if (!whereSql.isEmpty()) {
+            whereSql = " where " + whereSql;
+        }
+        String limitSql = new String();
+        if (pageIndex > 0) {
+            limitSql = "limit " + (pageIndex - 1) * DEFAULTITEMPERPAGE + "," + DEFAULTITEMPERPAGE;
+        }
+
+        if (!(new UserUtils()).isAdmin(userID_))
+            whereSql += " and  (cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
+                    " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"')) ";
+
+        return PosDbManager.executeSql("SELECT " +
+                "swingcard.billyear, " +
+                "swingcard.billmonth, " +
+                "swingcard.cardno, " +
+                "Sum(swingcard.amount) AS amount, " +
+                "cardtb.cardmaster, (count(1) -" +
+                "sum(case when swingstatus='enable' then 1 else 0 END)) finished, " +
+                "banktb.name as  bankname " +
+                "FROM " +
+                "swingcard " +
+                "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno " +
+                "INNER JOIN billtb ON CONVERT(swingcard.billyear, SIGNED)= CONVERT(SUBSTR(billtb.billdate,1,4), SIGNED) AND convert(swingcard.billmonth, SIGNED)= convert(SUBSTR(billtb.billdate,6,2), SIGNED) AND swingcard.cardno = billtb.cardno "+
+                "INNER JOIN banktb on banktb.uuid=cardtb.bankuuid "+
+                whereSql +
+                " GROUP BY " +
+                "swingcard.billyear, " +
+                "swingcard.billmonth, " +
+                "swingcard.cardno  ORDER BY " +
+                "swingcard.billyear desc, " +
+                "swingcard.billmonth desc "+
+                limitSql);
     }
 
     private ArrayList<HashMap<String, Object>> fetchSwingCardDetail(String cardNO, String billYear, String billMonth) throws Exception {
@@ -129,7 +162,6 @@ public class SwingCardUI extends WebUI {
                     "swingcard.userid, " +
                     "userinfo.unick, " +
                     "swingcard.realsdatetm, " +
-                    "swingcard.validstatus, " +
                     "swingcard.swingstatus " +
                     "FROM " +
                     "swingcard " +
@@ -142,5 +174,4 @@ public class SwingCardUI extends WebUI {
     }
 
     private String userID_;
-    public static int pagecontent=15;
 }

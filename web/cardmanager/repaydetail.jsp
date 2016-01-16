@@ -66,7 +66,6 @@
                             <th><s:text name="repaydetail.sdatetm"/></th>
                             <th><s:text name="repaydetail.teller"/></th>
                             <th><s:text name="repaydetail.realsdatetm"/></th>
-                            <th><s:text name="repaydetail.validstatus"/></th>
                             <th><s:text name="repaydetail.repaystatus"/></th>
                         </tr>
                         </thead>

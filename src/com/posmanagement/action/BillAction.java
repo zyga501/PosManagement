@@ -4,6 +4,7 @@ import com.posmanagement.policy.SwingCardPolicy;
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.utils.UUIDUtils;
 import com.posmanagement.webui.BillUI;
+import com.posmanagement.webui.WebUI;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -69,7 +70,7 @@ public class BillAction extends AjaxActionSupport {
 
     public String Init() throws Exception {
         billList = new BillUI(super.getUserID()).generateBillTable("");
-        getRequest().setAttribute("pagecount", (billList.split("<tr").length-1)/BillUI.pagecontent+1);
+        getRequest().setAttribute("pagecount", (billList.split("<tr").length-1)/WebUI.DEFAULTITEMPERPAGE+1);
         return BILLMANAGER;
     }
     
@@ -204,7 +205,7 @@ public class BillAction extends AjaxActionSupport {
         try {
             ArrayList<HashMap<String, Object>> rect = PosDbManager.executeSql("select count(*) as cnt from   " +
                             "billtb " +
-                            "INNER JOIN repaytb ON CONVERT(repaytb.repayyear, SIGNED)= CONVERT(SUBSTR(billtb.lastrepaymentdate,1,4), SIGNED) AND convert(repaytb.repaymonth, SIGNED)= convert(SUBSTR(billtb.lastrepaymentdate,6,2), SIGNED) " +
+                            "LEFT JOIN repaytb ON CONVERT(repaytb.repayyear, SIGNED)= CONVERT(SUBSTR(billtb.lastrepaymentdate,1,4), SIGNED) AND convert(repaytb.repaymonth, SIGNED)= convert(SUBSTR(billtb.lastrepaymentdate,6,2), SIGNED) " +
                             "INNER JOIN banktb ON banktb.uuid = billtb.bankuuid  " +
                             "inner join cardtb on cardtb.cardno=billtb.cardno "+
                             "inner  JOIN userinfo ON userinfo.uid = cardtb.salesmanuuid  " +
@@ -217,9 +218,9 @@ public class BillAction extends AjaxActionSupport {
                             "billtb.billdate DESC  " );
             if (rect.size()<=0)
                 map.put("pagecount",0);
-            map.put("pagecount",Integer.parseInt(rect.get(0).get("CNT").toString())/ BillUI.pagecontent+1);
+            map.put("pagecount",Integer.parseInt(rect.get(0).get("CNT").toString())/ WebUI.DEFAULTITEMPERPAGE+1);
             int curr = Integer.parseInt(null==getParameter("currpage")?"1":getParameter("currpage").toString());
-            billList = new BillUI(super.getUserID()).generateBillTable(wherestr+" limit "+String.valueOf((curr-1)*BillUI.pagecontent)+","+BillUI.pagecontent);
+            billList = new BillUI(super.getUserID()).generateBillTable(wherestr+" limit "+String.valueOf((curr-1)*WebUI.DEFAULTITEMPERPAGE)+","+WebUI.DEFAULTITEMPERPAGE);
             map.put("billList",billList);
         } catch (Exception e) {
             e.printStackTrace();

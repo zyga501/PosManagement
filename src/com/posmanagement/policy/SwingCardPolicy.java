@@ -1,6 +1,7 @@
 package com.posmanagement.policy;
 
 import com.posmanagement.utils.PosDbManager;
+import com.posmanagement.utils.SQLUtils;
 import com.posmanagement.utils.StringUtils;
 
 import java.sql.Date;
@@ -334,8 +335,8 @@ public class SwingCardPolicy {
                 ruleInfo.posServerUUID = sqlRuleInfo.get("POSSERVERUUID").toString();
                 ruleInfo.swingStartTime = StringUtils.convertNullableString(sqlRuleInfo.get("STARTTIME")).isEmpty() ? Time.valueOf("00:00:00") : Time.valueOf(sqlRuleInfo.get("STARTTIME").toString());
                 ruleInfo.swingEndTime = StringUtils.convertNullableString(sqlRuleInfo.get("ENDTIME")).isEmpty() ? Time.valueOf("23:59:59") : Time.valueOf(sqlRuleInfo.get("ENDTIME").toString());
-                ruleInfo.minSwingMoney = StringUtils.convertNullableString(sqlRuleInfo.get("ENDTIME")).isEmpty() ? 0.0 : Double.parseDouble(sqlRuleInfo.get("MINSWINGMONEY").toString());
-                ruleInfo.maxSwingMoney = StringUtils.convertNullableString(sqlRuleInfo.get("ENDTIME")).isEmpty() ? Double.MAX_VALUE : Double.parseDouble(sqlRuleInfo.get("MAXSWINGMONEY").toString());
+                ruleInfo.minSwingMoney = StringUtils.convertNullableString(sqlRuleInfo.get("MINSWINGMONEY")).isEmpty() ? 0.0 : Double.parseDouble(sqlRuleInfo.get("MINSWINGMONEY").toString());
+                ruleInfo.maxSwingMoney = StringUtils.convertNullableString(sqlRuleInfo.get("MAXSWINGMONEY")).isEmpty() ? Double.MAX_VALUE : Double.parseDouble(sqlRuleInfo.get("MAXSWINGMONEY").toString());
                 ruleInfo.rateUUID = sqlRuleInfo.get("RATEUUID").toString();
                 ruleInfo.mccUUID = sqlRuleInfo.get("MCCUUID").toString();
                 ruleInfo.ruleUseFre = StringUtils.convertNullableString(sqlRuleInfo.get("RULEUSEFRE")).isEmpty() ? Integer.MAX_VALUE : Integer.parseInt(sqlRuleInfo.get("RULEUSEFRE").toString());
@@ -363,22 +364,16 @@ public class SwingCardPolicy {
     }
 
     private ArrayList<HashMap<String, Object>> fetchPosList(RuleInfo ruleInfo) throws Exception {
-        HashMap<String, String> whereMap = new HashMap<String, String>();
-        whereMap.put("industryuuid", ruleInfo.industryUUID);
-        whereMap.put("posserveruuid", ruleInfo.posServerUUID);
-        whereMap.put("rateuuid", ruleInfo.rateUUID);
-        whereMap.put("mccuuid", ruleInfo.mccUUID);
-
-        String whereSql = "";
-        for (HashMap.Entry<String, String> entry : whereMap.entrySet()) {
-            if (!whereSql.isEmpty()) {
-                whereSql += " and ";
+        ArrayList<SQLUtils.WhereCondition> whereConditions = new ArrayList<SQLUtils.WhereCondition>() {
+            {
+                add(new SQLUtils.WhereCondition("industryuuid", "=", SQLUtils.ConvertToSqlString(ruleInfo.industryUUID), !ruleInfo.industryUUID.isEmpty()));
+                add(new SQLUtils.WhereCondition("posserveruuid", "=", SQLUtils.ConvertToSqlString(ruleInfo.posServerUUID), !ruleInfo.posServerUUID.isEmpty()));
+                add(new SQLUtils.WhereCondition("rateuuid", "=", SQLUtils.ConvertToSqlString(ruleInfo.rateUUID), !ruleInfo.rateUUID.isEmpty()));
+                add(new SQLUtils.WhereCondition("mccuuid", "=", SQLUtils.ConvertToSqlString(ruleInfo.mccUUID), !ruleInfo.mccUUID.isEmpty()));
             }
-            if (!entry.getValue().isEmpty()) {
-                whereSql += entry.getKey() + "='" + entry.getValue() + "'";
-            }
-        }
+        };
 
+        String whereSql = SQLUtils.BuildWhereCondition(whereConditions);
         if (!whereSql.isEmpty()) {
             whereSql = " where " + whereSql;
         }

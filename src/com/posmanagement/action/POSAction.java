@@ -163,7 +163,7 @@ public class POSAction extends AjaxActionSupport {
 
     public String addPos(){
         Map map = new HashMap();
-        if ((new UserUtils()).isSalesman(getUserID())) {
+        if (UserUtils.isSalesman(getUserID())) {
             Map parametMap = new HashMap();
             int i = 1;
             newid = UUIDUtils.generaterUUID();

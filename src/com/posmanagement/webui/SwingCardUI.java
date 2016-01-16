@@ -85,7 +85,7 @@ public class SwingCardUI extends WebUI {
             whereSql = " where " + whereSql;
         }
 
-        if (!(new UserUtils()).isAdmin(userID_))
+        if (!UserUtils.isAdmin(userID_))
             whereSql += " and  (cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
                     " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"')) ";
 
@@ -118,7 +118,7 @@ public class SwingCardUI extends WebUI {
             limitSql = "limit " + (pageIndex - 1) * DEFAULTITEMPERPAGE + "," + DEFAULTITEMPERPAGE;
         }
 
-        if (!(new UserUtils()).isAdmin(userID_))
+        if (!UserUtils.isAdmin(userID_))
             whereSql += " and  (cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
                     " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"')) ";
 

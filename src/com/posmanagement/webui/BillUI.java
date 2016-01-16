@@ -57,7 +57,7 @@ public class BillUI extends WebUI {
             whereSql = " where 1=1 ";
         }
 
-        if (!(new UserUtils()).isAdmin(userID_)) {
+        if (!UserUtils.isAdmin(userID_)) {
             whereSql += "and billtb.salesmanuuid='"+userID_+"'";
         }
         return PosDbManager.executeSql("SELECT  " +

@@ -73,7 +73,7 @@ public class PosUI extends WebUI {
     }
 
     private ArrayList<HashMap<String, Object>> fetchPosList(String wherestr) throws Exception {
-        if ((new UserUtils()).isAdmin(userID_))
+        if (UserUtils.isAdmin(userID_))
            return PosDbManager.executeSql("SELECT " +
                 "POSTB.uuid, " +
                 "POSTB.posname, " +

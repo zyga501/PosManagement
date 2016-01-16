@@ -34,7 +34,7 @@ public class CardUI extends WebUI {
                     .addElement("td", dbRet.get(index).get("NAME").toString())
                     .addElement("td", dbRet.get(index).get("CARDMASTER").toString())
                     .addElement("td", dbRet.get(index).get("CMTEL").toString());
-            if ((new UserUtils()).isAdmin(userID_))
+            if (UserUtils.isAdmin(userID_))
                     UI.addElement("td", dbRet.get(index).get("SALESMAN").toString());
             htmlString += UI;
         }
@@ -50,7 +50,7 @@ public class CardUI extends WebUI {
     }
 
     private ArrayList<HashMap<String, Object>> fetchCardList(String wherestr) throws Exception {
-        if ((new UserUtils()).isAdmin(userID_))
+        if ( UserUtils.isAdmin(userID_))
             return PosDbManager.executeSql("select cardtb.uuid, cardno,cardmaster,cmtel,billdate,userinfo.unick salesman " +
                 ",banktb.name,creditamount from cardtb inner join banktb " +
                 "on cardtb.bankuuid=banktb.uuid inner join userinfo on userinfo.uid=cardtb.salesmanuuid "+wherestr);

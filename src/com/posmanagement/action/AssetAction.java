@@ -1,6 +1,7 @@
 package com.posmanagement.action;
 
 import com.posmanagement.utils.PosDbManager;
+import com.posmanagement.utils.UUIDUtils;
 import com.posmanagement.webui.AssetUI;
 
 import java.util.HashMap;
@@ -31,17 +32,18 @@ public class AssetAction extends AjaxActionSupport {
                 throw new IllegalArgumentException();
             }
             Map parametMap = new HashMap();
-            parametMap.put(1, getParameter("assetMaster").toString());
-            parametMap.put(2, getParameter("bankUUID").toString());
-            parametMap.put(3, getParameter("cardCode").toString());
-            parametMap.put(4, getParameter("balance").toString());
-            parametMap.put(5, getParameter("signPwd").toString());
-            parametMap.put(6, getParameter("cashPwd").toString());
-            parametMap.put(7, getParameter("transferPwd").toString());
-            parametMap.put(8, getParameter("atmCashPwd").toString());
-            parametMap.put(9, super.getUserID().isEmpty());
-            PosDbManager.executeUpdate("insert into assettb(cardmaster,bankuuid,cardno,firstbalance,ebanksignpwd,ebankcashpwd," +
-                    "ebanktransferpwd,atmcashpwd,salesman) values(?,?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>)parametMap);
+            parametMap.put(1, UUIDUtils.generaterUUID());
+            parametMap.put(2, getParameter("assetMaster").toString());
+            parametMap.put(3, getParameter("bankUUID").toString());
+            parametMap.put(4, getParameter("cardCode").toString());
+            parametMap.put(5, getParameter("balance").toString());
+            parametMap.put(6, getParameter("signPwd").toString());
+            parametMap.put(7, getParameter("cashPwd").toString());
+            parametMap.put(8, getParameter("transferPwd").toString());
+            parametMap.put(9, getParameter("atmCashPwd").toString());
+            parametMap.put(10, super.getUserID().isEmpty());
+            PosDbManager.executeUpdate("insert into assettb(uuid,cardmaster,bankuuid,cardno,firstbalance,ebanksignpwd,ebankcashpwd," +
+                    "ebanktransferpwd,atmcashpwd,salesman) values(?,?,?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>)parametMap);
             map.put("assetList", new AssetUI().generateAssetTable());
         }
         catch (Exception exception) {

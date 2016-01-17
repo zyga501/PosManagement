@@ -71,7 +71,11 @@
                 url: 'Saleman!UpdateInfo',
                 data: $("form").serialize(),
                 success: function(data) {
-                    alert(data);
+                    var json = eval("(" + data + ")");
+                    if (json.ErrorMessage!=null)
+                    alert(json.ErrorMessage);
+                    else
+                    alert("<s:text name="global.dosuccess"/>");
                 }
             });
         }

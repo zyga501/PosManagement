@@ -100,7 +100,7 @@
                         layer.msg(json.errorMessage);
                     }
                     else {
-                        refreshposList(json.posList);
+                        refreshswingcardList(json.swingCardSummary);
                     }
                 }
             })

@@ -1,8 +1,11 @@
 package com.posmanagement.action;
 
 import com.posmanagement.utils.PosDbManager;
+import com.posmanagement.utils.SQLUtils;
+import com.posmanagement.utils.StringUtils;
 import com.posmanagement.webui.RepayUI;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,12 +34,39 @@ public class RepayAction extends AjaxActionSupport {
     public String getRepayMonth() { return repayMonth; }
 
     public String Init() throws Exception {
-        String userID = super.getUserID();
-        if (super.getUserName().equals("admin")) {
-            userID = "";
-        }
-        repaySummary = new RepayUI(userID).generateSummary();
+        repaySummary = new RepayUI(getUserID()).generateSummary();
+        getRequest().setAttribute("pagecount", (repaySummary.split("<tr").length-1)/RepayUI.pagecontent+1);
         return REPAYMANAGER;
+    }
+
+    public String FetchRepayList(){
+
+        ArrayList<SQLUtils.WhereCondition> uiConditions = new ArrayList<SQLUtils.WhereCondition>() {
+            {
+                add(new SQLUtils.WhereCondition("cardtb.cardno", "like",
+                        SQLUtils.ConvertToSqlString("%" + getParameter("cardno") + "%"), !StringUtils.convertNullableString(getParameter("cardno")).trim().isEmpty()));
+                add(new SQLUtils.WhereCondition("banktb.name", "like",
+                        SQLUtils.ConvertToSqlString("%" + getParameter("bankname") + "%"), !StringUtils.convertNullableString(getParameter("bankname")).trim().isEmpty()));
+                add(new SQLUtils.WhereCondition("cardmaster", "like",
+                        SQLUtils.ConvertToSqlString("%" + getParameter("cardmaster") + "%"), !StringUtils.convertNullableString(getParameter("cardmaster")).trim().isEmpty()));
+                add(new SQLUtils.WhereCondition("billtb.billdate", "like",
+                        SQLUtils.ConvertToSqlString("%" + getParameter("thedate") + "%"), !StringUtils.convertNullableString(getParameter("thedate")).trim().isEmpty()));
+            }
+        };
+
+        Map map = new HashMap();
+        RepayUI swingCardUI = new RepayUI(super.getUserID());
+        swingCardUI.setUiConditions(uiConditions);
+        try {
+            map.put("pagecount",swingCardUI.fetchRepayPageCount());
+
+        int curr = Integer.parseInt(null==getParameter("currpage")?"1":getParameter("currpage").toString());
+            repaySummary = swingCardUI.generateSummary(curr);
+            map.put("repaySummary",repaySummary);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return AjaxActionComplete(map);
     }
 
     public String InitDetail() throws Exception {

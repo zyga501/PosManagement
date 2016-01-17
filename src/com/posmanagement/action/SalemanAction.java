@@ -74,8 +74,21 @@ public class SalemanAction extends AjaxActionSupport {
     }
     public String UpdateInfo() throws Exception {
         Map map = new HashMap();
-        map.put("ErrorMessage", new String("UnImple"));
-        // todo
+        Map parametMap = new HashMap<Integer, Object>();
+        try{
+        parametMap.put(1, getParameter("cardID").toString().trim());
+        parametMap.put(2, getParameter("feeQK").toString().trim());
+        parametMap.put(3, getParameter("paymentTM").toString().trim());
+        parametMap.put(4, getParameter("contract").toString().trim());
+        parametMap.put(5, null==getParameter("saleStatus")?"disable":"enable");
+        parametMap.put(6, salemanID);
+        if (!PosDbManager.executeUpdate("update salesmantb set scardno=?,feeqk=?,paymenttm=?,contract=?,status=? where uid=?",
+                (HashMap<Integer, Object>) parametMap))
+            map.put("ErrorMessage", getText("global.dofailed"));
+        }
+        catch (Exception e) {
+            map.put("ErrorMessage", getText("global.dofailed"));
+        }
         return AjaxActionComplete(map);
     }
 

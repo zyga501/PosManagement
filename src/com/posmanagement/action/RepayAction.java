@@ -55,13 +55,13 @@ public class RepayAction extends AjaxActionSupport {
         };
 
         Map map = new HashMap();
-        RepayUI swingCardUI = new RepayUI(super.getUserID());
-        swingCardUI.setUiConditions(uiConditions);
+        RepayUI repayUI = new RepayUI(super.getUserID());
+        repayUI.setUiConditions(uiConditions);
         try {
-            map.put("pagecount",swingCardUI.fetchRepayPageCount());
+            map.put("pagecount",repayUI.fetchRepayPageCount());
 
         int curr = Integer.parseInt(null==getParameter("currpage")?"1":getParameter("currpage").toString());
-            repaySummary = swingCardUI.generateSummary(curr);
+            repaySummary = repayUI.generateSummary(curr);
             map.put("repaySummary",repaySummary);
         } catch (Exception e) {
             e.printStackTrace();

@@ -36,7 +36,7 @@
 <div align="center">
     <div class="panel panel-default" >
         <div class="panel-header"><form id="searchform"><table id="searchtb" style="width: 80%"><tr>
-            <td><input type="text" name="thedate" placeholder="<s:text name="swingcardsummary.thedate"/>" class="input-text radius size-s"></td>
+            <td><input type="text" name="thedate" placeholder="<s:text name="repaysummary.lastrepaymentdate"/>" class="input-text radius size-s"></td>
             <td><input type="text" name="cardno" placeholder="<s:text name="swingcardsummary.cardno"/>" class="input-text radius size-s"></td>
             <td><input type="text" name="bankname" placeholder="<s:text name="cardmanager.bankname"/>" class="input-text radius size-s"></td>
             <td><input type="text" name="cardmaster" placeholder="<s:text name="swingcardsummary.cardmaster"/>" class="input-text radius size-s"></td>

@@ -109,6 +109,8 @@ public class RepayUI extends WebUI {
                 "FROM " +
                 "repaytb " +
                 "INNER JOIN cardtb ON cardtb.cardno = repaytb.cardno " +
+                "INNER JOIN billtb ON CONVERT(repaytb.repayyear, SIGNED)= CONVERT(SUBSTR(billtb.lastrepaymentdate,1,4), SIGNED) AND convert(repaytb.repaymonth, SIGNED)= convert(SUBSTR(billtb.lastrepaymentdate,6,2), SIGNED) AND repaytb.cardno = billtb.cardno "+
+                "INNER JOIN banktb on banktb.uuid=cardtb.bankuuid "+
                 whereSql +
                 "GROUP BY " +
                 "repaytb.repayyear, " +
@@ -160,7 +162,7 @@ public class RepayUI extends WebUI {
                 "FROM " +
                 "repaytb " +
                 "INNER JOIN cardtb ON cardtb.cardno = repaytb.cardno " +
-                "INNER JOIN billtb ON substr(repaytb.thedate,6,2)=SUBSTR(billtb.billdate,6,2) and repaytb.cardno = billtb.cardno "+
+                "INNER JOIN billtb ON CONVERT(repaytb.repayyear, SIGNED)= CONVERT(SUBSTR(billtb.lastrepaymentdate,1,4), SIGNED) AND convert(repaytb.repaymonth, SIGNED)= convert(SUBSTR(billtb.lastrepaymentdate,6,2), SIGNED) AND repaytb.cardno = billtb.cardno "+
                 "INNER JOIN banktb on banktb.uuid=cardtb.bankuuid "+
                 whereSql +
                 " GROUP BY " +

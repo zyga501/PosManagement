@@ -22,7 +22,7 @@ public class SalemanUI extends WebUI {
                     .addAttribute("onclick", "clickSaleman('" + dbRet.get(index).get("UID") + "')")
                     .addElement("td", String.valueOf(index+1))
                     .addElement("td", dbRet.get(index).get("UNICK").toString())
-                    .addElement("td", dbRet.get(index).get("UID").toString()));
+                    .addElement("td", dbRet.get(index).get("UNAME").toString()));
         }
         return uiTable.generateUI() ;
     }
@@ -76,10 +76,9 @@ public class SalemanUI extends WebUI {
                                 .addElement("td", "状态")
                                 .addElement(new UIContainer("td")
                                         .addElement(new UIContainer("input")
-                                                .addAttribute("type", "text")
+                                                .addAttribute("type", "checkbox")
                                                 .addAttribute("name", "saleStatus")
-                                                .addAttribute("class", "input-text radius")
-                                                .addAttribute("value", StringUtils.convertNullableString(dbRet.get(0).get("STATUS"))))))
+                                                .addAttribute("checked", "checked", StringUtils.convertNullableString(dbRet.get(0).get("STATUS")).compareTo("enable") == 0))))
                         .addElement(new UIContainer("tr")
                                 .addElement("td", "费用情况")
                                 .addElement(new UIContainer("td")

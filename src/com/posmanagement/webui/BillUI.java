@@ -28,9 +28,9 @@ public class BillUI extends WebUI {
                             .addAttribute("name","billamount")
                             .addAttribute("datav",StringUtils.convertNullableString(dbRet.get(index).get("UUID")))
                             .addAttribute("style","display:inline-block;")))
-                    .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("CANUSEAMOUNT")))
-                    .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("REPAYAMOUNT")))
-                    .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("REMAINAMOUNT")))
+                    .addElement("td", String.valueOf(Double.valueOf(dbRet.get(index).get("CANUSEAMOUNT").toString()) + Double.valueOf(dbRet.get(index).get("REPAYAMOUNT").toString()) - Double.valueOf(dbRet.get(index).get("SWINGAMOUNT").toString())))
+                    .addElement("td", String.valueOf(Double.valueOf(dbRet.get(index).get("REPAYAMOUNT").toString())))
+                    .addElement("td", String.valueOf(Double.valueOf(dbRet.get(index).get("BILLAMOUNT").toString()) - Double.valueOf(dbRet.get(index).get("REPAYAMOUNT").toString())))
                     .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("SALEMAN")))
                     .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("REMAINAMOUNT")).compareTo("0") == 0 ?
                             getText("bill.billfinished") : getText("bill.billunfinished"))
@@ -60,28 +60,44 @@ public class BillUI extends WebUI {
         if (!UserUtils.isAdmin(userID_)) {
             whereSql += "and billtb.salesmanuuid='"+userID_+"'";
         }
-        return PosDbManager.executeSql("SELECT  " +
-                "billtb.uuid, " +
-                "billtb.cardno, " +
-                "billtb.billamount, " +
-                "billtb.`status`, " +
-                "billtb.billdate, " +
-                "Sum(CASE WHEN repaytb.tradestatus='enable' then repaytb.trademoney else 0 END) AS repayamount, " +
-                "SUM(CASE WHEN repaytb.tradestatus='enable' then repaytb.trademoney else 0 END) + billtb.canuseamount AS canuseamount, " +
-                "billamount - SUM(CASE WHEN repaytb.tradestatus='enable' then repaytb.trademoney else 0 END) AS remainamount, " +
-                "banktb.`name` AS bankname, " +
-                "billtb.lastrepaymentdate, " +
-                "userinfo.unick AS saleman " +
-                "FROM " +
-                "billtb " +
-                "LEFT JOIN repaytb ON CONVERT(repaytb.repayyear, SIGNED)= CONVERT(SUBSTR(billtb.lastrepaymentdate,1,4), SIGNED) AND convert(repaytb.repaymonth, SIGNED)= convert(SUBSTR(billtb.lastrepaymentdate,6,2), SIGNED) " +
-                "INNER JOIN banktb ON banktb.uuid = billtb.bankuuid  " +
-                "inner join cardtb on cardtb.cardno=billtb.cardno "+
-                "inner  JOIN userinfo ON userinfo.uid = cardtb.salesmanuuid  " +
+        return PosDbManager.executeSql("select billtb.*, sum(CASE WHEN swingcard.swingstatus='enable' then swingcard.amount else 0 END) swingamount \n" +
+                "from (select billtb.*, sum(CASE WHEN repaytb.tradestatus='enable' then repaytb.trademoney else 0 END) repayamount \n" +
+                "from (SELECT\n" +
+                "billtb.uuid,\n" +
+                "billtb.cardno,\n" +
+                "billtb.billamount,\n" +
+                "billtb.canuseamount,\n" +
+                "billtb.`status`,\n" +
+                "billtb.billdate,\n" +
+                "banktb.`name` AS bankname,\n" +
+                "billtb.lastrepaymentdate,\n" +
+                "userinfo.unick saleman\n" +
+                "FROM\n" +
+                "billtb\n" +
+                "INNER JOIN banktb ON banktb.uuid = billtb.bankuuid\n" +
+                "LEFT JOIN userinfo ON userinfo.uid = billtb.salesmanuuid\n" +
                 whereSql +
-                "GROUP BY " +
-                "billtb.cardno, " +
-                "SUBSTR(billtb.lastrepaymentdate,1,4), " +
+                "GROUP BY\n" +
+                "billtb.cardno,\n" +
+                "SUBSTR(billtb.lastrepaymentdate,1,4),\n" +
+                "SUBSTR(billtb.lastrepaymentdate,6,2)\n" +
+                "ORDER BY\n" +
+                "billtb.billdate DESC) as billtb\n" +
+                "LEFT JOIN\n" +
+                "repaytb ON CONVERT(repaytb.repayyear, SIGNED)= CONVERT(SUBSTR(billtb.lastrepaymentdate,1,4), SIGNED) \n" +
+                "AND convert(repaytb.repaymonth, SIGNED)= convert(SUBSTR(billtb.lastrepaymentdate,6,2), SIGNED)\n" +
+                whereSql +
+                "GROUP BY\n" +
+                "billtb.cardno,\n" +
+                "SUBSTR(billtb.lastrepaymentdate,1,4),\n" +
+                "SUBSTR(billtb.lastrepaymentdate,6,2)\n" +
+                ") billtb\n" +
+                "LEFT JOIN swingcard ON CONVERT(swingcard.billyear, SIGNED) = CONVERT(SUBSTR(billtb.billdate,1,4), SIGNED)\n" +
+                "AND convert(swingcard.billmonth, SIGNED) = convert(SUBSTR(billtb.billdate,6,2), SIGNED)\n" +
+                whereSql +
+                "GROUP BY\n" +
+                "billtb.cardno,\n" +
+                "SUBSTR(billtb.lastrepaymentdate,1,4),\n" +
                 "SUBSTR(billtb.lastrepaymentdate,6,2) " +
                 "ORDER BY " +
                 "billtb.billdate DESC " +limitstr );

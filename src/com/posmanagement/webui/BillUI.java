@@ -1,6 +1,7 @@
 package com.posmanagement.webui;
 
 import com.posmanagement.utils.PosDbManager;
+import com.posmanagement.utils.SQLUtils;
 import com.posmanagement.utils.StringUtils;
 import com.posmanagement.utils.UserUtils;
 
@@ -8,9 +9,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class BillUI extends WebUI {
-    public BillUI(String userID){userID_=userID;}
-    public String generateBillTable(String wherestr) throws Exception {
-        ArrayList<HashMap<String, Object>> dbRet = fetchBillList(wherestr);
+    public BillUI(String userID){
+        userID_=userID;
+    }
+
+    public String generateBillTable(int pageIndex) throws Exception {
+        ArrayList<HashMap<String, Object>> dbRet = fetchBillList(pageIndex);
         if (dbRet.size() <= 0)
             return new String("");
 
@@ -28,11 +32,12 @@ public class BillUI extends WebUI {
                             .addAttribute("name","billamount")
                             .addAttribute("datav",StringUtils.convertNullableString(dbRet.get(index).get("UUID")))
                             .addAttribute("style","display:inline-block;")))
-                    .addElement("td", String.valueOf(Double.valueOf(dbRet.get(index).get("CANUSEAMOUNT").toString()) + Double.valueOf(dbRet.get(index).get("REPAYAMOUNT").toString()) - Double.valueOf(dbRet.get(index).get("SWINGAMOUNT").toString())))
+                    .addElement("td", String.valueOf(((long)(10 * (Double.valueOf(dbRet.get(index).get("CANUSEAMOUNT").toString()) + Double.valueOf(dbRet.get(index).get("REPAYAMOUNT").toString()) - Double.valueOf(dbRet.get(index).get("SWINGAMOUNT").toString())))) / 10.0))
                     .addElement("td", String.valueOf(Double.valueOf(dbRet.get(index).get("REPAYAMOUNT").toString())))
                     .addElement("td", String.valueOf(Double.valueOf(dbRet.get(index).get("BILLAMOUNT").toString()) - Double.valueOf(dbRet.get(index).get("REPAYAMOUNT").toString())))
                     .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("SALEMAN")))
-                    .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("REMAINAMOUNT")).compareTo("0") == 0 ?
+                    .addElement("td", dbRet.get(index).get("SWINGCOUNT").toString().compareTo(dbRet.get(index).get("SWUNGCOUNT").toString()) == 0 &&
+                                        dbRet.get(index).get("REPAYCOUNT").toString().compareTo(dbRet.get(index).get("REPAYEDCOUNT").toString()) == 0 ?
                             getText("bill.billfinished") : getText("bill.billunfinished"))
                     .addElement(new UIContainer("td").addElement(new UIContainer("input")
                         .addAttribute("class", dbRet.get(index).get("STATUS").equals("enable")?"btn btn-success radius":"btn btn-danger radius")
@@ -45,24 +50,29 @@ public class BillUI extends WebUI {
         return htmlString;
     }
 
-    private ArrayList<HashMap<String, Object>> fetchBillList(String wherestr) throws Exception {
-        String limitstr = "";
-        String whereSql = " where 1=1 ";
-        try {
-            limitstr = wherestr.substring(wherestr.indexOf("limit"));
-            whereSql += wherestr.substring(0, wherestr.indexOf("limit")).replaceAll("where", "").replaceAll("1=1", "");
+    private ArrayList<HashMap<String, Object>> fetchBillList(int pageIndex) throws Exception {
+        String whereSql = SQLUtils.BuildWhereCondition(uiConditions_);
+        if (!whereSql.isEmpty()) {
+            whereSql = " where " + whereSql;
         }
-        catch (Exception e){
-            limitstr ="";
-            whereSql = " where 1=1 ";
+        if (!UserUtils.isAdmin(userID_)) {
+            whereSql += " and billtb.salesmanuuid='"+userID_+"'";
         }
 
-        if (!UserUtils.isAdmin(userID_)) {
-            whereSql += "and billtb.salesmanuuid='"+userID_+"'";
-        }
-        return PosDbManager.executeSql("select billtb.*, sum(CASE WHEN swingcard.swingstatus='enable' then swingcard.amount else 0 END) swingamount \n" +
-                "from (select billtb.*, sum(CASE WHEN repaytb.tradestatus='enable' then repaytb.trademoney else 0 END) repayamount \n" +
-                "from (SELECT\n" +
+        String limitSql = "limit " + (pageIndex - 1) * DEFAULTITEMPERPAGE + "," + DEFAULTITEMPERPAGE;
+
+        return PosDbManager.executeSql("select billtb.*, \n" +
+                "count(1) swingcount, \n" +
+                "sum(CASE WHEN swingcard.swingstatus='enable' then 1 else 0 END) swungcount, \n" +
+                "sum(CASE WHEN swingcard.swingstatus='enable' then swingcard.amount else 0 END) swingamount \n" +
+                "from (\n" +
+                "select billtb.*, \n" +
+                "count(1) repaycount,\n" +
+                "sum(CASE WHEN repaytb.tradestatus='enable' then 1 else 0 END) repayedcount,\n" +
+                "sum(CASE WHEN repaytb.tradestatus='enable' then repaytb.trademoney else 0 END) repayamount \n" +
+                "from \n" +
+                "(\n" +
+                "SELECT \n" +
                 "billtb.uuid,\n" +
                 "billtb.cardno,\n" +
                 "billtb.billamount,\n" +
@@ -77,30 +87,46 @@ public class BillUI extends WebUI {
                 "INNER JOIN banktb ON banktb.uuid = billtb.bankuuid\n" +
                 "LEFT JOIN userinfo ON userinfo.uid = billtb.salesmanuuid\n" +
                 whereSql +
-                "GROUP BY\n" +
+                " GROUP BY\n" +
                 "billtb.cardno,\n" +
-                "SUBSTR(billtb.lastrepaymentdate,1,4),\n" +
-                "SUBSTR(billtb.lastrepaymentdate,6,2)\n" +
+                "billtb.billdate\n" +
                 "ORDER BY\n" +
                 "billtb.billdate DESC) as billtb\n" +
                 "LEFT JOIN\n" +
-                "repaytb ON CONVERT(repaytb.repayyear, SIGNED)= CONVERT(SUBSTR(billtb.lastrepaymentdate,1,4), SIGNED) \n" +
-                "AND convert(repaytb.repaymonth, SIGNED)= convert(SUBSTR(billtb.lastrepaymentdate,6,2), SIGNED)\n" +
-                whereSql +
+                "repaytb ON repaytb.billuuid = billtb.uuid\n" +
                 "GROUP BY\n" +
                 "billtb.cardno,\n" +
-                "SUBSTR(billtb.lastrepaymentdate,1,4),\n" +
-                "SUBSTR(billtb.lastrepaymentdate,6,2)\n" +
+                "billtb.billdate\n" +
                 ") billtb\n" +
-                "LEFT JOIN swingcard ON CONVERT(swingcard.billyear, SIGNED) = CONVERT(SUBSTR(billtb.billdate,1,4), SIGNED)\n" +
-                "AND convert(swingcard.billmonth, SIGNED) = convert(SUBSTR(billtb.billdate,6,2), SIGNED)\n" +
-                whereSql +
+                "LEFT JOIN swingcard ON swingcard.billuuid = billtb.uuid\n" +
                 "GROUP BY\n" +
                 "billtb.cardno,\n" +
-                "SUBSTR(billtb.lastrepaymentdate,1,4),\n" +
-                "SUBSTR(billtb.lastrepaymentdate,6,2) " +
+                "billtb.billdate " +
                 "ORDER BY " +
-                "billtb.billdate DESC " +limitstr );
+                "billtb.billdate DESC " + limitSql);
+    }
+
+    public int fetchBillPageCount() throws Exception {
+        String whereSql = SQLUtils.BuildWhereCondition(uiConditions_);
+        if (!whereSql.isEmpty()) {
+            whereSql = " where " + whereSql;
+        }
+        if (!UserUtils.isAdmin(userID_)) {
+            whereSql += "and billtb.salesmanuuid='"+userID_+"'";
+        }
+
+        ArrayList<HashMap<String, Object>> resultMap =  PosDbManager.executeSql("SELECT count(*) CNT\n" +
+                "FROM\n" +
+                "billtb\n" +
+                "INNER JOIN banktb ON banktb.uuid = billtb.bankuuid\n" +
+                "LEFT JOIN userinfo ON userinfo.uid = billtb.salesmanuuid\n" +
+                whereSql +
+                "ORDER BY\n" +
+                "billtb.billdate DESC");
+        if (resultMap.size()<=0) {
+            return 0;
+        }
+        return Integer.parseInt(resultMap.get(0).get("CNT").toString())/ WebUI.DEFAULTITEMPERPAGE + 1;
     }
 
     private String userID_; // TODO for role

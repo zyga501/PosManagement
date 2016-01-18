@@ -13,10 +13,6 @@ public class SwingCardUI extends WebUI {
         userID_=uid;
     }
 
-    public String generateSummary() throws Exception {
-        return generateSummary(-1);
-    }
-
     public String generateSummary(int pageIndex) throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchSwingCardSummary(pageIndex);
         if (dbRet.size() <= 0)
@@ -32,7 +28,7 @@ public class SwingCardUI extends WebUI {
                     .addElement("td", StringUtils.formatCardNO(dbRet.get(index).get("CARDNO").toString()))
                     .addElement("td", dbRet.get(index).get("BANKNAME").toString())
                     .addElement("td", dbRet.get(index).get("CARDMASTER").toString())
-                    .addElement("td", dbRet.get(index).get("FINISHED").toString().equals("0")?
+                    .addElement("td", dbRet.get(index).get("UNFINISHED").toString().equals("0")?
                             getText("swingcardsummary.swingfinished") : getText("swingcardsummary.swingunfinished"))
                     .addElement(new UIContainer("td")
                             .addElement(
@@ -41,16 +37,15 @@ public class SwingCardUI extends WebUI {
                                             .addAttribute("value", "查看明细")
                                             .addAttribute("class", "btn radius")
                                             .addAttribute("onclick", "clickDetail('" + dbRet.get(index).get("CARDNO") +
-                                                    "','" + dbRet.get(index).get("BILLYEAR") +
-                                                    "','" + dbRet.get(index).get("BILLMONTH") + "')")
+                                                    "','" + dbRet.get(index).get("BILLUUID") + "')")
                             )
                     );
         }
         return htmlString;
     }
 
-    public String generateDetail(String cardNO, String billYear, String billMonth) throws Exception {
-        ArrayList<HashMap<String, Object>> dbRet = fetchSwingCardDetail(cardNO, billYear, billMonth);
+    public String generateDetail(String cardNO, String billUUID) throws Exception {
+        ArrayList<HashMap<String, Object>> dbRet = fetchSwingCardDetail(cardNO, billUUID);
         if (dbRet.size() <= 0)
             return new String("");
 
@@ -89,23 +84,20 @@ public class SwingCardUI extends WebUI {
             whereSql += " and  (cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
                     " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"')) ";
 
-        ArrayList<HashMap<String, Object>> rect = PosDbManager.executeSql("SELECT count(*) as cnt " +
-                "FROM " +
-                "swingcard " +
-                "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno " +
-                "INNER JOIN billtb ON CONVERT(swingcard.billyear, SIGNED)= CONVERT(SUBSTR(billtb.billdate,1,4), SIGNED) AND convert(swingcard.billmonth, SIGNED)= convert(SUBSTR(billtb.billdate,6,2), SIGNED) AND swingcard.cardno = billtb.cardno "+
-                "INNER JOIN banktb on banktb.uuid=cardtb.bankuuid "+
+        ArrayList<HashMap<String, Object>> resultMap = PosDbManager.executeSql("SELECT count(*) as cnt\n" +
+                "FROM\n" +
+                "swingcard\n" +
+                "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno \n" +
+                "INNER JOIN billtb ON swingcard.billuuid = billtb.uuid AND swingcard.cardno = billtb.cardno \n" +
+                "INNER JOIN banktb on banktb.uuid=cardtb.bankuuid  \n" +
                 whereSql +
-                " GROUP BY " +
-                "swingcard.billyear, " +
-                "swingcard.billmonth, " +
-                "swingcard.cardno  ORDER BY " +
-                "swingcard.billyear desc, " +
-                "swingcard.billmonth desc");
-        if (rect.size()<=0) {
+                " GROUP BY\n" +
+                "billtb.billdate,\n" +
+                "swingcard.cardno\n");
+        if (resultMap.size()<=0) {
             return 0;
         }
-        return Integer.parseInt(rect.get(0).get("CNT").toString())/ WebUI.DEFAULTITEMPERPAGE + 1;
+        return Integer.parseInt(resultMap.get(0).get("CNT").toString())/ WebUI.DEFAULTITEMPERPAGE + 1;
     }
 
     private ArrayList<HashMap<String, Object>> fetchSwingCardSummary(int pageIndex) throws Exception {
@@ -113,63 +105,58 @@ public class SwingCardUI extends WebUI {
         if (!whereSql.isEmpty()) {
             whereSql = " where " + whereSql;
         }
-        String limitSql = new String();
-        if (pageIndex > 0) {
-            limitSql = "limit " + (pageIndex - 1) * DEFAULTITEMPERPAGE + "," + DEFAULTITEMPERPAGE;
-        }
+        String limitSql ="limit " + (pageIndex - 1) * DEFAULTITEMPERPAGE + "," + DEFAULTITEMPERPAGE;
 
         if (!UserUtils.isAdmin(userID_))
             whereSql += " and  (cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
                     " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"')) ";
 
-        return PosDbManager.executeSql("SELECT " +
-                "swingcard.billyear, " +
-                "swingcard.billmonth, " +
-                "swingcard.cardno, " +
-                "Sum(swingcard.amount) AS amount, " +
-                "cardtb.cardmaster, (count(1) -" +
-                "sum(case when swingstatus='enable' then 1 else 0 END)) finished, " +
-                "banktb.name as  bankname " +
-                "FROM " +
-                "swingcard " +
-                "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno " +
-                "INNER JOIN billtb ON CONVERT(swingcard.billyear, SIGNED)= CONVERT(SUBSTR(billtb.billdate,1,4), SIGNED) AND convert(swingcard.billmonth, SIGNED)= convert(SUBSTR(billtb.billdate,6,2), SIGNED) AND swingcard.cardno = billtb.cardno "+
-                "INNER JOIN banktb on banktb.uuid=cardtb.bankuuid "+
+        return PosDbManager.executeSql("SELECT \n" +
+                "SUBSTR(billtb.billdate,1,4) billyear, \n" +
+                "SUBSTR(billtb.billdate,6,2) billmonth, \n" +
+                "swingcard.cardno, \n" +
+                "billtb.uuid billuuid, \n" +
+                "Sum(swingcard.amount) AS amount, \n" +
+                "cardtb.cardmaster, \n" +
+                "(count(1) - sum(case when swingstatus='enable' then 1 else 0 END)) unfinished, \n" +
+                "banktb.name as bankname \n" +
+                "FROM \n" +
+                "swingcard \n" +
+                "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno \n" +
+                "INNER JOIN billtb ON swingcard.billuuid = billtb.uuid AND swingcard.cardno = billtb.cardno \n" +
+                "INNER JOIN banktb on banktb.uuid=cardtb.bankuuid  \n" +
                 whereSql +
-                " GROUP BY " +
-                "swingcard.billyear, " +
-                "swingcard.billmonth, " +
-                "swingcard.cardno  ORDER BY " +
-                "swingcard.billyear desc, " +
-                "swingcard.billmonth desc "+
+                "GROUP BY billtb.billdate, swingcard.cardno \n" +
+                "ORDER BY billtb.billdate desc\n" +
                 limitSql);
     }
 
-    private ArrayList<HashMap<String, Object>> fetchSwingCardDetail(String cardNO, String billYear, String billMonth) throws Exception {
-        String whereSql = "where swingcard.cardno='" + cardNO + "' and billyear='" + billYear + "' and billmonth='"+ billMonth + "' ";
+    private ArrayList<HashMap<String, Object>> fetchSwingCardDetail(String cardNO, String billUUID) throws Exception {
+        String whereSql = "where swingcard.cardno='" + cardNO + "' and billuuid='" + billUUID + "'";
         if (null != userID_ && userID_.length() != 0)
-            whereSql += "and (cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
+            whereSql += " and (cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
                     " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"')) ";
 
-            return PosDbManager.executeSql("SELECT swingcard.id," +
-                    "swingcard.billyear, " +
-                    "swingcard.billmonth, " +
-                    "swingcard.cardno, " +
-                    "cardtb.cardmaster, " +
-                    "swingcard.amount, " +
-                    "swingcard.sdatetm, " +
-                    "postb.posname, " +
-                    "swingcard.userid, " +
-                    "userinfo.unick, " +
-                    "swingcard.realsdatetm, " +
-                    "swingcard.swingstatus " +
-                    "FROM " +
-                    "swingcard " +
-                    "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno " +
-                    "INNER JOIN postb ON postb.uuid = swingcard.posuuid  " +
-                    "left JOIN userinfo ON userinfo.uid = swingcard.userid " +
+            return PosDbManager.executeSql("SELECT swingcard.id,\n" +
+                    "SUBSTR(billtb.billdate,1,4) billyear, \n" +
+                    "SUBSTR(billtb.billdate,6,2) billmonth, \n" +
+                    "swingcard.cardno, \n" +
+                    "cardtb.cardmaster, \n" +
+                    "swingcard.amount, \n" +
+                    "swingcard.sdatetm, \n" +
+                    "postb.posname, \n" +
+                    "userinfo.unick, \n" +
+                    "swingcard.realsdatetm, \n" +
+                    "swingcard.swingstatus \n" +
+                    "FROM \n" +
+                    "swingcard \n" +
+                    "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno \n" +
+                    "INNER JOIN postb ON postb.uuid = swingcard.posuuid \n" +
+                    "INNER JOIN billtb ON swingcard.billuuid = billtb.uuid AND swingcard.cardno = billtb.cardno \n" +
+                    "left JOIN userinfo ON userinfo.uid = swingcard.userid \n" +
                     whereSql +
-                    "ORDER BY swingcard.swingstatus, " +
+                    "ORDER BY \n" +
+                    "swingcard.swingstatus, \n" +
                     "swingcard.sdatetm");
     }
 

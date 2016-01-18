@@ -27,8 +27,9 @@
                     $.ajax({
                         type: 'post',
                         url: 'SwingCard!EditDetail',
-                        data: {status:"enable" , swingId:swingid, cardNO:$('#cardNO').val(), billYear:$('#billYear').val(),billMonth:$('#billMonth').val()},
+                        data: {status:"enable" , swingId:swingid, cardNO:$('#cardNO').val(), billUUID:$('#billUUID').val()},
                         success: function (data) {
+                            alert(data);
                             var json = eval("(" + data + ")");
                             if (json.successMessage) {
                                 button.value = "Y";
@@ -52,8 +53,7 @@
         <div class="panel-header"><s:text name="swingcarddetail.paneltitle"/></div>
         <div class="panel-body" id="parentIframe">
             <input type="hidden" id="cardNO" value="<s:property value="cardNO" escape="false"/>"/>
-            <input type="hidden" id="billYear" value="<s:property value="billYear" escape="false"/>"/>
-            <input type="hidden" id="billMonth" value="<s:property value="billMonth" escape="false"/>"/>
+            <input type="hidden" id="billUUID" value="<s:property value="billUUID" escape="false"/>"/>
             <form>
                 <div style="height:auto; overflow:auto;">
                     <table class="table table-border table-bordered table-bg table-hover table-sort">

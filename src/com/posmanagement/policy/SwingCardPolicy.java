@@ -19,10 +19,6 @@ public class SwingCardPolicy {
 
     public class SwingList {
         public String cardNO;
-        public int billYear;
-        public int billMonth;
-        public int repayYear;
-        public int repayMonth;
         public ArrayList<SwingCardInfo> swingCardList;
         public ArrayList<RepayInfo> repayList;
     }
@@ -182,10 +178,6 @@ public class SwingCardPolicy {
 
     private SwingList generateSwingList( ArrayList<SwingCardInfo> swingCardList, ArrayList<RepayInfo> repayList) {
         SwingList swingList = new SwingList();
-        swingList.billYear = billInfo_.billDate.getYear() + 1900;
-        swingList.billMonth = billInfo_.billDate.getMonth() + 1;
-        swingList.repayYear = billInfo_.lastRepayDate.getYear() + 1900;
-        swingList.repayMonth = billInfo_.lastRepayDate.getMonth() + 1;
         swingList.cardNO = cardInfo_.cardNO;
         if (swingCardList.size() == 0) {
             swingCardList.add(new SwingCardInfo());

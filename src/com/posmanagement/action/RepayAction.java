@@ -13,15 +13,9 @@ public class RepayAction extends AjaxActionSupport {
     private final static String REPAYMANAGER = "repayManager";
     private final static String REPAYDETAIL = "repayDetail";
 
-    private String repaySummary;
     private String repayDetail;
     private String cardNO;
-    private String repayYear;
-    private String repayMonth;
-
-    public String getRepaySummary() {
-        return repaySummary;
-    }
+    private String billUUID;
 
     public String getRepayDetail() {
         return repayDetail;
@@ -29,13 +23,12 @@ public class RepayAction extends AjaxActionSupport {
 
     public String getCardNO() { return cardNO; }
 
-    public String getRepayYear() { return repayYear; }
-
-    public String getRepayMonth() { return repayMonth; }
+    public String getBillUUID() {
+        return billUUID;
+    }
 
     public String Init() throws Exception {
-        repaySummary = new RepayUI(getUserID()).generateSummary();
-        getRequest().setAttribute("pagecount", (repaySummary.split("<tr").length-1)/RepayUI.pagecontent+1);
+        getRequest().setAttribute("pagecount", (new RepayUI(getUserID()).fetchRepayPageCount())/RepayUI.pagecontent+1);
         return REPAYMANAGER;
     }
 
@@ -49,7 +42,7 @@ public class RepayAction extends AjaxActionSupport {
                         SQLUtils.ConvertToSqlString("%" + getParameter("bankname") + "%"), !StringUtils.convertNullableString(getParameter("bankname")).trim().isEmpty()));
                 add(new SQLUtils.WhereCondition("cardmaster", "like",
                         SQLUtils.ConvertToSqlString("%" + getParameter("cardmaster") + "%"), !StringUtils.convertNullableString(getParameter("cardmaster")).trim().isEmpty()));
-                add(new SQLUtils.WhereCondition("billtb.billdate", "like",
+                add(new SQLUtils.WhereCondition("billtb.lastrepaymentdate", "like",
                         SQLUtils.ConvertToSqlString("%" + getParameter("thedate") + "%"), !StringUtils.convertNullableString(getParameter("thedate")).trim().isEmpty()));
             }
         };
@@ -61,8 +54,7 @@ public class RepayAction extends AjaxActionSupport {
             map.put("pagecount",repayUI.fetchRepayPageCount());
 
         int curr = Integer.parseInt(null==getParameter("currpage")?"1":getParameter("currpage").toString());
-            repaySummary = repayUI.generateSummary(curr);
-            map.put("repaySummary",repaySummary);
+            map.put("repaySummary",repayUI.generateSummary(curr));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -74,10 +66,9 @@ public class RepayAction extends AjaxActionSupport {
         if (super.getUserName().equals("admin")) {
             userID = "";
         }
-        repayDetail = new RepayUI(userID).generateDetail(getParameter("cardNO").toString(), getParameter("repayYear").toString(), getParameter("repayMonth").toString());
+        repayDetail = new RepayUI(userID).generateDetail(getParameter("cardNO").toString(), getParameter("billUUID").toString());
         cardNO = getParameter("cardNO").toString();
-        repayYear = getParameter("repayYear").toString();
-        repayMonth = getParameter("repayMonth").toString();
+        billUUID = getParameter("billUUID").toString();
         return REPAYDETAIL;
     }
 
@@ -97,7 +88,7 @@ public class RepayAction extends AjaxActionSupport {
                 if (super.getUserName().equals("admin")) {
                     userID = "";
                 }
-                map.put("repayDetail", new RepayUI(userID).generateDetail(getParameter("cardNO").toString(), getParameter("repayYear").toString(), getParameter("repayMonth").toString()));
+                map.put("repayDetail", new RepayUI(userID).generateDetail(getParameter("cardNO").toString(), getParameter("billUUID").toString()));
             }
         }
         return AjaxActionComplete(map);

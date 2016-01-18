@@ -21,13 +21,13 @@
         }
     </style>
     <script type="text/javascript">
-        function clickDetail(cardNo, billYear, billMonth) {
+        function clickDetail(cardNo, billUUID) {
             var index = layer.open({
                 type: 2,
                 title: "刷卡明细",
                 fix: true,
                 maxmin: false,
-                content: "SwingCard!InitDetail?cardNO=" + cardNo + "&billYear=" + billYear + "&billMonth=" + billMonth
+                content: "SwingCard!InitDetail?cardNO=" + cardNo + "&billUUID=" + billUUID
             });
             layer.full(index);
         }

@@ -14,15 +14,9 @@ public class SwingCardAction extends AjaxActionSupport {
     private final static String SWINGCARDMANAGER = "swingCardManager";
     private final static String SWINGCARDDETAIL = "swingCardDetail";
 
-    private String swingCardSummary;
     private String swingCardDetail;
     private String cardNO;
-    private String billYear;
-    private String billMonth;
-
-    public String getSwingCardSummary() {
-        return swingCardSummary;
-    }
+    private String billUUID;
 
     public String getSwingCardDetail() {
         return swingCardDetail;
@@ -30,13 +24,10 @@ public class SwingCardAction extends AjaxActionSupport {
 
     public String getCardNO() { return cardNO; }
 
-    public String getBillYear() { return billYear; }
+    public String getBillUUID() { return billUUID; }
 
-    public String getBillMonth() { return billMonth; }
-
-    public String Init() throws Exception { 
-        swingCardSummary = new SwingCardUI(super.getUserID()).generateSummary();
-        getRequest().setAttribute("pagecount", (swingCardSummary.split("<tr").length-1)/WebUI.DEFAULTITEMPERPAGE+1);
+    public String Init() throws Exception {
+        getRequest().setAttribute("pagecount", (new SwingCardUI(super.getUserID()).fetchSwingCardPageCount())/WebUI.DEFAULTITEMPERPAGE+1);
         return SWINGCARDMANAGER;
     }
 
@@ -45,10 +36,9 @@ public class SwingCardAction extends AjaxActionSupport {
         if (super.getUserName().equals("admin")) {
             userID = "";
         }
-        swingCardDetail = new SwingCardUI(userID).generateDetail(getParameter("cardNO").toString(), getParameter("billYear").toString(), getParameter("billMonth").toString());
+        swingCardDetail = new SwingCardUI(userID).generateDetail(getParameter("cardNO").toString(), getParameter("billUUID").toString());
         cardNO = getParameter("cardNO").toString();
-        billYear = getParameter("billYear").toString();
-        billMonth = getParameter("billMonth").toString();
+        billUUID = getParameter("billUUID").toString();
         return SWINGCARDDETAIL;
     }
 
@@ -68,7 +58,7 @@ public class SwingCardAction extends AjaxActionSupport {
                 if (super.getUserName().equals("admin")) {
                     userID = "";
                 }
-                map.put("swingCardDetail", new SwingCardUI(userID).generateDetail(getParameter("cardNO").toString(), getParameter("billYear").toString(), getParameter("billMonth").toString()));
+                map.put("swingCardDetail", new SwingCardUI(userID).generateDetail(getParameter("cardNO").toString(), getParameter("billUUID").toString()));
             }
         }
         return AjaxActionComplete(map);
@@ -93,8 +83,7 @@ public class SwingCardAction extends AjaxActionSupport {
         swingCardUI.setUiConditions(uiConditions);
         map.put("pagecount", swingCardUI.fetchSwingCardPageCount());
         int curr = Integer.parseInt(null==getParameter("currpage")?"1":getParameter("currpage").toString());
-        swingCardSummary = swingCardUI.generateSummary(curr);
-        map.put("swingCardSummary",swingCardSummary);
+        map.put("swingCardSummary",swingCardUI.generateSummary(curr));
 
         return AjaxActionComplete(map);
     }

@@ -20,13 +20,13 @@
         }
     </style>
     <script type="text/javascript">
-        function clickDetail(cardNo, repayYear, repayMonth) {
+        function clickDetail(cardNo, billUUID) {
             var index = layer.open({
                 type: 2,
                 title: "还卡明细",
                 fix: true,
                 maxmin: false,
-                content: "Repay!InitDetail?cardNO=" + cardNo + "&repayYear=" + repayYear + "&repayMonth=" + repayMonth
+                content: "Repay!InitDetail?cardNO=" + cardNo + "&billUUID=" + billUUID
             });
             layer.full(index);
         }

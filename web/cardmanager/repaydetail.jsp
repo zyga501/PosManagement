@@ -27,7 +27,7 @@
                     $.ajax({
                         type: 'post',
                         url: 'Repay!EditDetail',
-                        data: {status:"enable" , repayId:repayid, cardNO:$('#cardNO').val(), repayYear:$('#repayYear').val(),repayMonth:$('#repayMonth').val()},
+                        data: {status:"enable" , repayId:repayid, cardNO:$('#cardNO').val(), billUUID:$('#billUUID').val()},
                         success: function (data) {
                             var json = eval("(" + data + ")");
                             if (json.successMessage) {
@@ -52,8 +52,7 @@
         <div class="panel-header"><s:text name="repaydetail.paneltitle"/></div>
         <div class="panel-body" id="parentIframe">
             <input type="hidden" id="cardNO" value="<s:property value="cardNO" escape="false"/>"/>
-            <input type="hidden" id="repayYear" value="<s:property value="repayYear" escape="false"/>"/>
-            <input type="hidden" id="repayMonth" value="<s:property value="repayMonth" escape="false"/>"/>
+            <input type="hidden" id="billUUID" value="<s:property value="billUUID" escape="false"/>"/>
             <form>
                 <div style="height:auto; overflow:auto;">
                     <table class="table table-border table-bordered table-bg table-hover table-sort">

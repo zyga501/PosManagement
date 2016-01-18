@@ -11,9 +11,6 @@ import java.util.HashMap;
 public class RepayUI extends WebUI {
     public RepayUI(String uid){userID_=uid;}
 
-    public String generateSummary() throws Exception {
-        return generateSummary(-1);
-    }
     public String generateSummary(int pageIndex) throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchRepaySummary(pageIndex);
         if (dbRet.size() <= 0)
@@ -29,7 +26,7 @@ public class RepayUI extends WebUI {
                     .addElement("td" , StringUtils.formatCardNO(dbRet.get(index).get("CARDNO").toString()))
                     .addElement("td" , dbRet.get(index).get("CARDMASTER").toString())
                     .addElement("td" , dbRet.get(index).get("TRADEMONEY").toString())
-                    .addElement("td", dbRet.get(index).get("FINISHED").toString().equals("0") ?
+                    .addElement("td", dbRet.get(index).get("UNFINISHED").toString().equals("0") ?
                             getText("repaysummary.repayfinished") : getText("repaysummary.repayunfinished"))
                     .addElement(new UIContainer("td")
                             .addElement(
@@ -38,16 +35,15 @@ public class RepayUI extends WebUI {
                                             .addAttribute("value", "查看明细")
                                             .addAttribute("class", "btn radius")
                                             .addAttribute("onclick", "clickDetail('" + dbRet.get(index).get("CARDNO") +
-                                                    "','" + dbRet.get(index).get("REPAYYEAR") +
-                                                    "','" + dbRet.get(index).get("REPAYMONTH") + "')")
+                                                    "','" + dbRet.get(index).get("BILLUUID") + "')")
                             )
                     );
         }
         return htmlString;
     }
 
-    public String generateDetail(String cardNO, String repayYear, String repayMonth) throws Exception {
-        ArrayList<HashMap<String, Object>> dbRet = fetchRepayDetail(cardNO, repayYear, repayMonth);
+    public String generateDetail(String cardNO, String billUUID) throws Exception {
+        ArrayList<HashMap<String, Object>> dbRet = fetchRepayDetail(cardNO, billUUID);
         if (dbRet.size() <= 0)
             return new String("");
 
@@ -89,54 +85,53 @@ public class RepayUI extends WebUI {
             whereSql += " and cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
                     " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"') ";
 
-        return PosDbManager.executeSql("SELECT " +
-                "repaytb.repayyear, " +
-                "repaytb.repaymonth, " +
-                "repaytb.thedate, " +
-                "cardtb.cardno, " +
-                "cardtb.cardmaster, " +
-                "SUM(repaytb.trademoney) trademoney, " +
-                "(COUNT(1) - " +
-                "sum(case when tradestatus='enable' then 1 else 0 END)) finished " +
-                "FROM " +
-                "repaytb " +
-                "INNER JOIN cardtb ON cardtb.cardno = repaytb.cardno " +
-                "INNER JOIN billtb ON CONVERT(repaytb.repayyear, SIGNED)= CONVERT(SUBSTR(billtb.lastrepaymentdate,1,4), SIGNED) AND convert(repaytb.repaymonth, SIGNED)= convert(SUBSTR(billtb.lastrepaymentdate,6,2), SIGNED) AND repaytb.cardno = billtb.cardno "+
-                "INNER JOIN banktb on banktb.uuid=cardtb.bankuuid "+
+        return PosDbManager.executeSql("SELECT \n" +
+                "SUBSTR(billtb.lastrepaymentdate,1,4) repayyear, \n" +
+                "SUBSTR(billtb.lastrepaymentdate,6,2) repaymonth, \n" +
+                "billtb.uuid billuuid, \n" +
+                "repaytb.thedate, \n" +
+                "cardtb.cardno, \n" +
+                "cardtb.cardmaster, \n" +
+                "SUM(repaytb.trademoney) trademoney, \n" +
+                "(COUNT(1) - sum(case when tradestatus='enable' then 1 else 0 END)) unfinished \n" +
+                "FROM repaytb \n" +
+                "INNER JOIN cardtb ON cardtb.cardno = repaytb.cardno \n" +
+                "INNER JOIN billtb ON repaytb.billuuid = billtb.uuid AND repaytb.cardno = billtb.cardno \n" +
+                "INNER JOIN banktb on banktb.uuid=cardtb.bankuuid \n" +
                 whereSql +
-                "GROUP BY " +
-                "repaytb.repayyear, " +
-                "repaytb.repaymonth, " +
-                "repaytb.cardno " +
-                "ORDER BY " +
-                "repaytb.repayyear desc, " +
-                "repaytb.repaymonth desc, " +
-                "repaytb.thedate desc "+ limitstr);
+                "GROUP BY \n" +
+                "billtb.lastrepaymentdate,\n" +
+                "repaytb.cardno \n" +
+                "ORDER BY \n" +
+                "billtb.lastrepaymentdate desc, \n" +
+                "repaytb.thedate desc\n"
+                + limitstr);
     }
 
-    private ArrayList<HashMap<String, Object>> fetchRepayDetail(String cardNO, String repayYear, String repayMonth) throws Exception {
-        String whereSql = "where repaytb.cardno='" + cardNO + "' and repayyear='" + repayYear + "' and repaymonth='"+ repayMonth + "' ";
+    private ArrayList<HashMap<String, Object>> fetchRepayDetail(String cardNO, String billUUID) throws Exception {
+        String whereSql = "where repaytb.cardno='" + cardNO + "' and billuuid='" + billUUID + "'";
         if (null != userID_ && userID_.length() != 0)
             whereSql += " and (cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
                     " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"')) ";
 
-        return PosDbManager.executeSql("SELECT repaytb.id," +
-                "repaytb.repayyear, " +
-                "repaytb.repaymonth, " +
-                "repaytb.cardno, " +
-                "cardtb.cardmaster, " +
-                "repaytb.trademoney, " +
-                "repaytb.thedate, " +
-                "repaytb.validstatus, " +
-                "repaytb.tradestatus, " +
-                "userinfo.unick, " +
-                "repaytb.tradetime " +
-                "FROM " +
-                "repaytb " +
-                "INNER JOIN cardtb ON cardtb.cardno = repaytb.cardno " +
-                "left JOIN userinfo ON userinfo.uid = repaytb.userid " +
+        return PosDbManager.executeSql("SELECT \n" +
+                "repaytb.id,\n" +
+                "SUBSTR(billtb.lastrepaymentdate,1,4) repayyear, \n" +
+                "SUBSTR(billtb.lastrepaymentdate,6,2) repaymonth, \n" +
+                "repaytb.cardno, \n" +
+                "cardtb.cardmaster, \n" +
+                "repaytb.trademoney, \n" +
+                "repaytb.thedate, \n" +
+                "repaytb.tradestatus, \n" +
+                "userinfo.unick, \n" +
+                "repaytb.tradetime \n" +
+                "FROM repaytb \n" +
+                "INNER JOIN cardtb ON cardtb.cardno = repaytb.cardno \n" +
+                "left JOIN userinfo ON userinfo.uid = repaytb.userid \n" +
+                "INNER JOIN billtb ON repaytb.billuuid = billtb.uuid AND repaytb.cardno = billtb.cardno \n" +
                 whereSql +
-                "ORDER BY repaytb.tradestatus," +
+                " ORDER BY \n" +
+                "repaytb.tradestatus,\n" +
                 "repaytb.thedate");
     }
 
@@ -154,7 +149,7 @@ public class RepayUI extends WebUI {
                 "FROM " +
                 "repaytb " +
                 "INNER JOIN cardtb ON cardtb.cardno = repaytb.cardno " +
-                "INNER JOIN billtb ON CONVERT(repaytb.repayyear, SIGNED)= CONVERT(SUBSTR(billtb.lastrepaymentdate,1,4), SIGNED) AND convert(repaytb.repaymonth, SIGNED)= convert(SUBSTR(billtb.lastrepaymentdate,6,2), SIGNED) AND repaytb.cardno = billtb.cardno "+
+                "INNER JOIN billtb ON repaytb.billuuid = billtb.uuid AND repaytb.cardno = billtb.cardno " +
                 "INNER JOIN banktb on banktb.uuid=cardtb.bankuuid "+
                 whereSql +
                 " GROUP BY " +

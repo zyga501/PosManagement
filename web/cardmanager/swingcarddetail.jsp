@@ -29,7 +29,6 @@
                         url: 'SwingCard!EditDetail',
                         data: {status:"enable" , swingId:swingid, cardNO:$('#cardNO').val(), billUUID:$('#billUUID').val()},
                         success: function (data) {
-                            alert(data);
                             var json = eval("(" + data + ")");
                             if (json.successMessage) {
                                 button.value = "Y";

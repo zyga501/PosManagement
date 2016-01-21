@@ -88,6 +88,51 @@ public class StatisticsAction extends AjaxActionSupport{
                 e.printStackTrace();
             }
         }
+        else{
+            ArrayList<HashMap<String, Object>> dbRet = null;
+            try {
+                generalinfo +=new UIContainer("tr")
+                        .addAttribute("class", "text-c odd")
+                        .addElement("td","")
+                        .addElement("td","昨天")
+                        .addElement("td","今天")
+                        .addElement("td","本月");
+                dbRet = PosDbManager.executeSql(
+                        "select  sum(case when date_sub('2016-01-24',INTERVAL 1 DAY)=date_format(a.sdatetm,'%Y-%m-%d') then 1 else 0 end ) zt ,\n" +
+                                "sum(case when date_format(NOW(),'%Y-%m-%d')=date_format(a.sdatetm,'%Y-%m-%d') then 1 else 0 end ) jt ," +
+                                "sum(case when date_format(NOW(),'%Y-%m-%d')=date_format(a.sdatetm,'%Y-%m-%d') then 1 else 0 end ) byue \n" +
+                                " from swingcard a,cardtb b,tellertb c \n" +
+                                "WHERE a.cardno=b.cardno  and c.salesman=b.salesmanuuid  and \n" +
+                                "c.uid='"+getUserID()+"' and date_format(NOW(),'%Y-%m')-date_format(a.sdatetm,'%Y-%m')");
+                if (dbRet.size()>0) {
+                    generalinfo +=new UIContainer("tr")
+                            .addAttribute("class", "text-c odd")
+                            .addElement("td","刷卡")
+                            .addElement("td", StringUtils.convertNullableString(dbRet.get(0).get("ZT")))
+                            .addElement("td", StringUtils.convertNullableString(dbRet.get(0).get("JT")))
+                            .addElement("td", StringUtils.convertNullableString(dbRet.get(0).get("BYUE")));
+                };
+                dbRet = PosDbManager.executeSql(
+                        "select  sum(case when date_sub('2016-01-24',INTERVAL 1 DAY)=date_format(a.thedate,'%Y-%m-%d') then 1 else 0 end ) zt ,\n" +
+                                "sum(case when date_format(NOW(),'%Y-%m-%d')=date_format(a.thedate,'%Y-%m-%d') then 1 else 0 end ) jt ," +
+                                "sum(case when date_format(NOW(),'%Y-%m-%d')=date_format(a.thedate,'%Y-%m-%d') then 1 else 0 end ) byue \n" +
+                                " from repaytb a,cardtb b,tellertb c \n" +
+                                "WHERE a.cardno=b.cardno  and c.salesman=b.salesmanuuid  and \n" +
+                                "c.uid='"+getUserID()+"' and date_format(NOW(),'%Y-%m')-date_format(a.thedate,'%Y-%m')");
+                if (dbRet.size()>0) {
+                    generalinfo +=new UIContainer("tr")
+                            .addAttribute("class", "text-c odd")
+                            .addElement("td","还款")
+                            .addElement("td", StringUtils.convertNullableString(dbRet.get(0).get("ZT")))
+                            .addElement("td", StringUtils.convertNullableString(dbRet.get(0).get("JT")))
+                            .addElement("td", StringUtils.convertNullableString(dbRet.get(0).get("BYUE")));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
         return GENERALINFO;
     }
 }

@@ -114,7 +114,7 @@ public class SwingCardPolicy {
                     if (repayInfo == null)
                         break;
                     if (remainBillAmount < repayInfo.money) {
-                        repayInfo.money = (long)(remainBillAmount * 10) / 10.0;
+                        repayInfo.money = (long)(remainBillAmount / 10 + 1) * 10;
                         remainBillAmount = 0;
                     }
                     updateRepayInfo();

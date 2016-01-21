@@ -9,6 +9,13 @@ public class StringUtils {
         return object.toString();
     }
 
+    public static float convertNullableFloat(Object object) {
+        if (object == null) {
+            return 0;
+        }
+
+        return Float.parseFloat(object.toString());
+    }
     public static boolean isEmpty(String string) {
         if (string == null || string.length() <= 0)
             return true;

@@ -146,11 +146,11 @@ public class BillAction extends AjaxActionSupport {
             int day = cal.get(Calendar.DATE);
             int month = cal.get(Calendar.MONTH)+1;
             int year = cal.get(Calendar.YEAR);
-            sqlString = "insert into billtb (uuid,bankuuid,cardno,billdate,billamount,lastrepaymentdate) " +
+            sqlString = "insert into billtb (uuid,bankuuid,cardno,billdate,billamount,lastrepaymentdate,salesmanuuid) " +
                     "select '" + UUIDUtils.generaterUUID() + "', bankuuid,cardno,'" + (new SimpleDateFormat("yyyy-MM-dd")).format(billd) + "'," +
                     "creditamount,date_add('" +
-                    (new SimpleDateFormat("yyyy-MM-dd")).format(billd) + "',INTERVAL billafterdate DAY ) from cardtb a " +
-                    " where a.status='enable'  and billdate=" + day + wherestr + " and  not exists " +
+                    (new SimpleDateFormat("yyyy-MM-dd")).format(billd) + "',INTERVAL billafterdate DAY ),'"+getUserID()+"' from cardtb a " +
+                    " where a.status='enable'  and billdate=" + day + wherestr + " and a.salesmanuuid='"+getUserID()+"' and  not exists " +
                     "(select 1 from billtb b where a.cardno=b.cardno and b.billdate='" + (new SimpleDateFormat("yyyy-MM-dd")).format(billd) + "')";
         }
         else {
@@ -158,11 +158,11 @@ public class BillAction extends AjaxActionSupport {
             int day = cal.get(Calendar.DATE);
             int month = cal.get(Calendar.MONTH)+1;
             int year = cal.get(Calendar.YEAR);
-            sqlString = "insert into billtb (uuid,bankuuid,cardno,billdate,billamount,lastrepaymentdate) " +
+            sqlString = "insert into billtb (uuid,bankuuid,cardno,billdate,billamount,lastrepaymentdate,salesmanuuid) " +
                     "select '" + UUIDUtils.generaterUUID() + "', bankuuid,cardno,concat('" + String.valueOf(year)+
                     "','-','"+String.valueOf(month)+"','-',billdate),creditamount,date_add("+
-            "concat('" + String.valueOf(year)+"','-','"+String.valueOf(month)+"','-',billdate),INTERVAL billafterdate DAY ) from cardtb a " +
-                    " where a.status='enable' " +  wherestr + " and  not exists " +
+            "concat('" + String.valueOf(year)+"','-','"+String.valueOf(month)+"','-',billdate),INTERVAL billafterdate DAY ),'"+getUserID()+"' from cardtb a " +
+                    " where a.status='enable' and a.salesmanuuid='"+getUserID()+"' " +  wherestr + " and  not exists " +
                     "(select 1 from billtb b where a.cardno=b.cardno and b.billdate=concat('" + String.valueOf(year)+"','-','"+String.valueOf(month)+"','-',billdate))";
         }
         System.out.println(sqlString);

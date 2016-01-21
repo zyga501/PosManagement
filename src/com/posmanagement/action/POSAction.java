@@ -148,7 +148,7 @@ public class POSAction extends AjaxActionSupport {
                 parametMap.put(i++,StringUtils.convertNullableString( getParameter("status")).equals("on")?"enable":"disable");
                 parametMap.put(i++, (String) getParameter("newid"));
 
-                    if (PosDbManager.executeUpdate("update postb set  posname=?,industryuuid=?,rateuuid=?,corporation=?,mccuuid=?," +
+                    if (!PosDbManager.executeUpdate("update postb set  posname=?,industryuuid=?,rateuuid=?,corporation=?,mccuuid=?," +
                             "posserveruuid=?,status=? where uuid=?", (HashMap<Integer, Object>)parametMap)) {
                         map.put("errorMessage","error");
                     }

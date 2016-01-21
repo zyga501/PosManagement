@@ -183,7 +183,7 @@ public class UserAction extends AjaxActionSupport{
         parametMap.put(3,userNickName);
         if (super.getUserName().toLowerCase().equals("admin")) {
              parametMap.put(4, userName);
-            if (PosDbManager.executeUpdate("insert into userinfo(uid,upwd,unick,uname) values(?,?,?,?)", (HashMap<Integer, Object>) parametMap)) {
+            if (PosDbManager.executeUpdate("insert into userinfo(uid,upwd,unick,uname,rid) values(?,?,?,?,'69632ae8-7e48-4e72-ad58-1043ad655a4c')", (HashMap<Integer, Object>) parametMap)) {
                 PosDbManager.executeUpdate("insert into salesmantb(uid) values('" + UUID + "')");
                 Map resultMap = new HashMap();
                 resultMap.put("userList", new SalemanUI().generateTable());

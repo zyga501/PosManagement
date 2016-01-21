@@ -73,8 +73,9 @@ public class IndustryAction extends AjaxActionSupport{
         else {
             Map parametMap = new HashMap();
             parametMap.put(1, industryEnabled!=null?"enable":"disable");
-            parametMap.put(2, getParameter("uuid"));
-            PosDbManager.executeUpdate("update industrytb set  status=? where uuid=? ", (HashMap<Integer, Object>) parametMap);
+            parametMap.put(2, industryName);
+            parametMap.put(3, getParameter("uuid"));
+            PosDbManager.executeUpdate("update industrytb set  status=?,name=? where uuid=? ", (HashMap<Integer, Object>) parametMap);
             map.put("industryList", new IndustryUI().generateIndustryTable());
         }
         return AjaxActionComplete(map);

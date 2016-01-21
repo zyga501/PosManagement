@@ -44,6 +44,7 @@
                 success: function(data) {
                     var json = eval("(" + data + ")");
                     $("#bankUUID").html(json.bankList);
+                    $("#bankUUID").prepend("<option value=''></option>");
                 }
             });
         }
@@ -56,6 +57,7 @@
                 success: function(data) {
                     var json = eval("(" + data + ")");
                     $("#posServerUUID").html(json.posServerList);
+                    $("#posServerUUID").prepend("<option value=''></option>");
                 }
             });
         }
@@ -68,6 +70,7 @@
                 success: function(data) {
                     var json = eval("(" + data + ")");
                     $("#swingTimeUUID").html(json.swingTimeList);
+                    $("#swingTimeUUID").prepend("<option value=''></option>");
                 }
             });
         }
@@ -80,6 +83,7 @@
                 success: function(data) {
                     var json = eval("(" + data + ")");
                     $("#industryUUID").html(json.industryList);
+                    $("#industryUUID").prepend("<option value=''></option>");
                 }
             });
         }
@@ -92,6 +96,7 @@
                 success: function(data) {
                     var json = eval("(" + data + ")");
                     $("#rateUUID").html(json.rateList);
+                    $("#rateUUID").prepend("<option value=''></option>");
                 }
             });
         }
@@ -104,6 +109,7 @@
                 success: function(data) {
                     var json = eval("(" + data + ")");
                     $("#mccUUID").html(json.mccList);
+                    $("#mccUUID").prepend("<option value=''></option>");
                 }
             });
         }
@@ -124,21 +130,21 @@
             <tr class="text-c odd" role="row">
                 <td><s:text name="rule.bankname" /></td>
                 <td>
-                    <select id="bankUUID" name="bankUUID">
+                    <select id="bankUUID" name="bankUUID" style="width: 100%">
                     </select>
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
                 <td><s:text name="rule.posserver" /></td>
                 <td>
-                    <select id="posServerUUID" name="posServerUUID">
+                    <select id="posServerUUID" name="posServerUUID" style="width: 100%">
                     </select>
                 </td>
             </tr>
             <tr class="text-c odd" role="row">
                 <td><s:text name="rule.swingtime" /></td>
                 <td>
-                    <select id="swingTimeUUID" name="swingTimeUUID">
+                    <select id="swingTimeUUID" name="swingTimeUUID" style="width: 100%">
                     </select>
                 </td>
             </tr>
@@ -157,7 +163,7 @@
             <tr class="text-c odd" role="row">
                 <td><s:text name="rule.industryname" /></td>
                 <td>
-                    <select id="industryUUID" name="industryUUID">
+                    <select id="industryUUID" name="industryUUID" style="width: 100%">
                     </select>
                 </td>
             </tr>
@@ -176,7 +182,7 @@
             <tr class="text-c odd" role="row">
                 <td><s:text name="rule.rate" /></td>
                 <td>
-                    <select id="rateUUID" name="rateUUID">
+                    <select id="rateUUID" name="rateUUID" style="width: 100%">
                     </select>
                 </td>
             </tr>
@@ -195,7 +201,7 @@
             <tr class="text-c odd" role="row">
                 <td><s:text name="rule.mcc" /></td>
                 <td>
-                    <select id="mccUUID" name="mccUUID">
+                    <select id="mccUUID" name="mccUUID" style="width: 100%">
                     </select>
                 </td>
             </tr>

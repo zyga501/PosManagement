@@ -41,6 +41,6 @@ public class MCCUI extends WebUI {
     }
 
     private ArrayList<HashMap<String, Object>> fetchMCCList() throws Exception {
-        return PosDbManager.executeSql("select * from mcctb");
+        return PosDbManager.executeSql("select * from mcctb order by mcc");
     }
 }

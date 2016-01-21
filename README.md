@@ -1,3 +1,3 @@
 # PosManagement
 CopyRight © 2015-2015
-# CODE FREZE
+# CODE FREEZE

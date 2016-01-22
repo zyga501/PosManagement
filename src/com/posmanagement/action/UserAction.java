@@ -2,6 +2,7 @@ package com.posmanagement.action;
 
 import com.posmanagement.utils.LogManager;
 import com.posmanagement.utils.PosDbManager;
+import com.posmanagement.utils.StringUtils;
 import com.posmanagement.utils.UUIDUtils;
 import com.posmanagement.webui.SalemanUI;
 import com.posmanagement.webui.TellerUI;
@@ -110,8 +111,8 @@ public class UserAction extends AjaxActionSupport{
             super.setUserID(userID);
             super.setUserName(userName);
             super.setAttribute("userNick", dbRet.get(0).get("UNICK").toString());
-            super.setAttribute("lastLocation", dbRet.get(0).get("LASTLOCATION").toString());
-            super.setAttribute("lastTime", dbRet.get(0).get("LASTTIME").toString());
+            super.setAttribute("lastLocation", StringUtils.convertNullableString(dbRet.get(0).get("LASTLOCATION").toString(), "?.?.?.?"));
+            super.setAttribute("lastTime", StringUtils.convertNullableString(dbRet.get(0).get("LASTTIME").toString(), "????-??-?? ??:??:??.?"));
             super.setAttribute("roleId", dbRet.get(0).get("RID").toString());
 
             logLoginTrack(userID, super.getRequest().getRemoteAddr() );

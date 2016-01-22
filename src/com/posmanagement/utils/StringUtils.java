@@ -9,6 +9,14 @@ public class StringUtils {
         return object.toString();
     }
 
+    public static String convertNullableString(Object object, String defaultValue) {
+        if (object == null) {
+            return defaultValue;
+        }
+
+        return object.toString();
+    }
+
     public static boolean isEmpty(String string) {
         if (string == null || string.length() <= 0)
             return true;

@@ -111,8 +111,8 @@ public class UserAction extends AjaxActionSupport{
             super.setUserID(userID);
             super.setUserName(userName);
             super.setAttribute("userNick", dbRet.get(0).get("UNICK").toString());
-            super.setAttribute("lastLocation", StringUtils.convertNullableString(dbRet.get(0).get("LASTLOCATION").toString(), "?.?.?.?"));
-            super.setAttribute("lastTime", StringUtils.convertNullableString(dbRet.get(0).get("LASTTIME").toString(), "????-??-?? ??:??:??.?"));
+            super.setAttribute("lastLocation", StringUtils.convertNullableString(dbRet.get(0).get("LASTLOCATION"), "?.?.?.?"));
+            super.setAttribute("lastTime", StringUtils.convertNullableString(dbRet.get(0).get("LASTTIME"), "????-??-?? ??:??:??.?"));
             super.setAttribute("roleId", dbRet.get(0).get("RID").toString());
 
             logLoginTrack(userID, super.getRequest().getRemoteAddr() );

@@ -73,9 +73,9 @@
                 success: function(data) {
                     var json = eval("(" + data + ")");
                     if (json.ErrorMessage!=null)
-                    alert(json.ErrorMessage);
+                        layer.msg(json.ErrorMessage,{icon:2});
                     else
-                    alert("<s:text name="global.dosuccess"/>");
+                    layer.msg("<s:text name="global.dosuccess"/>",{icon:1});
                 }
             });
         }

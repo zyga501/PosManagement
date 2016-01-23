@@ -1,5 +1,6 @@
 package com.posmanagement.action;
 
+import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.webui.TellerUI;
 
 import java.util.HashMap;
@@ -44,8 +45,19 @@ public class TellerAction extends AjaxActionSupport {
 
     public String UpdateInfo() throws Exception {
         Map map = new HashMap();
-        map.put("ErrorMessage", new String("UnImple"));
-        // todo
+        Map parametMap = new HashMap<Integer, Object>();
+        try{
+            parametMap.put(1, getParameter("cardID").toString().trim());
+            parametMap.put(2, getParameter("contact").toString().trim());
+            parametMap.put(3, null==getParameter("tellStatus")?"disable":"enable");
+            parametMap.put(4, tellerID);
+            if (!PosDbManager.executeUpdate("update tellertb set tcardno=?,contact=?,status=? where uid=?",
+                    (HashMap<Integer, Object>) parametMap))
+                map.put("ErrorMessage", getText("global.dofailed"));
+        }
+        catch (Exception e) {
+            map.put("ErrorMessage", getText("global.dofailed"));
+        }
         return AjaxActionComplete(map);
     }
 }

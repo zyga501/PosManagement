@@ -73,7 +73,7 @@ public class SalemanUI extends WebUI {
                                                 .addAttribute("class", "input-text radius")
                                                 .addAttribute("value", StringUtils.convertNullableString(dbRet.get(0).get("SCARDNO"))))))
                         .addElement(new UIContainer("tr")
-                                .addElement("td", "状态")
+                                .addElement("td", "是否激活")
                                 .addElement(new UIContainer("td")
                                         .addElement(new UIContainer("input")
                                                 .addAttribute("type", "checkbox")
@@ -100,9 +100,9 @@ public class SalemanUI extends WebUI {
                                 .addElement(new UIContainer("td")
                                         .addElement(new UIContainer("input")
                                                 .addAttribute("type", "text")
-                                                .addAttribute("name", "contract")
+                                                .addAttribute("name", "contact")
                                                 .addAttribute("class", "input-text radius")
-                                                .addAttribute("value", StringUtils.convertNullableString(dbRet.get(0).get("CONTRACT"))))))
+                                                .addAttribute("value", StringUtils.convertNullableString(dbRet.get(0).get("CONTACT"))))))
                 ).generateUI();
     }
 

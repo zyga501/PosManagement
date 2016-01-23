@@ -194,8 +194,8 @@ public class UserAction extends AjaxActionSupport{
         else {
             parametMap.put(4, super.getUserName());
             parametMap.put(5, super.getUserID());
-            if (PosDbManager.executeUpdate("insert into userinfo(uid,upwd,unick,uname) select ?,?,?,CONCAT(?,count(*))" +
-                    " from tellertb a where a.salesman=?", (HashMap<Integer, Object>) parametMap)){
+            if (PosDbManager.executeUpdate("insert into userinfo(uid,upwd,unick,uname,rid) select ?,?,?,CONCAT(?,count(*))" +
+                    ",'f5466ce9-5e10-4443-aac8-5e385c3febb0' from tellertb a where a.salesman=?", (HashMap<Integer, Object>) parametMap)){
                 PosDbManager.executeUpdate("insert into tellertb(uid,salesman) values('" + UUID + "','"+super.getUserID()+"')");
                 Map resultMap = new HashMap();
                 resultMap.put("userList", new TellerUI().generateTable(super.getUserID(), false));

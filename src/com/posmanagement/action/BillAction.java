@@ -86,11 +86,11 @@ public class BillAction extends AjaxActionSupport {
             }
             if (PosDbManager.executeUpdate(sqlString,(HashMap<Integer, Object>)para)) {
                 map.put("billList", new BillUI(super.getUserID()).generateBillTable(1));
-                map.put("successMessage", getText("BillAction.InfoSuccess"));
+                map.put("successMessage", getText("global.actionSuccess"));
             }
         }
         catch (Exception e) {
-            map.put("errorMessage", getText("BillAction.InfoError"));
+            map.put("errorMessage", getText("global.actionFailed"));
             e.printStackTrace();
             return AjaxActionComplete(map);
         }
@@ -115,10 +115,10 @@ public class BillAction extends AjaxActionSupport {
             }
             para.put(2,billNO);
             if (PosDbManager.executeUpdate(sqlString,(HashMap<Integer, Object>)para))
-                map.put("successMessage",getText("BillAction.InfoSuccess") );
+                map.put("successMessage",getText("global.actionSuccess") );
         }
         catch (Exception e) {
-            map.put("errorMessage", getText("BillAction.InfoError"));
+            map.put("errorMessage", getText("global.actionFailed"));
             e.printStackTrace();
         }
         return AjaxActionComplete(map);

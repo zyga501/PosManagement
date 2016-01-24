@@ -3,6 +3,7 @@ package com.posmanagement.action;
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.utils.SQLUtils;
 import com.posmanagement.utils.StringUtils;
+import com.posmanagement.utils.UserUtils;
 import com.posmanagement.webui.SwingCardUI;
 import com.posmanagement.webui.WebUI;
 
@@ -48,17 +49,41 @@ public class SwingCardAction extends AjaxActionSupport {
             map.put("errorMessage", getText("BillAction.InfoErro"));
         }
         else {
-            Map para =new HashMap();
-            para.put(1,"enable");
-            para.put(2,super.getUserID());
-            para.put(3,getParameter("swingId"));
-            if (PosDbManager.executeUpdate("update swingcard set swingstatus=?,userid=?,realsdatetm=now() where id=?",(HashMap<Integer, Object>)para)) {
-                map.put("successMessage", getText("BillAction.InfoSuccess"));
-                String userID = super.getUserID();
-                if (super.getUserName().equals("admin")) {
-                    userID = "";
+            Map parameterMap =new HashMap();
+            parameterMap.put(1,super.getUserID());
+            parameterMap.put(2,getParameter("swingId"));
+            if (PosDbManager.executeUpdate("update swingcard set swingstatus='enable',userid=?,realsdatetm=now() where id=?",(HashMap<Integer, Object>)parameterMap)) {
+                parameterMap.clear();
+                parameterMap.put(1, getParameter("swingId"));
+                parameterMap.put(2, super.getUserID());
+                String whereSql = new String();
+                if (UserUtils.isSalesman(super.getUserID())) {
+                    whereSql = "where salesmanuuid=?";
                 }
-                map.put("swingCardDetail", new SwingCardUI(userID).generateDetail(getParameter("cardNO").toString(), getParameter("billUUID").toString()));
+                else {
+                    whereSql = "where salesmanuuid=(select salesmanuuid from tellertb where uid=?)";
+                }
+                if (PosDbManager.executeUpdate("update assettb\n" +
+                        "set balance=balance +\n" +
+                        "(SELECT swingcard.amount -\n" +
+                        "(case when (maxfee='' or maxfee=NULL) \n" +
+                        "\t\t\tthen swingcard.amount * rate\n" +
+                        "\t\t\telse \n" +
+                        "\t\t\t\t(case when maxfee>(swingcard.amount * rate)\n" +
+                        "\t\t\t\tthen (swingcard.amount * rate) \n" +
+                        "\t\t\t\telse maxfee \n" +
+                        "\t\t\t\tend) \n" +
+                        "\t\t\tend) as fee\n" +
+                        "FROM\n" +
+                        "swingcard\n" +
+                        "INNER JOIN postb ON postb.uuid = swingcard.posuuid\n" +
+                        "INNER JOIN ratetb ON ratetb.uuid = postb.rateuuid\n" +
+                        "where id = ?\n" +
+                        ")\n" +
+                        whereSql, (HashMap<Integer, Object>)parameterMap)) {
+                    map.put("successMessage", getText("global.actionSuccess"));
+                    map.put("swingCardDetail", new SwingCardUI(super.getUserID()).generateDetail(getParameter("cardNO").toString(), getParameter("billUUID").toString()));
+                }
             }
         }
         return AjaxActionComplete(map);

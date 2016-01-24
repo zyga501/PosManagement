@@ -3,6 +3,7 @@ package com.posmanagement.action;
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.utils.SQLUtils;
 import com.posmanagement.utils.StringUtils;
+import com.posmanagement.utils.UserUtils;
 import com.posmanagement.webui.RepayUI;
 
 import java.util.ArrayList;
@@ -78,17 +79,26 @@ public class RepayAction extends AjaxActionSupport {
             map.put("errorMessage", getText("BillAction.InfoErro"));
         }
         else {
-            Map para =new HashMap();
-            para.put(1,"enable");
-            para.put(2,super.getUserID());
-            para.put(3,getParameter("repayId"));
-            if (PosDbManager.executeUpdate("update repaytb set tradestatus=?,userid=?,tradetime=now() where id=?",(HashMap<Integer, Object>)para)) {
-                map.put("successMessage", getText("BillAction.InfoSuccess"));
-                String userID = super.getUserID();
-                if (super.getUserName().equals("admin")) {
-                    userID = "";
+            Map parameterMap =new HashMap();
+            parameterMap.put(1,super.getUserID());
+            parameterMap.put(2,getParameter("repayId"));
+            if (PosDbManager.executeUpdate("update repaytb set tradestatus='enable',userid=?,tradetime=now() where id=?",(HashMap<Integer, Object>)parameterMap)) {
+                parameterMap.clear();
+                parameterMap.put(1, getParameter("repayId"));
+                parameterMap.put(2, super.getUserID());
+                String whereSql = new String();
+                if (UserUtils.isSalesman(super.getUserID())) {
+                    whereSql = "where salesmanuuid=?";
                 }
-                map.put("repayDetail", new RepayUI(userID).generateDetail(getParameter("cardNO").toString(), getParameter("billUUID").toString()));
+                else {
+                    whereSql = "where salesmanuuid=(select salesmanuuid from tellertb where uid=?)";
+                }
+                if (PosDbManager.executeUpdate("UPDATE assettb\n" +
+                        "SET balance= balance - (select trademoney from repaytb where id=?)\n" +
+                        whereSql, (HashMap<Integer, Object>)parameterMap)) {
+                    map.put("successMessage", getText("global.actionSuccess"));
+                    map.put("repayDetail", new RepayUI(super.getUserID()).generateDetail(getParameter("cardNO").toString(), getParameter("billUUID").toString()));
+                }
             }
         }
         return AjaxActionComplete(map);

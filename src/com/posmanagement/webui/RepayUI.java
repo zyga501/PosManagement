@@ -110,7 +110,8 @@ public class RepayUI extends WebUI {
 
     private ArrayList<HashMap<String, Object>> fetchRepayDetail(String cardNO, String billUUID) throws Exception {
         String whereSql = "where repaytb.cardno='" + cardNO + "' and billuuid='" + billUUID + "'";
-        if (null != userID_ && userID_.length() != 0)
+
+        if (!UserUtils.isAdmin(userID_))
             whereSql += " and (cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
                     " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"')) ";
 
@@ -143,7 +144,7 @@ public class RepayUI extends WebUI {
 
         if (!UserUtils.isAdmin(userID_))
             whereSql += " and  (cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
-                    " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"')) ";
+                    " or cardtb.salesmanuuid in(select salesman from tellertb where uid='"+userID_+"')) ";
 
         ArrayList<HashMap<String, Object>> rect = PosDbManager.executeSql("SELECT count(*) as cnt " +
                 "FROM " +

@@ -20,6 +20,10 @@ public class BillUI extends WebUI {
 
         String htmlString = "";
         for (int index = 0; index < dbRet.size(); ++index) {
+            double canUseMoney = ((long)(10 * (Double.valueOf(dbRet.get(index).get("CANUSEAMOUNT").toString()) +
+                    Double.valueOf(dbRet.get(index).get("REPAYAMOUNT").toString()) - Double.valueOf(dbRet.get(index).get("SWINGAMOUNT").toString())))) / 10.0;
+            double repayAmount = Double.valueOf(dbRet.get(index).get("REPAYAMOUNT").toString());
+            double remainAmount = Double.valueOf(dbRet.get(index).get("BILLAMOUNT").toString()) - repayAmount;
             htmlString += new UIContainer("tr")
                     .addAttribute("class", "text-c odd")
                     .addAttribute("role", "row")
@@ -32,10 +36,9 @@ public class BillUI extends WebUI {
                             .addAttribute("name","billamount")
                             .addAttribute("datav",StringUtils.convertNullableString(dbRet.get(index).get("UUID")))
                             .addAttribute("style","display:inline-block;")))
-                    .addElement("td", String.valueOf(((long)(10 * (Double.valueOf(dbRet.get(index).get("CANUSEAMOUNT").toString()) +
-                            Double.valueOf(dbRet.get(index).get("REPAYAMOUNT").toString()) - Double.valueOf(dbRet.get(index).get("SWINGAMOUNT").toString())))) / 10.0))
-                    .addElement("td", String.valueOf(Double.valueOf(dbRet.get(index).get("REPAYAMOUNT").toString())))
-                    .addElement("td", String.valueOf(Double.valueOf(dbRet.get(index).get("BILLAMOUNT").toString()) - Double.valueOf(dbRet.get(index).get("REPAYAMOUNT").toString())))
+                    .addElement("td", String.valueOf(canUseMoney))
+                    .addElement("td", String.valueOf(repayAmount))
+                    .addElement("td", String.valueOf(Double.max(remainAmount, 0.0)))
                     .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("SALEMAN")))
                     .addElement("td", dbRet.get(index).get("SWINGCOUNT").toString().compareTo(dbRet.get(index).get("SWUNGCOUNT").toString()) == 0 &&
                                         dbRet.get(index).get("REPAYCOUNT").toString().compareTo(dbRet.get(index).get("REPAYEDCOUNT").toString()) == 0 ?

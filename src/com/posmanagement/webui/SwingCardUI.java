@@ -133,7 +133,7 @@ public class SwingCardUI extends WebUI {
 
     private ArrayList<HashMap<String, Object>> fetchSwingCardDetail(String cardNO, String billUUID) throws Exception {
         String whereSql = "where swingcard.cardno='" + cardNO + "' and billuuid='" + billUUID + "'";
-        if (null != userID_ && userID_.length() != 0)
+        if (!UserUtils.isAdmin(userID_))
             whereSql += " and (cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
                     " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"')) ";
 

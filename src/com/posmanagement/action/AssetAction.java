@@ -19,7 +19,7 @@ public class AssetAction extends AjaxActionSupport {
     }
 
     public String Init() throws Exception {
-        assetList = new AssetUI().generateAssetTable();
+        assetList = new AssetUI(getUserID()).generateAssetTable();
         return ASSETMANAGER;
     }
 
@@ -33,18 +33,17 @@ public class AssetAction extends AjaxActionSupport {
             }
             Map parametMap = new HashMap();
             parametMap.put(1, UUIDUtils.generaterUUID());
-            parametMap.put(2, getParameter("assetMaster").toString());
-            parametMap.put(3, getParameter("bankUUID").toString());
-            parametMap.put(4, getParameter("cardCode").toString());
-            parametMap.put(5, getParameter("balance").toString());
-            parametMap.put(6, getParameter("signPwd").toString());
-            parametMap.put(7, getParameter("cashPwd").toString());
-            parametMap.put(8, getParameter("transferPwd").toString());
-            parametMap.put(9, getParameter("atmCashPwd").toString());
-            parametMap.put(10, super.getUserID().isEmpty());
-            PosDbManager.executeUpdate("insert into assettb(uuid,cardmaster,bankuuid,cardno,firstbalance,ebanksignpwd,ebankcashpwd," +
-                    "ebanktransferpwd,atmcashpwd,salesman) values(?,?,?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>)parametMap);
-            map.put("assetList", new AssetUI().generateAssetTable());
+            parametMap.put(2, getParameter("bankUUID").toString());
+            parametMap.put(3, getParameter("cardCode").toString());
+            parametMap.put(4, getParameter("balance").toString());
+            parametMap.put(5, getParameter("signPwd").toString());
+            parametMap.put(6, getParameter("cashPwd").toString());
+            parametMap.put(7, getParameter("transferPwd").toString());
+            parametMap.put(8, getParameter("atmCashPwd").toString());
+            parametMap.put(9, super.getUserID());
+            PosDbManager.executeUpdate("insert into assettb(uuid,bankuuid,cardno,balance,ebanksignpwd,ebankcashpwd," +
+                    "ebanktransferpwd,atmcashpwd,salesmanuuid) values(?,?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>)parametMap);
+            map.put("assetList", new AssetUI(getUserID()).generateAssetTable());
         }
         catch (Exception exception) {
             map.put("errorMessage", getText("AssetAction.InfoError"));

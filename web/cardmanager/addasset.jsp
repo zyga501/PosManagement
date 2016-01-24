@@ -59,12 +59,6 @@
     <form class="form form-horizontal">
         <table class="table table-border table-bordered table-bg table-hover table-sort">
             <tr class="text-c odd" role="row">
-                <td><s:text name="addasset.assetMaster" /></td>
-                <td>
-                    <input id="assetMaster" name="assetMaster" type="text" placeholder="<s:text name="addasset.assetMaster" />" class="input-text size-S">
-                </td>
-            </tr>
-            <tr class="text-c odd" role="row">
                 <td><s:text name="addasset.cardCode" /></td>
                 <td>
                     <input id="cardCode" name="cardCode" type="text" placeholder="<s:text name="addasset.cardCode" />" class="input-text size-S">

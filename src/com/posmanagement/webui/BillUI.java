@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class BillUI extends WebUI {
-    public BillUI(String userID){
-        userID_=userID;
+    public BillUI(String userID) {
+        userID_ = userID;
     }
 
     public String generateBillTable(int pageIndex) throws Exception {
@@ -130,5 +130,5 @@ public class BillUI extends WebUI {
         return Integer.parseInt(resultMap.get(0).get("CNT").toString())/ WebUI.DEFAULTITEMPERPAGE + 1;
     }
 
-    private String userID_; // TODO for role
+    private String userID_;
 }

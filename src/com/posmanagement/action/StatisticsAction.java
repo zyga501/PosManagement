@@ -1,17 +1,13 @@
 package com.posmanagement.action;
 
-import com.posmanagement.utils.*;
-import com.posmanagement.webui.SalemanUI;
-import com.posmanagement.webui.TellerUI;
+import com.posmanagement.utils.PosDbManager;
+import com.posmanagement.utils.StringUtils;
+import com.posmanagement.utils.UserUtils;
 import com.posmanagement.webui.UIContainer;
-import com.posmanagement.webui.UserMenu;
 
-import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 
 public class StatisticsAction extends AjaxActionSupport{
     private final static String GENERALINFO = "welcomeinfo";
@@ -75,7 +71,7 @@ public class StatisticsAction extends AjaxActionSupport{
                             "LEFT JOIN (select sum(trademoney) trademoney,cardno from repaytb where" +
                             "  tradestatus='enable' group by cardno) r on (r.cardno=t.cardno ) where t.salesmanuuid='"+getUserID()+"'" +
                             "union all  " +
-                            "select SUM(t.firstbalance) cnt,'资产总额' as nm  from  assettb t where t.salesman='"+getUserID()+"'");
+                            "select SUM(t.balance) cnt,'资产总额' as nm  from  assettb t where t.salesmanuuid='"+getUserID()+"'");
                 for (int index = 0; index < dbRet.size(); ++index) {
                     generalinfo +=new UIContainer("tr")
                             .addAttribute("class", "text-c odd")

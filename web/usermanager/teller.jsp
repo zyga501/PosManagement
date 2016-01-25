@@ -47,7 +47,7 @@
                 url: 'Teller!UpdateInfo',
                 data: $("form").serialize(),
                 success: function(data) {
-                    alert(data);
+                    layer.msg("<s:text name="global.dosuccess"/>",{icon:1});
                 }
             });
         }

@@ -67,13 +67,13 @@ public class SwingCardAction extends AjaxActionSupport {
                         "set balance=balance +\n" +
                         "(SELECT swingcard.amount -\n" +
                         "(case when (maxfee='' or maxfee=NULL) \n" +
-                        "\t\t\tthen swingcard.amount * rate\n" +
-                        "\t\t\telse \n" +
-                        "\t\t\t\t(case when maxfee>(swingcard.amount * rate)\n" +
-                        "\t\t\t\tthen (swingcard.amount * rate) \n" +
-                        "\t\t\t\telse maxfee \n" +
-                        "\t\t\t\tend) \n" +
-                        "\t\t\tend) as fee\n" +
+                        "then swingcard.amount * rate * 0.01\n" +
+                        "else \n" +
+                        "(case when maxfee>(swingcard.amount * rate * 0.01)\n" +
+                        "then (swingcard.amount * rate * 0.01) \n" +
+                        "else maxfee \n" +
+                        "end) \n" +
+                        "end) as fee\n" +
                         "FROM\n" +
                         "swingcard\n" +
                         "INNER JOIN postb ON postb.uuid = swingcard.posuuid\n" +

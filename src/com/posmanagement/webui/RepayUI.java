@@ -81,7 +81,7 @@ public class RepayUI extends WebUI {
         if (pageIndex > 0) {
             limitSql = "limit " + (pageIndex - 1) * DEFAULTITEMPERPAGE + "," + DEFAULTITEMPERPAGE;
         }
-        if (!(new UserUtils()).isAdmin(userID_))
+        if (! UserUtils.isAdmin(userID_))
             whereSql += " and cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
                     " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"') ";
 

@@ -59,7 +59,7 @@
                         <th><s:text name="repaysummary.cardmaster"/></th>
                         <th><s:text name="repaysummary.amount"/></th>
                         <th><s:text name="repaysummary.status"/></th>
-                        <th><s:text name="repaysummary.operation"/></th>
+                        <th><s:text name="global.operation"/></th>
                     </tr>
                     </thead>
                     <tbody id="repaySummary">

@@ -21,8 +21,20 @@
                 fix: false,
                 content: "./advancemanager/addrule.jsp"
             });}
+
         function refreshRuleList(ruleList) {
             $('#ruleList').html(ruleList);
+        }
+
+        function  clickRule(ruleUUID) {
+            var index = layer.open({
+                type: 2,
+                title: "规则管理",
+                fix: true,
+                maxmin: false,
+                content: "Repay!InitDetail?cardNO=" + cardNo + "&billUUID=" + billUUID
+            });
+            layer.full(index);
         }
     </script>
 </head>
@@ -54,6 +66,7 @@
                             <th><s:text name="rule.ruleusefre" /></th>
                             <th><s:text name="rule.ruleuseinterval" /></th>
                             <th><s:text name="global.status" /></th>
+                            <th><s:text name="global.operation"/></th>
                         </tr>
                         </thead>
                         <tbody id="ruleList">

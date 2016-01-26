@@ -8,7 +8,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class CardUI extends WebUI {
-    public CardUI(String uid){ userID_ = uid;   }
+    public CardUI(String uid) {
+        userID_ = uid;
+    }
+
     public String generateCardTable(String wherestr) throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchCardList(wherestr);
         if (dbRet.size() <= 0)

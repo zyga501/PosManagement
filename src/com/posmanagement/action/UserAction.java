@@ -1,9 +1,6 @@
 package com.posmanagement.action;
 
-import com.posmanagement.utils.LogManager;
-import com.posmanagement.utils.PosDbManager;
-import com.posmanagement.utils.StringUtils;
-import com.posmanagement.utils.UUIDUtils;
+import com.posmanagement.utils.*;
 import com.posmanagement.webui.SalemanUI;
 import com.posmanagement.webui.TellerUI;
 import com.posmanagement.webui.UserMenu;
@@ -182,7 +179,7 @@ public class UserAction extends AjaxActionSupport{
         parametMap.put(1, UUID);
         parametMap.put(2,userPwd);
         parametMap.put(3,userNickName);
-        if (super.getUserName().toLowerCase().equals("admin")) {
+        if (UserUtils.isAdmin(super.getUserID())) {
              parametMap.put(4, userName);
             if (PosDbManager.executeUpdate("insert into userinfo(uid,upwd,unick,uname,rid) values(?,?,?,?,'69632ae8-7e48-4e72-ad58-1043ad655a4c')", (HashMap<Integer, Object>) parametMap)) {
                 PosDbManager.executeUpdate("insert into salesmantb(uid) values('" + UUID + "')");

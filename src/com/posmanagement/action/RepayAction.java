@@ -63,11 +63,7 @@ public class RepayAction extends AjaxActionSupport {
     }
 
     public String InitDetail() throws Exception {
-        String userID = super.getUserID();
-        if (super.getUserName().equals("admin")) {
-            userID = "";
-        }
-        repayDetail = new RepayUI(userID).generateDetail(getParameter("cardNO").toString(), getParameter("billUUID").toString());
+        repayDetail = new RepayUI(super.getUserID()).generateDetail(getParameter("cardNO").toString(), getParameter("billUUID").toString());
         cardNO = getParameter("cardNO").toString();
         billUUID = getParameter("billUUID").toString();
         return REPAYDETAIL;

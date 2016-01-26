@@ -22,9 +22,9 @@
 <body scroll="no">
 <div>
     <form class="form form-horizontal">
-        <div class="panel panel-default" style="width: 814px">
+        <div class="panel panel-default">
             <div class="panel-header">规则管理</div>
-            <div class="panel-body111">
+            <div class="panel-body">
                 <div class="panel panel-default" style="float:left;width: 500px;height: 600px">
                     <div class="panel-header"><span>编号：G12312312    </span> &nbsp; &nbsp; <input type="checkbox"
                             id="chk1"><label  for="chk1">启用</label>

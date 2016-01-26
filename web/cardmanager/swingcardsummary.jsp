@@ -64,7 +64,7 @@
                             <th><s:text name="cardmanager.bankname"/></th>
                             <th><s:text name="swingcardsummary.cardmaster"/></th>
                             <th><s:text name="swingcardsummary.status"/></th>
-                            <th><s:text name="swingcardsummary.operation"/></th>
+                            <th><s:text name="global.operation"/></th>
                         </tr>
                         </thead>
                         <tbody id="swingCardSummary">

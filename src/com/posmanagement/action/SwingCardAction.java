@@ -33,11 +33,7 @@ public class SwingCardAction extends AjaxActionSupport {
     }
 
     public String InitDetail() throws Exception {
-        String userID = super.getUserID();
-        if (super.getUserName().equals("admin")) {
-            userID = "";
-        }
-        swingCardDetail = new SwingCardUI(userID).generateDetail(getParameter("cardNO").toString(), getParameter("billUUID").toString());
+        swingCardDetail = new SwingCardUI(super.getUserID()).generateDetail(getParameter("cardNO").toString(), getParameter("billUUID").toString());
         cardNO = getParameter("cardNO").toString();
         billUUID = getParameter("billUUID").toString();
         return SWINGCARDDETAIL;

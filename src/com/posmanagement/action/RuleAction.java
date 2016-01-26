@@ -67,4 +67,8 @@ public class RuleAction extends AjaxActionSupport {
 
         return AjaxActionComplete(map);
     }
+
+    public String ManagerRule() {
+        return AjaxActionComplete();
+    }
 }

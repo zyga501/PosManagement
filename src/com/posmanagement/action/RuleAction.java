@@ -2,21 +2,48 @@ package com.posmanagement.action;
 
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.utils.UUIDUtils;
+import com.posmanagement.webui.BankUI;
 import com.posmanagement.webui.RuleUI;
+import com.posmanagement.webui.SalemanUI;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class RuleAction extends AjaxActionSupport {
     private final static String RULEMANAGER = "ruleManager";
+    private final static String RULEASSIGN = "ruleAssign";
     private String ruleList;
+    private String ruleUUID;
+    private String ruleInfo;
+    private String bankList;
+    private String salemanList;
 
     public String  getRuleList() {
         return ruleList;
     }
 
+    public String getRuleUUID() {
+        return ruleUUID;
+    }
+
+    public void setRuleUUID(String _ruleUUID) {
+        ruleUUID = _ruleUUID;
+    }
+
+    public String getRuleInfo() {
+        return ruleInfo;
+    }
+
+    public String getBankList() {
+        return bankList;
+    }
+
+    public String getSalemanList() {
+        return salemanList;
+    }
+
     public String Init() throws Exception {
-        ruleList = new RuleUI().generateHTMLString();
+        ruleList = new RuleUI().generateTable();
         return RULEMANAGER;
     }
 
@@ -58,7 +85,7 @@ public class RuleAction extends AjaxActionSupport {
             if (PosDbManager.executeUpdate("insert into ruletb(uuid,bankuuid,posserveruuid,swingtimeuuid," +
                     "minswingmoney,maxswingmoney,industryuuid,rateuuid,mccuuid,ruleusefre,ruleuseinterval,status)" +
                     "values(?,?,?,?,?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>)parametMap)) {
-                map.put("ruleList", new RuleUI().generateHTMLString());
+                map.put("ruleList", new RuleUI().generateTable());
             }
         }
         catch (IllegalArgumentException exception) {
@@ -68,7 +95,10 @@ public class RuleAction extends AjaxActionSupport {
         return AjaxActionComplete(map);
     }
 
-    public String ManagerRule() {
-        return AjaxActionComplete();
+    public String InitRuleAssign() throws Exception {
+        ruleInfo = new RuleUI().generaterInfo(ruleUUID);
+        bankList = new BankUI().generateBankSelectList();
+        salemanList = new SalemanUI().generateSelect();
+        return RULEASSIGN;
     }
 }

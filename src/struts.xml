@@ -90,7 +90,7 @@
         </action>
         <action name="Rule!*" class="com.posmanagement.action.RuleAction" method="{1}">
             <result name="ruleManager">./advancemanager/rulemanager.jsp</result>
-            <result name="addrule">./advancemanager/addrule.jsp</result>
+            <result name="ruleAssign">./advancemanager/ruleassign.jsp</result>
         </action>
         <action name="Bill!*" class="com.posmanagement.action.BillAction" method="{1}">
             <result name="billManager">./cardmanager/billmanager.jsp</result>

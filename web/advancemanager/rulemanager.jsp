@@ -29,10 +29,10 @@
         function  clickRule(ruleUUID) {
             var index = layer.open({
                 type: 2,
-                title: "规则管理",
+                title: "规则分配",
                 fix: true,
                 maxmin: false,
-                content: "Repay!InitDetail?cardNO=" + cardNo + "&billUUID=" + billUUID
+                content: "Rule!InitRuleAssign?ruleUUID=" + ruleUUID
             });
             layer.full(index);
         }
@@ -55,7 +55,6 @@
                     <table class="table table-border table-bordered table-bg table-hover table-sort">
                         <thead>
                         <tr class="text-c">
-                            <th><s:text name="rule.bankname" /></th>
                             <th><s:text name="rule.posserver" /></th>
                             <th><s:text name="rule.swingtime" /></th>
                             <th><s:text name="rule.minswingmoney" /></th>

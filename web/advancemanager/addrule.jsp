@@ -35,19 +35,6 @@
                 }
             })
         }
-        function fetchBankList() {
-            $.ajax({
-                type: 'post',
-                url: 'Bank!FetchBankList',
-                data: "uiMode=SELECTLIST",
-                dataType : "json",
-                success: function(data) {
-                    var json = eval("(" + data + ")");
-                    $("#bankUUID").html(json.bankList);
-                    $("#bankUUID").prepend("<option value=''></option>");
-                }
-            });
-        }
         function fetchPosServerList() {
             $.ajax({
                 type: 'post',
@@ -114,7 +101,6 @@
             });
         }
         $(function(){
-            fetchBankList();
             fetchPosServerList();
             fetchSwingTimeList();
             fetchIndustryList();
@@ -127,13 +113,6 @@
 <div>
     <form class="form form-horizontal">
         <table class="table table-border table-bordered table-bg table-hover table-sort">
-            <tr class="text-c odd" role="row">
-                <td><s:text name="rule.bankname" /></td>
-                <td>
-                    <select id="bankUUID" name="bankUUID" style="width: 100%">
-                    </select>
-                </td>
-            </tr>
             <tr class="text-c odd" role="row">
                 <td><s:text name="rule.posserver" /></td>
                 <td>

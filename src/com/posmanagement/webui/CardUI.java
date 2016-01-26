@@ -64,5 +64,5 @@ public class CardUI extends WebUI {
                     userID_+"'"+ wherestr.replaceAll("where","").replaceAll("1=1",""));
     }
 
-    private String userID_; // TODO for role
+    private String userID_;
 }

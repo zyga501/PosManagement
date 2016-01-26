@@ -23,53 +23,28 @@
 <div>
     <form class="form form-horizontal">
         <div class="panel panel-default">
-            <div class="panel-header">规则管理</div>
+            <div class="panel-header">规则分配</div>
             <div class="panel-body">
                 <div class="panel panel-default" style="float:left;width: 500px;height: 600px">
-                    <div class="panel-header"><span>编号：G12312312    </span> &nbsp; &nbsp; <input type="checkbox"
+                    <div class="panel-header">
+                        <span>编号：</span><s:property value="ruleUUID" escape="false" />  &nbsp; &nbsp; <input type="checkbox"
                             id="chk1"><label  for="chk1">启用</label>
-                        <input type="checkbox" id="chk2"><label for="chk2" style="color: red">停用</label></div>
+                    </div>
                     <div class="panel-body">
                         <div  style="float:left;width:33% ">
-                            <span class="label label-default radius">xxxxxx</span><br>
-                            <select name="list" multiple="true"  size="25"  >
-                                <option   value= "1 "   > 爱情片 </option>
-                                <option   value= "2 "   > 动作片123456565 </option>
-                                <option   value= "3 "   > 战争片 </option>
-                                <option   value= "4 "   > 恐怖片 </option>
-                                <option   value= "5 "   > 喜剧片 </option>
-                                <option   value= "6 "   > 伦理片 </option>
-                                <option   value= "7 "   > 电视剧 </option>
-                                <option   value= "8 "   > 动画片 </option>
-                                <option   value= "9 "   > 其它 </option>
+                            <span class="label label-default radius">内容</span><br>
+                            <s:property value="ruleInfo" escape="false" />
+                        </div>
+                        <div  style="float:left;width:33% ">
+                            <span class="label label-default radius">银行列表</span><br>
+                            <select name="list" multiple="true" size="25" style="width: auto">
+                                <s:property value="bankList" escape="false" />
                             </select>
                         </div>
                         <div  style="float:left;width:33% ">
-                            <span class="label label-default radius">xxxxxx</span><br>
-                            <select name="list" multiple="true"  size="25"  >
-                                <option   value= "1 "   > 爱情片 </option>
-                                <option   value= "2 "   > 动作片127676345 </option>
-                                <option   value= "3 "   > 战争片 </option>
-                                <option   value= "4 "   > 恐怖片 </option>
-                                <option   value= "5 "   > 喜剧片 </option>
-                                <option   value= "6 "   > 伦理片 </option>
-                                <option   value= "7 "   > 电视剧 </option>
-                                <option   value= "8 "   > 动画片 </option>
-                                <option   value= "9 "   > 其它 </option>
-                            </select>
-                        </div>
-                        <div  style="float:left;width:33% ">
-                            <span class="label label-default radius">xxxxxx</span><br>
-                            <select name="list" multiple="true"  size="25" width="100%" >
-                                <option   value= "1 "   > 爱情片 </option>
-                                <option   value= "2 "   > 动作片165652345 </option>
-                                <option   value= "3 "   > 战争片 </option>
-                                <option   value= "4 "   > 恐怖片 </option>
-                                <option   value= "5 "   > 喜剧片 </option>
-                                <option   value= "6 "   > 伦理片 </option>
-                                <option   value= "7 "   > 电视剧 </option>
-                                <option   value= "8 "   > 动画片 </option>
-                                <option   value= "9 "   > 其它 </option>
+                            <span class="label label-default radius">业务员列表</span><br>
+                            <select name="list" multiple="true" size="25" style="width: auto">
+                                <s:property value="salemanList" escape="false" />
                             </select>
                         </div>
                     </div>
@@ -86,7 +61,7 @@
                             </tr>
                         </table>
                     </div>
-                <div class="panel panel-default" style="float:left;width: 180px;height: 90%">
+                <div class="panel panel-default" style="float:left;width: 180px;height: 600px">
                     <div class="panel-header" style="height: 3%"><span>使用银行</span></div>
                     <div class="panel-body" style="height: 40%">面板内容1</div>
                     <div class="panel-header" style="height: 3%"><span>使用业务员</span></div>

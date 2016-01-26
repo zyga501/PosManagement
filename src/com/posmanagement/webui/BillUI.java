@@ -85,8 +85,9 @@ public class BillUI extends WebUI {
                 "userinfo.unick saleman\n" +
                 "FROM\n" +
                 "billtb\n" +
-                "INNER JOIN banktb ON banktb.uuid = billtb.bankuuid\n" +
-                "LEFT JOIN userinfo ON userinfo.uid = billtb.salesmanuuid\n" +
+                "INNER JOIN banktb ON banktb.uuid = billtb.bankuuid \n" +
+                "INNER JOIN cardtb ON cardtb.cardno = billtb.cardno \n" +
+                "inner JOIN userinfo ON userinfo.uid = cardtb.salesmanuuid\n" +
                 whereSql +
                 " GROUP BY\n" +
                 "billtb.cardno,\n" +

@@ -34,7 +34,6 @@
                 maxmin: false,
                 content: "Rule!InitRuleAssign?ruleUUID=" + ruleUUID
             });
-           // layer.full(index);
         }
     </script>
 </head>

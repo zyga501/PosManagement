@@ -41,7 +41,9 @@
                         <div  style="float:left;width:33% ">
                             <span class="label label-default radius">业务员列表</span><br>
                             <select name="list" id="salesmanList"  size="25"style="width:150px;" >
-                                <s:property value="salesmanList" escape="false" />
+                                <option   value= "8 "   > 动画片 </option>
+                                <option   value= "9 "   > 其它 </option>
+                                <!--s:property value="salesmanList" escape="false" /-->
                             </select>
                         </div>
                     </div>
@@ -61,11 +63,11 @@
                 <div class="panel panel-default" style="float:left;width: 180px;">
                     <div class="panel-header"  ><span>使用银行</span></div>
                     <div class="panel-body"  >
-                        <select name="list"  id="selectedbanklist"  size="11" style="width:155px;" ></select>
+                        <select name="list"  id="selectedbankList"  size="11" style="width:155px;" ></select>
                     </div>
                     <div class="panel-header"  ><span>使用业务员</span></div>
                     <div class="panel-body"  >
-                        <select name="list"  id="selectedsalesmanlist"  size="11" style="width:155px;" ></select>
+                        <select name="list"  id="selectedsalesmanList"  size="11" style="width:155px;" ></select>
                     </div>
                 </div>
             </div>
@@ -75,35 +77,33 @@
 
 <script type="text/javascript">
     function  bankin(){
-        alert(21);
-        var v= $("#banklist").val();
-        var t= $("#banklist").find("option:selected").text();alert(t);
+        var v= $("#bankList").val();
+        var t= $("#bankList").find("option:selected").text();
         if ((v=='undefined') || (v==null)||(v=="")){}
         else{
-            $("#selectedbanklist").append("<option value="+v+">"+t+"</option>");
+            $("#selectedbankList").append("<option value="+v+">"+t+"</option>");
         }
-        alert(1);
     }
     function  bankout(){
-        var v= $("#selectedbanklist").val();
+        var v= $("#selectedbankList").val();
         if ((v=='undefined') || (v==null)||(v=="")){}
         else{
-            $("#selectedbanklist option[value='"+v+"']").remove();
+            $("#selectedbankList option[value='"+v+"']").remove();
         }
     }
     function  salesmanin(){
-        var v= $("#salesmanlist").val();
-        var t= $("#salesmanlist").find("option:selected").text();
+        var v= $("#salesmanList").val();
+        var t= $("#salesmanList").find("option:selected").text();
         if ((v=='undefined') || (v==null)||(v=="")){}
         else{
-            $("#selectedsalesmanlist").append("<option value="+v+">"+t+"</option>");
+            $("#selectedsalesmanList").append("<option value="+v+">"+t+"</option>");
         }
     }
     function  salesmanout(){
-        var v= $("#selectedsalesmanlist").val();
+        var v= $("#selectedsalesmanList").val();
         if ((v=='undefined') || (v==null)||(v=="")){}
         else{
-            $("#selectedsalesmanlist option[value='"+v+"']").remove();
+            $("#selectedsalesmanList option[value='"+v+"']").remove();
         }
     }
 </script>

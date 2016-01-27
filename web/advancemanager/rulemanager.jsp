@@ -29,12 +29,12 @@
         function  clickRule(ruleUUID) {
             var index = layer.open({
                 type: 2,
-                title: "规则分配",
+                title: "规则分配",area: ['850px', '650px'],
                 fix: true,
                 maxmin: false,
                 content: "Rule!InitRuleAssign?ruleUUID=" + ruleUUID
             });
-            layer.full(index);
+           // layer.full(index);
         }
     </script>
 </head>

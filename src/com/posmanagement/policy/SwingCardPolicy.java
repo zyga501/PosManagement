@@ -3,6 +3,7 @@ package com.posmanagement.policy;
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.utils.SQLUtils;
 import com.posmanagement.utils.StringUtils;
+import com.posmanagement.utils.UserUtils;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -295,23 +296,34 @@ public class SwingCardPolicy {
     }
 
     private ArrayList<RuleInfo> fetchRuleList(String bankUUID) throws Exception {
-        return convertRuleList((ArrayList<HashMap<String, Object>>)PosDbManager.executeSql("SELECT\n" +
-                "ruletb.uuid,\n" +
-                "ruletb.bankuuid,\n" +
-                "swingtimetb.startTime,\n" +
-                "swingtimetb.endTime,\n" +
-                "ruletb.posserveruuid,\n" +
-                "ruletb.minswingmoney,\n" +
-                "ruletb.maxswingmoney,\n" +
-                "ruletb.industryuuid,\n" +
-                "ruletb.rateuuid,\n" +
-                "ruletb.mccuuid,\n" +
-                "ruletb.ruleusefre,\n" +
-                "ruletb.ruleuseinterval\n" +
-                "FROM\n" +
-                "ruletb\n" +
-                "LEFT JOIN swingtimetb ON swingtimetb.uuid = ruletb.swingtimeuuid\n" +
-                "where bankuuid='" + bankUUID + "'"));
+        String whereSql = new String();
+        if (!UserUtils.isAdmin(salemanID)) {
+            whereSql += "and rulesaleman.salemanuuid='" + salemanID + "'";
+        }
+
+        return convertRuleList((ArrayList<HashMap<String, Object>>)PosDbManager.executeSql(
+                "SELECT\n" +
+                        "ruletb.uuid,\n" +
+                        "swingtimetb.starttime,\n" +
+                        "swingtimetb.endtime,\n" +
+                        "ruletb.posserveruuid,\n" +
+                        "ruletb.minswingmoney,\n" +
+                        "ruletb.maxswingmoney,\n" +
+                        "ruletb.industryuuid,\n" +
+                        "ruletb.rateuuid,\n" +
+                        "ruletb.mccuuid,\n" +
+                        "ruletb.ruleusefre,\n" +
+                        "ruletb.ruleuseinterval,\n" +
+                        "rulebank.bankuuid,\n" +
+                        "rulesaleman.salemanuuid\n" +
+                        "FROM\n" +
+                        "ruletb\n" +
+                        "LEFT JOIN swingtimetb ON swingtimetb.uuid = ruletb.swingtimeuuid\n" +
+                        "INNER JOIN rulebank ON rulebank.ruleuuid = ruletb.uuid\n" +
+                        "INNER JOIN rulesaleman ON rulesaleman.ruleuuid = ruletb.uuid\n" +
+                        "where rulebank.bankuuid='" + bankUUID + "' " +
+                        whereSql
+                        ));
     }
 
     private ArrayList<RuleInfo> convertRuleList(ArrayList<HashMap<String, Object>> ruleList) {

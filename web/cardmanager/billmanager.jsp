@@ -41,7 +41,6 @@
                         url: 'Bill!editBill',
                         data: {status:"enable" , billNO:billNO},
                         success: function (data) {
-                            alert(data);
                             var json = eval("(" + data + ")");
                             if (json.successMessage) {
                                 button.value = "Y";

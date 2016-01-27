@@ -14,13 +14,27 @@
     <link href="<%=request.getContextPath()%>/css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css"/>
     <link href="<%=request.getContextPath()%>/skin/default/skin.css" rel="stylesheet" type="text/css" id="skin"/>
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        function assignRule() {
+            $.ajax({
+                type: 'post',
+                url: 'Rule!AssignRule',
+                data: {ruleUUID:$('#ruleUUID').val(), bankList:$('#selectedbankList option').val() , salemanList:$('#selectedsalemanList option').val()},
+                dataType : "json",
+                success: function(data) {
+                    parent.layer.close(parent.layer.getFrameIndex(window.name));
+                }
+            });
+        }
+    </script>
     <title><s:text name="addasset.title"/></title>
 </head>
 <body scroll="no">
 <div>
-    <form class="form form-horizontal">
+    <form class="form form-horizontal" action="Rule!AssignRule">
         <div class="panel panel-default">
             <div class="panel-header">规则分配</div>
+            <input type="hidden" id="ruleUUID" value="<s:property value="ruleUUID" escape="false"/>"/>
             <div class="panel-body11">
                 <div class="panel panel-default" style="float:left;width: 500px;">
                     <div class="panel-header">
@@ -34,16 +48,14 @@
                         </div>
                         <div  style="float:left;width:33% ">
                             <span class="label label-default radius">银行列表</span><br>
-                            <select name="list" id="bankList" size="25" style="width:150px;" >
+                            <select name="bankList" id="bankList" size="25" style="width:150px;" >
                                 <s:property value="bankList" escape="false" />
                             </select>
                         </div>
                         <div  style="float:left;width:33% ">
                             <span class="label label-default radius">业务员列表</span><br>
-                            <select name="list" id="salesmanList"  size="25"style="width:150px;" >
-                                <option   value= "8 "   > 动画片 </option>
-                                <option   value= "9 "   > 其它 </option>
-                                <!--s:property value="salesmanList" escape="false" /-->
+                            <select name="salemanList" id="salemanList"  size="25"style="width:150px;" >
+                                <s:property value="salemanList" escape="false" />
                             </select>
                         </div>
                     </div>
@@ -63,12 +75,17 @@
                 <div class="panel panel-default" style="float:left;width: 180px;">
                     <div class="panel-header"  ><span>使用银行</span></div>
                     <div class="panel-body"  >
-                        <select name="list"  id="selectedbankList"  size="11" style="width:155px;" ></select>
+                        <select name="selectedbankList"  id="selectedbankList"  size="11" style="width:155px;" ></select>
                     </div>
                     <div class="panel-header"  ><span>使用业务员</span></div>
                     <div class="panel-body"  >
-                        <select name="list"  id="selectedsalesmanList"  size="11" style="width:155px;" ></select>
+                        <select name="selectedsalemanList"  id="selectedsalemanList"  size="11" style="width:155px;" ></select>
                     </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="formControls col-8 col-offset-3" align="center">
+                    <input type="button" class="btn btn-success radius size-M" value="<s:text name="global.submit" />" onclick="assignRule()">
                 </div>
             </div>
         </div>
@@ -92,18 +109,18 @@
         }
     }
     function  salesmanin(){
-        var v= $("#salesmanList").val();
-        var t= $("#salesmanList").find("option:selected").text();
+        var v= $("#salemanList").val();
+        var t= $("#salemanList").find("option:selected").text();
         if ((v=='undefined') || (v==null)||(v=="")){}
         else{
-            $("#selectedsalesmanList").append("<option value="+v+">"+t+"</option>");
+            $("#selectedsalemanList").append("<option value="+v+">"+t+"</option>");
         }
     }
     function  salesmanout(){
-        var v= $("#selectedsalesmanList").val();
+        var v= $("#selectedsalemanList").val();
         if ((v=='undefined') || (v==null)||(v=="")){}
         else{
-            $("#selectedsalesmanList option[value='"+v+"']").remove();
+            $("#selectedsalemanList option[value='"+v+"']").remove();
         }
     }
 </script>

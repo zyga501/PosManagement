@@ -207,7 +207,7 @@ public class BillAction extends AjaxActionSupport {
             return false;
         }
 
-        SwingCardPolicy swingCardPolicy = new SwingCardPolicy("");
+        SwingCardPolicy swingCardPolicy = new SwingCardPolicy(super.getUserID());
         SwingCardPolicy.SwingList swingList = swingCardPolicy.generateSwingList(billNO);
         if (swingList == null) {
             return false;

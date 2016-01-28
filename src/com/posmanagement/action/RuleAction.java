@@ -98,7 +98,11 @@ public class RuleAction extends AjaxActionSupport {
     public String InitRuleAssign() throws Exception {
         ruleInfo = new RuleUI().generaterInfo(ruleUUID);
         bankList = new BankUI().generateBankSelectList();
+        String selectedbankList = new BankUI().generateRuleBankList(ruleUUID);
         salemanList = new SalemanUI().generateSelect();
+        String selectedsalemanList = new SalemanUI().generateRuleSalesmasnSelect(ruleUUID);
+        getRequest().setAttribute("selectedbankList",selectedbankList);
+        getRequest().setAttribute("selectedsalemanList",selectedsalemanList);
         return RULEASSIGN;
     }
 

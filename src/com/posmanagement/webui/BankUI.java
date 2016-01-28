@@ -39,7 +39,25 @@ public class BankUI extends WebUI {
         return uiContainer.generateUI();
     }
 
+    public String generateRuleBankList(String ruleUUID) throws Exception {
+        ArrayList<HashMap<String, Object>> dbRet = fetchBankList(ruleUUID);
+        if (dbRet.size() <= 0)
+                return new String("");
+
+        UIContainer uiContainer = new UIContainer();
+        for (int index = 0; index < dbRet.size(); ++index) {
+            uiContainer.addElement(new UIContainer("option", dbRet.get(index).get("NAME").toString())
+                           .addAttribute("value", dbRet.get(index).get("UUID").toString()));
+        }
+
+       return uiContainer.generateUI();
+    }
+
     private ArrayList<HashMap<String, Object>> fetchBankList() throws Exception {
         return PosDbManager.executeSql("select * from banktb");
+    }
+
+    private ArrayList<HashMap<String, Object>> fetchBankList(String ruleUUID) throws Exception {
+        return PosDbManager.executeSql("select a.* from banktb a,rulebank b where a.uuid=b.bankuuid and b.ruleuuid='"+ruleUUID+"'");
     }
 }

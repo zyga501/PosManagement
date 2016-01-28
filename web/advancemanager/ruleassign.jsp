@@ -14,78 +14,69 @@
     <link href="<%=request.getContextPath()%>/css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css"/>
     <link href="<%=request.getContextPath()%>/skin/default/skin.css" rel="stylesheet" type="text/css" id="skin"/>
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery/1.9.1/jquery.min.js"></script>
-    <script type="text/javascript">
-        function assignRule() {
-            $.ajax({
-                type: 'post',
-                url: 'Rule!AssignRule',
-                data: {ruleUUID:$('#ruleUUID').val(), bankList:$('#selectedbankList option').val() , salemanList:$('#selectedsalemanList option').val()},
-                dataType : "json",
-                success: function(data) {
-                    parent.layer.close(parent.layer.getFrameIndex(window.name));
-                }
-            });
-        }
-    </script>
     <title><s:text name="addasset.title"/></title>
 </head>
 <body scroll="no">
 <div>
-    <form class="form form-horizontal" action="Rule!AssignRule">
+    <form class="form form-horizontal">
         <div class="panel panel-default">
-            <div class="panel-header">规则分配</div>
-            <input type="hidden" id="ruleUUID" value="<s:property value="ruleUUID" escape="false"/>"/>
+            <div class="panel-header">规则分配
+                <div style="float: right">
+                    <input type="button" class="btn btn-primary radius size-s" value="<s:text name="global.save"/>"  onclick="save()" />
+                </div>
+            </div>
             <div class="panel-body11">
                 <div class="panel panel-default" style="float:left;width: 500px;">
                     <div class="panel-header">
+                        <input type="hidden" name="ruleUUID" value="<s:property value="ruleUUID" />">
                         <span>编号：</span><s:property value="ruleUUID" escape="false" />  &nbsp; &nbsp; <input type="checkbox"
-                            id="chk1"><label  for="chk1">启用</label>
+                                                                                                             id="chk1"><label  for="chk1">启用</label>
                     </div>
                     <div class="panel-body">
-                        <div  style="float:left;width:33% ">
+                        <div  style="float:left;width:33%;">
                             <span class="label label-default radius">内容</span><br>
-                            <s:property value="ruleInfo" escape="false" />
+                            <div  style="width:150px;border-color: #9c9c9c;border-width: 1px;border-style:solid;">
+                                <s:property value="ruleInfo" escape="false" />
+                            </div>
                         </div>
                         <div  style="float:left;width:33% ">
                             <span class="label label-default radius">银行列表</span><br>
-                            <select name="bankList" id="bankList" size="25" style="width:150px;" >
+                            <select  id="bankList" size="25" style="width:150px;" >
                                 <s:property value="bankList" escape="false" />
                             </select>
                         </div>
                         <div  style="float:left;width:33% ">
                             <span class="label label-default radius">业务员列表</span><br>
-                            <select name="salemanList" id="salemanList"  size="25"style="width:150px;" >
+                            <select  id="salesmanList"  size="25"style="width:150px;" >
                                 <s:property value="salemanList" escape="false" />
                             </select>
                         </div>
                     </div>
                 </div>
-                    <div class="panel-body" style="float:left;width: 100px; height: 500px;alignment: center;" vertical="middle">
-                        <table style="height: 100%">
-                            <tr class="text-c odd">
-                                <td ><input type="button" class="btn btn-default radius" value="->" onclick="bankin()"/><br>
+                <div class="panel-body" style="float:left;width: 100px; height: 500px;alignment: center;" vertical="middle">
+                    <table style="height: 100%">
+                        <tr class="text-c odd">
+                            <td ><input type="button" class="btn btn-default radius" value="->" onclick="bankin()"/><br>
                                 <input type="button" class="btn btn-default radius" value="<-"  onclick="bankout()" /></td>
-                            </tr>
-                            <tr class="text-c odd">
-                                <td ><input type="button" class="btn btn-default radius" value="->"  onclick="salesmanin()"  /><br>
+                        </tr>
+                        <tr class="text-c odd">
+                            <td ><input type="button" class="btn btn-default radius" value="->"  onclick="salesmanin()"  /><br>
                                 <input type="button" class="btn btn-default radius" value="<-" onclick="salesmanout()"/></td>
-                            </tr>
-                        </table>
-                    </div>
+                        </tr>
+                    </table>
+                </div>
                 <div class="panel panel-default" style="float:left;width: 180px;">
                     <div class="panel-header"  ><span>使用银行</span></div>
                     <div class="panel-body"  >
-                        <select name="selectedbankList"  id="selectedbankList"  size="11" style="width:155px;" ></select>
+                        <select  name="selectedbankList" id="selectedbankList"  size="11" style="width:155px;" >
+                            ${selectedbankList}
+                        </select>
                     </div>
                     <div class="panel-header"  ><span>使用业务员</span></div>
                     <div class="panel-body"  >
-                        <select name="selectedsalemanList"  id="selectedsalemanList"  size="11" style="width:155px;" ></select>
+                        <select name="selectedsalesmanList"  id="selectedsalesmanList"  size="11" style="width:155px;" >
+                            ${selectedsalemanList}</select>
                     </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="formControls col-8 col-offset-3" align="center">
-                    <input type="button" class="btn btn-success radius size-M" value="<s:text name="global.submit" />" onclick="assignRule()">
                 </div>
             </div>
         </div>
@@ -109,19 +100,39 @@
         }
     }
     function  salesmanin(){
-        var v= $("#salemanList").val();
-        var t= $("#salemanList").find("option:selected").text();
+        var v= $("#salesmanList").val();
+        var t= $("#salesmanList").find("option:selected").text();
         if ((v=='undefined') || (v==null)||(v=="")){}
         else{
-            $("#selectedsalemanList").append("<option value="+v+">"+t+"</option>");
+            $("#selectedsalesmanList").append("<option value="+v+">"+t+"</option>");
         }
     }
     function  salesmanout(){
-        var v= $("#selectedsalemanList").val();
+        var v= $("#selectedsalesmanList").val();
         if ((v=='undefined') || (v==null)||(v=="")){}
         else{
-            $("#selectedsalemanList option[value='"+v+"']").remove();
+            $("#selectedsalesmanList option[value='"+v+"']").remove();
         }
+    }
+    function  save(){
+        var banklist =  $("#selectedbankList option").map(function(){return $(this).val();}).get().join(",");
+        var salemanlist =  $("#selectedsalesmanList option").map(function(){return $(this).val();}).get().join(",");
+        $.ajax({
+            type: 'post',
+            url: 'Rule!ruleAssign',
+            dataType:"json",
+            data:$("form").serialize()+'&banklist='+banklist+'&salemanlist='+salemanlist,
+            success: function (data) {
+                var json = eval("(" + data + ")");
+                if (json.errorMessage != null) {
+                    $('#Message').html(json.errorMessage);
+                }
+                else {
+                    parent.layer.msg("<s:text name="global.dosuccess" />");
+                    parent.layer.close(parent.layer.getFrameIndex(window.name));
+                }
+            }
+        })
     }
 </script>
 </body>

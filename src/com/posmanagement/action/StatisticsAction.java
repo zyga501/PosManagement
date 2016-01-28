@@ -11,6 +11,7 @@ import java.util.HashMap;
 
 public class StatisticsAction extends AjaxActionSupport{
     private final static String GENERALINFO = "welcomeinfo";
+    private final static String SWINGGENERAL="swinggeneral";
     private String welcomeuser = "";
     private String generalinfo = "";
 
@@ -28,6 +29,10 @@ public class StatisticsAction extends AjaxActionSupport{
 
     public void setGeneralinfo(String generalinfo) {
         this.generalinfo = generalinfo;
+    }
+
+    public String SwingGeneral(){
+        return SWINGGENERAL;
     }
 
     public String obtainGeneralinfo(){

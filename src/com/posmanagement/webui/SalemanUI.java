@@ -43,6 +43,21 @@ public class SalemanUI extends WebUI {
         return uiContainer.generateUI();
     }
 
+    public String generateRuleSalesmasnSelect(String ruleUUID) throws Exception {
+        ArrayList<HashMap<String, Object>> dbRet = fetchSalemanList(ruleUUID);
+        if (dbRet.size() <= 0)
+                return new String("");
+
+                UIContainer uiContainer = new UIContainer();
+        for (int index = 0; index < dbRet.size(); ++index) {
+                if (dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0) {
+                    uiContainer.addElement(new UIContainer("option", dbRet.get(index).get("UNICK").toString())
+                   .addAttribute("value", dbRet.get(index).get("UID").toString()));
+                }
+            }
+        return uiContainer.generateUI();
+    }
+
     public String generateInfoTable(String salemanID) throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchSalemanInfo(salemanID);
         if (dbRet.size() != 1)
@@ -115,5 +130,10 @@ public class SalemanUI extends WebUI {
 
     private ArrayList<HashMap<String, Object>> fetchSalemanList() throws Exception {
         return PosDbManager.executeSql("select * from userinfo a,salesmantb b where a.uid=b.uid");
+    }
+
+    private ArrayList<HashMap<String, Object>> fetchSalemanList(String ruleUUID) throws Exception {
+        return PosDbManager.executeSql("select * from userinfo a,salesmantb b,rulesaleman c where a.uid=b.uid " +
+                      "and b.uid=c.salemanuuid and c.ruleuuid='"+ruleUUID+"'");
     }
 }

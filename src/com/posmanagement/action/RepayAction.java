@@ -78,7 +78,14 @@ public class RepayAction extends AjaxActionSupport {
             Map parameterMap =new HashMap();
             parameterMap.put(1,super.getUserID());
             parameterMap.put(2,getParameter("repayId"));
-            if (PosDbManager.executeUpdate("update repaytb set tradestatus='enable',userid=?,tradetime=now() where id=?",(HashMap<Integer, Object>)parameterMap)) {
+            if (PosDbManager.executeUpdate("update repaytb\n" +
+                    "INNER JOIN cardtb on cardtb.cardno=repaytb.cardno\n" +
+                    "set \n" +
+                    "tradestatus='enable',\n" +
+                    "userid=?,\n" +
+                    "tradetime=now(),\n" +
+                    "charge=cardtb.commissioncharge * repaytb.trademoney\n" +
+                    "where id=?",(HashMap<Integer, Object>)parameterMap)) {
                 parameterMap.clear();
                 parameterMap.put(1, getParameter("repayId"));
                 parameterMap.put(2, super.getUserID());
@@ -90,7 +97,7 @@ public class RepayAction extends AjaxActionSupport {
                     whereSql = "where salesmanuuid=(select salesmanuuid from tellertb where uid=?)";
                 }
                 if (PosDbManager.executeUpdate("UPDATE assettb\n" +
-                        "SET balance= balance - (select trademoney from repaytb where id=?)\n" +
+                        "SET balance= balance - (select trademoney - charge from repaytb where id=?)\n" +
                         whereSql, (HashMap<Integer, Object>)parameterMap)) {
                     map.put("successMessage", getText("global.actionSuccess"));
                     map.put("repayDetail", new RepayUI(super.getUserID()).generateDetail(getParameter("cardNO").toString(), getParameter("billUUID").toString()));

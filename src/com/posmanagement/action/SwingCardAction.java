@@ -48,7 +48,28 @@ public class SwingCardAction extends AjaxActionSupport {
             Map parameterMap =new HashMap();
             parameterMap.put(1,super.getUserID());
             parameterMap.put(2,getParameter("swingId"));
-            if (PosDbManager.executeUpdate("update swingcard set swingstatus='enable',userid=?,realsdatetm=now() where id=?",(HashMap<Integer, Object>)parameterMap)) {
+            if (PosDbManager.executeUpdate("update swingcard\n" +
+                    "INNER JOIN postb ON postb.uuid = swingcard.posuuid\n" +
+                    "INNER JOIN ratetb ON ratetb.uuid = postb.rateuuid\n" +
+                    "set \n" +
+                    "swingstatus='enable',\n" +
+                    "userid=?,\n" +
+                    "realsdatetm=now(),\n" +
+                    "charge=\n" +
+                    "(\n" +
+                    "case when \n" +
+                    "(maxfee='' or maxfee=NULL) \n" +
+                    "then swingcard.amount * rate * 0.01\n" +
+                    "else \n" +
+                    "(\n" +
+                    "case when maxfee>(swingcard.amount * rate * 0.01)\n" +
+                    "then \n" +
+                    "(swingcard.amount * rate * 0.01) \n" +
+                    "else \n" +
+                    "maxfee \n" +
+                    "end)\n" +
+                    "end)" +
+                    " where id=?",(HashMap<Integer, Object>)parameterMap)) {
                 parameterMap.clear();
                 parameterMap.put(1, getParameter("swingId"));
                 parameterMap.put(2, super.getUserID());
@@ -61,19 +82,9 @@ public class SwingCardAction extends AjaxActionSupport {
                 }
                 if (PosDbManager.executeUpdate("update assettb\n" +
                         "set balance=balance +\n" +
-                        "(SELECT swingcard.amount -\n" +
-                        "(case when (maxfee='' or maxfee=NULL) \n" +
-                        "then swingcard.amount * rate * 0.01\n" +
-                        "else \n" +
-                        "(case when maxfee>(swingcard.amount * rate * 0.01)\n" +
-                        "then (swingcard.amount * rate * 0.01) \n" +
-                        "else maxfee \n" +
-                        "end) \n" +
-                        "end) as fee\n" +
+                        "(SELECT swingcard.amount - swingcard.charge\n" +
                         "FROM\n" +
                         "swingcard\n" +
-                        "INNER JOIN postb ON postb.uuid = swingcard.posuuid\n" +
-                        "INNER JOIN ratetb ON ratetb.uuid = postb.rateuuid\n" +
                         "where id = ?\n" +
                         ")\n" +
                         whereSql, (HashMap<Integer, Object>)parameterMap)) {

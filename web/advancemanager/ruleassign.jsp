@@ -41,13 +41,13 @@
                         </div>
                         <div  style="float:left;width:33% ">
                             <span class="label label-default radius">银行列表</span><br>
-                            <select  id="bankList" size="25" style="width:150px;" >
+                            <select  id="bankList" size="25" style="width:150px;" multiple="multiple" >
                                 <s:property value="bankList" escape="false" />
                             </select>
                         </div>
                         <div  style="float:left;width:33% ">
                             <span class="label label-default radius">业务员列表</span><br>
-                            <select  id="salesmanList"  size="25"style="width:150px;" >
+                            <select  id="salesmanList"  size="25"style="width:150px;" multiple="multiple" >
                                 <s:property value="salemanList" escape="false" />
                             </select>
                         </div>
@@ -68,7 +68,7 @@
                 <div class="panel panel-default" style="float:left;width: 180px;">
                     <div class="panel-header"  ><span>使用银行</span></div>
                     <div class="panel-body"  >
-                        <select  name="selectedbankList" id="selectedbankList"  size="11" style="width:155px;" >
+                        <select  name="selectedbankList" id="selectedbankList"   size="11" style="width:155px;" >
                             ${selectedbankList}
                         </select>
                     </div>
@@ -85,13 +85,22 @@
 
 <script type="text/javascript">
     function  bankin(){
-        var v= $("#bankList").val();
-        var t= $("#bankList").find("option:selected").text();
-        if ((v=='undefined') || (v==null)||(v=="")){}
-        else{
-            $("#selectedbankList").append("<option value="+v+">"+t+"</option>");
+            var v = ""+$("#bankList").val();
+            var t ="";
+        $("#bankList").find("option:selected").each(function(){
+            t = t + $(this).text() + ',';
+        })
+        var vs = new Array(); vs = v.split(",");
+        var ts = new Array(); ts = t.split(",");
+        for (i=0;i<vs.length;i++) {
+            if ((vs[i] == 'undefined') || (vs[i] == null) || (vs[i] == "")) {
+            }
+            else {
+                $("#selectedbankList").append("<option value=" + vs[i] + ">" + ts[i] + "</option>");
+            }
         }
     }
+
     function  bankout(){
         var v= $("#selectedbankList").val();
         if ((v=='undefined') || (v==null)||(v=="")){}
@@ -99,12 +108,21 @@
             $("#selectedbankList option[value='"+v+"']").remove();
         }
     }
+
     function  salesmanin(){
-        var v= $("#salesmanList").val();
-        var t= $("#salesmanList").find("option:selected").text();
-        if ((v=='undefined') || (v==null)||(v=="")){}
-        else{
-            $("#selectedsalesmanList").append("<option value="+v+">"+t+"</option>");
+        var v = ""+$("#salesmanList").val();
+        var t ="";
+        $("#salesmanList").find("option:selected").each(function(){
+            t = t + $(this).text() + ',';
+        })
+        var vs = new Array(); vs = v.split(",");
+        var ts = new Array(); ts = t.split(",");
+        for (i=0;i<vs.length;i++) {
+            if ((vs[i] == 'undefined') || (vs[i] == null) || (vs[i] == "")) {
+            }
+            else {
+                $("#selectedsalesmanList").append("<option value=" + vs[i] + ">" + ts[i] + "</option>");
+            }
         }
     }
     function  salesmanout(){

@@ -18,8 +18,7 @@
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery/1.9.1/jquery.min.js"></script>
     <script >
         function setval(v){
-            alert(v);
-            $('#swinggengralsummary').html(v);
+            $('#swinggeneralsummary').html(v);
         }
     </script>
 </head>
@@ -69,7 +68,7 @@
                                                                                                <%--class="input-text" style="width:60%" placeholder="业务员"--%>
                                                                                                <%--AutoComplete="off"></select> --%>
                     </div><div class="formControls col-2">
-                    <input name="saleman" placeholder="柜员" class="input-text">
+                    <input name="teller" placeholder="刷卡者" class="input-text">
                     <%--<span style="width:40%;">柜员</span><select  name="tellerList" id="tellerid"--%>
                                                                                                <%--class="input-text" style="width:60%" placeholder="柜员"--%>
                                                                                                <%--AutoComplete="off"></select>--%></div>
@@ -106,7 +105,7 @@
                     <th><s:text name="swinggengral.doer"/></th>
                 </tr>
                 </thead>
-                <tbody id="swinggengralsummary">
+                <tbody id="swinggeneralsummary">
                 </tbody>
             </table>
         </div>
@@ -116,7 +115,6 @@
 <script src="<%=request.getContextPath()%>/js/laypage/laypage.js"></script>
 <script>
     function dosearch() {
-        alert($("#searchform").serialize());
         $.ajax({
             type: 'post',
             url: 'Statistics!FetchSwingGeneral',

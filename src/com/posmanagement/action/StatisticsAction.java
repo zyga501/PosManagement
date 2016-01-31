@@ -146,19 +146,18 @@ public class StatisticsAction extends AjaxActionSupport{
             {
                 if (!StringUtils.convertNullableString(getParameter("sdate")).trim().isEmpty())
                     add(new SQLUtils.WhereCondition("swingcard.realsdatetm", " >",
-                            SQLUtils.ConvertToSqlString(getParameter("edate").toString().trim())));
+                            SQLUtils.ConvertToSqlString(getParameter("sdate").toString().trim())));
                 if (!StringUtils.convertNullableString(getParameter("edate")).trim().isEmpty())
                     add(new SQLUtils.WhereCondition("swingcard.realsdatetm", " <",
                             SQLUtils.ConvertToSqlString(getParameter("edate").toString().trim())));
                 if (!StringUtils.convertNullableString(getParameter("saleman")).trim().isEmpty()) {
-                    add(new SQLUtils.WhereCondition("userinfo.unick", " =",
-                            SQLUtils.ConvertToSqlString(getParameter("rid").toString().trim())));
-                    add(new SQLUtils.WhereCondition("userinfo.rid", " =","69632ae8-7e48-4e72-ad58-1043ad655a4c"));
+                    add(new SQLUtils.WhereCondition("salemantb.unick", " =",
+                            SQLUtils.ConvertToSqlString(getParameter("saleman").toString().trim())));
+                    add(new SQLUtils.WhereCondition("salemantb.rid", " =","'69632ae8-7e48-4e72-ad58-1043ad655a4c'"));
                 }
                 if (!StringUtils.convertNullableString(getParameter("teller")).trim().isEmpty()) {
                     add(new SQLUtils.WhereCondition("userinfo.unick", " =",
-                            SQLUtils.ConvertToSqlString(getParameter("rid").toString().trim())));
-                    add(new SQLUtils.WhereCondition("userinfo.rid", " =","f5466ce9-5e10-4443-aac8-5e385c3febb0"));
+                            SQLUtils.ConvertToSqlString(getParameter("teller").toString().trim())));
                 }
             }
         };

@@ -16,7 +16,11 @@
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/My97DatePicker/WdatePicker.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/dateRangeUtil.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery/1.9.1/jquery.min.js"></script>
-    <script type="text/javascript">
+    <script >
+        function setval(v){
+            alert(v);
+            $('#swinggengralsummary').html(v);
+        }
     </script>
 </head>
 <body style="overflow:hidden">
@@ -47,25 +51,29 @@
                    onclick="$('#sdate').val(  DateUtil.Format(dateRangeUtil.getPreviousMonth()[0]).toString());$('#edate').val( DateUtil.Format(dateRangeUtil.getPreviousMonth()[1]));"
                    value="上月">
         </div>
-        <div  style="width: 80%;margin: 0 auto;">
-            <form action="" onsubmit="return false;">
-                <div class="row cl">
-                    <div class="formControls col-2">
+        <div pd-5 style="width: 80%;margin: 0 auto;">
+            <form id="searchform" onsubmit="return false;">
+                <div class="row cl ">
+                    <div class="formControls col-3">
                         <input type="text" onfocus="WdatePicker()" id="sdate"
                                name="sdate" class="input-text Wdate" placeholder="开始日期"
                                AutoComplete="off" style="width:auto;">
                     </div>
-                    <div class="formControls col-2"><input type="text" AutoComplete="off"
+                    <div class="formControls col-3"><input type="text" AutoComplete="off"
                                                            onfocus="WdatePicker()" id="edate" name="edate"
                                                            placeholder="结束日期" class="input-text Wdate" style="width:auto;">
                     </div>
-                    <div class="formControls col-2"><span style="width:40%;">业务员</span><select name="salesmanList" id="salesmanid"
-                                                                                               class="input-text" style="width:60%" placeholder="业务员"
-                                                                                               AutoComplete="off"></select> </div>
-                    <div class="formControls col-2"><span style="width:40%;">柜员</span><select  name="tellerList" id="tellerid"
-                                                                                               class="input-text" style="width:60%" placeholder="柜员"
-                                                                                               AutoComplete="off"></select></div>
-                    <div class="formControls col-2"><input type="button" value="<s:text name="global.search" />" class="btn btn-primary radius size-S"></div>
+                    <div class="formControls col-2">
+                        <input name="saleman" placeholder="业务员" class="input-text">
+                        <%--<span style="width:40%;">业务员</span><select name="salesmanList" id="salesmanid"--%>
+                                                                                               <%--class="input-text" style="width:60%" placeholder="业务员"--%>
+                                                                                               <%--AutoComplete="off"></select> --%>
+                    </div><div class="formControls col-2">
+                    <input name="saleman" placeholder="柜员" class="input-text">
+                    <%--<span style="width:40%;">柜员</span><select  name="tellerList" id="tellerid"--%>
+                                                                                               <%--class="input-text" style="width:60%" placeholder="柜员"--%>
+                                                                                               <%--AutoComplete="off"></select>--%></div>
+                    <div class="formControls col-1"><input type="button" value="<s:text name="global.search" />" onclick="dosearch()" class="btn btn-primary radius size-S"></div>
                 </div>
             </form>
         </div>
@@ -91,15 +99,14 @@
             <table class="table table-border table-bordered table-bg table-hover table-sort">
                 <thead>
                 <tr class="text-c">
-                    <th><s:text name="swingcardsummary.amount"/></th>
-                    <th><s:text name="swingcardsummary.cardno"/></th>
-                    <th><s:text name="cardmanager.bankname"/></th>
-                    <th><s:text name="swingcardsummary.cardmaster"/></th>
-                    <th><s:text name="swingcardsummary.status"/></th>
-                    <th><s:text name="global.operation"/></th>
+                    <th><s:text name="swinggengral.totalcount"/></th>
+                    <th><s:text name="swinggengral.totalamount"/></th>
+                    <th><s:text name="swinggengral.totalcharge"/></th>
+                    <th><s:text name="swinggengral.saleman"/></th>
+                    <th><s:text name="swinggengral.doer"/></th>
                 </tr>
                 </thead>
-                <tbody id="swingCardSummary">
+                <tbody id="swinggengralsummary">
                 </tbody>
             </table>
         </div>
@@ -108,34 +115,11 @@
 </div>
 <script src="<%=request.getContextPath()%>/js/laypage/laypage.js"></script>
 <script>
-    $().ready
-    (laypage({
-        cont: 'navigatediv',
-        pages: ${pagecount},
-        skip: true,
-        skin: 'yahei',
-        jump: function (obj) {
-            $.ajax({
-                type: 'post',
-                url: 'SwingCard!FetchSwingList?currpage='+obj.curr,
-                dataType:"json",
-                data:$("#searchform").serialize(),
-                success: function (data) {
-                    var json = eval("(" + data + ")");
-                    if (json.errorMessage != null) {
-                        layer.msg(json.errorMessage);
-                    }
-                    else {
-                        refreshswingcardList(json.swingCardSummary);
-                    }
-                }
-            })
-        }
-    }) );
     function dosearch() {
+        alert($("#searchform").serialize());
         $.ajax({
             type: 'post',
-            url: 'SwingCard!FetchSwingList',
+            url: 'Statistics!FetchSwingGeneral',
             dataType:"json",
             data:$("#searchform").serialize(),
             success: function (data) {
@@ -144,6 +128,7 @@
                     layer.msg(json.errorMessage);
                 }
                 else {
+                    setval(json.swingGeneral);
                 }
                 laypage({
                     cont: 'navigatediv',
@@ -153,7 +138,7 @@
                     jump: function (obj) {
                         $.ajax({
                             type: 'post',
-                            url: 'SwingCard!FetchSwingList?currpage='+obj.curr,
+                            url: 'Statistics!FetchSwingGeneral?currpage='+obj.curr,
                             dataType:"json",
                             data:$("#searchform").serialize(),
                             success: function (data) {
@@ -162,7 +147,7 @@
                                     layer.msg(json.errorMessage);
                                 }
                                 else {
-                                    refreshswingcardList(json.swingCardSummary);
+                                    setval(json.swingGeneral);
                                 }
                             }
                         })

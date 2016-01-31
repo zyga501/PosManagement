@@ -1,13 +1,16 @@
 package com.posmanagement.action;
 
 import com.posmanagement.utils.PosDbManager;
+import com.posmanagement.utils.SQLUtils;
 import com.posmanagement.utils.StringUtils;
 import com.posmanagement.utils.UserUtils;
+import com.posmanagement.webui.StatisticsUI;
 import com.posmanagement.webui.UIContainer;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class StatisticsAction extends AjaxActionSupport{
     private final static String GENERALINFO = "welcomeinfo";
@@ -135,5 +138,42 @@ public class StatisticsAction extends AjaxActionSupport{
             }
         }
         return GENERALINFO;
+    }
+
+    public  String FetchSwingGeneral(){
+
+        ArrayList<SQLUtils.WhereCondition> uiConditions = new ArrayList<SQLUtils.WhereCondition>() {
+            {
+                if (!StringUtils.convertNullableString(getParameter("sdate")).trim().isEmpty())
+                    add(new SQLUtils.WhereCondition("swingcard.realsdatetm", " >",
+                            SQLUtils.ConvertToSqlString(getParameter("edate").toString().trim())));
+                if (!StringUtils.convertNullableString(getParameter("edate")).trim().isEmpty())
+                    add(new SQLUtils.WhereCondition("swingcard.realsdatetm", " <",
+                            SQLUtils.ConvertToSqlString(getParameter("edate").toString().trim())));
+                if (!StringUtils.convertNullableString(getParameter("saleman")).trim().isEmpty()) {
+                    add(new SQLUtils.WhereCondition("userinfo.unick", " =",
+                            SQLUtils.ConvertToSqlString(getParameter("rid").toString().trim())));
+                    add(new SQLUtils.WhereCondition("userinfo.rid", " =","69632ae8-7e48-4e72-ad58-1043ad655a4c"));
+                }
+                if (!StringUtils.convertNullableString(getParameter("teller")).trim().isEmpty()) {
+                    add(new SQLUtils.WhereCondition("userinfo.unick", " =",
+                            SQLUtils.ConvertToSqlString(getParameter("rid").toString().trim())));
+                    add(new SQLUtils.WhereCondition("userinfo.rid", " =","f5466ce9-5e10-4443-aac8-5e385c3febb0"));
+                }
+            }
+        };
+
+        Map map = new HashMap();
+        StatisticsUI statisticsUI = new StatisticsUI(super.getUserID());
+        statisticsUI.setUiConditions(uiConditions);
+        try {
+            map.put("pagecount",statisticsUI.fetchSwingGeneralpagecount());
+            int curr = Integer.parseInt(null==getParameter("currpage")?"1":getParameter("currpage").toString());
+            String  v=statisticsUI.generateSummary(curr);
+            map.put("swingGeneral",v);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return AjaxActionComplete(map);
     }
 }

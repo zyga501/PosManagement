@@ -50,7 +50,6 @@ public class RuleAction extends AjaxActionSupport {
     public String AddRule() throws Exception {
         Map map = new HashMap();
         try {
-            String bankUUID = getParameter("bankUUID").toString();
             String posServerUUID = getParameter("posServerUUID").toString();
             String swingTimeUUID = getParameter("swingTimeUUID").toString();
             String minSwingMoney = getParameter("minSwingMoney").toString();
@@ -60,31 +59,28 @@ public class RuleAction extends AjaxActionSupport {
             String mccUUID = getParameter("mccUUID").toString();
             String ruleUseFre = getParameter("ruleUseFre").toString();
             String ruleUseInterval = getParameter("ruleUseInterval").toString();
-            if (bankUUID.isEmpty()) {
-                throw new IllegalArgumentException();
-            }
             Map parametMap = new HashMap();
-            parametMap.put(1, UUIDUtils.generaterUUID());
-            parametMap.put(2, bankUUID);
-            parametMap.put(3, posServerUUID);
-            parametMap.put(4, swingTimeUUID);
-            parametMap.put(5, minSwingMoney);
-            parametMap.put(6, maxSwingMoney);
-            parametMap.put(7, industryUUID);
-            parametMap.put(8, rateUUID);
-            parametMap.put(9, mccUUID);
-            parametMap.put(10, ruleUseFre);
-            parametMap.put(11, ruleUseInterval);
+            int i = 0;
+            parametMap.put(++i, UUIDUtils.generaterUUID());
+            parametMap.put(++i, posServerUUID);
+            parametMap.put(++i, swingTimeUUID);
+            parametMap.put(++i, minSwingMoney);
+            parametMap.put(++i, maxSwingMoney);
+            parametMap.put(++i, industryUUID);
+            parametMap.put(++i, rateUUID);
+            parametMap.put(++i, mccUUID);
+            parametMap.put(++i, ruleUseFre);
+            parametMap.put(++i, ruleUseInterval);
             if (getParameter("status") != null && getParameter("status").toString().compareTo("on") == 0) {
-                parametMap.put(12, "enable");
+                parametMap.put(++i, "enable");
             }
             else {
-                parametMap.put(12, "disable");
+                parametMap.put(++i, "disable");
             }
 
-            if (PosDbManager.executeUpdate("insert into ruletb(uuid,bankuuid,posserveruuid,swingtimeuuid," +
+            if (PosDbManager.executeUpdate("insert into ruletb(uuid,posserveruuid,swingtimeuuid," +
                     "minswingmoney,maxswingmoney,industryuuid,rateuuid,mccuuid,ruleusefre,ruleuseinterval,status)" +
-                    "values(?,?,?,?,?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>)parametMap)) {
+                    "values(?,?,?,?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>)parametMap)) {
                 map.put("ruleList", new RuleUI().generateTable());
             }
         }

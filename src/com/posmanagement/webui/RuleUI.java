@@ -26,7 +26,6 @@ public class RuleUI extends WebUI {
                             .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("MCC")), "○")
                             .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("RULEUSEFRE")), "○")
                             .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("RULEUSEINTERVAL")), "○")
-                            .addElement("td", getText(dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0 ? "global.enable" : "global.disable"))
                             .addElement(new UIContainer("td")
                                     .addElement(
                                             new UIContainer("input")

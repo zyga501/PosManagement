@@ -6,6 +6,7 @@ import com.posmanagement.webui.BankUI;
 import com.posmanagement.webui.RuleUI;
 import com.posmanagement.webui.SalemanUI;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ public class RuleAction extends AjaxActionSupport {
     private String ruleInfo;
     private String bankList;
     private String salemanList;
+    private String ruleEnabled;
 
     public String  getRuleList() {
         return ruleList;
@@ -40,6 +42,10 @@ public class RuleAction extends AjaxActionSupport {
 
     public String getSalemanList() {
         return salemanList;
+    }
+
+    public String getRuleEnabled() {
+        return ruleEnabled;
     }
 
     public String Init() throws Exception {
@@ -99,6 +105,10 @@ public class RuleAction extends AjaxActionSupport {
         String selectedsalemanList = new SalemanUI().generateRuleSalesmasnSelect(ruleUUID);
         getRequest().setAttribute("selectedbankList",selectedbankList);
         getRequest().setAttribute("selectedsalemanList",selectedsalemanList);
+        ArrayList<HashMap<String, Object>> dbRet = PosDbManager.executeSql("select status from ruletb where uuid='" + ruleUUID + "'");
+        if (dbRet.size() == 1) {
+            ruleEnabled = dbRet.get(0).get("STATUS").toString().compareTo("enable") == 0 ? "checked" : "unchecked";
+        }
         return RULEASSIGN;
     }
 
@@ -106,6 +116,10 @@ public class RuleAction extends AjaxActionSupport {
         String ruleUUID = getParameter("ruleUUID").toString();
         String[] bankUUID = getParameter("bankList").toString().split(",");
 
+        PosDbManager.executeUpdate("update ruletb set status='" +
+                (getParameter("ruleEnabled") != null ? "enable" : "disable")
+                + "' where uuid='" + ruleUUID + "'"
+        );
         Map parametMap = new HashMap();
         for (int index = 0; index < bankUUID.length; ++index) {
             parametMap.clear();

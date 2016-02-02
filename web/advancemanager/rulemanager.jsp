@@ -63,7 +63,6 @@
                             <th><s:text name="rule.mcc" /></th>
                             <th><s:text name="rule.ruleusefre" /></th>
                             <th><s:text name="rule.ruleuseinterval" /></th>
-                            <th><s:text name="global.status" /></th>
                             <th><s:text name="global.operation"/></th>
                         </tr>
                         </thead>

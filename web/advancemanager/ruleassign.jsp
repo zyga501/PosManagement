@@ -29,8 +29,9 @@
                 <div class="panel panel-default" style="float:left;width: 500px;">
                     <div class="panel-header">
                         <input type="hidden" name="ruleUUID" value="<s:property value="ruleUUID" />">
-                        <span>编号：</span><s:property value="ruleUUID" escape="false" />  &nbsp; &nbsp; <input type="checkbox"
-                                                                                                             id="chk1"><label  for="chk1">启用</label>
+                        <span>编号：</span><s:property value="ruleUUID" escape="false" />  &nbsp; &nbsp;
+                        <input type="checkbox" id="ruleEnabled" name="ruleEnabled" <s:property value="ruleEnabled" escape="false" />>
+                        <label for="ruleEnabled">启用</label>
                     </div>
                     <div class="panel-body">
                         <div  style="float:left;width:33%;">

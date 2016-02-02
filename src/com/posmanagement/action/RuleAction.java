@@ -104,25 +104,31 @@ public class RuleAction extends AjaxActionSupport {
 
     public String AssignRule() throws Exception {
         String ruleUUID = getParameter("ruleUUID").toString();
-        String bankUUID = getParameter("bankList").toString();
-        String salemanUUID = getParameter("salemanList").toString();
+        String[] bankUUID = getParameter("bankList").toString().split(",");
 
         Map parametMap = new HashMap();
-        parametMap.put(1, ruleUUID);
-        parametMap.put(2, bankUUID);
-        try {
-            PosDbManager.executeUpdate("insert into rulebank(ruleuuid, bankuuid) values(?,?)", (HashMap<Integer, Object>) parametMap);
-        }
-        catch (Exception exception) {
+        for (int index = 0; index < bankUUID.length; ++index) {
+            parametMap.clear();
+            parametMap.put(1, ruleUUID);
+            parametMap.put(2, bankUUID[index]);
+            try {
+                PosDbManager.executeUpdate("insert into rulebank(ruleuuid, bankuuid) values(?,?)", (HashMap<Integer, Object>) parametMap);
+            }
+            catch (Exception exception) {
 
+            }
         }
-        parametMap.clear();
-        parametMap.put(1, ruleUUID);
-        parametMap.put(2, salemanUUID);
-        try {
-            PosDbManager.executeUpdate("insert into rulesaleman(ruleuuid, salemanuuid) values(?, ?)", (HashMap<Integer, Object>)parametMap);
-        }
-        catch (Exception excetipn) {
+
+        String[] salemanUUID = getParameter("salemanList").toString().split(",");
+        for (int index = 0; index < salemanUUID.length; ++index) {
+            parametMap.clear();
+            parametMap.put(1, ruleUUID);
+            parametMap.put(2, salemanUUID[index]);
+            try {
+                PosDbManager.executeUpdate("insert into rulesaleman(ruleuuid, salemanuuid) values(?, ?)", (HashMap<Integer, Object>)parametMap);
+            }
+            catch (Exception excetipn) {
+            }
         }
 
         return AjaxActionComplete();

@@ -137,18 +137,12 @@
         var salemanlist =  $("#selectedsalesmanList option").map(function(){return $(this).val();}).get().join(",");
         $.ajax({
             type: 'post',
-            url: 'Rule!ruleAssign',
+            url: 'Rule!AssignRule',
             dataType:"json",
-            data:$("form").serialize()+'&banklist='+banklist+'&salemanlist='+salemanlist,
+            data:$("form").serialize()+'&bankList='+banklist+'&salemanList='+salemanlist,
             success: function (data) {
-                var json = eval("(" + data + ")");
-                if (json.errorMessage != null) {
-                    $('#Message').html(json.errorMessage);
-                }
-                else {
-                    parent.layer.msg("<s:text name="global.dosuccess" />");
-                    parent.layer.close(parent.layer.getFrameIndex(window.name));
-                }
+                parent.layer.msg("<s:text name="global.dosuccess" />");
+                parent.layer.close(parent.layer.getFrameIndex(window.name));
             }
         })
     }

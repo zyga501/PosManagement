@@ -105,6 +105,12 @@ public class UserAction extends AjaxActionSupport{
             }
 
             String userID = (dbRet.get(0).get("UID").toString());
+            if (UserUtils.isSalesman(userID)) {
+                if (PosDbManager.executeSql("select 1 from salesmantb where status='enable' and uid='" + userID + "'").size() < 1) {
+                    loginErrorMessage = getText("UserAction.UserStausError");
+                    return LOGINFAILURE;
+                }
+            }
             super.setUserID(userID);
             super.setUserName(userName);
             super.setAttribute("userNick", dbRet.get(0).get("UNICK").toString());

@@ -20,9 +20,12 @@
         function setval(v){
             $('#swinggeneralsummary').html(v);
         }
+        function explist(){
+            alert('开发中。。。稍等');
+        }
     </script>
 </head>
-<body style="overflow:hidden">
+<body align="center" >
 <div class="panel panel-default">
     <div class="panel-header " align="center">
         <div class="row cl panel-header ">
@@ -79,8 +82,8 @@
     </div>
 </div>
 <div class="cl pd-5 bg-1 bk-gray mt-20">
-	 <span style="float:left;">共有数据：<strong><s:property
-             value="reserveList.size"/></strong> 条</span>
+	 <span style="float:left;">共<strong><span id="cnt"></span></strong> 笔，金额合计<strong><span id="amount">
+     </span></strong>  扣款<strong><span id="charge"></span></strong>到账<strong><span id="inbank"></span></strong></span>
 		<span style="float:right;">
 		<a href="javascript:void(0);" title="<s:text name="global.exportdate" />"
            class="btn btn-danger radius size-MINI" onclick="explist();"> <i
@@ -98,11 +101,11 @@
             <table class="table table-border table-bordered table-bg table-hover table-sort">
                 <thead>
                 <tr class="text-c">
-                    <th><s:text name="swinggengral.totalcount"/></th>
-                    <th><s:text name="swinggengral.totalamount"/></th>
-                    <th><s:text name="swinggengral.totalcharge"/></th>
-                    <th><s:text name="swinggengral.saleman"/></th>
-                    <th><s:text name="swinggengral.doer"/></th>
+                    <th><s:text name="repaydetail.thedate"/></th>
+                    <th><s:text name="posmanager.posname"/></th>
+                    <th><s:text name="posmanager.rate"/></th>
+                    <th><s:text name="swingcardsummary.amount"/></th>
+                    <th><s:text name="swinggengral.charge"/></th>
                 </tr>
                 </thead>
                 <tbody id="swinggeneralsummary">
@@ -127,6 +130,10 @@
                 }
                 else {
                     setval(json.swingGeneral);
+                    $('#cnt').html(json.cnt);
+                    $('#amount').html(json.amount);
+                    $('#charge').html(json.charge);
+                    $('#inbank').html(json.inbank);
                 }
                 laypage({
                     cont: 'navigatediv',

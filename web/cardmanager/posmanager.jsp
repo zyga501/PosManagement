@@ -29,17 +29,19 @@
                 content: "./cardmanager/addpos.jsp"
             });
         }
-        function editpos() {
+        function editpos(val) {
+            if (val==undefined) return;//不知道为什么执行上面的addcard也触发这个事件
             var index = layer.open({
                 type: 2,
                 title: "<s:text name="global.edit"/>",
                 fix:false,area: ['310px', '500px'],
                 maxmin: false,
-                content: "POS!FetchPOS?"+$("form").serialize()
+                content: "POS!FetchPOS?newid="+val+'&'+$("form").serialize()
             });
         }
         function refreshposList(posList) {
             $('#posList').html(posList);
+            init();
         }
     </script>
 </head>
@@ -54,8 +56,6 @@
                 <td><input type="text" name="posserver" placeholder="<s:text name="posmanager.posserver"/>" class="input-text radius size-s"></td>
                 <td><a href="javascript:void(0);" class="btn btn-primary  radius size-S " onclick="dosearch()">
                     <s:text name="global.search"/></a><span style="float:right;">
-            <a href="javascript:void(0);" class="btn btn-warning  radius size-S " onclick="editpos()">
-                <s:text name="global.edit"/></a></span> <span style="float:right;">
             <a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addpos()">
                 <s:text name="global.add"/></a></span></td></tr></table></form></div></div>
         <div id="navigatediv"></div>
@@ -65,7 +65,6 @@
                     <table class="table table-border table-bordered table-bg table-hover table-sort">
                         <thead>
                         <tr class="text-c">
-                            <th><s:text name="global.sequence"/></th>
                             <th><s:text name="posmanager.posname"/></th>
                             <th><s:text name="posmanager.industryname"/></th>
                             <th><s:text name="posmanager.rate"/></th>
@@ -115,6 +114,12 @@
             })
         }
     }) );
+
+    function init(){
+        $("tr").click(function() {
+            editpos($(this).attr("value"));
+        })
+    }
 
     function dosearch() {
         $.ajax({

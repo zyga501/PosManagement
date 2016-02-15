@@ -24,6 +24,7 @@ public class RepayUI extends WebUI {
                     .addElement("td" , dbRet.get(index).get("REPAYYEAR").toString() + "/" +
                             dbRet.get(index).get("REPAYMONTH").toString())
                     .addElement("td" , StringUtils.formatCardNO(dbRet.get(index).get("CARDNO").toString()))
+                    .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("LASTREPAYMENTDATE")))
                     .addElement("td" , dbRet.get(index).get("CARDMASTER").toString())
                     .addElement("td" , dbRet.get(index).get("TRADEMONEY").toString())
                     .addElement("td", dbRet.get(index).get("UNFINISHED").toString().equals("0") ?
@@ -36,7 +37,9 @@ public class RepayUI extends WebUI {
                                             .addAttribute("class", "btn radius")
                                             .addAttribute("onclick", "clickDetail('" + dbRet.get(index).get("CARDNO") +
                                                     "','" + dbRet.get(index).get("BILLUUID") + "')")
-                            )
+                            ).addElement("span", "刷<b>"+StringUtils.convertNullableString(dbRet.get(index).get("FINISHED"))+
+                                    "</b>,未<b>"+StringUtils.convertNullableString(dbRet.get(index).get("UNFINISHED"))+"</b>,共<b>"+
+                                    StringUtils.convertNullableString(dbRet.get(index).get("TOTALCOUNT"))+"</b>笔")
                     );
         }
         return htmlString;
@@ -66,7 +69,8 @@ public class RepayUI extends WebUI {
                             .addAttribute("title" ,StringUtils.convertNullableString(dbRet.get(index).get("TRADESTATUS")).equals("enable")?"已刷":"未刷")
                             .addAttribute("datav", StringUtils.convertNullableString(dbRet.get(index).get("ID")))
                             .addAttribute("value" ,StringUtils.convertNullableString(dbRet.get(index).get("TRADESTATUS")).equals("enable")?"Y":"N")
-                            .addAttribute("onclick", "clickrepay(this,'" + StringUtils.convertNullableString(dbRet.get(index).get("ID")) + "')")));
+                            .addAttribute("onclick", "clickrepay(this,'" + StringUtils.convertNullableString(dbRet.get(index).get("ID")) + "')"))
+                    );
         }
         return htmlString;
     }
@@ -88,12 +92,15 @@ public class RepayUI extends WebUI {
         return PosDbManager.executeSql("SELECT \n" +
                 "SUBSTR(billtb.lastrepaymentdate,1,4) repayyear, \n" +
                 "SUBSTR(billtb.lastrepaymentdate,6,2) repaymonth, \n" +
+                "billtb.lastrepaymentdate, \n" +
                 "billtb.uuid billuuid, \n" +
                 "repaytb.thedate, \n" +
                 "cardtb.cardno, \n" +
                 "cardtb.cardmaster, \n" +
+                "count(*) totalcount, \n" +
                 "SUM(repaytb.trademoney) trademoney, \n" +
-                "(COUNT(1) - sum(case when tradestatus='enable' then 1 else 0 END)) unfinished \n" +
+                "(COUNT(1) - sum(case when tradestatus='enable' then 1 else 0 END)) unfinished, \n" +
+                "(sum(case when tradestatus='enable' then 1 else 0 END)) finished \n" +
                 "FROM repaytb \n" +
                 "INNER JOIN cardtb ON cardtb.cardno = repaytb.cardno \n" +
                 "INNER JOIN billtb ON repaytb.billuuid = billtb.uuid AND repaytb.cardno = billtb.cardno \n" +
@@ -104,7 +111,7 @@ public class RepayUI extends WebUI {
                 "repaytb.cardno \n" +
                 "ORDER BY \n" +
                 "billtb.lastrepaymentdate desc, \n" +
-                "repaytb.thedate desc\n"
+                "repaytb.tradetime desc\n"
                 + limitstr);
     }
 
@@ -119,6 +126,7 @@ public class RepayUI extends WebUI {
                 "repaytb.id,\n" +
                 "SUBSTR(billtb.lastrepaymentdate,1,4) repayyear, \n" +
                 "SUBSTR(billtb.lastrepaymentdate,6,2) repaymonth, \n" +
+                "billtb.lastrepaymentdate, \n" +
                 "repaytb.cardno, \n" +
                 "cardtb.cardmaster, \n" +
                 "repaytb.trademoney, \n" +
@@ -132,8 +140,8 @@ public class RepayUI extends WebUI {
                 "INNER JOIN billtb ON repaytb.billuuid = billtb.uuid AND repaytb.cardno = billtb.cardno \n" +
                 whereSql +
                 " ORDER BY \n" +
-                "repaytb.tradestatus,\n" +
-                "repaytb.thedate");
+                "repaytb.tradestatus asc,\n" +
+                "repaytb.tradetime desc");
     }
 
     public int fetchRepayPageCount() throws Exception {

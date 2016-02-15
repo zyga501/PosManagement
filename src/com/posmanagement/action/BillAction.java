@@ -80,7 +80,7 @@ public class BillAction extends AjaxActionSupport {
                 para.put(1, billamount);
                 para.put(2, billamount);
                 para.put(3,billNO);
-                sqlString ="update billtb a inner join cardtb b on  a.cardno=b.cardno set a.billamount=?,a.canuseamount=b.creditamount-? where a.UUID=? ";
+                sqlString ="update billtb a inner join cardtb b on  a.cardno=b.cardno set a.billamount=?,a.canuseamount=b.creditamount-? where status<>'enable' and  a.UUID=? ";
             } else {
                 return "";
             }
@@ -188,6 +188,14 @@ public class BillAction extends AjaxActionSupport {
                         SQLUtils.ConvertToSqlString("%" + getParameter("salesman") + "%"), !StringUtils.convertNullableString(getParameter("salesman")).trim().isEmpty()));
                 add(new SQLUtils.WhereCondition("billtb.billdate", "like",
                         SQLUtils.ConvertToSqlString("%" + getParameter("billdate") + "%"), !StringUtils.convertNullableString(getParameter("billdate")).trim().isEmpty()));
+//                if (StringUtils.convertNullableString(getParameter("billstatus")).trim().equals("finished")){
+//                    add(new  SQLUtils.WhereCondition("billtb.swingcount", "=","billtb.swungcount"));
+//                    add(new  SQLUtils.WhereCondition("billtb.repaycount", "=","billtb.repayedcount"));
+//                }else if (StringUtils.convertNullableString(getParameter("billstatus")).trim().equals("unfinished")) {
+//                    add(new  SQLUtils.WhereCondition("(billtb.swingcount = billtb.swungcount"," or","billtb.repaycount =billtb.repayedcount) "));
+//                }
+//                else {
+//                }
             }
         };
 

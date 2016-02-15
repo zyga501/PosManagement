@@ -41,9 +41,9 @@
             <td><input type="text" name="bankname" placeholder="<s:text name="cardmanager.bankname"/>" class="input-text radius size-s"></td>
             <td><input type="text" name="cardmaster" placeholder="<s:text name="swingcardsummary.cardmaster"/>" class="input-text radius size-s"></td>
             <td><select name="SWINGSTATUS" placeholder="<s:text name="swingcardsummary.status"/>">
-                <option value=""></option>
-                <option value="finished"><s:text name="swingcardsummary.swingfinished"/></option>
-                <option value="unfinished"><s:text name="swingcardsummary.swingunfinished"/></option>
+                <option value="all"><s:text name="global.alldata"/></option></option>
+                <option value="finished"><s:text name="global.finished"/></option>
+                <option value="unfinished"><s:text name="global.unfinished"/></option>
             </select></td>
             <td><a href="javascript:void(0);" class="btn btn-primary  radius size-S " onclick="dosearch()">  <s:text name="global.search"/></a>
             </td></tr></table></form></div></div>
@@ -56,6 +56,7 @@
                     <tr class="text-c">
                         <th><s:text name="repaysummary.thedate"/></th>
                         <th><s:text name="repaysummary.cardno"/></th>
+                        <th><s:text name="repaysummary.lastrepaymentdate"/></th>
                         <th><s:text name="repaysummary.cardmaster"/></th>
                         <th><s:text name="repaysummary.amount"/></th>
                         <th><s:text name="repaysummary.status"/></th>

@@ -72,11 +72,11 @@
             <td><input type="text" name="bankname" placeholder="<s:text name="cardmanager.bankname"/>" class="input-text radius size-s"></td>
             <% if (request.getSession().getAttribute("roleId").equals("e664d6f3-85f8-4bd6-bcb8-c4e053732b29")){ %>
             <td><input type="text" name="salesman" placeholder="<s:text name="billmanager.salesman"/>" class="input-text radius size-s"></td><%}%>
-            <!--td><select name="billstatus" placeholder="< s : text name="global.status"/>">
-                <option value=""></option>
-                <option value="finished">< s : text name="swingcardsummary.swingfinished"/></option>
-                <option value="unfinished">< s : text name="swingcardsummary.swingunfinished"/></option>
-            </select></td-->
+            <td><select name="billstatus" placeholder="<s:text name="global.status"/>">
+                <option value="all"><s:text name="global.alldata"/></option>
+                <option value="finished"><s:text name="global.finished"/></option>
+                <option value="unfinished"><s:text name="global.unfinished"/></option>
+            </select></td>
             <td><a href="javascript:void(0);" class="btn btn-primary  radius size-S " onclick="dosearch()"><s:text name="global.search"/></a>
             </td>
         <td><a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addBill()">
@@ -182,6 +182,7 @@ $().ready( function(){
         }
     })}
 )
+
     function  clickbtbill(obj){
         var name = prompt("输入新的金额",obj.innerHTML);
         if (name==null) return ;

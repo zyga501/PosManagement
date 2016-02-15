@@ -166,7 +166,12 @@ public class StatisticsAction extends AjaxActionSupport{
         StatisticsUI statisticsUI = new StatisticsUI(super.getUserID());
         statisticsUI.setUiConditions(uiConditions);
         try {
-            map.put("pagecount",statisticsUI.fetchSwingGeneralpagecount());
+            float[] rt = statisticsUI.fetchSwingGeneralpagecount();
+            map.put("pagecount",rt[0]);
+            map.put("cnt",rt[1]);
+            map.put("amount",rt[2]);
+            map.put("charge",rt[3]);
+            map.put("inbank",rt[2]-rt[3]);
             int curr = Integer.parseInt(null==getParameter("currpage")?"1":getParameter("currpage").toString());
             String  v=statisticsUI.generateSummary(curr);
             map.put("swingGeneral",v);

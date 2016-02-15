@@ -79,6 +79,7 @@ public class BillUI extends WebUI {
                 "SELECT \n" +
                 "billtb.uuid,\n" +
                 "billtb.cardno,\n" +
+                "cardtb.billdate as cardbilldate,\n" +
                 "billtb.billamount,\n" +
                 "billtb.canuseamount,\n" +
                 "billtb.`status`,\n" +
@@ -108,7 +109,7 @@ public class BillUI extends WebUI {
                 "billtb.cardno,\n" +
                 "billtb.billdate " +
                 "ORDER BY " +
-                "billtb.billdate DESC " + limitSql);
+                "billtb.cardbilldate asc,billtb.billdate DESC " + limitSql);
     }
 
     public int fetchBillPageCount() throws Exception {
@@ -121,13 +122,13 @@ public class BillUI extends WebUI {
         }
 
         ArrayList<HashMap<String, Object>> resultMap =  PosDbManager.executeSql("SELECT count(*) CNT\n" +
-                "FROM\n" +
-                "billtb\n" +
-                "INNER JOIN banktb ON banktb.uuid = billtb.bankuuid\n" +
-                "LEFT JOIN userinfo ON userinfo.uid = billtb.salesmanuuid\n" +
-                whereSql +
-                "ORDER BY\n" +
-                "billtb.billdate DESC");
+           "FROM\n" +
+                   "billtb\n" +
+                   "INNER JOIN banktb ON banktb.uuid = billtb.bankuuid\n" +
+                   "LEFT JOIN userinfo ON userinfo.uid = billtb.salesmanuuid\n" +
+                          whereSql +
+                   "ORDER BY\n" +
+                   "billtb.billdate DESC ");
         if (resultMap.size()<=0) {
             return 0;
         }

@@ -23,14 +23,7 @@ public class CardUI extends WebUI {
                     UIContainer UI = new UIContainer("tr");
                     UI.addAttribute("class", "text-c odd")
                     .addAttribute("role", "row")
-                    .addElement(new UIContainer("td")
-                        .addElement(
-                            new UIContainer("input")
-                                    .addAttribute("type", "radio")
-                                    .addAttribute("name", "newid")
-                                    .addAttribute("value", dbRet.get(index).get("CARDNO").toString())
-                                    .addAttribute("checked", "checked",false)
-                        ))
+                    .addAttribute("value", dbRet.get(index).get("CARDNO").toString())
                     .addElement("td", StringUtils.formatCardNO(cardstr))
                     .addElement("td", dbRet.get(index).get("CREDITAMOUNT").toString())
                     .addElement("td", dbRet.get(index).get("BILLDATE").toString())

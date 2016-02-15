@@ -11,6 +11,7 @@
           <element id="library" level="project" name="Struts 2-2.3.20.1" />
           <element id="library" level="project" name="mysql-connector-java-5.1.10-bin" />
           <element id="library" level="project" name="jxl-2.6.9" />
+          <element id="file-copy" path="$PROJECT_DIR$/web/WEB-INF/lib/mybatis-3.3.1.jar" />
         </element>
       </element>
       <element id="directory" name="images">

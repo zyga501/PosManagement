@@ -23,16 +23,16 @@ public class StatisticsUI extends WebUI {
             htmlString += new UIContainer("tr")
                     .addAttribute("class", "text-c odd")
                     .addAttribute("role", "row")
-                    .addElement("td", dbRet.get(index).get("TOTALCOUNT").toString())
-                    .addElement("td", dbRet.get(index).get("TOTALAMOUNT").toString())
-                    .addElement("td", dbRet.get(index).get("TOTALCHARGE").toString())
-                    .addElement("td", dbRet.get(index).get("SALEMAN").toString())
-                    .addElement("td", dbRet.get(index).get("DOER").toString());
+                    .addElement("td", dbRet.get(index).get("REALSDATETM").toString())
+                    .addElement("td", dbRet.get(index).get("POSNAME").toString())
+                    .addElement("td", dbRet.get(index).get("RATE").toString())
+                    .addElement("td", dbRet.get(index).get("AMOUNT").toString())
+                    .addElement("td", dbRet.get(index).get("CHARGE").toString()) ;
         }
         return htmlString;
     }
 
-    public int fetchSwingGeneralpagecount() throws Exception {
+    public float[] fetchSwingGeneralpagecount() throws Exception {
         String whereSql = SQLUtils.BuildWhereCondition(uiConditions_);
         if (!whereSql.isEmpty()) {
             whereSql = " where " + whereSql;
@@ -41,20 +41,25 @@ public class StatisticsUI extends WebUI {
         if (!UserUtils.isAdmin(userID_))
             whereSql += " and  (salemantb.uid='"+userID_+"' " +
                     " or userinfo.uid ='"+userID_+"') ";
-
-        ArrayList<HashMap<String, Object>> resultMap = PosDbManager.executeSql("SELECT count(*) as cnt\n" +
+        float[] rt = new float[4];
+        ArrayList<HashMap<String, Object>> resultMap = PosDbManager.executeSql("SELECT count(*) as cnt,\n" +
+                "sum(swingcard.amount) as amount, \n"+
+                "sum(swingcard.charge) as charge \n"+
                 "FROM\n" +
                 "swingcard\n" +
                 "INNER JOIN userinfo ON swingcard.userid = userinfo.uid \n" +
                 "INNER JOIN postb on postb.uuid=swingcard.posuuid  \n" +
                 "INNER JOIN userinfo salemantb on postb.salesmanuuid=salemantb.uid  \n" +
-                whereSql +
-                " GROUP BY\n" +
-                "userinfo.unick\n");
+                whereSql );
         if (resultMap.size()<=0) {
-            return 0;
+            rt[0]=0;
+            return rt;
         }
-        return resultMap.size()/ WebUI.DEFAULTITEMPERPAGE + 1;
+        rt[0]=Integer.parseInt(resultMap.get(0).get("CNT").toString())/ WebUI.DEFAULTITEMPERPAGE + 1;
+        rt[1]=Integer.parseInt(resultMap.get(0).get("CNT").toString());
+        rt[2]=Float.parseFloat(resultMap.get(0).get("AMOUNT").toString());
+        rt[3]=Float.parseFloat(resultMap.get(0).get("CHARGE").toString());
+        return rt;
     }
 
     private ArrayList<HashMap<String, Object>>  fetchSwingGeneralSummary(int pageIndex) throws Exception {
@@ -67,16 +72,15 @@ public class StatisticsUI extends WebUI {
         if (!UserUtils.isAdmin(userID_))
             whereSql += " and  (salemantb.uid='"+userID_+"' " +
                     " or userinfo.uid ='"+userID_+"') ";
-        return PosDbManager.executeSql("SELECT  sum(swingcard.amount) as totalamount,count(*) as totalcount," +
-                "sum(swingcard.charge) as totalcharge,salemantb.unick as saleman,userinfo.unick as doer  " +
+        return PosDbManager.executeSql("SELECT   swingcard.*,postb.*,AMOUNT-charge INBANK,salemantb.unick as saleman," +
+                "userinfo.unick as doer,ratetb.rate  " +
                 "FROM\n" +
                         "swingcard\n" +
                         "INNER JOIN userinfo ON swingcard.userid = userinfo.uid \n" +
                         "INNER JOIN postb on postb.uuid=swingcard.posuuid  \n" +
                         "INNER JOIN userinfo salemantb on postb.salesmanuuid=salemantb.uid  \n" +
-                        whereSql +
-                        " GROUP BY\n" +
-                        "userinfo.unick\n" +limitSql);
+                        "left JOIN ratetb on ratetb.uuid=postb.rateuuid  \n" +
+                        whereSql +limitSql);
     }
     private String userID_;
 }

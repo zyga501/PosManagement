@@ -31,18 +31,20 @@
             });
             layer.full(index);
         }
-        function editcard() {
+        function editcard(val) {
+            if (val==undefined) return;//不知道为什么执行上面的addcard也触发这个事件
             var index = layer.open({
                 type: 2,
                 title: "<s:text name="global.edit"/>",
                 fix: true,
                 maxmin: false,
-                content: "Card!FetchCard?" + $("form").serialize()
+                content: "Card!FetchCard?newid=" + val//$ ("form").serialize()
             });
             layer.full(index);
         }
         function refreshcardList(cardList) {
             $('#cardList').html(cardList);
+            init();
         }
     </script>
 </head>
@@ -57,9 +59,7 @@
                 <% if (request.getSession().getAttribute("roleId").equals("e664d6f3-85f8-4bd6-bcb8-c4e053732b29")){ %>
                 <td><input type="text" name="salesman" placeholder="<s:text name="cardmanager.salesman"/>" class="input-text radius size-s"></td><%}%>
                 <td><a href="javascript:void(0);" class="btn btn-primary  radius size-S " onclick="dosearch()">
-                    <s:text name="global.search"/></a><span style="float:right;">
-            <a href="javascript:void(0);" class="btn btn-warning  radius size-S " onclick="editcard()">
-                <s:text name="global.edit"/></a><a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="
+                    <s:text name="global.search"/></a><span style="float:right;"> <a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="
             addcard();"><s:text name="global.add"/></a></span></td></tr></table></form></div></div>
         <div id="navigatediv"></div>
         <div class="panel-body" id="parentIframe" >
@@ -68,7 +68,6 @@
                     <table class="table table-border table-bordered table-bg table-hover table-sort">
                         <thead>
                         <tr class="text-c">
-                            <th><s:text name="global.sequence"/></th>
                             <th><s:text name="cardmanager.cardno"/></th>
                             <th><s:text name="cardmanager.creditamount"/></th>
                             <th><s:text name="cardmanager.billdate"/></th>
@@ -117,7 +116,11 @@
                 })
             }
         })});
-
+    function init(){
+        $("tr").click(function() {
+            editcard($(this).attr("value"));
+        })
+    }
     function dosearch() {
         $.ajax({
             type: 'post',

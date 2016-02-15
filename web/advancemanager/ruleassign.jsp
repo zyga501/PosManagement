@@ -29,8 +29,9 @@
                 <div class="panel panel-default" style="float:left;width: 500px;">
                     <div class="panel-header">
                         <input type="hidden" name="ruleUUID" value="<s:property value="ruleUUID" />">
-                        <span>编号：</span><s:property value="ruleUUID" escape="false" />  &nbsp; &nbsp; <input type="checkbox"
-                                                                                                             id="chk1"><label  for="chk1">启用</label>
+                        <span>编号：</span><s:property value="ruleUUID" escape="false" />  &nbsp; &nbsp;
+                        <input type="checkbox" id="ruleEnabled" name="ruleEnabled" <s:property value="ruleEnabled" escape="false" />>
+                        <label for="ruleEnabled">启用</label>
                     </div>
                     <div class="panel-body">
                         <div  style="float:left;width:33%;">
@@ -137,18 +138,12 @@
         var salemanlist =  $("#selectedsalesmanList option").map(function(){return $(this).val();}).get().join(",");
         $.ajax({
             type: 'post',
-            url: 'Rule!ruleAssign',
+            url: 'Rule!AssignRule',
             dataType:"json",
-            data:$("form").serialize()+'&banklist='+banklist+'&salemanlist='+salemanlist,
+            data:$("form").serialize()+'&bankList='+banklist+'&salemanList='+salemanlist,
             success: function (data) {
-                var json = eval("(" + data + ")");
-                if (json.errorMessage != null) {
-                    $('#Message').html(json.errorMessage);
-                }
-                else {
-                    parent.layer.msg("<s:text name="global.dosuccess" />");
-                    parent.layer.close(parent.layer.getFrameIndex(window.name));
-                }
+                parent.layer.msg("<s:text name="global.dosuccess" />");
+                parent.layer.close(parent.layer.getFrameIndex(window.name));
             }
         })
     }

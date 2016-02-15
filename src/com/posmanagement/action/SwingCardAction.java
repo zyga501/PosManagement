@@ -70,16 +70,18 @@ public class SwingCardAction extends AjaxActionSupport {
                     "end)\n" +
                     "end)" +
                     " where id=?",(HashMap<Integer, Object>)parameterMap)) {
+                String salemanUUID = super.getUserID();
+                if (!UserUtils.isSalesman(salemanUUID)) {
+                    parameterMap.clear();
+                    parameterMap.put(1, salemanUUID);
+                    ArrayList<HashMap<String, Object>> salemanRet = PosDbManager.executeSql("select salesmanuuid from tellertb where uid=?", (HashMap<Integer, Object>)parameterMap);
+                    if (salemanRet.size() > 0) {
+                        salemanUUID = salemanRet.get(0).get("SALEMANUUID").toString();
+                    }
+                }
                 parameterMap.clear();
                 parameterMap.put(1, getParameter("swingId"));
-                parameterMap.put(2, super.getUserID());
-                String whereSql = new String();
-                if (UserUtils.isSalesman(super.getUserID())) {
-                    whereSql = "where salesmanuuid=?";
-                }
-                else {
-                    whereSql = "where salesmanuuid=(select salesmanuuid from tellertb where uid=?)";
-                }
+                parameterMap.put(2, salemanUUID);
                 if (PosDbManager.executeUpdate("update assettb\n" +
                         "set balance=balance +\n" +
                         "(SELECT swingcard.amount - swingcard.charge\n" +
@@ -87,9 +89,37 @@ public class SwingCardAction extends AjaxActionSupport {
                         "swingcard\n" +
                         "where id = ?\n" +
                         ")\n" +
-                        whereSql, (HashMap<Integer, Object>)parameterMap)) {
+                        "where salesmanuuid=?", (HashMap<Integer, Object>)parameterMap)) {
                     map.put("successMessage", getText("global.actionSuccess"));
                     map.put("swingCardDetail", new SwingCardUI(super.getUserID()).generateDetail(getParameter("cardNO").toString(), getParameter("billUUID").toString()));
+                    parameterMap.clear();
+                    parameterMap.put(1, getParameter("swingId"));
+                    ArrayList<HashMap<String, Object>> swingRet = PosDbManager.executeSql("SELECT amount, charge, postb.posname from swingcard LEFT JOIN postb on swingcard.posuuid = postb.uuid where id=?", (HashMap<Integer, Object>)parameterMap);
+                    parameterMap.clear();
+                    parameterMap.put(1, super.getUserID());
+                    ArrayList<HashMap<String, Object>> assetRet = PosDbManager.executeSql("SELECT balance from assettb where salesmanuuid=?", (HashMap<Integer, Object>)parameterMap);
+                    if (swingRet.size() > 0 && assetRet.size() > 0) {
+                        double swingAmount = Double.parseDouble(swingRet.get(0).get("AMOUNT").toString());
+                        double charge = Double.parseDouble(swingRet.get(0).get("CHARGE").toString());
+                        String posName = swingRet.get(0).get("POSNAME").toString();
+                        double balance = Double.parseDouble(assetRet.get(0).get("BALANCE").toString());
+                        parameterMap.clear();
+                        parameterMap.put(1, swingAmount);
+                        parameterMap.put(2, balance + charge);
+                        parameterMap.put(3, posName);
+                        parameterMap.put(4, salemanUUID);
+                        PosDbManager.executeUpdate("insert into posmanagement.assetflowtb(time, type, amount, balance, remark, salemanuuid)\n" +
+                                        "VALUES(NOW(), '结算到账',?, ?, CONCAT(?,'结算款'), ?);\n"
+                                , (HashMap<Integer, Object>)parameterMap);
+                        parameterMap.clear();
+                        parameterMap.put(1, -charge);
+                        parameterMap.put(2, balance);
+                        parameterMap.put(3, posName);
+                        parameterMap.put(4, salemanUUID);
+                        PosDbManager.executeUpdate("insert into posmanagement.assetflowtb(time, type, amount, balance, remark, salemanuuid)\n" +
+                                        "VALUES(NOW(), '刷卡扣费',?, ?, CONCAT(?,'费率扣款'), ?);"
+                                , (HashMap<Integer, Object>)parameterMap);
+                    }
                 }
             }
         }

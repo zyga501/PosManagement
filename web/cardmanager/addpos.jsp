@@ -192,8 +192,8 @@
                     <td><s:text name="global.status"/></td><td><input name="status" type="checkbox"  <s:if  test="posManager.status =='enable'">checked</s:if><s:else></s:else> > </td>
                 </tr>
                 <tr class="text-c">
-                    <td><s:text name="posmanager.salesman"/></td><td>
-                    <input name="salesman" type="text" readonly  value="<s:property value="posManager.salesman"/>" placeholder="<s:text name="posmanager.salesman" />" class="input-text size-S">
+                    <td><s:text name="posmanager.saleman"/></td><td>
+                    <input name="saleman" type="text" readonly  value="<s:property value="posManager.saleman"/>" placeholder="<s:text name="posmanager.saleman" />" class="input-text size-S">
                 </tr>
             </table>
         </div>

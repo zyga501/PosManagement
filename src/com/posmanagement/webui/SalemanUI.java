@@ -33,6 +33,8 @@ public class SalemanUI extends WebUI {
             return new String("");
 
         UIContainer uiContainer = new UIContainer();
+        uiContainer.addElement(new UIContainer("option","")
+                .addAttribute("value", ""));
         for (int index = 0; index < dbRet.size(); ++index) {
             if (dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0)
             {
@@ -124,16 +126,16 @@ public class SalemanUI extends WebUI {
     private ArrayList<HashMap<String, Object>> fetchSalemanInfo(String salemanID) throws Exception {
         Map parametMap = new HashMap<Integer, Object>();
         parametMap.put(1, salemanID);
-        return PosDbManager.executeSql("select * from userinfo a,salesmantb b where a.uid=b.uid and b.uid=?",
+        return PosDbManager.executeSql("select * from userinfo a,salemantb b where a.uid=b.uid and b.uid=?",
                 (HashMap<Integer, Object>) parametMap);
     }
 
     private ArrayList<HashMap<String, Object>> fetchSalemanList() throws Exception {
-        return PosDbManager.executeSql("select * from userinfo a,salesmantb b where a.uid=b.uid");
+        return PosDbManager.executeSql("select * from userinfo a,salemantb b where a.uid=b.uid");
     }
 
     private ArrayList<HashMap<String, Object>> fetchSalemanList(String ruleUUID) throws Exception {
-        return PosDbManager.executeSql("select * from userinfo a,salesmantb b,rulesaleman c where a.uid=b.uid " +
+        return PosDbManager.executeSql("select * from userinfo a,salemantb b,rulesaleman c where a.uid=b.uid " +
                       "and b.uid=c.salemanuuid and c.ruleuuid='"+ruleUUID+"'");
     }
 }

@@ -60,7 +60,7 @@ public class BillUI extends WebUI {
             whereSql = " where " + whereSql;
         }
         if (!UserUtils.isAdmin(userID_)) {
-            whereSql += " and billtb.salesmanuuid='"+userID_+"'";
+            whereSql += " and billtb.salemanuuid='"+userID_+"'";
         }
 
         String limitSql = "limit " + (pageIndex - 1) * DEFAULTITEMPERPAGE + "," + DEFAULTITEMPERPAGE;
@@ -91,7 +91,7 @@ public class BillUI extends WebUI {
                 "billtb\n" +
                 "INNER JOIN banktb ON banktb.uuid = billtb.bankuuid \n" +
                 "INNER JOIN cardtb ON cardtb.cardno = billtb.cardno \n" +
-                "inner JOIN userinfo ON userinfo.uid = cardtb.salesmanuuid\n" +
+                "inner JOIN userinfo ON userinfo.uid = cardtb.salemanuuid\n" +
                 whereSql +
                 " GROUP BY\n" +
                 "billtb.cardno,\n" +
@@ -118,14 +118,14 @@ public class BillUI extends WebUI {
             whereSql = " where " + whereSql;
         }
         if (!UserUtils.isAdmin(userID_)) {
-            whereSql += "and billtb.salesmanuuid='"+userID_+"'";
+            whereSql += "and billtb.salemanuuid='"+userID_+"'";
         }
 
         ArrayList<HashMap<String, Object>> resultMap =  PosDbManager.executeSql("SELECT count(*) CNT\n" +
            "FROM\n" +
                    "billtb\n" +
                    "INNER JOIN banktb ON banktb.uuid = billtb.bankuuid\n" +
-                   "LEFT JOIN userinfo ON userinfo.uid = billtb.salesmanuuid\n" +
+                   "LEFT JOIN userinfo ON userinfo.uid = billtb.salemanuuid\n" +
                           whereSql +
                    "ORDER BY\n" +
                    "billtb.billdate DESC ");

@@ -109,7 +109,9 @@
         </action>
         <action name="Statistics!*" class="com.posmanagement.action.StatisticsAction" method="{1}">
             <result name="welcomeinfo">./welcomeinfo.jsp</result>
+            <result name="assetgeneral">./statisticsmanager/assetgeneral.jsp</result>
             <result name="swinggeneral">./statisticsmanager/swinggeneral.jsp</result>
+            <result name="repaygeneral">./statisticsmanager/repaygeneral.jsp</result>
         </action>
         <action name="Menu!*" class="com.posmanagement.action.MenuAction" method="{1}">
             <result name="salemanManager" type="redirectAction">Saleman!Init</result>
@@ -127,7 +129,9 @@
             <result name="swingCardManager" type="redirectAction">SwingCard!Init</result>
             <result name="posManager" type="redirectAction">POS!Init</result>
             <result name="RepayManager" type="redirectAction">Repay!Init</result>
+            <result name="StatisticsAssetGeneral" type="redirectAction">Statistics!AssetGeneral</result>
             <result name="StatisticsSwingGeneral" type="redirectAction">Statistics!SwingGeneral</result>
+            <result name="StatisticsRepayGeneral" type="redirectAction">Statistics!RepayGeneral</result>
         </action>
     </package>
 </struts>

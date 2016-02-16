@@ -169,9 +169,9 @@
                     <td><s:text name="cardmanager.repayinterval"/></td><td><input id=repayinterval name=cardmanager.repayinterval type="text" value="<s:property value="cardmanager.repayinterval"/>" placeholder="<s:text name="cardmanager.repayinterval"/>" class="input-text size-S required "datatype="*"></td>
                 <tr class="text-c">
                 <% if (request.getSession().getAttribute("roleId").equals("e664d6f3-85f8-4bd6-bcb8-c4e053732b29")){ %>
-                <td><s:text name="cardmanager.salesman"/></td>
-                    <td><input id=salesman name=cardmanager.salesman type="text" value="<s:property value="cardmanager.salesman"/>"
-                               placeholder="<s:text name="cardmanager.salesman"/>" class="input-text size-S">
+                <td><s:text name="cardmanager.saleman"/></td>
+                    <td><input id=saleman name=cardmanager.saleman type="text" value="<s:property value="cardmanager.saleman"/>"
+                               placeholder="<s:text name="cardmanager.saleman"/>" class="input-text size-S">
                     </td>
                 <%}%>
                     <td><s:text name="cardmanager.memos"/></td>

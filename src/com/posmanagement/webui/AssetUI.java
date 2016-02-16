@@ -36,7 +36,7 @@ public class AssetUI {
     private ArrayList<HashMap<String, Object>> fetchAssetList() throws Exception {
         String whereSql = new String();
         if (!UserUtils.isAdmin(userID_)) {
-            whereSql += " where assettb.salesmanuuid='"+userID_+"'";
+            whereSql += " where assettb.salemanuuid='"+userID_+"'";
         }
 
         return PosDbManager.executeSql("SELECT\n" +
@@ -50,7 +50,7 @@ public class AssetUI {
                 "userinfo.unick\n" +
                 "FROM\n" +
                 "assettb\n" +
-                "INNER JOIN userinfo ON userinfo.uid = assettb.salesmanuuid\n" +
+                "INNER JOIN userinfo ON userinfo.uid = assettb.salemanuuid\n" +
                 "INNER JOIN banktb ON banktb.uuid = assettb.bankuuid" +
                 whereSql);
     }

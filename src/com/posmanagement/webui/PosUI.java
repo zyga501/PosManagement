@@ -1,6 +1,7 @@
 package com.posmanagement.webui;
 
 import com.posmanagement.utils.PosDbManager;
+import com.posmanagement.utils.StringUtils;
 import com.posmanagement.utils.UserUtils;
 
 import java.util.ArrayList;
@@ -15,6 +16,8 @@ public class PosUI extends WebUI {
             return new String("");
 
         UIContainer uiContainer = new UIContainer();
+        uiContainer.addElement(new UIContainer("option","")
+                .addAttribute("value", ""));
         ;
         for (int index = 0; index < dbRet.size(); ++index) {
             if (dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0) {
@@ -44,11 +47,11 @@ public class PosUI extends WebUI {
                     .addAttribute("role", "row")
                     .addAttribute("value", dbRet.get(index).get("UUID").toString())
                     .addElement("td", dbRet.get(index).get("POSNAME").toString())
-                    .addElement("td", dbRet.get(index).get("INDUSTRYNAME").toString())
-                    .addElement("td", dbRet.get(index).get("RATE").toString()+"|"+dbRet.get(index).get("MAXFEE").toString())
-                    .addElement("td", dbRet.get(index).get("POSSERVERNAME").toString())
-                    .addElement("td", dbRet.get(index).get("MCC").toString())
-                    .addElement("td", dbRet.get(index).get("STARTDATETM").toString())
+                    .addElement("td", StringUtils.convertNullableString( dbRet.get(index).get("INDUSTRYNAME")))
+                    .addElement("td",  StringUtils.convertNullableString(dbRet.get(index).get("RATE"))+"|"+StringUtils.convertNullableString(dbRet.get(index).get("MAXFEE")))
+                    .addElement("td",  StringUtils.convertNullableString(dbRet.get(index).get("POSSERVERNAME")))
+                    .addElement("td",  StringUtils.convertNullableString(dbRet.get(index).get("MCC")))
+                    .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("STARTDATETM")))
                     .addElement("td", usevalue[0])
                     .addElement("td", usevalue[1])
                     .addElement("td", getText(dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0 ? "global.enable" : "global.disable")
@@ -70,7 +73,7 @@ public class PosUI extends WebUI {
            return PosDbManager.executeSql("SELECT " +
                 "POSTB.uuid, " +
                 "POSTB.posname, " +
-                "userinfo.unick salesman, " +
+                "userinfo.unick saleman, " +
                 "posservertb.name posservername, " +
                 "mcctb.mcc mcc, " +
                 "industrytb.name industryname, " +
@@ -81,16 +84,16 @@ public class PosUI extends WebUI {
                 "  from  swingcard b where POSTB.uuid=b.posuuid ) used "+
                 "FROM  " +
                 "POSTB  " +
-                "INNER JOIN posservertb ON posservertb.uuid = POSTB.posserveruuid  " +
-                "INNER JOIN industrytb ON POSTB.industryuuid = industrytb.uuid  " +
-                "INNER JOIN ratetb ON POSTB.rateuuid = ratetb.uuid " +
-                "INNER JOIN userinfo ON POSTB.salesmanuuid = userinfo.uid  " +
-                "INNER JOIN mcctb ON mcctb.uuid = POSTB.mccuuid  "+wherestr);
+                "inner JOIN userinfo ON POSTB.salemanuuid = userinfo.uid  " +
+                "left JOIN posservertb ON posservertb.uuid = POSTB.posserveruuid  " +
+                "left JOIN industrytb ON POSTB.industryuuid = industrytb.uuid  " +
+                "left JOIN ratetb ON POSTB.rateuuid = ratetb.uuid " +
+                "left JOIN mcctb ON mcctb.uuid = POSTB.mccuuid  "+wherestr);
         else
             return PosDbManager.executeSql("SELECT " +
                 "POSTB.uuid, " +
                 "POSTB.posname, " +
-                "userinfo.unick salesman, " +
+                "userinfo.unick saleman, " +
                 "posservertb.name posservername, " +
                 "mcctb.mcc mcc, " +
                 "industrytb.name industryname, " +
@@ -101,11 +104,12 @@ public class PosUI extends WebUI {
                 "  from  swingcard b where POSTB.uuid=b.posuuid ) used "+
                 "FROM  " +
                 "POSTB  " +
-                "INNER JOIN posservertb ON posservertb.uuid = POSTB.posserveruuid  " +
-                "INNER JOIN industrytb ON POSTB.industryuuid = industrytb.uuid  " +
-                "INNER JOIN ratetb ON POSTB.rateuuid = ratetb.uuid " +
-                "INNER JOIN userinfo ON POSTB.salesmanuuid = userinfo.uid  " +
-                "INNER JOIN mcctb ON mcctb.uuid = POSTB.mccuuid where POSTB.salesmanuuid= '"+userID_+"'"+ wherestr.replaceAll("where","").replaceAll("1=1",""));
+                "inner JOIN userinfo ON POSTB.salemanuuid = userinfo.uid  " +
+                "left JOIN mcctb ON mcctb.uuid = POSTB.mccuuid "+
+                "left JOIN posservertb ON posservertb.uuid = POSTB.posserveruuid  " +
+                "left JOIN industrytb ON POSTB.industryuuid = industrytb.uuid  " +
+                "left JOIN ratetb ON POSTB.rateuuid = ratetb.uuid " +
+                " where POSTB.salemanuuid= '"+userID_+"'"+ wherestr.replaceAll("where","").replaceAll("1=1",""));
 
     }
     private String userID_; // TODO for role

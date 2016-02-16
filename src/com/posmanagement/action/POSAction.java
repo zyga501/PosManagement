@@ -83,7 +83,7 @@ public class POSAction extends AjaxActionSupport {
                     " INNER JOIN posservertb ON posservertb.uuid = POSTB.posserveruuid   " +
                     " INNER JOIN industrytb ON POSTB.industryuuid = industrytb.uuid   " +
                     " INNER JOIN ratetb ON POSTB.rateuuid = ratetb.uuid  " +
-                    " INNER JOIN userinfo ON POSTB.salesmanuuid = userinfo.uid   " +
+                    " INNER JOIN userinfo ON POSTB.salemanuuid = userinfo.uid   " +
                     " INNER JOIN mcctb ON mcctb.uuid = POSTB.mccuuid " +
                     wherestr);
             if (rect.size()<=0)
@@ -103,9 +103,9 @@ public class POSAction extends AjaxActionSupport {
         Map para= new HashMap();
         para.put(1,newid);
         try {
-            ArrayList<HashMap<String, Object>> hashMaps = PosDbManager.executeSql("SELECT a.*,c.unick as salesman,(select CONCAT(COUNT(b.amount),';',SUM(b.amount))" +
+            ArrayList<HashMap<String, Object>> hashMaps = PosDbManager.executeSql("SELECT a.*,c.unick as saleman,(select CONCAT(COUNT(b.amount),';',SUM(b.amount))" +
                     "  from  swingcard b where a.uuid=b.posuuid )used from postb a inner join userinfo c on" +
-                    " c.uid=a.salesmanuuid  where a.uuid=? ",( HashMap<Integer, Object>) para);
+                    " c.uid=a.salemanuuid  where a.uuid=? ",( HashMap<Integer, Object>) para);
             if (hashMaps.size()<=0) return "";
             posManager = new HashMap();
             for (Object keyName:hashMaps.get(0).keySet())
@@ -149,7 +149,7 @@ public class POSAction extends AjaxActionSupport {
                 parametMap.put(i++, (String) getParameter("newid"));
 
                     if (!PosDbManager.executeUpdate("update postb set  posname=?,industryuuid=?,rateuuid=?,corporation=?,mccuuid=?," +
-                            "posserveruuid=?,status=? where uuid=?", (HashMap<Integer, Object>)parametMap)) {
+                            "posserveruuid=?,status=?,startdatetm=now() where uuid=?", (HashMap<Integer, Object>)parametMap)) {
                         map.put("errorMessage","error");
                     }
             }
@@ -163,7 +163,7 @@ public class POSAction extends AjaxActionSupport {
 
     public String addPos(){
         Map map = new HashMap();
-        if (UserUtils.isSalesman(getUserID())) {
+        if (UserUtils.issaleman(getUserID())) {
             Map parametMap = new HashMap();
             int i = 1;
             newid = UUIDUtils.generaterUUID();
@@ -179,7 +179,7 @@ public class POSAction extends AjaxActionSupport {
 
             try {
                 if (PosDbManager.executeUpdate("insert into postb(uuid,posname,industryuuid,rateuuid,corporation,mccuuid," +
-                        "posserveruuid,status,salesmanuuid)" +
+                        "posserveruuid,status,salemanuuid)" +
                         "values(?,?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>) parametMap)) {
                     map.put("posList", new PosUI(super.getUserID()).generateSelect());
                 }

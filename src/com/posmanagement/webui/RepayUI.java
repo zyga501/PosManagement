@@ -37,7 +37,7 @@ public class RepayUI extends WebUI {
                                             .addAttribute("class", "btn radius")
                                             .addAttribute("onclick", "clickDetail('" + dbRet.get(index).get("CARDNO") +
                                                     "','" + dbRet.get(index).get("BILLUUID") + "')")
-                            ).addElement("span", "刷<b>"+StringUtils.convertNullableString(dbRet.get(index).get("FINISHED"))+
+                            ).addElement("span", "还<b>"+StringUtils.convertNullableString(dbRet.get(index).get("FINISHED"))+
                                     "</b>,未<b>"+StringUtils.convertNullableString(dbRet.get(index).get("UNFINISHED"))+"</b>,共<b>"+
                                     StringUtils.convertNullableString(dbRet.get(index).get("TOTALCOUNT"))+"</b>笔")
                     );
@@ -86,8 +86,8 @@ public class RepayUI extends WebUI {
             limitSql = "limit " + (pageIndex - 1) * DEFAULTITEMPERPAGE + "," + DEFAULTITEMPERPAGE;
         }
         if (! UserUtils.isAdmin(userID_))
-            whereSql += " and cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
-                    " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"') ";
+            whereSql += " and cardtb.salemanuuid in (select a.uid from salemantb a  where a.uid='"+userID_+"' )" +
+                    " or cardtb.salemanuuid in(select salemanuuid from tellertb   where uid='"+userID_+"') ";
 
         return PosDbManager.executeSql("SELECT \n" +
                 "SUBSTR(billtb.lastrepaymentdate,1,4) repayyear, \n" +
@@ -119,8 +119,8 @@ public class RepayUI extends WebUI {
         String whereSql = "where repaytb.cardno='" + cardNO + "' and billuuid='" + billUUID + "'";
 
         if (!UserUtils.isAdmin(userID_))
-            whereSql += " and (cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
-                    " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"')) ";
+            whereSql += " and (cardtb.salemanuuid in (select a.uid from salemantb a  where a.uid='"+userID_+"' )" +
+                    " or cardtb.salemanuuid in(select salemanuuid from tellertb   where uid='"+userID_+"')) ";
 
         return PosDbManager.executeSql("SELECT \n" +
                 "repaytb.id,\n" +
@@ -151,8 +151,8 @@ public class RepayUI extends WebUI {
         }
 
         if (!UserUtils.isAdmin(userID_))
-            whereSql += " and  (cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
-                    " or cardtb.salesmanuuid in(select salesman from tellertb where uid='"+userID_+"')) ";
+            whereSql += " and  (cardtb.salemanuuid in (select a.uid from salemantb a  where a.uid='"+userID_+"' )" +
+                    " or cardtb.salemanuuid in(select salemanuuid from tellertb where uid='"+userID_+"')) ";
 
         ArrayList<HashMap<String, Object>> rect = PosDbManager.executeSql("SELECT count(*) as cnt " +
                 "FROM " +

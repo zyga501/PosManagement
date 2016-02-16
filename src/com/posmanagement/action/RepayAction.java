@@ -87,10 +87,10 @@ public class RepayAction extends AjaxActionSupport {
                     "charge=cardtb.commissioncharge * repaytb.trademoney\n" +
                     "where id=?",(HashMap<Integer, Object>)parameterMap)) {
                 String salemanUUID = super.getUserID();
-                if (!UserUtils.isSalesman(salemanUUID)) {
+                if (!UserUtils.issaleman(salemanUUID)) {
                     parameterMap.clear();
                     parameterMap.put(1, salemanUUID);
-                    ArrayList<HashMap<String, Object>> salemanRet = PosDbManager.executeSql("select salesmanuuid from tellertb where uid=?", (HashMap<Integer, Object>)parameterMap);
+                    ArrayList<HashMap<String, Object>> salemanRet = PosDbManager.executeSql("select salemanuuid from tellertb where uid=?", (HashMap<Integer, Object>)parameterMap);
                     if (salemanRet.size() > 0) {
                         salemanUUID = salemanRet.get(0).get("SALEMANUUID").toString();
                     }
@@ -101,7 +101,7 @@ public class RepayAction extends AjaxActionSupport {
                 String whereSql = new String();
                 if (PosDbManager.executeUpdate("UPDATE assettb\n" +
                         "SET balance= balance - (select trademoney - charge from repaytb where id=?)\n" +
-                        "where salesmanuuid=?", (HashMap<Integer, Object>)parameterMap)) {
+                        "where salemanuuid=?", (HashMap<Integer, Object>)parameterMap)) {
                     map.put("successMessage", getText("global.actionSuccess"));
                     map.put("repayDetail", new RepayUI(super.getUserID()).generateDetail(getParameter("cardNO").toString(), getParameter("billUUID").toString()));
                     parameterMap.clear();
@@ -109,7 +109,7 @@ public class RepayAction extends AjaxActionSupport {
                     ArrayList<HashMap<String, Object>> repayRet = PosDbManager.executeSql("SELECT trademoney, cardNO, charge from repaytb where id=?", (HashMap<Integer, Object>)parameterMap);
                     parameterMap.clear();
                     parameterMap.put(1, super.getUserID());
-                    ArrayList<HashMap<String, Object>> assetRet = PosDbManager.executeSql("SELECT balance from assettb where salesmanuuid=?", (HashMap<Integer, Object>)parameterMap);
+                    ArrayList<HashMap<String, Object>> assetRet = PosDbManager.executeSql("SELECT balance from assettb where salemanuuid=?", (HashMap<Integer, Object>)parameterMap);
                     if (repayRet.size() > 0 && assetRet.size() > 0) {
                         double repayAmount = -Double.parseDouble(repayRet.get(0).get("TRADEMONEY").toString());
                         double charge = Double.parseDouble(repayRet.get(0).get("CHARGE").toString());
@@ -120,7 +120,7 @@ public class RepayAction extends AjaxActionSupport {
                         parameterMap.put(2, balance - charge);
                         parameterMap.put(3, cardNO);
                         parameterMap.put(4, salemanUUID);
-                        PosDbManager.executeUpdate("insert into posmanagement.assetflowtb(time, type, amount, balance, remark, salemanuuid)\n" +
+                        PosDbManager.executeUpdate("insert into assetflowtb(time, type, amount, balance, remark, salemanuuid)\n" +
                                 "VALUES(NOW(), '还款',?, ?, CONCAT(?,'还款'), ?);\n"
                                 , (HashMap<Integer, Object>)parameterMap);
                         parameterMap.clear();
@@ -128,7 +128,7 @@ public class RepayAction extends AjaxActionSupport {
                         parameterMap.put(2, balance);
                         parameterMap.put(3, cardNO);
                         parameterMap.put(4, salemanUUID);
-                        PosDbManager.executeUpdate("insert into posmanagement.assetflowtb(time, type, amount, balance, remark, salemanuuid)\n" +
+                        PosDbManager.executeUpdate("insert into assetflowtb(time, type, amount, balance, remark, salemanuuid)\n" +
                                 "VALUES(NOW(), '还款收费',?, ?, CONCAT(?,'还款收费'), ?);"
                                 , (HashMap<Integer, Object>)parameterMap);
                     }

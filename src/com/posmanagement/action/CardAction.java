@@ -87,13 +87,13 @@ public class CardAction extends AjaxActionSupport {
         if (null!=getParameter("cardmaster")&& (!getParameter("cardmaster").toString().trim().equals(""))){
             wherestr += "and cardmaster  like '%"+getParameter("cardmaster")+"%'";
         }
-        if (null!=getParameter("salesman")&& (!getParameter("salesman").toString().trim().equals(""))) {
-            wherestr += "and userinfo.unick  like '%"+getParameter("salesman")+"%'";
+        if (null!=getParameter("saleman")&& (!getParameter("saleman").toString().trim().equals(""))) {
+            wherestr += "and userinfo.unick  like '%"+getParameter("saleman")+"%'";
         }
 
         try {
             ArrayList<HashMap<String, Object>> rect = PosDbManager.executeSql("select count(*) as cnt from cardtb inner join banktb " +
-                    "on cardtb.bankuuid=banktb.uuid inner join userinfo on userinfo.uid=cardtb.salesmanuuid " +
+                    "on cardtb.bankuuid=banktb.uuid inner join userinfo on userinfo.uid=cardtb.salemanuuid " +
                     wherestr);
             if (rect.size()<=0)
                 map.put("pagecount",0);
@@ -113,8 +113,8 @@ public class CardAction extends AjaxActionSupport {
         para.put(1,newid);
         try {
             ArrayList<HashMap<String, Object>> hashMaps = PosDbManager.executeSql("select cardtb.*,banktb.name bankname," +
-                    "userinfo.unick salesman  from cardtb inner join banktb " +
-                    "on cardtb.bankuuid=banktb.uuid inner join userinfo on userinfo.uid=cardtb.salesmanuuid" +
+                    "userinfo.unick saleman  from cardtb inner join banktb " +
+                    "on cardtb.bankuuid=banktb.uuid inner join userinfo on userinfo.uid=cardtb.salemanuuid" +
                     "  where cardno=?",( HashMap<Integer, Object>) para);
             if (hashMaps.size()<=0) return "";
             cardmanager = new HashMap();
@@ -208,7 +208,7 @@ public class CardAction extends AjaxActionSupport {
                     System.out.print("'"+((String[])cardmanager.get(key))[0]+"',");
                     para.put(i++,((String[])cardmanager.get(key))[0] );
                 }
-                if (!PosDbManager.executeUpdate("insert into cardtb(uuid,salesmanuuid,cardno,bankuuid,creditamount," +
+                if (!PosDbManager.executeUpdate("insert into cardtb(uuid,salemanuuid,cardno,bankuuid,creditamount," +
                         "tempamount,templimitdate,useamount,billdate,pin,telpwd,tradepwd,enchashmentpwd," +
                         "billafterdate,lastrepaymentdate,billemail,status,commissioncharge,cardmaster,identityno," +
                         "cmaddress,cmtel,cmseccontact,memos) values(?," +

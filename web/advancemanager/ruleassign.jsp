@@ -48,7 +48,7 @@
                         </div>
                         <div  style="float:left;width:33% ">
                             <span class="label label-default radius">业务员列表</span><br>
-                            <select  id="salesmanList"  size="25"style="width:150px;" multiple="multiple" >
+                            <select  id="salemanList"  size="25"style="width:150px;" multiple="multiple" >
                                 <s:property value="salemanList" escape="false" />
                             </select>
                         </div>
@@ -61,8 +61,8 @@
                                 <input type="button" class="btn btn-default radius" value="<-"  onclick="bankout()" /></td>
                         </tr>
                         <tr class="text-c odd">
-                            <td ><input type="button" class="btn btn-default radius" value="->"  onclick="salesmanin()"  /><br>
-                                <input type="button" class="btn btn-default radius" value="<-" onclick="salesmanout()"/></td>
+                            <td ><input type="button" class="btn btn-default radius" value="->"  onclick="salemanin()"  /><br>
+                                <input type="button" class="btn btn-default radius" value="<-" onclick="salemanout()"/></td>
                         </tr>
                     </table>
                 </div>
@@ -75,7 +75,7 @@
                     </div>
                     <div class="panel-header"  ><span>使用业务员</span></div>
                     <div class="panel-body"  >
-                        <select name="selectedsalesmanList"  id="selectedsalesmanList"  size="11" style="width:155px;" >
+                        <select name="selectedsalemanList"  id="selectedsalemanList"  size="11" style="width:155px;" >
                             ${selectedsalemanList}</select>
                     </div>
                 </div>
@@ -110,10 +110,10 @@
         }
     }
 
-    function  salesmanin(){
-        var v = ""+$("#salesmanList").val();
+    function  salemanin(){
+        var v = ""+$("#salemanList").val();
         var t ="";
-        $("#salesmanList").find("option:selected").each(function(){
+        $("#salemanList").find("option:selected").each(function(){
             t = t + $(this).text() + ',';
         })
         var vs = new Array(); vs = v.split(",");
@@ -122,20 +122,20 @@
             if ((vs[i] == 'undefined') || (vs[i] == null) || (vs[i] == "")) {
             }
             else {
-                $("#selectedsalesmanList").append("<option value=" + vs[i] + ">" + ts[i] + "</option>");
+                $("#selectedsalemanList").append("<option value=" + vs[i] + ">" + ts[i] + "</option>");
             }
         }
     }
-    function  salesmanout(){
-        var v= $("#selectedsalesmanList").val();
+    function  salemanout(){
+        var v= $("#selectedsalemanList").val();
         if ((v=='undefined') || (v==null)||(v=="")){}
         else{
-            $("#selectedsalesmanList option[value='"+v+"']").remove();
+            $("#selectedsalemanList option[value='"+v+"']").remove();
         }
     }
     function  save(){
         var banklist =  $("#selectedbankList option").map(function(){return $(this).val();}).get().join(",");
-        var salemanlist =  $("#selectedsalesmanList option").map(function(){return $(this).val();}).get().join(",");
+        var salemanlist =  $("#selectedsalemanList option").map(function(){return $(this).val();}).get().join(",");
         $.ajax({
             type: 'post',
             url: 'Rule!AssignRule',

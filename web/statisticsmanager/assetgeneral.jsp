@@ -18,7 +18,7 @@
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery/1.9.1/jquery.min.js"></script>
     <script >
         function setval(v){
-            $('#swinggeneralsummary').html(v);
+            $('#assetgeneralsummary').html(v);
         }
         function explist(){
             alert('开发中。。。稍等');
@@ -70,11 +70,7 @@
                         <%--<span style="width:40%;">业务员</span><select name="salemanList" id="salemanid"--%>
                                                                                                <%--class="input-text" style="width:60%" placeholder="业务员"--%>
                                                                                                <%--AutoComplete="off"></select> --%>
-                    </div><div class="formControls col-2">
-                    <input name="teller" placeholder="刷卡者" class="input-text">
-                    <%--<span style="width:40%;">柜员</span><select  name="tellerList" id="tellerid"--%>
-                                                                                               <%--class="input-text" style="width:60%" placeholder="柜员"--%>
-                                                                                               <%--AutoComplete="off"></select>--%></div>
+                    </div>
                     <div class="formControls col-1"><input type="button" value="<s:text name="global.search" />" onclick="dosearch()" class="btn btn-primary radius size-S"></div>
                 </div>
             </form>
@@ -82,8 +78,8 @@
     </div>
 </div>
 <div class="cl pd-5 bg-1 bk-gray mt-20">
-	 <span style="float:left;">共<strong><span id="cnt"></span></strong> 笔，金额合计 <strong><span id="amount">
-     </span></strong> 扣款 <strong><span id="charge"></span></strong> 到账 <strong><span id="inbank"></span></strong></span>
+	 <span style="float:left;">共<strong><span id="cnt"></span></strong> 条，还款 <strong><span id="repay">
+     </span></strong> 还款收费 <strong><span id="repaycharge"></span></strong> 结算到账 <strong><span id="inbank"></span></strong> 刷卡扣费 <strong><span id="charge"></span></strong> 产生利润 <strong><span id="profit"></span></strong></span>
 		<span style="float:right;">
 		<a href="javascript:void(0);" title="<s:text name="global.exportdate" />"
            class="btn btn-danger radius size-MINI" onclick="explist();"> <i
@@ -102,13 +98,13 @@
                 <thead>
                 <tr class="text-c">
                     <th><s:text name="repaydetail.thedate"/></th>
-                    <th><s:text name="posmanager.posname"/></th>
-                    <th><s:text name="posmanager.rate"/></th>
+                    <th><s:text name="statistics.type"/></th>
                     <th><s:text name="swingcardsummary.amount"/></th>
-                    <th><s:text name="swinggengral.charge"/></th>
+                    <th><s:text name="statistics.balance"/></th>
+                    <th><s:text name="statistics.general"/></th>
                 </tr>
                 </thead>
-                <tbody id="swinggeneralsummary">
+                <tbody id="assetgeneralsummary">
                 </tbody>
             </table>
         </div>
@@ -120,7 +116,7 @@
     function dosearch() {
         $.ajax({
             type: 'post',
-            url: 'Statistics!FetchSwingGeneral',
+            url: 'Statistics!FetchAssetGeneral',
             dataType:"json",
             data:$("#searchform").serialize(),
             success: function (data) {
@@ -129,7 +125,7 @@
                     layer.msg(json.errorMessage);
                 }
                 else {
-                    setval(json.swingGeneral);
+                    setval(json.assetGeneral);
                     $('#cnt').html(json.cnt);
                     $('#amount').html(json.amount);
                     $('#charge').html(json.charge);
@@ -143,7 +139,7 @@
                     jump: function (obj) {
                         $.ajax({
                             type: 'post',
-                            url: 'Statistics!FetchSwingGeneral?currpage='+obj.curr,
+                            url: 'Statistics!FetchAssetGeneral?currpage='+obj.curr,
                             dataType:"json",
                             data:$("#searchform").serialize(),
                             success: function (data) {
@@ -152,7 +148,7 @@
                                     layer.msg(json.errorMessage);
                                 }
                                 else {
-                                    setval(json.swingGeneral);
+                                    setval(json.assetGeneral);
                                 }
                             }
                         })

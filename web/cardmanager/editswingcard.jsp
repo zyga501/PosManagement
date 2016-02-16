@@ -138,7 +138,7 @@
                 dataType : "json",
                 success: function(data) {
                     var json = eval("(" + data + ")");
-                    $("#salesman").html(json.userList);
+                    $("#saleman").html(json.userList);
                 }
             });
         }
@@ -211,8 +211,8 @@
                     <td><s:text name="posmanager.status"/></td><td><input name="status" type="text" placeholder="<s:text name="posmanager.status" />" class="input-text size-S"></td>
                 </tr>
                 <tr class="text-c">
-                    <td><s:text name="posmanager.salesman"/></td><td>
-                    <select id="salesman" name="salesman" style="width: 100%">
+                    <td><s:text name="posmanager.saleman"/></td><td>
+                    <select id="saleman" name="saleman" style="width: 100%">
                     </select>
                 </tr>
             </table>

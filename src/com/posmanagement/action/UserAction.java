@@ -105,8 +105,8 @@ public class UserAction extends AjaxActionSupport{
             }
 
             String userID = (dbRet.get(0).get("UID").toString());
-            if (UserUtils.isSalesman(userID)) {
-                if (PosDbManager.executeSql("select 1 from salesmantb where status='enable' and uid='" + userID + "'").size() < 1) {
+            if (UserUtils.issaleman(userID)) {
+                if (PosDbManager.executeSql("select 1 from salemantb where status='enable' and uid='" + userID + "'").size() < 1) {
                     loginErrorMessage = getText("UserAction.UserStausError");
                     return LOGINFAILURE;
                 }
@@ -188,7 +188,7 @@ public class UserAction extends AjaxActionSupport{
         if (UserUtils.isAdmin(super.getUserID())) {
              parametMap.put(4, userName);
             if (PosDbManager.executeUpdate("insert into userinfo(uid,upwd,unick,uname,rid) values(?,?,?,?,'69632ae8-7e48-4e72-ad58-1043ad655a4c')", (HashMap<Integer, Object>) parametMap)) {
-                PosDbManager.executeUpdate("insert into salesmantb(uid) values('" + UUID + "')");
+                PosDbManager.executeUpdate("insert into salemantb(uid) values('" + UUID + "')");
                 Map resultMap = new HashMap();
                 resultMap.put("userList", new SalemanUI().generateTable());
                 return AjaxActionComplete(resultMap);
@@ -198,8 +198,8 @@ public class UserAction extends AjaxActionSupport{
             parametMap.put(4, super.getUserName());
             parametMap.put(5, super.getUserID());
             if (PosDbManager.executeUpdate("insert into userinfo(uid,upwd,unick,uname,rid) select ?,?,?,CONCAT(?,count(*))" +
-                    ",'f5466ce9-5e10-4443-aac8-5e385c3febb0' from tellertb a where a.salesman=?", (HashMap<Integer, Object>) parametMap)){
-                PosDbManager.executeUpdate("insert into tellertb(uid,salesman) values('" + UUID + "','"+super.getUserID()+"')");
+                    ",'f5466ce9-5e10-4443-aac8-5e385c3febb0' from tellertb a where a.salemanuuid=?", (HashMap<Integer, Object>) parametMap)){
+                PosDbManager.executeUpdate("insert into tellertb(uid,salemanuuid) values('" + UUID + "','"+super.getUserID()+"')");
                 Map resultMap = new HashMap();
                 resultMap.put("userList", new TellerUI().generateTable(super.getUserID(), false));
                 return AjaxActionComplete(resultMap);

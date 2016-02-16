@@ -49,16 +49,72 @@ public class StatisticsUI extends WebUI {
                 "swingcard\n" +
                 "INNER JOIN userinfo ON swingcard.userid = userinfo.uid \n" +
                 "INNER JOIN postb on postb.uuid=swingcard.posuuid  \n" +
-                "INNER JOIN userinfo salemantb on postb.salesmanuuid=salemantb.uid  \n" +
+                "INNER JOIN userinfo salemantb on postb.salemanuuid=salemantb.uid  \n" +
                 whereSql );
         if (resultMap.size()<=0) {
             rt[0]=0;
             return rt;
         }
-        rt[0]=Integer.parseInt(resultMap.get(0).get("CNT").toString())/ WebUI.DEFAULTITEMPERPAGE + 1;
-        rt[1]=Integer.parseInt(resultMap.get(0).get("CNT").toString());
-        rt[2]=Float.parseFloat(resultMap.get(0).get("AMOUNT").toString());
-        rt[3]=Float.parseFloat(resultMap.get(0).get("CHARGE").toString());
+        try {
+            rt[0] = Integer.parseInt(resultMap.get(0).get("CNT").toString()) / WebUI.DEFAULTITEMPERPAGE + 1;
+            rt[1] = Integer.parseInt(resultMap.get(0).get("CNT").toString());
+            rt[2] = Float.parseFloat(resultMap.get(0).get("AMOUNT").toString());
+            rt[3] = Float.parseFloat(resultMap.get(0).get("CHARGE").toString());
+        }
+        catch (Exception e){
+
+        }
+        return rt;
+    }
+
+    public String generateAsset(int pageIndex) throws Exception {
+        ArrayList<HashMap<String, Object>> dbRet = fetchAssetGeneralSummary(pageIndex);
+        if (dbRet.size() <= 0)
+            return new String("");
+
+        String htmlString = "";
+        for (int index = 0; index < dbRet.size(); ++index) {
+            htmlString += new UIContainer("tr")
+                    .addAttribute("class", "text-c odd")
+                    .addAttribute("role", "row")
+                    .addElement("td", dbRet.get(index).get("TIME").toString())
+                    .addElement("td", dbRet.get(index).get("TYPE").toString())
+                    .addElement("td", dbRet.get(index).get("AMOUNT").toString())
+                    .addElement("td", dbRet.get(index).get("BALANCE").toString())
+                    .addElement("td", dbRet.get(index).get("REMARK").toString()) ;
+        }
+        return htmlString;
+    }
+
+    public float[] fetchAssetGeneralpagecount() throws Exception {
+        String whereSql = SQLUtils.BuildWhereCondition(uiConditions_);
+        if (!whereSql.isEmpty()) {
+            whereSql = " where " + whereSql;
+        }
+
+        if (!UserUtils.isAdmin(userID_))
+            whereSql += " and  (assetflowtb.salemanuuid='"+userID_+"') ";
+        float[] rt = new float[4];
+        ArrayList<HashMap<String, Object>> resultMap = PosDbManager.executeSql("SELECT count(*) as cnt,\n" +
+                "sum(amount) as amount, \n"+
+                "sum(balance) as charge \n"+
+                "FROM\n" +
+                "assetflowtb \n" +
+                "INNER JOIN salemantb  ON assetflowtb.salemanuuid = salemantb.uid \n" +
+                whereSql );
+        if (resultMap.size()<=0) {
+            rt[0]=0;
+            return rt;
+        }
+        try {
+            rt[0] = Integer.parseInt(resultMap.get(0).get("CNT").toString()) / WebUI.DEFAULTITEMPERPAGE + 1;
+            rt[1] = Integer.parseInt(resultMap.get(0).get("CNT").toString());
+            rt[2] = Float.parseFloat(resultMap.get(0).get("AMOUNT").toString());
+            rt[3] = Float.parseFloat(resultMap.get(0).get("CHARGE").toString());
+        }
+        catch (Exception e){
+
+        }
         return rt;
     }
 
@@ -70,17 +126,34 @@ public class StatisticsUI extends WebUI {
         String limitSql ="limit " + (pageIndex - 1) * DEFAULTITEMPERPAGE + "," + DEFAULTITEMPERPAGE;
 
         if (!UserUtils.isAdmin(userID_))
-            whereSql += " and  (salemantb.uid='"+userID_+"' " +
+            whereSql += " and  (postb.salemanuuid='"+userID_+"' " +
                     " or userinfo.uid ='"+userID_+"') ";
         return PosDbManager.executeSql("SELECT   swingcard.*,postb.*,AMOUNT-charge INBANK,salemantb.unick as saleman," +
                 "userinfo.unick as doer,ratetb.rate  " +
                 "FROM\n" +
-                        "swingcard\n" +
-                        "INNER JOIN userinfo ON swingcard.userid = userinfo.uid \n" +
-                        "INNER JOIN postb on postb.uuid=swingcard.posuuid  \n" +
-                        "INNER JOIN userinfo salemantb on postb.salesmanuuid=salemantb.uid  \n" +
-                        "left JOIN ratetb on ratetb.uuid=postb.rateuuid  \n" +
-                        whereSql +limitSql);
+                "swingcard\n" +
+                "INNER JOIN userinfo ON swingcard.userid = userinfo.uid \n" +
+                "INNER JOIN postb on postb.uuid=swingcard.posuuid  \n" +
+                "INNER JOIN userinfo salemantb on postb.salemanuuid=userinfo.uid  \n" +
+                "left JOIN ratetb on ratetb.uuid=postb.rateuuid  \n" +
+                whereSql +limitSql);
+    }
+
+    private ArrayList<HashMap<String, Object>>  fetchAssetGeneralSummary(int pageIndex) throws Exception {
+        String whereSql = SQLUtils.BuildWhereCondition(uiConditions_);
+        if (!whereSql.isEmpty()) {
+            whereSql = " where " + whereSql;
+        }
+        String limitSql ="limit " + (pageIndex - 1) * DEFAULTITEMPERPAGE + "," + DEFAULTITEMPERPAGE;
+
+        if (!UserUtils.isAdmin(userID_))
+            whereSql += " and  (assetflowtb.salemanuuid='"+userID_+"' " +
+                    " or salemantb.uid ='"+userID_+"') ";
+        return PosDbManager.executeSql("SELECT  * " +
+                "FROM\n" +
+                "assetflowtb\n" +
+                "INNER JOIN salemantb ON assetflowtb.salemanuuid = salemantb.uid \n" +
+                whereSql +limitSql);
     }
     private String userID_;
 }

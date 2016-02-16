@@ -14,7 +14,9 @@ import java.util.Map;
 
 public class StatisticsAction extends AjaxActionSupport{
     private final static String GENERALINFO = "welcomeinfo";
+    private final static String ASSETGENERAL="assetgeneral";
     private final static String SWINGGENERAL="swinggeneral";
+    private final static String REPAYGENERAL="repaygeneral";
     private String welcomeuser = "";
     private String generalinfo = "";
 
@@ -34,10 +36,17 @@ public class StatisticsAction extends AjaxActionSupport{
         this.generalinfo = generalinfo;
     }
 
+    public String AssetGeneral(){
+        return ASSETGENERAL;
+    }
+
     public String SwingGeneral(){
         return SWINGGENERAL;
     }
 
+    public String RepayGeneral(){
+        return REPAYGENERAL;
+    }
     public String obtainGeneralinfo(){
         welcomeuser = super.getAttribute("userNick");
         if  (UserUtils.isAdmin(getUserID())){
@@ -61,25 +70,25 @@ public class StatisticsAction extends AjaxActionSupport{
             }
         }
         else
-        if  (UserUtils.isSalesman(getUserID())) {
+        if  (UserUtils.issaleman(getUserID())) {
                 ArrayList<HashMap<String, Object>> dbRet = null;
                 try {
-                    dbRet = PosDbManager.executeSql("select  count(*) cnt,'本月未审核账单' as nm from  billtb t  where t.salesmanuuid='"+getUserID()+"'  and `status`<>'enable' " +
+                    dbRet = PosDbManager.executeSql("select  count(*) cnt,'本月未审核账单' as nm from  billtb t  where t.salemanuuid='"+getUserID()+"'  and `status`<>'enable' " +
                             "and billdate " +
                             "union all  " +
-                            "select  count(*) cnt,'本月未生成账单' as nm  from  cardtb t where t.salesmanuuid='"+getUserID()+"' and  t.cardno not in " +
+                            "select  count(*) cnt,'本月未生成账单' as nm  from  cardtb t where t.salemanuuid='"+getUserID()+"' and  t.cardno not in " +
                             "(select cardno  from billtb where  " +
                             "  YEAR(billdate)=YEAR(CURRENT_DATE) and MONTH(billdate)=month(CURRENT_DATE) ) " +
                             "union all  " +
-                            "select  count(*) cnt,'卡片数量' as nm  from  cardtb t  where t.salesmanuuid='"+getUserID()+"'" +
+                            "select  count(*) cnt,'卡片数量' as nm  from  cardtb t  where t.salemanuuid='"+getUserID()+"'" +
                             "union all  " +
                             "select  SUM(t.creditamount)-SUM(b.amount)+SUM(r.trademoney) cnt,'信用总额' as nm  from cardtb t LEFT OUTER JOIN  " +
                             "(select SUM(amount) amount,cardno  from  swingcard where  swingstatus='enable'" +
                             " group by cardno ) b on (b.cardno=t.cardno)  " +
                             "LEFT JOIN (select sum(trademoney) trademoney,cardno from repaytb where" +
-                            "  tradestatus='enable' group by cardno) r on (r.cardno=t.cardno ) where t.salesmanuuid='"+getUserID()+"'" +
+                            "  tradestatus='enable' group by cardno) r on (r.cardno=t.cardno ) where t.salemanuuid='"+getUserID()+"'" +
                             "union all  " +
-                            "select SUM(t.balance) cnt,'资产总额' as nm  from  assettb t where t.salesmanuuid='"+getUserID()+"'");
+                            "select SUM(t.balance) cnt,'资产总额' as nm  from  assettb t where t.salemanuuid='"+getUserID()+"'");
                 for (int index = 0; index < dbRet.size(); ++index) {
                     generalinfo +=new UIContainer("tr")
                             .addAttribute("class", "text-c odd")
@@ -106,7 +115,7 @@ public class StatisticsAction extends AjaxActionSupport{
                                 "sum(case when date_format(NOW(),'%Y-%m-%d')=date_format(a.sdatetm,'%Y-%m-%d') then 1 else 0 end ) jt ," +
                                 "sum(case when date_format(NOW(),'%Y-%m')=date_format(a.sdatetm,'%Y-%m') then 1 else 0 end ) byue \n" +
                                 " from swingcard a,cardtb b,tellertb c \n" +
-                                "WHERE a.cardno=b.cardno  and c.salesman=b.salesmanuuid  and \n" +
+                                "WHERE a.cardno=b.cardno  and c.salemanuuid=b.salemanuuid  and \n" +
                                 "c.uid='"+getUserID()+"'");
                 if (dbRet.size()>0) {
                     generalinfo +=new UIContainer("tr")
@@ -121,7 +130,7 @@ public class StatisticsAction extends AjaxActionSupport{
                                 "sum(case when date_format(NOW(),'%Y-%m-%d')=date_format(a.thedate,'%Y-%m-%d') then 1 else 0 end ) jt ," +
                                 "sum(case when date_format(NOW(),'%Y-%m')=date_format(a.thedate,'%Y-%m') then 1 else 0 end ) byue \n" +
                                 " from repaytb a,cardtb b,tellertb c \n" +
-                                "WHERE a.cardno=b.cardno  and c.salesman=b.salesmanuuid  and \n" +
+                                "WHERE a.cardno=b.cardno  and c.salemanuuid=b.salemanuuid  and \n" +
                                 "c.uid='"+getUserID()+"'");
                 if (dbRet.size()>0) {
                     generalinfo +=new UIContainer("tr")
@@ -175,6 +184,43 @@ public class StatisticsAction extends AjaxActionSupport{
             int curr = Integer.parseInt(null==getParameter("currpage")?"1":getParameter("currpage").toString());
             String  v=statisticsUI.generateSummary(curr);
             map.put("swingGeneral",v);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return AjaxActionComplete(map);
+    }
+
+    public  String FetchAssetGeneral(){
+
+        ArrayList<SQLUtils.WhereCondition> uiConditions = new ArrayList<SQLUtils.WhereCondition>() {
+            {
+                if (!StringUtils.convertNullableString(getParameter("sdate")).trim().isEmpty())
+                    add(new SQLUtils.WhereCondition("assetflowtb.time", " >",
+                            SQLUtils.ConvertToSqlString(getParameter("sdate").toString().trim())));
+                if (!StringUtils.convertNullableString(getParameter("edate")).trim().isEmpty())
+                    add(new SQLUtils.WhereCondition("assetflowtb.time", " <",
+                            SQLUtils.ConvertToSqlString(getParameter("edate").toString().trim())));
+                if (!StringUtils.convertNullableString(getParameter("saleman")).trim().isEmpty()) {
+                    add(new SQLUtils.WhereCondition("salemantb.unick", " =",
+                            SQLUtils.ConvertToSqlString(getParameter("saleman").toString().trim())));
+                    add(new SQLUtils.WhereCondition("salemantb.rid", " =","'69632ae8-7e48-4e72-ad58-1043ad655a4c'"));
+                }
+            }
+        };
+
+        Map map = new HashMap();
+        StatisticsUI statisticsUI = new StatisticsUI(super.getUserID());
+        statisticsUI.setUiConditions(uiConditions);
+        try {
+            float[] rt = statisticsUI.fetchAssetGeneralpagecount();
+            map.put("pagecount",rt[0]);
+            map.put("cnt",rt[1]);
+            map.put("amount",rt[2]);
+            map.put("charge",rt[3]);
+            map.put("inbank",rt[2]-rt[3]);
+            int curr = Integer.parseInt(null==getParameter("currpage")?"1":getParameter("currpage").toString());
+            String  v=statisticsUI.generateAsset(curr);
+            map.put("assetGeneral",v);
         } catch (Exception e) {
             e.printStackTrace();
         }

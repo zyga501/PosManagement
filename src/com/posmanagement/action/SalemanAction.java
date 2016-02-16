@@ -82,7 +82,7 @@ public class SalemanAction extends AjaxActionSupport {
         parametMap.put(4, getParameter("contact").toString().trim());
         parametMap.put(5, null==getParameter("saleStatus")?"disable":"enable");
         parametMap.put(6, salemanID);
-        if (!PosDbManager.executeUpdate("update salesmantb set scardno=?,feeqk=?,paymenttm=?,contact=?,status=? where uid=?",
+        if (!PosDbManager.executeUpdate("update salemantb set scardno=?,feeqk=?,paymenttm=?,contact=?,status=? where uid=?",
                 (HashMap<Integer, Object>) parametMap))
             map.put("ErrorMessage", getText("global.dofailed"));
         }
@@ -101,7 +101,7 @@ public class SalemanAction extends AjaxActionSupport {
             Map parametMap = new HashMap<Integer, Object>();
             parametMap.put(1, salemanID);
             parametMap.put(2, tellerID);
-            if (!PosDbManager.executeUpdate("update tellertb set salesman=? where uid=?", (HashMap<Integer, Object>) parametMap)) {
+            if (!PosDbManager.executeUpdate("update tellertb set salemanuuid=? where uid=?", (HashMap<Integer, Object>) parametMap)) {
                 map.put("ErrorMessage", getText("SalemanAction.AddTellerError"));
             }
             map.put("tellerList", new TellerUI().generateTable(salemanID, false));

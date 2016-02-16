@@ -146,11 +146,11 @@ public class BillAction extends AjaxActionSupport {
             int day = cal.get(Calendar.DATE);
             int month = cal.get(Calendar.MONTH)+1;
             int year = cal.get(Calendar.YEAR);
-            sqlString = "insert into billtb (uuid,bankuuid,cardno,billdate,billamount,lastrepaymentdate,salesmanuuid) " +
+            sqlString = "insert into billtb (uuid,bankuuid,cardno,billdate,billamount,lastrepaymentdate,salemanuuid) " +
                     "select '" + UUIDUtils.generaterUUID() + "', bankuuid,cardno,'" + (new SimpleDateFormat("yyyy-MM-dd")).format(billd) + "'," +
                     "creditamount,date_add('" +
                     (new SimpleDateFormat("yyyy-MM-dd")).format(billd) + "',INTERVAL billafterdate DAY ),'"+getUserID()+"' from cardtb a " +
-                    " where a.status='enable'  and billdate=" + day + wherestr + " and a.salesmanuuid='"+getUserID()+"' and  not exists " +
+                    " where a.status='enable'  and billdate=" + day + wherestr + " and a.salemanuuid='"+getUserID()+"' and  not exists " +
                     "(select 1 from billtb b where a.cardno=b.cardno and b.billdate='" + (new SimpleDateFormat("yyyy-MM-dd")).format(billd) + "')";
         }
         else {
@@ -158,11 +158,11 @@ public class BillAction extends AjaxActionSupport {
             int day = cal.get(Calendar.DATE);
             int month = cal.get(Calendar.MONTH)+1;
             int year = cal.get(Calendar.YEAR);
-            sqlString = "insert into billtb (uuid,bankuuid,cardno,billdate,billamount,lastrepaymentdate,salesmanuuid) " +
-                    "select '" + UUIDUtils.generaterUUID() + "', bankuuid,cardno,concat('" + String.valueOf(year)+
+            sqlString = "insert into billtb (uuid,bankuuid,cardno,billdate,billamount,lastrepaymentdate,salemanuuid) " +
+                    "select uuid(), bankuuid,cardno,concat('" + String.valueOf(year)+
                     "','-','"+String.valueOf(month)+"','-',billdate),creditamount,date_add("+
             "concat('" + String.valueOf(year)+"','-','"+String.valueOf(month)+"','-',billdate),INTERVAL billafterdate DAY ),'"+getUserID()+"' from cardtb a " +
-                    " where a.status='enable' and a.salesmanuuid='"+getUserID()+"' " +  wherestr + " and  not exists " +
+                    " where a.status='enable' and a.salemanuuid='"+getUserID()+"' " +  wherestr + " and  not exists " +
                     "(select 1 from billtb b where a.cardno=b.cardno and b.billdate=concat('" + String.valueOf(year)+"','-','"+String.valueOf(month)+"','-',billdate))";
         }
         System.out.println(sqlString);
@@ -185,7 +185,7 @@ public class BillAction extends AjaxActionSupport {
                 add(new SQLUtils.WhereCondition("banktb.name", "like",
                         SQLUtils.ConvertToSqlString("%" + getParameter("bankname") + "%"), !StringUtils.convertNullableString(getParameter("bankname")).trim().isEmpty()));
                 add(new SQLUtils.WhereCondition("userinfo.unick", "like",
-                        SQLUtils.ConvertToSqlString("%" + getParameter("salesman") + "%"), !StringUtils.convertNullableString(getParameter("salesman")).trim().isEmpty()));
+                        SQLUtils.ConvertToSqlString("%" + getParameter("saleman") + "%"), !StringUtils.convertNullableString(getParameter("saleman")).trim().isEmpty()));
                 add(new SQLUtils.WhereCondition("billtb.billdate", "like",
                         SQLUtils.ConvertToSqlString("%" + getParameter("billdate") + "%"), !StringUtils.convertNullableString(getParameter("billdate")).trim().isEmpty()));
 //                if (StringUtils.convertNullableString(getParameter("billstatus")).trim().equals("finished")){

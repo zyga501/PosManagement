@@ -16,7 +16,9 @@ public class MenuAction {
     private final static String POSMANAGER = "posManager";
     private final static String SWINGCARDMANAGER = "swingCardManager";
     private final static String REPAYMANAGER="RepayManager";
+    private final static String STATISTICSASSETGENERAL="StatisticsAssetGeneral";
     private final static String STATISTICSSWINGGENERAL="StatisticsSwingGeneral";
+    private final static String STATISTICSREPAYGENERAL="StatisticsRepayGeneral";
 
     public String ManageSaleMan() {
         return SALEMANMANAGE;
@@ -78,7 +80,13 @@ public class MenuAction {
         return REPAYMANAGER;
     }
 
+    public String StatisticsAssetGeneral(){
+        return STATISTICSASSETGENERAL;
+    }
     public String StatisticsSwingGeneral(){
         return STATISTICSSWINGGENERAL;
+    }
+    public String StatisticsRepayGeneral(){
+        return STATISTICSREPAYGENERAL;
     }
 }

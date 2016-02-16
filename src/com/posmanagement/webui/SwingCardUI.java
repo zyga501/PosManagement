@@ -81,8 +81,8 @@ public class SwingCardUI extends WebUI {
         }
 
         if (!UserUtils.isAdmin(userID_))
-            whereSql += " and  (cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
-                    " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"')) ";
+            whereSql += " and  (cardtb.salemanuuid in (select a.uid from salemantb a  where a.uid='"+userID_+"' )" +
+                    " or cardtb.salemanuuid in(select salemanuuid from tellertb   where uid='"+userID_+"')) ";
 
         ArrayList<HashMap<String, Object>> resultMap = PosDbManager.executeSql("SELECT count(*) as cnt\n" +
                 "FROM\n" +
@@ -108,8 +108,8 @@ public class SwingCardUI extends WebUI {
         String limitSql ="limit " + (pageIndex - 1) * DEFAULTITEMPERPAGE + "," + DEFAULTITEMPERPAGE;
 
         if (!UserUtils.isAdmin(userID_))
-            whereSql += " and  (cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
-                    " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"')) ";
+            whereSql += " and  (cardtb.salemanuuid in (select a.uid from salemantb a  where a.uid='"+userID_+"' )" +
+                    " or cardtb.salemanuuid in(select salemanuuid from tellertb   where uid='"+userID_+"')) ";
 
         return PosDbManager.executeSql("SELECT \n" +
                 "SUBSTR(billtb.billdate,1,4) billyear, \n" +
@@ -134,8 +134,8 @@ public class SwingCardUI extends WebUI {
     private ArrayList<HashMap<String, Object>> fetchSwingCardDetail(String cardNO, String billUUID) throws Exception {
         String whereSql = "where swingcard.cardno='" + cardNO + "' and billuuid='" + billUUID + "'";
         if (!UserUtils.isAdmin(userID_))
-            whereSql += " and (cardtb.salesmanuuid in (select a.uid from salesmantb a  where a.uid='"+userID_+"' )" +
-                    " or cardtb.salesmanuuid in(select salesman from tellertb   where uid='"+userID_+"')) ";
+            whereSql += " and (cardtb.salemanuuid in (select a.uid from salemantb a  where a.uid='"+userID_+"' )" +
+                    " or cardtb.salemanuuid in(select salemanuuid from tellertb   where uid='"+userID_+"')) ";
 
             return PosDbManager.executeSql("SELECT swingcard.id,\n" +
                     "SUBSTR(billtb.billdate,1,4) billyear, \n" +

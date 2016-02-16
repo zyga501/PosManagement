@@ -15,7 +15,7 @@ public class UserUtils {
         return (dbRet.size() > 0);
     }
 
-    public static boolean isSalesman(String UID){
+    public static boolean issaleman(String UID){
         ArrayList<HashMap<String, Object>> dbRet = null;
         try {
             dbRet = PosDbManager.executeSql("select 1 from userinfo where rid ='69632ae8-7e48-4e72-ad58-1043ad655a4c' and  uid='"+UID+"'");

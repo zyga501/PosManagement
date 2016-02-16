@@ -42,7 +42,7 @@ public class AssetAction extends AjaxActionSupport {
             parametMap.put(8, getParameter("atmCashPwd").toString());
             parametMap.put(9, super.getUserID());
             PosDbManager.executeUpdate("insert into assettb(uuid,bankuuid,cardno,balance,ebanksignpwd,ebankcashpwd," +
-                    "ebanktransferpwd,atmcashpwd,salesmanuuid) values(?,?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>)parametMap);
+                    "ebanktransferpwd,atmcashpwd,salemanuuid) values(?,?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>)parametMap);
             map.put("assetList", new AssetUI(getUserID()).generateAssetTable());
         }
         catch (Exception exception) {

@@ -53,7 +53,7 @@ public class SalemanFeePolicy {
     }
 
     private ArrayList<HashMap<String, Object>> fetchSalemanFeeInfo() throws Exception {
-        return (ArrayList<HashMap<String, Object>>) PosDbManager.executeSql("select * from salesmantb where status='enable'");
+        return (ArrayList<HashMap<String, Object>>) PosDbManager.executeSql("select * from salemantb where status='enable'");
     }
 
     private ArrayList<SalemanFeeInfo> convertSalemanFeeInfo(ArrayList<HashMap<String, Object>> sqlSalemanFeeInfoList) {
@@ -81,7 +81,7 @@ public class SalemanFeePolicy {
         parametMap.put(2, salemanFeeInfo.feeqk);
         parametMap.put(3, salemanFeeInfo.uuid);
         return PosDbManager.executeUpdate("" +
-                "update salesmantb\n" +
+                "update salemantb\n" +
                 "set `status`=?,\n" +
                 "feeqk=?\n" +
                 "WHERE uid=?", (HashMap<Integer, Object>)parametMap);

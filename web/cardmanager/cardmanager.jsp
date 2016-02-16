@@ -57,7 +57,7 @@
                 <td><input type="text" name="bankname" placeholder="<s:text name="cardmanager.bankname"/>" class="input-text radius size-s"></td>
                 <td><input type="text" name="cardmaster" placeholder="<s:text name="cardmanager.cardmaster"/>" class="input-text radius size-s"></td>
                 <% if (request.getSession().getAttribute("roleId").equals("e664d6f3-85f8-4bd6-bcb8-c4e053732b29")){ %>
-                <td><input type="text" name="salesman" placeholder="<s:text name="cardmanager.salesman"/>" class="input-text radius size-s"></td><%}%>
+                <td><input type="text" name="saleman" placeholder="<s:text name="cardmanager.saleman"/>" class="input-text radius size-s"></td><%}%>
                 <td><a href="javascript:void(0);" class="btn btn-primary  radius size-S " onclick="dosearch()">
                     <s:text name="global.search"/></a><span style="float:right;"> <a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="
             addcard();"><s:text name="global.add"/></a></span></td></tr></table></form></div></div>
@@ -75,7 +75,7 @@
                             <th><s:text name="cardmanager.cardmaster"/></th>
                             <th><s:text name="cardmanager.cmtel"/></th>
                             <% if (request.getSession().getAttribute("roleId").equals("e664d6f3-85f8-4bd6-bcb8-c4e053732b29")){ %>
-                            <th><s:text name="cardmanager.salesman"/></th><%}%>
+                            <th><s:text name="cardmanager.saleman"/></th><%}%>
                         </tr>
                         </thead>
                         <tbody id="cardList">

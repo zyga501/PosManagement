@@ -61,6 +61,8 @@
                         <tr class="text-c">
                             <th><s:text name="swingcardsummary.thedate"/></th>
                             <th><s:text name="swingcardsummary.cardno"/></th>
+                            <th><s:text name="repaysummary.amount"/></th>
+                            <th><s:text name="statistics.paymoney"/></th>
                             <th><s:text name="cardmanager.bankname"/></th>
                             <th><s:text name="swingcardsummary.cardmaster"/></th>
                             <th><s:text name="swingcardsummary.status"/></th>

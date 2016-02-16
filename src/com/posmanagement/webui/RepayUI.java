@@ -27,6 +27,7 @@ public class RepayUI extends WebUI {
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("LASTREPAYMENTDATE")))
                     .addElement("td" , dbRet.get(index).get("CARDMASTER").toString())
                     .addElement("td" , dbRet.get(index).get("TRADEMONEY").toString())
+                    .addElement("td" , dbRet.get(index).get("CHARGEFEE").toString())
                     .addElement("td", dbRet.get(index).get("UNFINISHED").toString().equals("0") ?
                             getText("repaysummary.repayfinished") : getText("repaysummary.repayunfinished"))
                     .addElement(new UIContainer("td")
@@ -60,6 +61,7 @@ public class RepayUI extends WebUI {
                     .addElement("td" , StringUtils.formatCardNO(StringUtils.convertNullableString(dbRet.get(index).get("CARDNO"))))
                     .addElement("td" , StringUtils.convertNullableString(dbRet.get(index).get("CARDMASTER")))
                     .addElement("td" , StringUtils.convertNullableString(dbRet.get(index).get("TRADEMONEY")))
+                    .addElement("td" , StringUtils.convertNullableString(dbRet.get(index).get("CHARGEFEE")))
                     .addElement("td" , StringUtils.convertNullableString(dbRet.get(index).get("THEDATE")))
                     .addElement("td" , StringUtils.convertNullableString(dbRet.get(index).get("UNICK")), "○")
                     .addElement("td" , StringUtils.convertNullableString(dbRet.get(index).get("TRADETIME")), "○")
@@ -96,6 +98,7 @@ public class RepayUI extends WebUI {
                 "billtb.uuid billuuid, \n" +
                 "repaytb.thedate, \n" +
                 "cardtb.cardno, \n" +
+                "cardtb.commissioncharge*SUM(repaytb.trademoney) as chargefee, \n" +
                 "cardtb.cardmaster, \n" +
                 "count(*) totalcount, \n" +
                 "SUM(repaytb.trademoney) trademoney, \n" +
@@ -108,7 +111,8 @@ public class RepayUI extends WebUI {
                 whereSql +
                 "GROUP BY \n" +
                 "billtb.lastrepaymentdate,\n" +
-                "repaytb.cardno \n" +
+                "repaytb.cardno, \n" +
+                "cardtb.commissioncharge "+
                 "ORDER BY \n" +
                 "billtb.lastrepaymentdate desc, \n" +
                 "repaytb.tradetime desc\n"
@@ -129,6 +133,7 @@ public class RepayUI extends WebUI {
                 "billtb.lastrepaymentdate, \n" +
                 "repaytb.cardno, \n" +
                 "cardtb.cardmaster, \n" +
+                "repaytb.trademoney*cardtb.commissioncharge chargefee, \n" +
                 "repaytb.trademoney, \n" +
                 "repaytb.thedate, \n" +
                 "repaytb.tradestatus, \n" +

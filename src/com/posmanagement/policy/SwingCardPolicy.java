@@ -78,22 +78,44 @@ public class SwingCardPolicy {
         salemanID = _salemanID;
     }
 
+    public String getLastError() { return lastError; }
+
     public SwingList generateSwingList(String billNumber) throws Exception {
-        billInfo_ = fetchBillInfo(billNumber);
-        if (billInfo_ == null) {
-            return null;
+        try {
+            billInfo_ = fetchBillInfo(billNumber);
+            if (billInfo_ == null) {
+                throw new NullPointerException();
+            }
         }
-        cardInfo_ = fetchCardInfo(billInfo_.cardNO);
-        if (cardInfo_ == null) {
+        catch (NullPointerException exception) {
+            lastError = "无法找到有效账单信息";
             return null;
         }
 
-        ruleList_ = fetchRuleList(billInfo_.bankUUID);
-        if (ruleList_.size() <= 0) {
+        try {
+            cardInfo_ = fetchCardInfo(billInfo_.cardNO);
+            if (cardInfo_ == null) {
+                throw new NullPointerException();
+            }
+        }
+        catch (NullPointerException exception) {
+            lastError = "无法找到有效卡信息";
+            return null;
+        }
+
+        try {
+            ruleList_ = fetchRuleList(billInfo_.bankUUID);
+            if (ruleList_.size() <= 0) {
+                throw new NullPointerException();
+            }
+        }
+        catch (NullPointerException exception) {
+            lastError = "无法找到有效规则信息";
             return null;
         }
 
         if (cardInfo_.repayNum < 1) {
+            lastError = "当前账单关联卡还款次数少于1";
             return null;
         }
 
@@ -396,4 +418,5 @@ public class SwingCardPolicy {
     private final double REPAYDATEFIXEDLIMIT = 1.3;
     private final double SWINGAMOUNTFIXEDLIMIT = 0.1;
     private final long ONEDAYMILLIONSECOND = 24 * 60 * 60 * 1000;
+    private String lastError;
 }

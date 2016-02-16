@@ -34,8 +34,6 @@
                 layer.confirm('确定启用？', {
                     btn: ['yes', 'no'] //按钮
                 }, function () {
-                    button.value = "Y";
-                    button.setAttribute("class", "btn btn-success radius");
                     $.ajax({
                         type: 'post',
                         url: 'Bill!editBill',
@@ -47,8 +45,9 @@
                                 button.setAttribute("class", "btn btn-success radius");
                                 layer.msg(json.successMessage);
                             }
-                            else if (json.errorMessage)
+                            else if (json.errorMessage) {
                                 layer.msg(json.errorMessage);
+                            }
                         }
                     });
                 }, function () {

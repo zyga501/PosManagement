@@ -21,6 +21,7 @@ public class BillAction extends AjaxActionSupport {
     private String billamount;
     private String status;
     private String billNO;
+    private String swingcardErrorMessage;
 
     public String getStatus() {
         return status;
@@ -111,7 +112,8 @@ public class BillAction extends AjaxActionSupport {
                 return "";
             }
             if (!generateSwingCard()) {
-                return AjaxActionComplete();
+                map.put("errorMessage", getText("global.actionFailed") + swingcardErrorMessage);
+                return AjaxActionComplete(map);
             }
             para.put(2,billNO);
             if (PosDbManager.executeUpdate(sqlString,(HashMap<Integer, Object>)para))
@@ -218,6 +220,7 @@ public class BillAction extends AjaxActionSupport {
         SwingCardPolicy swingCardPolicy = new SwingCardPolicy(super.getUserID());
         SwingCardPolicy.SwingList swingList = swingCardPolicy.generateSwingList(billNO);
         if (swingList == null) {
+            swingcardErrorMessage = swingCardPolicy.getLastError();
             return false;
         }
 

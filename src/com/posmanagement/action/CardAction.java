@@ -201,7 +201,7 @@ public class CardAction extends AjaxActionSupport {
                 String[] strary=(new String("cardno,bankname,creditamount,tempamount,templimitdate," +
                         "useamount,billdate,pin,telpwd,tradepwd,enchashmentpwd,billafterdate,lastrepaymentdate," +
                         "billemail,status,commissioncharge,cardmaster,identityno,cmaddress,cmtel,cmseccontact," +
-                        "memos")).split(",");
+                        "memos,repaylimit,repaynum,repayinterval")).split(",");
                 para.put(i++, UUID.randomUUID().toString());
                 para.put(i++, super.getUserID());
                 for (String key : strary) {
@@ -211,8 +211,8 @@ public class CardAction extends AjaxActionSupport {
                 if (!PosDbManager.executeUpdate("insert into cardtb(uuid,salemanuuid,cardno,bankuuid,creditamount," +
                         "tempamount,templimitdate,useamount,billdate,pin,telpwd,tradepwd,enchashmentpwd," +
                         "billafterdate,lastrepaymentdate,billemail,status,commissioncharge,cardmaster,identityno," +
-                        "cmaddress,cmtel,cmseccontact,memos) values(?," +
-                        "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",(HashMap<Integer, Object>)  para))
+                        "cmaddress,cmtel,cmseccontact,memos,repaylimit,repaynum,repayinterval) values(?," +
+                        "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",(HashMap<Integer, Object>)  para))
                     map.put("errorMessage", getText("addrate.rateFormatError"));
                 else {
                     map.put("cardList", new CardUI(super.getUserID()).generateCardTable(""));

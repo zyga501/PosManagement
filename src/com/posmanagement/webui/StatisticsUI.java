@@ -86,7 +86,7 @@ public class StatisticsUI extends WebUI {
         return htmlString;
     }
 
-    public float[] fetchAssetGeneralpagecount() throws Exception {
+    public String[] fetchAssetGeneralpagecount() throws Exception {
         String whereSql = SQLUtils.BuildWhereCondition(uiConditions_);
         if (!whereSql.isEmpty()) {
             whereSql = " where " + whereSql;
@@ -94,23 +94,30 @@ public class StatisticsUI extends WebUI {
 
         if (!UserUtils.isAdmin(userID_))
             whereSql += " and  (assetflowtb.salemanuuid='"+userID_+"') ";
-        float[] rt = new float[4];
+        String[] rt = new String[5];
         ArrayList<HashMap<String, Object>> resultMap = PosDbManager.executeSql("SELECT count(*) as cnt,\n" +
                 "sum(amount) as amount, \n"+
-                "sum(balance) as charge \n"+
+                "sum(balance) as charge, \n"+
+                "assetflowtb.type "+
                 "FROM\n" +
                 "assetflowtb \n" +
-                "INNER JOIN salemantb  ON assetflowtb.salemanuuid = salemantb.uid \n" +
-                whereSql );
+                "INNER JOIN userinfo  ON assetflowtb.salemanuuid = userinfo.uid \n" +
+                whereSql +" group by type");
         if (resultMap.size()<=0) {
-            rt[0]=0;
+            rt[0]="0";
             return rt;
         }
         try {
-            rt[0] = Integer.parseInt(resultMap.get(0).get("CNT").toString()) / WebUI.DEFAULTITEMPERPAGE + 1;
-            rt[1] = Integer.parseInt(resultMap.get(0).get("CNT").toString());
-            rt[2] = Float.parseFloat(resultMap.get(0).get("AMOUNT").toString());
-            rt[3] = Float.parseFloat(resultMap.get(0).get("CHARGE").toString());
+            int _count = 0;
+            float _amount = 0;
+            String _string = "";
+            for  (int i = 0;i < resultMap.size();i++){
+                _count +=Integer.parseInt(resultMap.get(i).get("CNT").toString());
+                _amount += Float.parseFloat(resultMap.get(i).get("AMOUNT").toString());
+                _string += resultMap.get(i).get("TYPE").toString() +"<b>"+ resultMap.get(i).get("AMOUNT").toString()+"</b>";;
+            }
+            rt[0] = String.valueOf(_count / WebUI.DEFAULTITEMPERPAGE + 1);
+            rt[1] ="共 <b>"+String.valueOf(_count)+"</b>条 " +_string+" 产生利润 <b>"+String.valueOf(_amount)+"</b>";
         }
         catch (Exception e){
 
@@ -134,7 +141,7 @@ public class StatisticsUI extends WebUI {
                 "swingcard\n" +
                 "INNER JOIN userinfo ON swingcard.userid = userinfo.uid \n" +
                 "INNER JOIN postb on postb.uuid=swingcard.posuuid  \n" +
-                "INNER JOIN userinfo salemantb on postb.salemanuuid=userinfo.uid  \n" +
+                "INNER JOIN userinfo salemantb on postb.salemanuuid=salemantb.uid  \n" +
                 "left JOIN ratetb on ratetb.uuid=postb.rateuuid  \n" +
                 whereSql +limitSql);
     }
@@ -152,7 +159,7 @@ public class StatisticsUI extends WebUI {
         return PosDbManager.executeSql("SELECT  * " +
                 "FROM\n" +
                 "assetflowtb\n" +
-                "INNER JOIN salemantb ON assetflowtb.salemanuuid = salemantb.uid \n" +
+                "INNER JOIN userinfo ON assetflowtb.salemanuuid = userinfo.uid \n" +
                 whereSql +limitSql);
     }
     private String userID_;

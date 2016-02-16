@@ -59,6 +59,7 @@
                         <th><s:text name="repaysummary.lastrepaymentdate"/></th>
                         <th><s:text name="repaysummary.cardmaster"/></th>
                         <th><s:text name="repaysummary.amount"/></th>
+                        <th><s:text name="repaysummary.charge"/></th>
                         <th><s:text name="repaysummary.status"/></th>
                         <th><s:text name="global.operation"/></th>
                     </tr>

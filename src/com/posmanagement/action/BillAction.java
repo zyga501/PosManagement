@@ -80,7 +80,7 @@ public class BillAction extends AjaxActionSupport {
                 para.put(1, billamount);
                 para.put(2, billamount);
                 para.put(3,billNO);
-                sqlString ="update billtb a inner join cardtb b on  a.cardno=b.cardno set a.billamount=?,a.canuseamount=b.creditamount-? where status<>'enable' and  a.UUID=? ";
+                sqlString ="update billtb a inner join cardtb b on  a.cardno=b.cardno set a.billamount=?,a.canuseamount=b.creditamount-? where a.status<>'enable' and  a.UUID=? ";
             } else {
                 return "";
             }

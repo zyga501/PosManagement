@@ -158,7 +158,7 @@ public class StatisticsAction extends AjaxActionSupport{
                             SQLUtils.ConvertToSqlString(getParameter("sdate").toString().trim())));
                 if (!StringUtils.convertNullableString(getParameter("edate")).trim().isEmpty())
                     add(new SQLUtils.WhereCondition("swingcard.realsdatetm", " <",
-                            SQLUtils.ConvertToSqlString(getParameter("edate").toString().trim())));
+                            SQLUtils.ConvertToSqlString(getParameter("edate").toString().trim()+" 23:59:59")));
                 if (!StringUtils.convertNullableString(getParameter("saleman")).trim().isEmpty()) {
                     add(new SQLUtils.WhereCondition("salemantb.unick", " =",
                             SQLUtils.ConvertToSqlString(getParameter("saleman").toString().trim())));
@@ -199,11 +199,11 @@ public class StatisticsAction extends AjaxActionSupport{
                             SQLUtils.ConvertToSqlString(getParameter("sdate").toString().trim())));
                 if (!StringUtils.convertNullableString(getParameter("edate")).trim().isEmpty())
                     add(new SQLUtils.WhereCondition("assetflowtb.time", " <",
-                            SQLUtils.ConvertToSqlString(getParameter("edate").toString().trim())));
+                            SQLUtils.ConvertToSqlString(getParameter("edate").toString().trim()+" 23:59:59")));
                 if (!StringUtils.convertNullableString(getParameter("saleman")).trim().isEmpty()) {
-                    add(new SQLUtils.WhereCondition("salemantb.unick", " =",
+                    add(new SQLUtils.WhereCondition("userinfo.unick", " =",
                             SQLUtils.ConvertToSqlString(getParameter("saleman").toString().trim())));
-                    add(new SQLUtils.WhereCondition("salemantb.rid", " =","'69632ae8-7e48-4e72-ad58-1043ad655a4c'"));
+                    add(new SQLUtils.WhereCondition("userinfo.rid", " =","'69632ae8-7e48-4e72-ad58-1043ad655a4c'"));
                 }
             }
         };
@@ -212,12 +212,9 @@ public class StatisticsAction extends AjaxActionSupport{
         StatisticsUI statisticsUI = new StatisticsUI(super.getUserID());
         statisticsUI.setUiConditions(uiConditions);
         try {
-            float[] rt = statisticsUI.fetchAssetGeneralpagecount();
+            String[] rt = statisticsUI.fetchAssetGeneralpagecount();
             map.put("pagecount",rt[0]);
-            map.put("cnt",rt[1]);
-            map.put("amount",rt[2]);
-            map.put("charge",rt[3]);
-            map.put("inbank",rt[2]-rt[3]);
+            map.put("msgstring",rt[1]);
             int curr = Integer.parseInt(null==getParameter("currpage")?"1":getParameter("currpage").toString());
             String  v=statisticsUI.generateAsset(curr);
             map.put("assetGeneral",v);

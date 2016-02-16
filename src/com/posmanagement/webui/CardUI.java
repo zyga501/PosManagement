@@ -31,7 +31,7 @@ public class CardUI extends WebUI {
                     .addElement("td", dbRet.get(index).get("CARDMASTER").toString())
                     .addElement("td", dbRet.get(index).get("CMTEL").toString());
             if (UserUtils.isAdmin(userID_))
-                    UI.addElement("td", dbRet.get(index).get("saleman").toString());
+                    UI.addElement("td", dbRet.get(index).get("SALEMAN").toString());
             htmlString += UI;
         }
         return htmlString;

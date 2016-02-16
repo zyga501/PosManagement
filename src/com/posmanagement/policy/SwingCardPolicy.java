@@ -374,6 +374,7 @@ public class SwingCardPolicy {
                 add(new SQLUtils.WhereCondition("posserveruuid", "=", SQLUtils.ConvertToSqlString(ruleInfo.posServerUUID), !ruleInfo.posServerUUID.isEmpty()));
                 add(new SQLUtils.WhereCondition("rateuuid", "=", SQLUtils.ConvertToSqlString(ruleInfo.rateUUID), !ruleInfo.rateUUID.isEmpty()));
                 add(new SQLUtils.WhereCondition("mccuuid", "=", SQLUtils.ConvertToSqlString(ruleInfo.mccUUID), !ruleInfo.mccUUID.isEmpty()));
+                add(new SQLUtils.WhereCondition("userinfo.uid", "=", SQLUtils.ConvertToSqlString(salemanID), !UserUtils.isAdmin(salemanID)));
             }
         };
 
@@ -382,7 +383,8 @@ public class SwingCardPolicy {
             whereSql = " where " + whereSql;
         }
 
-        return (ArrayList<HashMap<String, Object>>)PosDbManager.executeSql("select * from postb" + whereSql);
+        return (ArrayList<HashMap<String, Object>>)PosDbManager.executeSql("SELECT * FROM postb\n" +
+                "INNER JOIN userinfo ON userinfo.uid = postb.salemanuuid" + whereSql);
     }
 
     private String salemanID;

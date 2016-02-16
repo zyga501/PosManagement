@@ -126,9 +126,9 @@
             <table class="table table-border table-bordered table-bg table-hover table-sort">
                 <tr class="text-c">
                     <td><s:text name="cardmanager.cardno"/></td><td><input id=cardno name=cardmanager.cardno type="text" value="<s:property value="cardmanager.cardno"/>" placeholder="<s:text name="cardmanager.cardno"/>" class="input-text size-S required " datatype="s10-22"></td>
-                    <td><s:text name="cardmanager.bankname"/></td>
+                    <td><s:text name="cardmanager.bankname" /></td>
                     <td>
-                        <select id="bankName" name="cardmanager.bankname" style="width: 100%">
+                        <select id="bankName" name="cardmanager.bankname" style="width: 100%" datatype="*" class="required">
                         </select>
                     </td>
                     <td><s:text name="cardmanager.creditamount"/></td><td><input id=creditamount name=cardmanager.creditamount type="text" value="<s:property value="cardmanager.creditamount"/>" placeholder="<s:text name="cardmanager.creditamount"/>" class="input-text size-S required " datatype="n"></td>

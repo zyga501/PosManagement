@@ -78,8 +78,7 @@
     </div>
 </div>
 <div class="cl pd-5 bg-1 bk-gray mt-20">
-	 <span style="float:left;">共<strong><span id="cnt"></span></strong> 条，还款 <strong><span id="repay">
-     </span></strong> 还款收费 <strong><span id="repaycharge"></span></strong> 结算到账 <strong><span id="inbank"></span></strong> 刷卡扣费 <strong><span id="charge"></span></strong> 产生利润 <strong><span id="profit"></span></strong></span>
+	 <span style="float:left;"><span id="msgstring"></span></span>
 		<span style="float:right;">
 		<a href="javascript:void(0);" title="<s:text name="global.exportdate" />"
            class="btn btn-danger radius size-MINI" onclick="explist();"> <i
@@ -126,10 +125,7 @@
                 }
                 else {
                     setval(json.assetGeneral);
-                    $('#cnt').html(json.cnt);
-                    $('#amount').html(json.amount);
-                    $('#charge').html(json.charge);
-                    $('#inbank').html(json.inbank);
+                    $('#msgstring').html(json.msgstring);
                 }
                 laypage({
                     cont: 'navigatediv',

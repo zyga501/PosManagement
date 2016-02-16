@@ -46,6 +46,23 @@ public class SwingCardAction extends AjaxActionSupport {
         }
         else {
             Map parameterMap =new HashMap();
+            String salemanUUID = super.getUserID();
+            if (!UserUtils.issaleman(salemanUUID)) {
+                parameterMap.clear();
+                parameterMap.put(1, salemanUUID);
+                ArrayList<HashMap<String, Object>> salemanRet = PosDbManager.executeSql("select salemanuuid from tellertb where uid=?", (HashMap<Integer, Object>)parameterMap);
+                if (salemanRet.size() > 0) {
+                    salemanUUID = salemanRet.get(0).get("SALEMANUUID").toString();
+                }
+            }
+            parameterMap.clear();
+            parameterMap.put(1, salemanUUID);
+            ArrayList<HashMap<String, Object>> assetRet = PosDbManager.executeSql("select * from assettb where salemanuuid=?", (HashMap<Integer, Object>)parameterMap);
+            if (assetRet.size() <= 0) {
+                map.put("errorMessage", "操作失败!资产信息不存在");
+                return AjaxActionComplete(map);
+            }
+
             parameterMap.put(1,super.getUserID());
             parameterMap.put(2,getParameter("swingId"));
             if (PosDbManager.executeUpdate("update swingcard\n" +
@@ -70,15 +87,7 @@ public class SwingCardAction extends AjaxActionSupport {
                     "end)\n" +
                     "end)" +
                     " where id=?",(HashMap<Integer, Object>)parameterMap)) {
-                String salemanUUID = super.getUserID();
-                if (!UserUtils.issaleman(salemanUUID)) {
-                    parameterMap.clear();
-                    parameterMap.put(1, salemanUUID);
-                    ArrayList<HashMap<String, Object>> salemanRet = PosDbManager.executeSql("select salemanuuid from tellertb where uid=?", (HashMap<Integer, Object>)parameterMap);
-                    if (salemanRet.size() > 0) {
-                        salemanUUID = salemanRet.get(0).get("SALEMANUUID").toString();
-                    }
-                }
+
                 parameterMap.clear();
                 parameterMap.put(1, getParameter("swingId"));
                 parameterMap.put(2, salemanUUID);
@@ -97,7 +106,7 @@ public class SwingCardAction extends AjaxActionSupport {
                     ArrayList<HashMap<String, Object>> swingRet = PosDbManager.executeSql("SELECT amount, charge, postb.posname from swingcard LEFT JOIN postb on swingcard.posuuid = postb.uuid where id=?", (HashMap<Integer, Object>)parameterMap);
                     parameterMap.clear();
                     parameterMap.put(1, super.getUserID());
-                    ArrayList<HashMap<String, Object>> assetRet = PosDbManager.executeSql("SELECT balance from assettb where salemanuuid=?", (HashMap<Integer, Object>)parameterMap);
+                    assetRet = PosDbManager.executeSql("SELECT balance from assettb where salemanuuid=?", (HashMap<Integer, Object>)parameterMap);
                     if (swingRet.size() > 0 && assetRet.size() > 0) {
                         double swingAmount = Double.parseDouble(swingRet.get(0).get("AMOUNT").toString());
                         double charge = Double.parseDouble(swingRet.get(0).get("CHARGE").toString());

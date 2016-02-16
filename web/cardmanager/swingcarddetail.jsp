@@ -21,8 +21,6 @@
                 layer.confirm('确定启用？', {
                     btn: ['yes', 'no'] //按钮
                 }, function () {
-                    button.value = "Y";
-                    button.setAttribute("class", "btn btn-success radius");
                     layer.msg('你选择了YES', {icon: 1});
                     $.ajax({
                         type: 'post',

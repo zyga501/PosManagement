@@ -30,6 +30,11 @@ public class RepayUI extends WebUI {
                     .addElement("td", dbRet.get(index).get("UNFINISHED").toString().equals("0") ?
                             getText("repaysummary.repayfinished") : getText("repaysummary.repayunfinished"))
                     .addElement(new UIContainer("td")
+                            .addElement("span", "还<b>"+StringUtils.convertNullableString(dbRet.get(index).get("FINISHED"))+
+                            "</b>,未<b>"+StringUtils.convertNullableString(dbRet.get(index).get("UNFINISHED"))+"</b>,共<b>"+
+                            StringUtils.convertNullableString(dbRet.get(index).get("TOTALCOUNT"))+"</b>笔")
+                    )
+                    .addElement(new UIContainer("td")
                             .addElement(
                                     new UIContainer("input")
                                             .addAttribute("type", "button")
@@ -37,9 +42,7 @@ public class RepayUI extends WebUI {
                                             .addAttribute("class", "btn radius")
                                             .addAttribute("onclick", "clickDetail('" + dbRet.get(index).get("CARDNO") +
                                                     "','" + dbRet.get(index).get("BILLUUID") + "')")
-                            ).addElement("span", "还<b>"+StringUtils.convertNullableString(dbRet.get(index).get("FINISHED"))+
-                                    "</b>,未<b>"+StringUtils.convertNullableString(dbRet.get(index).get("UNFINISHED"))+"</b>,共<b>"+
-                                    StringUtils.convertNullableString(dbRet.get(index).get("TOTALCOUNT"))+"</b>笔")
+                            )
                     );
         }
         return htmlString;

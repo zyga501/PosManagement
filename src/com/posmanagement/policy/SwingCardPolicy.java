@@ -121,6 +121,7 @@ public class SwingCardPolicy {
 
         double dateLimit = (billInfo_.lastRepayDate.getTime() - billInfo_.billDate.getTime()) / ONEDAYMILLIONSECOND;
         if (dateLimit < 0) {
+            lastError = "最后还款日与账单日时间错误";
             return null;
         }
 

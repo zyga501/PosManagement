@@ -76,6 +76,23 @@ public class RepayAction extends AjaxActionSupport {
         }
         else {
             Map parameterMap =new HashMap();
+            String salemanUUID = super.getUserID();
+            if (!UserUtils.issaleman(salemanUUID)) {
+                parameterMap.clear();
+                parameterMap.put(1, salemanUUID);
+                ArrayList<HashMap<String, Object>> salemanRet = PosDbManager.executeSql("select salemanuuid from tellertb where uid=?", (HashMap<Integer, Object>)parameterMap);
+                if (salemanRet.size() > 0) {
+                    salemanUUID = salemanRet.get(0).get("SALEMANUUID").toString();
+                }
+            }
+            parameterMap.clear();
+            parameterMap.put(1, salemanUUID);
+            ArrayList<HashMap<String, Object>> assetRet = PosDbManager.executeSql("select * from assettb where salemanuuid=?", (HashMap<Integer, Object>)parameterMap);
+            if (assetRet.size() <= 0) {
+                map.put("errorMessage", "操作失败!资产信息不存在");
+                return AjaxActionComplete(map);
+            }
+
             parameterMap.put(1,super.getUserID());
             parameterMap.put(2,getParameter("repayId"));
             if (PosDbManager.executeUpdate("update repaytb\n" +
@@ -86,15 +103,6 @@ public class RepayAction extends AjaxActionSupport {
                     "tradetime=now(),\n" +
                     "charge=cardtb.commissioncharge * repaytb.trademoney\n" +
                     "where id=?",(HashMap<Integer, Object>)parameterMap)) {
-                String salemanUUID = super.getUserID();
-                if (!UserUtils.issaleman(salemanUUID)) {
-                    parameterMap.clear();
-                    parameterMap.put(1, salemanUUID);
-                    ArrayList<HashMap<String, Object>> salemanRet = PosDbManager.executeSql("select salemanuuid from tellertb where uid=?", (HashMap<Integer, Object>)parameterMap);
-                    if (salemanRet.size() > 0) {
-                        salemanUUID = salemanRet.get(0).get("SALEMANUUID").toString();
-                    }
-                }
                 parameterMap.clear();
                 parameterMap.put(1, getParameter("repayId"));
                 parameterMap.put(2, salemanUUID);
@@ -109,7 +117,7 @@ public class RepayAction extends AjaxActionSupport {
                     ArrayList<HashMap<String, Object>> repayRet = PosDbManager.executeSql("SELECT trademoney, cardNO, charge from repaytb where id=?", (HashMap<Integer, Object>)parameterMap);
                     parameterMap.clear();
                     parameterMap.put(1, super.getUserID());
-                    ArrayList<HashMap<String, Object>> assetRet = PosDbManager.executeSql("SELECT balance from assettb where salemanuuid=?", (HashMap<Integer, Object>)parameterMap);
+                    assetRet = PosDbManager.executeSql("SELECT balance from assettb where salemanuuid=?", (HashMap<Integer, Object>)parameterMap);
                     if (repayRet.size() > 0 && assetRet.size() > 0) {
                         double repayAmount = -Double.parseDouble(repayRet.get(0).get("TRADEMONEY").toString());
                         double charge = Double.parseDouble(repayRet.get(0).get("CHARGE").toString());

@@ -26,9 +26,9 @@ public class SwingCardUI extends WebUI {
                     .addElement("td", dbRet.get(index).get("BILLYEAR").toString() + "/" +
                             dbRet.get(index).get("BILLMONTH").toString())
                     .addElement("td", StringUtils.formatCardNO(dbRet.get(index).get("CARDNO").toString()))
-                    .addElement("td", dbRet.get(index).get("BANKNAME").toString())
                     .addElement("td", dbRet.get(index).get("AMOUNT").toString())
                     .addElement("td", dbRet.get(index).get("PAYCHARGE").toString())
+                    .addElement("td", dbRet.get(index).get("BANKNAME").toString())
                     .addElement("td", dbRet.get(index).get("CARDMASTER").toString())
                     .addElement("td", dbRet.get(index).get("UNFINISHED").toString().equals("0")?
                             getText("swingcardsummary.swingfinished") : getText("swingcardsummary.swingunfinished"))
@@ -122,7 +122,8 @@ public class SwingCardUI extends WebUI {
                 "swingcard.cardno, \n" +
                 "billtb.uuid billuuid, \n" +
                 "Sum(swingcard.amount) AS amount, \n" +
-                "Sum(case when swingcard.amount*ratetb.rate>ratetb.MAXFEE and ratetb.maxfee>0 then ratetb.maxfee else swingcard.amount*ratetb.rate  end)  paycharge, \n" +
+                "Sum(case when swingcard.amount*ratetb.rate/100>ratetb.MAXFEE and ratetb.maxfee>0 then " +
+                "ratetb.maxfee else swingcard.amount*ratetb.rate/100  end)  paycharge, \n" +
                 "cardtb.cardmaster, \n" +
                 "count(1) totalcount,"+
                 "sum(case when swingstatus='enable' then 1 else 0 END) finished, \n" +
@@ -147,29 +148,29 @@ public class SwingCardUI extends WebUI {
             whereSql += " and (cardtb.salemanuuid in (select a.uid from salemantb a  where a.uid='"+userID_+"' )" +
                     " or cardtb.salemanuuid in(select salemanuuid from tellertb   where uid='"+userID_+"')) ";
 
-            return PosDbManager.executeSql("SELECT swingcard.id,\n" +
-                    "SUBSTR(billtb.billdate,1,4) billyear, \n" +
-                    "SUBSTR(billtb.billdate,6,2) billmonth, \n" +
-                    "swingcard.cardno, \n" +
-                    "cardtb.cardmaster, \n" +
-                    "swingcard.amount, \n" +
-                    "(case when swingcard.amount*ratetb.rate>ratetb.MAXFEE and ratetb.maxfee>0 then" +
-                    " ratetb.maxfee else swingcard.amount*ratetb.rate  end)  paycharge, \n" +
-                    "swingcard.sdatetm, \n" +
-                    "postb.posname, \n" +
-                    "userinfo.unick, \n" +
-                    "swingcard.realsdatetm, \n" +
-                    "swingcard.swingstatus \n" +
-                    "FROM \n" +
-                    "swingcard \n" +
-                    "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno \n" +
-                    "INNER JOIN postb ON postb.uuid = swingcard.posuuid \n" +
-                    "INNER JOIN ratetb ON postb.rateuuid = ratetb.uuid \n" +
-                    "INNER JOIN billtb ON swingcard.billuuid = billtb.uuid AND swingcard.cardno = billtb.cardno \n" +
-                    "left JOIN userinfo ON userinfo.uid = swingcard.userid \n" +
-                    whereSql +
-                    "ORDER BY \n" + 
-                    "swingcard.sdatetm desc");
+        return PosDbManager.executeSql("SELECT swingcard.id,\n" +
+                "SUBSTR(billtb.billdate,1,4) billyear, \n" +
+                "SUBSTR(billtb.billdate,6,2) billmonth, \n" +
+                "swingcard.cardno, \n" +
+                "cardtb.cardmaster, \n" +
+                "swingcard.amount, \n" +
+                "(case when swingcard.amount*ratetb.rate/100>ratetb.MAXFEE and ratetb.maxfee>0 then" +
+                " ratetb.maxfee else swingcard.amount*ratetb.rate/100  end)  paycharge, \n" +
+                "swingcard.sdatetm, \n" +
+                "postb.posname, \n" +
+                "userinfo.unick, \n" +
+                "swingcard.realsdatetm, \n" +
+                "swingcard.swingstatus \n" +
+                "FROM \n" +
+                "swingcard \n" +
+                "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno \n" +
+                "INNER JOIN postb ON postb.uuid = swingcard.posuuid \n" +
+                "INNER JOIN ratetb ON postb.rateuuid = ratetb.uuid \n" +
+                "INNER JOIN billtb ON swingcard.billuuid = billtb.uuid AND swingcard.cardno = billtb.cardno \n" +
+                "left JOIN userinfo ON userinfo.uid = swingcard.userid \n" +
+                whereSql +
+                "ORDER BY \n" +
+                "swingcard.sdatetm desc");
     }
 
     private String userID_;

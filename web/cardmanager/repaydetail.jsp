@@ -60,6 +60,7 @@
                             <th><s:text name="repaydetail.cardno"/></th>
                             <th><s:text name="repaydetail.cardmaster"/></th>
                             <th><s:text name="repaydetail.amount"/></th>
+                            <th><s:text name="repaysummary.charge"/></th>
                             <th><s:text name="repaydetail.sdatetm"/></th>
                             <th><s:text name="repaydetail.teller"/></th>
                             <th><s:text name="repaydetail.realsdatetm"/></th>

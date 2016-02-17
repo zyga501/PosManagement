@@ -101,7 +101,7 @@ public class RepayUI extends WebUI {
                 "billtb.uuid billuuid, \n" +
                 "repaytb.thedate, \n" +
                 "cardtb.cardno, \n" +
-                "cardtb.commissioncharge*SUM(repaytb.trademoney) as chargefee, \n" +
+                "cardtb.commissioncharge*SUM(repaytb.trademoney)/100 as chargefee, \n" +
                 "cardtb.cardmaster, \n" +
                 "count(*) totalcount, \n" +
                 "SUM(repaytb.trademoney) trademoney, \n" +

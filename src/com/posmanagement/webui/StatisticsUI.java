@@ -67,6 +67,60 @@ public class StatisticsUI extends WebUI {
         return rt;
     }
 
+
+    public String generateRepaySummary(int pageIndex) throws Exception {
+        ArrayList<HashMap<String, Object>> dbRet = fetchRepayGeneralSummary(pageIndex);
+        if (dbRet.size() <= 0)
+            return new String("");
+
+        String htmlString = "";
+        for (int index = 0; index < dbRet.size(); ++index) {
+            htmlString += new UIContainer("tr")
+                    .addAttribute("class", "text-c odd")
+                    .addAttribute("role", "row")
+                    .addElement("td", dbRet.get(index).get("TRADETIME").toString())
+                    .addElement("td", dbRet.get(index).get("CARDNO").toString())
+                    .addElement("td", dbRet.get(index).get("CARDMASTER").toString())
+                    .addElement("td", dbRet.get(index).get("COMMISSIONCHARGE").toString())
+                    .addElement("td", dbRet.get(index).get("TRADEMONEY").toString())
+                    .addElement("td", dbRet.get(index).get("CHARGE").toString()) ;
+        }
+        return htmlString;
+    }
+
+    public float[] fetchRepayGeneralpagecount() throws Exception {
+        String whereSql = SQLUtils.BuildWhereCondition(uiConditions_);
+        if (!whereSql.isEmpty()) {
+            whereSql = " where " + whereSql;
+        }
+
+        if (!UserUtils.isAdmin(userID_))
+            whereSql += " and  (salemantb.uid='"+userID_+"' " +
+                    " or userinfo.uid ='"+userID_+"') ";
+        float[] rt = new float[4];
+        ArrayList<HashMap<String, Object>> resultMap = PosDbManager.executeSql("SELECT count(*) as cnt, \n" +
+                "sum(trademoney) amount,"+
+                "sum(charge) charge "+
+                "from repaytb \n" +
+                "INNER JOIN userinfo ON repaytb.userid = userinfo.uid \n" +
+                "INNER JOIN cardtb on cardtb.cardno=repaytb.cardno  \n" +
+                whereSql );
+        if (resultMap.size()<=0) {
+            rt[0]=0;
+            return rt;
+        }
+        try {
+            rt[0] = Integer.parseInt(resultMap.get(0).get("CNT").toString()) / WebUI.DEFAULTITEMPERPAGE + 1;
+            rt[1] = Integer.parseInt(resultMap.get(0).get("CNT").toString());
+            rt[2] = Float.parseFloat(resultMap.get(0).get("AMOUNT").toString());
+            rt[3] = Float.parseFloat(resultMap.get(0).get("CHARGE").toString());
+        }
+        catch (Exception e){
+
+        }
+        return rt;
+    }
+
     public String generateAsset(int pageIndex) throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchAssetGeneralSummary(pageIndex);
         if (dbRet.size() <= 0)
@@ -143,6 +197,25 @@ public class StatisticsUI extends WebUI {
                 "INNER JOIN postb on postb.uuid=swingcard.posuuid  \n" +
                 "INNER JOIN userinfo salemantb on postb.salemanuuid=salemantb.uid  \n" +
                 "left JOIN ratetb on ratetb.uuid=postb.rateuuid  \n" +
+                whereSql +limitSql);
+    }
+
+    private ArrayList<HashMap<String, Object>>  fetchRepayGeneralSummary(int pageIndex) throws Exception {
+        String whereSql = SQLUtils.BuildWhereCondition(uiConditions_);
+        if (!whereSql.isEmpty()) {
+            whereSql = " where " + whereSql;
+        }
+        String limitSql ="limit " + (pageIndex - 1) * DEFAULTITEMPERPAGE + "," + DEFAULTITEMPERPAGE;
+
+        if (!UserUtils.isAdmin(userID_))
+            whereSql += " and  (repaytb.salemanuuid='"+userID_+"' " +
+                    " or userinfo.uid ='"+userID_+"') ";
+        return PosDbManager.executeSql("SELECT   repaytb.*,cardtb.cardmaster,cardtb.commissioncharge," +
+                "userinfo.unick as doer " +
+                "FROM\n" +
+                "repaytb \n" +
+                "INNER JOIN userinfo ON repaytb.userid = userinfo.uid \n" +
+                "INNER JOIN cardtb on cardtb.cardno=repaytb.cardno  \n" +
                 whereSql +limitSql);
     }
 

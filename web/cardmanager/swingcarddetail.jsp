@@ -60,6 +60,7 @@
                             <th><s:text name="swingcarddetail.cardno"/></th>
                             <th><s:text name="swingcarddetail.cardmaster"/></th>
                             <th><s:text name="swingcarddetail.amount"/></th>
+                            <th><s:text name="statistics.paymoney"/></th>
                             <th><s:text name="swingcarddetail.sdatetm"/></th>
                             <th><s:text name="swingcarddetail.machinename"/></th>
                             <th><s:text name="swingcarddetail.teller"/></th>

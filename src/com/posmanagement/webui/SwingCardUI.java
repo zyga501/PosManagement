@@ -27,6 +27,8 @@ public class SwingCardUI extends WebUI {
                             dbRet.get(index).get("BILLMONTH").toString())
                     .addElement("td", StringUtils.formatCardNO(dbRet.get(index).get("CARDNO").toString()))
                     .addElement("td", dbRet.get(index).get("BANKNAME").toString())
+                    .addElement("td", dbRet.get(index).get("AMOUNT").toString())
+                    .addElement("td", dbRet.get(index).get("PAYCHARGE").toString())
                     .addElement("td", dbRet.get(index).get("CARDMASTER").toString())
                     .addElement("td", dbRet.get(index).get("UNFINISHED").toString().equals("0")?
                             getText("swingcardsummary.swingfinished") : getText("swingcardsummary.swingunfinished"))
@@ -38,7 +40,9 @@ public class SwingCardUI extends WebUI {
                                             .addAttribute("class", "btn radius")
                                             .addAttribute("onclick", "clickDetail('" + dbRet.get(index).get("CARDNO") +
                                                     "','" + dbRet.get(index).get("BILLUUID") + "')")
-                            )
+                            ).addElement("span", "刷<b>"+StringUtils.convertNullableString(dbRet.get(index).get("FINISHED"))+
+                                    "</b>,未<b>"+StringUtils.convertNullableString(dbRet.get(index).get("UNFINISHED"))+"</b>,共<b>"+
+                                    StringUtils.convertNullableString(dbRet.get(index).get("TOTALCOUNT"))+"</b>笔")
                     );
         }
         return htmlString;
@@ -59,6 +63,7 @@ public class SwingCardUI extends WebUI {
                     .addElement("td" , StringUtils.formatCardNO(StringUtils.convertNullableString(dbRet.get(index).get("CARDNO"))))
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("CARDMASTER")))
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("AMOUNT")))
+                    .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("PAYCHARGE")))
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("SDATETM")))
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("POSNAME")))
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("UNICK")), "○")
@@ -117,12 +122,17 @@ public class SwingCardUI extends WebUI {
                 "swingcard.cardno, \n" +
                 "billtb.uuid billuuid, \n" +
                 "Sum(swingcard.amount) AS amount, \n" +
+                "Sum(case when swingcard.amount*ratetb.rate>ratetb.MAXFEE and ratetb.maxfee>0 then ratetb.maxfee else swingcard.amount*ratetb.rate  end)  paycharge, \n" +
                 "cardtb.cardmaster, \n" +
+                "count(1) totalcount,"+
+                "sum(case when swingstatus='enable' then 1 else 0 END) finished, \n" +
                 "(count(1) - sum(case when swingstatus='enable' then 1 else 0 END)) unfinished, \n" +
                 "banktb.name as bankname \n" +
                 "FROM \n" +
                 "swingcard \n" +
                 "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno \n" +
+                "INNER JOIN postb ON postb.uuid = swingcard.posuuid \n" +
+                "INNER JOIN ratetb ON postb.rateuuid = ratetb.uuid \n" +
                 "INNER JOIN billtb ON swingcard.billuuid = billtb.uuid AND swingcard.cardno = billtb.cardno \n" +
                 "INNER JOIN banktb on banktb.uuid=cardtb.bankuuid  \n" +
                 whereSql +
@@ -143,6 +153,8 @@ public class SwingCardUI extends WebUI {
                     "swingcard.cardno, \n" +
                     "cardtb.cardmaster, \n" +
                     "swingcard.amount, \n" +
+                    "(case when swingcard.amount*ratetb.rate>ratetb.MAXFEE and ratetb.maxfee>0 then" +
+                    " ratetb.maxfee else swingcard.amount*ratetb.rate  end)  paycharge, \n" +
                     "swingcard.sdatetm, \n" +
                     "postb.posname, \n" +
                     "userinfo.unick, \n" +
@@ -152,12 +164,12 @@ public class SwingCardUI extends WebUI {
                     "swingcard \n" +
                     "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno \n" +
                     "INNER JOIN postb ON postb.uuid = swingcard.posuuid \n" +
+                    "INNER JOIN ratetb ON postb.rateuuid = ratetb.uuid \n" +
                     "INNER JOIN billtb ON swingcard.billuuid = billtb.uuid AND swingcard.cardno = billtb.cardno \n" +
                     "left JOIN userinfo ON userinfo.uid = swingcard.userid \n" +
                     whereSql +
-                    "ORDER BY \n" +
-                    "swingcard.swingstatus, \n" +
-                    "swingcard.sdatetm");
+                    "ORDER BY \n" + 
+                    "swingcard.sdatetm desc");
     }
 
     private String userID_;

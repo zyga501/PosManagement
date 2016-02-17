@@ -18,7 +18,7 @@
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery/1.9.1/jquery.min.js"></script>
     <script >
         function setval(v){
-            $('#swinggeneralsummary').html(v);
+            $('#repaygeneralsummary').html(v);
         }
         function explist(){
             alert('开发中。。。稍等');
@@ -102,13 +102,13 @@
                 <thead>
                 <tr class="text-c">
                     <th><s:text name="repaydetail.thedate"/></th>
-                    <th><s:text name="posmanager.posname"/></th>
-                    <th><s:text name="posmanager.rate"/></th>
+                    <th><s:text name="cardmanager.cardno"/></th>
+                    <th><s:text name="cardmanager.cardmaster"/></th>
                     <th><s:text name="swingcardsummary.amount"/></th>
                     <th><s:text name="swinggengral.charge"/></th>
                 </tr>
                 </thead>
-                <tbody id="swinggeneralsummary">
+                <tbody id="repaygeneralsummary">
                 </tbody>
             </table>
         </div>
@@ -120,7 +120,7 @@
     function dosearch() {
         $.ajax({
             type: 'post',
-            url: 'Statistics!FetchSwingGeneral',
+            url: 'Statistics!FetchRepayGeneral',
             dataType:"json",
             data:$("#searchform").serialize(),
             success: function (data) {
@@ -129,7 +129,7 @@
                     layer.msg(json.errorMessage);
                 }
                 else {
-                    setval(json.swingGeneral);
+                    setval(json.repayGeneral);
                     $('#cnt').html(json.cnt);
                     $('#amount').html(json.amount);
                     $('#charge').html(json.charge);
@@ -143,7 +143,7 @@
                     jump: function (obj) {
                         $.ajax({
                             type: 'post',
-                            url: 'Statistics!FetchSwingGeneral?currpage='+obj.curr,
+                            url: 'Statistics!FetchRepayGeneral?currpage='+obj.curr,
                             dataType:"json",
                             data:$("#searchform").serialize(),
                             success: function (data) {
@@ -152,7 +152,7 @@
                                     layer.msg(json.errorMessage);
                                 }
                                 else {
-                                    setval(json.swingGeneral);
+                                    setval(json.repayGeneral);
                                 }
                             }
                         })

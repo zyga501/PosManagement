@@ -154,8 +154,7 @@ public class StatisticsUI extends WebUI {
         String limitSql ="limit " + (pageIndex - 1) * DEFAULTITEMPERPAGE + "," + DEFAULTITEMPERPAGE;
 
         if (!UserUtils.isAdmin(userID_))
-            whereSql += " and  (assetflowtb.salemanuuid='"+userID_+"' " +
-                    " or salemantb.uid ='"+userID_+"') ";
+            whereSql += " and  (assetflowtb.salemanuuid='"+userID_+"' ) ";
         return PosDbManager.executeSql("SELECT  * " +
                 "FROM\n" +
                 "assetflowtb\n" +

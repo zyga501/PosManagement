@@ -31,19 +31,16 @@ public class RepayUI extends WebUI {
                     .addElement("td", dbRet.get(index).get("UNFINISHED").toString().equals("0") ?
                             getText("repaysummary.repayfinished") : getText("repaysummary.repayunfinished"))
                     .addElement(new UIContainer("td")
-                            .addElement("span", "还<b>"+StringUtils.convertNullableString(dbRet.get(index).get("FINISHED"))+
-                            "</b>,未<b>"+StringUtils.convertNullableString(dbRet.get(index).get("UNFINISHED"))+"</b>,共<b>"+
-                            StringUtils.convertNullableString(dbRet.get(index).get("TOTALCOUNT"))+"</b>笔")
-                    )
-                    .addElement(new UIContainer("td")
                             .addElement(
                                     new UIContainer("input")
                                             .addAttribute("type", "button")
                                             .addAttribute("value", "查看明细")
                                             .addAttribute("class", "btn radius")
                                             .addAttribute("onclick", "clickDetail('" + dbRet.get(index).get("CARDNO") +
-                                                    "','" + dbRet.get(index).get("BILLUUID") + "')")
-                            )
+                                                    "','" + dbRet.get(index).get("BILLUUID") + "')"))
+                            .addElement("span", "还<b>"+StringUtils.convertNullableString(dbRet.get(index).get("FINISHED"))+
+                                    "</b>,未<b>"+StringUtils.convertNullableString(dbRet.get(index).get("UNFINISHED"))+"</b>,共<b>"+
+                                    StringUtils.convertNullableString(dbRet.get(index).get("TOTALCOUNT"))+"</b>笔")
                     );
         }
         return htmlString;
@@ -136,7 +133,7 @@ public class RepayUI extends WebUI {
                 "billtb.lastrepaymentdate, \n" +
                 "repaytb.cardno, \n" +
                 "cardtb.cardmaster, \n" +
-                "repaytb.trademoney*cardtb.commissioncharge chargefee, \n" +
+                "repaytb.trademoney*cardtb.commissioncharge/100 chargefee, \n" +
                 "repaytb.trademoney, \n" +
                 "repaytb.thedate, \n" +
                 "repaytb.tradestatus, \n" +

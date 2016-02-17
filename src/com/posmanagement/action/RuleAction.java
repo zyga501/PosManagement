@@ -121,6 +121,11 @@ public class RuleAction extends AjaxActionSupport {
                 + "' where uuid='" + ruleUUID + "'"
         );
         Map parametMap = new HashMap();
+
+        parametMap.put(1, ruleUUID);
+        PosDbManager.executeUpdate("delete from rulebank where ruleuuid=?", (HashMap<Integer, Object>) parametMap);
+        PosDbManager.executeUpdate("delete from rulesaleman where ruleuuid=?", (HashMap<Integer, Object>) parametMap);
+
         for (int index = 0; index < bankUUID.length; ++index) {
             parametMap.clear();
             parametMap.put(1, ruleUUID);

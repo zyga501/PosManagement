@@ -95,7 +95,7 @@ public class StatisticsUI extends WebUI {
         }
 
         if (!UserUtils.isAdmin(userID_))
-            whereSql += " and  (salemantb.uid='"+userID_+"' " +
+            whereSql += " and  (userinfo.uid='"+userID_+"' " +
                     " or userinfo.uid ='"+userID_+"') ";
         float[] rt = new float[4];
         ArrayList<HashMap<String, Object>> resultMap = PosDbManager.executeSql("SELECT count(*) as cnt, \n" +
@@ -208,7 +208,7 @@ public class StatisticsUI extends WebUI {
         String limitSql ="limit " + (pageIndex - 1) * DEFAULTITEMPERPAGE + "," + DEFAULTITEMPERPAGE;
 
         if (!UserUtils.isAdmin(userID_))
-            whereSql += " and  (repaytb.salemanuuid='"+userID_+"' " +
+            whereSql += " and  (repaytb.userid='"+userID_+"' " +
                     " or userinfo.uid ='"+userID_+"') ";
         return PosDbManager.executeSql("SELECT   repaytb.*,cardtb.cardmaster,cardtb.commissioncharge," +
                 "userinfo.unick as doer " +

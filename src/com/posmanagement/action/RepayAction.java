@@ -101,7 +101,7 @@ public class RepayAction extends AjaxActionSupport {
                     "tradestatus='enable',\n" +
                     "userid=?,\n" +
                     "tradetime=now(),\n" +
-                    "charge=cardtb.commissioncharge * repaytb.trademoney\n" +
+                    "charge=cardtb.commissioncharge * repaytb.trademoney/100 \n" +
                     "where id=?",(HashMap<Integer, Object>)parameterMap)) {
                 parameterMap.clear();
                 parameterMap.put(1, getParameter("repayId"));

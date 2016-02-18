@@ -174,6 +174,10 @@ public class SwingCardPolicy {
             lastDate = repayInfo.repayDate.getTime() / ONEDAYMILLIONSECOND;
             canUseAmount += repayInfo.money;
             SwingCardInfo swingCardInfo = generateSwingInfo(ruleInfo, repayInfo, canUseAmount);
+            if (swingCardInfo.posUUID.isEmpty()) {
+                lastError = "没有刷卡机或刷卡机不满足规则要求";
+                return null;
+            }
             canUseAmount -= swingCardInfo.money;
             swingCardList.add(swingCardInfo);
             updateRuleCoolingTime(nextDateLimit);

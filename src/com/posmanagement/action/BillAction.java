@@ -102,8 +102,16 @@ public class BillAction extends AjaxActionSupport {
     public String editBill(){ 
         Map map = new HashMap();
         Map para = new HashMap();
+
+
         String sqlString="";
         try {
+
+            ArrayList<HashMap<String, Object>> assetRet = PosDbManager.executeSql("select * from assettb where salemanuuid='"+getUserID()+"'");
+            if (assetRet.size() <= 0) {
+                map.put("errorMessage", "操作失败!资产信息不存在");
+                return AjaxActionComplete(map);
+            }
             if (null != status ){
                 para.put(1,status);
                 sqlString="update billtb set status=? where UUID=?";
@@ -111,6 +119,8 @@ public class BillAction extends AjaxActionSupport {
             else {
                 return "";
             }
+
+
             if (!generateSwingCard()) {
                 map.put("errorMessage", getText("global.actionFailed") + swingcardErrorMessage);
                 return AjaxActionComplete(map);

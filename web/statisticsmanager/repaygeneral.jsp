@@ -83,7 +83,7 @@
 </div>
 <div class="cl pd-5 bg-1 bk-gray mt-20">
 	 <span style="float:left;">共<strong><span id="cnt"></span></strong> 笔，金额合计 <strong><span id="amount">
-     </span></strong> 扣款 <strong><span id="charge"></span></strong> 到账 <strong><span id="inbank"></span></strong></span>
+     </span></strong> 费用收入 <strong><span id="charge"></span></strong></span>
 		<span style="float:right;">
 		<a href="javascript:void(0);" title="<s:text name="global.exportdate" />"
            class="btn btn-danger radius size-MINI" onclick="explist();"> <i
@@ -104,8 +104,9 @@
                     <th><s:text name="repaydetail.thedate"/></th>
                     <th><s:text name="cardmanager.cardno"/></th>
                     <th><s:text name="cardmanager.cardmaster"/></th>
+                    <th><s:text name="cardmanager.commissioncharge"/></th>
                     <th><s:text name="swingcardsummary.amount"/></th>
-                    <th><s:text name="swinggengral.charge"/></th>
+                    <th><s:text name="statistics.income"/></th>
                 </tr>
                 </thead>
                 <tbody id="repaygeneralsummary">

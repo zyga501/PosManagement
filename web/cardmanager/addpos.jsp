@@ -34,9 +34,9 @@
                     }
                     else {
                         $('.input').val("");
-                        $('#Message').html("<s:text name="global.addSuccess" />");
-                        $('#newid').val(json.newid);
-                        parent.refreshposList(json.posList);
+                        parent.layer.msg("<s:text name="global.dosuccess" />");
+                        parent.dosearch();
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));
                     }
                 }
             })
@@ -57,7 +57,7 @@
                     else {
                         $('.input').val("");
                         parent.layer.msg("<s:text name="global.dosuccess" />");
-                        parent.refreshposList(json.posList);
+                        parent.dosearch();
                         parent.layer.close(parent.layer.getFrameIndex(window.name));
                     }
                 }

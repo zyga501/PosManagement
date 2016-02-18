@@ -14,8 +14,8 @@ import java.util.Random;
 
 public class SwingCardPolicy {
     public static void main(String[] args) throws Exception {
-        SwingCardPolicy policy = new SwingCardPolicy("");
-        policy.generateSwingList("1");
+        SwingCardPolicy policy = new SwingCardPolicy("3977725B-C162-4CF6-8FB9-48BC163B2549");
+        policy.generateSwingList("14829bb5-d55a-11e5-804b-0030487c8b4b");
     }
 
     public class SwingList {
@@ -137,7 +137,7 @@ public class SwingCardPolicy {
                     RepayInfo repayInfo = generateRepayInfo(curDate);
                     if (repayInfo == null)
                         break;
-                    if (remainBillAmount < repayInfo.money) {
+                    if (remainBillAmount < repayInfo.money || cardInfo_.repayNum == 1) {
                         repayInfo.money = (long)(remainBillAmount / 10 + 1) * 10;
                         remainBillAmount = 0;
                     }

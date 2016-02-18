@@ -145,8 +145,7 @@ public class RepayUI extends WebUI {
                 "INNER JOIN billtb ON repaytb.billuuid = billtb.uuid AND repaytb.cardno = billtb.cardno \n" +
                 whereSql +
                 " ORDER BY \n" +
-                "repaytb.tradestatus asc,\n" +
-                "repaytb.tradetime desc");
+                "repaytb.tradetime,repaytb.thedate");
     }
 
     public int fetchRepayPageCount() throws Exception {

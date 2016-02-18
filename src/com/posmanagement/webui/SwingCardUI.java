@@ -170,7 +170,7 @@ public class SwingCardUI extends WebUI {
                 "left JOIN userinfo ON userinfo.uid = swingcard.userid \n" +
                 whereSql +
                 "ORDER BY \n" +
-                "swingcard.sdatetm desc");
+                "swingcard.realsdatetm, swingcard.sdatetm");
     }
 
     private String userID_;

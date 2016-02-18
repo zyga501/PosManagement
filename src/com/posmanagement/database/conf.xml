@@ -14,4 +14,7 @@
         </environment>
     </environments>
 
+    <mappers>
+        <mapper resource="com/posmanagement/database/mapping/mccMapper.xml" />
+    </mappers>
 </configuration>

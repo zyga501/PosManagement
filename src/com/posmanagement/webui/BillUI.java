@@ -5,6 +5,8 @@ import com.posmanagement.utils.SQLUtils;
 import com.posmanagement.utils.StringUtils;
 import com.posmanagement.utils.UserUtils;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -29,7 +31,7 @@ public class BillUI extends WebUI {
                     .addAttribute("role", "row")
                     .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("BANKNAME")))
                     .addElement("td", StringUtils.formatCardNO(StringUtils.convertNullableString(dbRet.get(index).get("CARDNO"))))
-                    .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("BILLDATE")).substring(0, 7))
+                    .addElement("td", (new SimpleDateFormat("yyyy-MM")).format(Date.valueOf(dbRet.get(index).get("BILLDATE").toString())))
                     .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("LASTREPAYMENTDATE")))
                     .addElement(new UIContainer("td")
                             .addElement(new UIContainer("label",StringUtils.convertNullableString(dbRet.get(index).get("BILLAMOUNT")).equals("")?"0":dbRet.get(index).get("BILLAMOUNT").toString())

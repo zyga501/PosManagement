@@ -25,7 +25,7 @@ public class StatisticsUI extends WebUI {
                     .addAttribute("role", "row")
                     .addElement("td", dbRet.get(index).get("REALSDATETM").toString())
                     .addElement("td", dbRet.get(index).get("POSNAME").toString())
-                    .addElement("td", dbRet.get(index).get("RATE").toString())
+                    .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("RATE")))
                     .addElement("td", dbRet.get(index).get("AMOUNT").toString())
                     .addElement("td", dbRet.get(index).get("CHARGE").toString()) ;
         }
@@ -187,8 +187,12 @@ public class StatisticsUI extends WebUI {
         String limitSql ="limit " + (pageIndex - 1) * DEFAULTITEMPERPAGE + "," + DEFAULTITEMPERPAGE;
 
         if (!UserUtils.isAdmin(userID_))
-            whereSql += " and  (postb.salemanuuid='"+userID_+"' " +
-                    " or userinfo.uid ='"+userID_+"') ";
+            if (whereSql.isEmpty())
+                whereSql = " where  (salemantb.uid='"+userID_+"' " +
+                        " or userinfo.uid ='"+userID_+"') ";
+            else
+                whereSql += " and  (salemantb.uid='"+userID_+"' " +
+                        " or userinfo.uid ='"+userID_+"') ";
         return PosDbManager.executeSql("SELECT   swingcard.*,postb.*,AMOUNT-charge INBANK,salemantb.unick as saleman," +
                 "userinfo.unick as doer,ratetb.rate  " +
                 "FROM\n" +

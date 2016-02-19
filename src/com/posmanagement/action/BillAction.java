@@ -130,7 +130,7 @@ public class BillAction extends AjaxActionSupport {
                 map.put("successMessage",getText("global.actionSuccess") );
         }
         catch (Exception e) {
-            map.put("errorMessage", getText("global.actionFailed"));
+            map.put("errorMessage", getText("global.actionFailed")+ swingcardErrorMessage);
             e.printStackTrace();
         }
         return AjaxActionComplete(map);

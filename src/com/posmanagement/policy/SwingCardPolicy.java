@@ -217,10 +217,11 @@ public class SwingCardPolicy {
 
     private SwingCardInfo generateSwingInfo(RuleInfo ruleInfo, RepayInfo repayInfo, double canUseAmount, boolean isLastSwing) throws Exception {
         SwingCardInfo swingCardInfo = new SwingCardInfo();
-        swingCardInfo.money = ((long)(canUseAmount * (0.8 + random.nextDouble() * SWINGAMOUNTFIXEDLIMIT) / 10)) * 10.0;
+        swingCardInfo.money = (long)(canUseAmount * (0.8 + random.nextDouble() * SWINGAMOUNTFIXEDLIMIT));
         if (isLastSwing) {
             swingCardInfo.money = canUseAmount - random.nextDouble() * LASTFIXEDSWINGCARDMONEY;
         }
+        swingCardInfo.money = (long)(swingCardInfo.money / 10.0) * 10.0;
         swingCardInfo.swingTime = new Time((long)(random.nextDouble() * ((ruleInfo.swingEndTime.getTime()) - ruleInfo.swingStartTime.getTime())  + ruleInfo.swingStartTime.getTime())) ;
         swingCardInfo.ruleUUID = ruleInfo.ruleUUID;
         swingCardInfo.swingDate = repayInfo.repayDate;

@@ -173,7 +173,7 @@ public class SwingCardPolicy {
             double nextDateLimit = repayInfo.repayDate.getTime() / ONEDAYMILLIONSECOND - lastDate;
             lastDate = repayInfo.repayDate.getTime() / ONEDAYMILLIONSECOND;
             canUseAmount += repayInfo.money;
-            SwingCardInfo swingCardInfo = generateSwingInfo(ruleInfo, repayInfo, canUseAmount);
+            SwingCardInfo swingCardInfo = generateSwingInfo(ruleInfo, repayInfo, canUseAmount, !iterator.hasNext());
             if (null==swingCardInfo.posUUID || swingCardInfo.posUUID.isEmpty()) {
                 lastError = "没有刷卡机或刷卡机不满足规则要求";
                 return null;
@@ -215,9 +215,13 @@ public class SwingCardPolicy {
         return swingList;
     }
 
-    private SwingCardInfo generateSwingInfo(RuleInfo ruleInfo, RepayInfo repayInfo, double canUseAmount) throws Exception {
+    private SwingCardInfo generateSwingInfo(RuleInfo ruleInfo, RepayInfo repayInfo, double canUseAmount, boolean isLastSwing) throws Exception {
         SwingCardInfo swingCardInfo = new SwingCardInfo();
-        swingCardInfo.money = ((long)(canUseAmount * (0.8 + random.nextDouble() * SWINGAMOUNTFIXEDLIMIT) / 10)) * 10.0;
+        swingCardInfo.money = (long)(canUseAmount * (0.8 + random.nextDouble() * SWINGAMOUNTFIXEDLIMIT));
+        if (isLastSwing) {
+            swingCardInfo.money = canUseAmount - random.nextDouble() * LASTFIXEDSWINGCARDMONEY;
+        }
+        swingCardInfo.money = (long)(swingCardInfo.money / 10.0) * 10.0;
         swingCardInfo.swingTime = new Time((long)(random.nextDouble() * ((ruleInfo.swingEndTime.getTime()) - ruleInfo.swingStartTime.getTime())  + ruleInfo.swingStartTime.getTime())) ;
         swingCardInfo.ruleUUID = ruleInfo.ruleUUID;
         swingCardInfo.swingDate = repayInfo.repayDate;
@@ -423,5 +427,6 @@ public class SwingCardPolicy {
     private final double REPAYDATEFIXEDLIMIT = 1.3;
     private final double SWINGAMOUNTFIXEDLIMIT = 0.1;
     private final long ONEDAYMILLIONSECOND = 24 * 60 * 60 * 1000;
+    private final double LASTFIXEDSWINGCARDMONEY = 10;
     private String lastError;
 }

@@ -1,5 +1,7 @@
 package com.posmanagement.utils;
 
+import java.text.DecimalFormat;
+
 public class StringUtils {
     public static String convertNullableString(Object object) {
         if (object == null) {
@@ -31,5 +33,13 @@ public class StringUtils {
         return originStr;
     }
 
+    public static String formatMoney(String originStr) {
+        try {
+            return (new DecimalFormat("##.00")).format(Float.parseFloat(originStr));
+        }
+        catch(Exception e) {
+            return originStr;
+        }
+    }
 
 }

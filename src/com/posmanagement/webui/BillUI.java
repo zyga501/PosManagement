@@ -71,7 +71,7 @@ public class BillUI extends WebUI {
                         .addElement("td", dbRet.get(index).get("AMOUNT").toString())
                         .addElement("td", dbRet.get(index).get("PAYCHARGE").toString())
                         .addElement("td", dbRet.get(index).get("UNFINISHED").toString().equals("0")?
-                                getText("swingcardsummary.swingfinished") : getText("swingcardsummary.swingunfinished"))
+                                "<font color=#00ff00><i class=\"Hui-iconfont\">&#xe6a7;</i></font>" : "<font color=#ff0000><i class=\"Hui-iconfont\">&#xe6a6;</i></font>" )
                         .addElement(new UIContainer("td")
                                 .addElement(
                                         new UIContainer("input")

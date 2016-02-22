@@ -27,16 +27,17 @@ public class SwingCardUI extends WebUI {
                             dbRet.get(index).get("BILLMONTH").toString())
                     .addElement("td", StringUtils.formatCardNO(dbRet.get(index).get("CARDNO").toString()))
                     .addElement("td", dbRet.get(index).get("AMOUNT").toString())
-                    .addElement("td", dbRet.get(index).get("PAYCHARGE").toString())
+                    .addElement("td", StringUtils.formatMoney(dbRet.get(index).get("PAYCHARGE").toString()))
                     .addElement("td", dbRet.get(index).get("BANKNAME").toString())
                     .addElement("td", dbRet.get(index).get("CARDMASTER").toString())
-                    .addElement("td", dbRet.get(index).get("UNFINISHED").toString().equals("0")?
-                            getText("swingcardsummary.swingfinished") : getText("swingcardsummary.swingunfinished"))
                     .addElement(new UIContainer("td")
+                            .addElement("",dbRet.get(index).get("UNFINISHED").toString().equals("0")?
+                                    "<font color=#006000><i class=\"Hui-iconfont\">&#xe6a7;</i></font>" :
+                                    "<font color=#ff0000><i class=\"Hui-iconfont\">&#xe6a6;</i></font>" )
                             .addElement(
                                     new UIContainer("input")
                                             .addAttribute("type", "button")
-                                            .addAttribute("value", "查看明细")
+                                            .addAttribute("value", "明细")
                                             .addAttribute("class", "btn radius")
                                             .addAttribute("onclick", "clickDetail('" + dbRet.get(index).get("CARDNO") +
                                                     "','" + dbRet.get(index).get("BILLUUID") + "')")

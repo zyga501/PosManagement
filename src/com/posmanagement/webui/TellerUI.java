@@ -79,7 +79,7 @@ public class TellerUI extends WebUI {
         String sql = "select * from userinfo a,tellertb b where a.uid=b.uid";
         Map parametMap = new HashMap<Integer, Object>();
         if (unassigned) {
-            sql += " and (salemanuuid is null or saleman=\"\" )";
+            sql += " and (salemanuuid is null or salemanuuid=\"\" )";
         }
         else {
             if (salemanID != null) {

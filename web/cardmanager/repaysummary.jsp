@@ -35,7 +35,7 @@
 <body style="overflow: hidden">
 <div align="center">
     <div class="panel panel-default" >
-        <div class="panel-header"><form id="searchform"><table id="searchtb" style="width: 80%"><tr>
+        <div class="panel-header">还款<br><form id="searchform"><table id="searchtb" style="width: 80%"><tr>
             <td><input type="text" name="thedate" placeholder="<s:text name="repaysummary.lastrepaymentdate"/>" class="input-text radius size-s"></td>
             <td><input type="text" name="cardno" placeholder="<s:text name="swingcardsummary.cardno"/>" class="input-text radius size-s"></td>
             <td><input type="text" name="bankname" placeholder="<s:text name="cardmanager.bankname"/>" class="input-text radius size-s"></td>
@@ -60,7 +60,6 @@
                         <th><s:text name="repaysummary.cardmaster"/></th>
                         <th><s:text name="repaysummary.amount"/></th>
                         <th><s:text name="repaysummary.charge"/></th>
-                        <th><s:text name="repaysummary.status"/></th>
                         <th><s:text name="global.operation"/></th>
                     </tr>
                     </thead>

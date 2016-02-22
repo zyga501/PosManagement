@@ -19,6 +19,7 @@ public class MenuAction {
     private final static String STATISTICSASSETGENERAL="StatisticsAssetGeneral";
     private final static String STATISTICSSWINGGENERAL="StatisticsSwingGeneral";
     private final static String STATISTICSREPAYGENERAL="StatisticsRepayGeneral";
+    private final static String SWINGREPAYLIST="swingRepayList";
 
     public String ManageSaleMan() {
         return SALEMANMANAGE;
@@ -88,5 +89,8 @@ public class MenuAction {
     }
     public String StatisticsRepayGeneral(){
         return STATISTICSREPAYGENERAL;
+    }
+    public String ManageSwingRepay(){
+        return SWINGREPAYLIST ;
     }
 }

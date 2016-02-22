@@ -14,6 +14,7 @@ import java.util.*;
 
 public class BillAction extends AjaxActionSupport {
     public final static String BILLMANAGER = "billManager";
+    public final static String SWINGREPAYPAGE = "swingRepayPage";
 
     private String cardno;
     private String bankName;
@@ -261,5 +262,40 @@ public class BillAction extends AjaxActionSupport {
         }
 
         return true;
+    }
+
+    public String SwingRepay(){
+        try {
+            getRequest().setAttribute("pagecount", (new BillUI(super.getUserID()).fetchSwingRepayPageCount())/WebUI.DEFAULTITEMPERPAGE+1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return SWINGREPAYPAGE;
+    }
+
+    public  String FetchSwingRepayList(){
+        ArrayList<SQLUtils.WhereCondition> uiConditions = new ArrayList<SQLUtils.WhereCondition>() {
+            {
+                add(new SQLUtils.WhereCondition("cardtb.cardno", "like",
+                        SQLUtils.ConvertToSqlString("%" + getParameter("cardno") + "%"), !StringUtils.convertNullableString(getParameter("cardno")).trim().isEmpty()));
+                add(new SQLUtils.WhereCondition("banktb.name", "like",
+                        SQLUtils.ConvertToSqlString("%" + getParameter("bankname") + "%"), !StringUtils.convertNullableString(getParameter("bankname")).trim().isEmpty()));
+                add(new SQLUtils.WhereCondition("cardmaster", "like",
+                        SQLUtils.ConvertToSqlString("%" + getParameter("cardmaster") + "%"), !StringUtils.convertNullableString(getParameter("cardmaster")).trim().isEmpty()));
+                add(new SQLUtils.WhereCondition("billtb.billdate", "like",
+                        SQLUtils.ConvertToSqlString("%" + getParameter("thedate") + "%"), !StringUtils.convertNullableString(getParameter("thedate")).trim().isEmpty()));
+            }
+        };
+        Map map = new HashMap();
+        BillUI billUI = new BillUI(super.getUserID());
+        billUI.setUiConditions(uiConditions);
+        try {
+            map.put("pagecount", billUI.fetchSwingRepayPageCount());
+            int curr = Integer.parseInt(null==getParameter("currpage")?"1":getParameter("currpage").toString());
+            map.put("swingrepaySummary",billUI.generateSwingRepay(curr));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+       return AjaxActionComplete(map);
     }
 }

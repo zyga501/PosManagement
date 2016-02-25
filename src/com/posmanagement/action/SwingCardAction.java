@@ -16,27 +16,56 @@ public class SwingCardAction extends AjaxActionSupport {
     private final static String SWINGCARDDETAIL = "swingCardDetail";
 
     private String swingCardDetail;
-    private String cardNO;
+    private String cardno;
     private String billUUID;
 
     public String getSwingCardDetail() {
         return swingCardDetail;
     }
 
-    public String getCardNO() { return cardNO; }
+    public String getCardNO() { return cardno; }
 
     public String getBillUUID() { return billUUID; }
 
     public String Init() throws Exception {
-        getRequest().setAttribute("pagecount", (new SwingCardUI(super.getUserID()).fetchSwingCardPageCount())/WebUI.DEFAULTITEMPERPAGE+1);
+        getRequest().setAttribute("pagecount", (new SwingCardUI(super.getUserID()).fetchSwingCardPageCount()+WebUI.DEFAULTITEMPERPAGE-1)/WebUI.DEFAULTITEMPERPAGE);
         return SWINGCARDMANAGER;
     }
 
     public String InitDetail() throws Exception {
-        swingCardDetail = new SwingCardUI(super.getUserID()).generateDetail(getParameter("cardNO").toString(), getParameter("billUUID").toString());
-        cardNO = getParameter("cardNO").toString();
-        billUUID = getParameter("billUUID").toString();
+        if (StringUtils.convertNullableString(getParameter("cardno")).equals("")){
+            FetchDetail();
+        }else {
+            swingCardDetail = new SwingCardUI(super.getUserID()).generateDetail(StringUtils.convertNullableString(getParameter("cardno")),
+                    StringUtils.convertNullableString(getParameter("billUUID")));
+            cardno = StringUtils.convertNullableString(getParameter("cardno"));
+            billUUID = StringUtils.convertNullableString(getParameter("billUUID"));
+        }
         return SWINGCARDDETAIL;
+    }
+    public String FetchDetail() throws Exception {
+        ArrayList<SQLUtils.WhereCondition> uiConditions = new ArrayList<SQLUtils.WhereCondition>() {
+            {
+                if (!StringUtils.convertNullableString(getParameter("cardno"),"").equals(""))
+                    add(new SQLUtils.WhereCondition("cardtb.cardno", "like",
+                            SQLUtils.ConvertToSqlString("%" + getParameter("cardno") + "%"), !StringUtils.convertNullableString(getParameter("cardno")).trim().isEmpty()));
+                if (!StringUtils.convertNullableString(getParameter("cardmaster"),"").equals(""))
+                    add(new SQLUtils.WhereCondition("cardmaster", "like",
+                            SQLUtils.ConvertToSqlString("%" + getParameter("cardmaster") + "%"), !StringUtils.convertNullableString(getParameter("cardmaster")).trim().isEmpty()));
+                if (StringUtils.convertNullableString(getParameter("SWINGSTATUS"),"").equals("finished"))
+                    add(new SQLUtils.WhereCondition("ifnull(SWINGSTATUS,'')", "=","'enable'"));
+                else if (StringUtils.convertNullableString(getParameter("SWINGSTATUS"),"").equals("unfinished"))
+                    add(new SQLUtils.WhereCondition("ifnull(SWINGSTATUS,'')", "<>","'enable'"));
+            }
+        };
+        Map map = new HashMap();
+        SwingCardUI swingCardUI = new SwingCardUI(super.getUserID());
+        swingCardUI.setUiConditions(uiConditions);
+        map.put("pagecount", swingCardUI.fetchSwingDetailPageCount());
+        int curr = Integer.parseInt(null==getParameter("currpage")?"1":getParameter("currpage").toString());
+        map.put("swingCardDetail",swingCardUI.generateDetail(curr));
+
+        return AjaxActionComplete(map);
     }
 
     public String EditDetail() throws Exception{
@@ -100,7 +129,7 @@ public class SwingCardAction extends AjaxActionSupport {
                         ")\n" +
                         "where salemanuuid=?", (HashMap<Integer, Object>)parameterMap)) {
                     map.put("successMessage", getText("global.actionSuccess"));
-                    map.put("swingCardDetail", new SwingCardUI(super.getUserID()).generateDetail(getParameter("cardNO").toString(), getParameter("billUUID").toString()));
+                    map.put("swingCardDetail", new SwingCardUI(super.getUserID()).generateDetail(getParameter("cardno").toString(), getParameter("billUUID").toString()));
                     parameterMap.clear();
                     parameterMap.put(1, getParameter("swingId"));
                     ArrayList<HashMap<String, Object>> swingRet = PosDbManager.executeSql("SELECT amount, charge, postb.posname from swingcard LEFT JOIN postb on swingcard.posuuid = postb.uuid where id=?", (HashMap<Integer, Object>)parameterMap);
@@ -138,12 +167,16 @@ public class SwingCardAction extends AjaxActionSupport {
     public String FetchSwingList() throws Exception {
         ArrayList<SQLUtils.WhereCondition> uiConditions = new ArrayList<SQLUtils.WhereCondition>() {
             {
+                if (!StringUtils.convertNullableString(getParameter("cardno"),"").equals(""))
                 add(new SQLUtils.WhereCondition("cardtb.cardno", "like",
                         SQLUtils.ConvertToSqlString("%" + getParameter("cardno") + "%"), !StringUtils.convertNullableString(getParameter("cardno")).trim().isEmpty()));
+                if (!StringUtils.convertNullableString(getParameter("bankname"),"").equals(""))
                 add(new SQLUtils.WhereCondition("banktb.name", "like",
                         SQLUtils.ConvertToSqlString("%" + getParameter("bankname") + "%"), !StringUtils.convertNullableString(getParameter("bankname")).trim().isEmpty()));
+                if (!StringUtils.convertNullableString(getParameter("cardmaster"),"").equals(""))
                 add(new SQLUtils.WhereCondition("cardmaster", "like",
                         SQLUtils.ConvertToSqlString("%" + getParameter("cardmaster") + "%"), !StringUtils.convertNullableString(getParameter("cardmaster")).trim().isEmpty()));
+                if (!StringUtils.convertNullableString(getParameter("thedate"),"").equals(""))
                 add(new SQLUtils.WhereCondition("billtb.billdate", "like",
                         SQLUtils.ConvertToSqlString("%" + getParameter("thedate") + "%"), !StringUtils.convertNullableString(getParameter("thedate")).trim().isEmpty()));
             }

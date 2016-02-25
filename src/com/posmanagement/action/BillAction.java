@@ -68,7 +68,7 @@ public class BillAction extends AjaxActionSupport {
     }
 
     public String Init() throws Exception {
-        getRequest().setAttribute("pagecount", (new BillUI(super.getUserID()).fetchBillPageCount())/WebUI.DEFAULTITEMPERPAGE+1);
+        getRequest().setAttribute("pagecount", (new BillUI(super.getUserID()).fetchBillPageCount() + WebUI.DEFAULTITEMPERPAGE -1)/WebUI.DEFAULTITEMPERPAGE);
         return BILLMANAGER;
     }
     
@@ -266,7 +266,7 @@ public class BillAction extends AjaxActionSupport {
 
     public String SwingRepay(){
         try {
-            getRequest().setAttribute("pagecount", (new BillUI(super.getUserID()).fetchSwingRepayPageCount())/WebUI.DEFAULTITEMPERPAGE+1);
+            getRequest().setAttribute("pagecount", (new BillUI(super.getUserID()).fetchSwingRepayPageCount()+WebUI.DEFAULTITEMPERPAGE-1)/WebUI.DEFAULTITEMPERPAGE);
         } catch (Exception e) {
             e.printStackTrace();
         }

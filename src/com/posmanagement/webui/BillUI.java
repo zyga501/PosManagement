@@ -91,7 +91,7 @@ public class BillUI extends WebUI {
     private ArrayList<HashMap<String, Object>> fetchBillList(int pageIndex) throws Exception {
         String whereSql = SQLUtils.BuildWhereCondition(uiConditions_);
         if (!whereSql.isEmpty()) {
-            whereSql = " where " + whereSql;
+            whereSql = " and " + whereSql;
         }
         String limitSql ="limit " + (pageIndex - 1) * DEFAULTITEMPERPAGE + "," + DEFAULTITEMPERPAGE;
 
@@ -99,28 +99,24 @@ public class BillUI extends WebUI {
             whereSql += " and  (cardtb.salemanuuid in (select a.uid from salemantb a  where a.uid='"+userID_+"' )" +
                     " or cardtb.salemanuuid in(select salemanuuid from tellertb   where uid='"+userID_+"')) ";
 
-        return PosDbManager.executeSql("SELECT \n" +
-                "SUBSTR(billtb.billdate,1,4) billyear, \n" +
-                "SUBSTR(billtb.billdate,6,2) billmonth, \n" +
-                "swingcard.cardno, \n" +
-                "billtb.uuid billuuid, \n" +
-                "Sum(swingcard.amount) AS amount, \n" +
-                "Sum(case when swingcard.amount*ratetb.rate/100>ratetb.MAXFEE and ratetb.maxfee>0 then " +
-                "ratetb.maxfee else swingcard.amount*ratetb.rate/100  end)  paycharge, \n" +
-                "cardtb.cardmaster, \n" +
-                "count(1) totalcount,"+
-                "sum(case when swingstatus='enable' then 1 else 0 END) finished, \n" +
-                "(count(1) - sum(case when swingstatus='enable' then 1 else 0 END)) unfinished, \n" +
-                "banktb.name as bankname \n" +
-                "FROM \n" +
-                "swingcard \n" +
-                "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno \n" +
-                "INNER JOIN postb ON postb.uuid = swingcard.posuuid \n" +
-                "INNER JOIN ratetb ON postb.rateuuid = ratetb.uuid \n" +
-                "INNER JOIN billtb ON swingcard.billuuid = billtb.uuid AND swingcard.cardno = billtb.cardno \n" +
-                "INNER JOIN banktb on banktb.uuid=cardtb.bankuuid  \n" +
+        return PosDbManager.executeSql("SELECT  *,userinfo.unick SALEMAN,banktb.name bankname \n" +
+                "from billtb ,cardtb , (select billtb.uuid billuuid,sum(CASE WHEN swingcard.swingstatus='enable' then swingcard.amount else 0 END) swingamount,"+
+                "Sum(swingcard.amount) AS amount, " +
+                "count(1) swingcount," +
+                "sum(case when swingstatus='enable' then 1 else 0 END) swungcount,"+
+                "(count(1) - sum(case when swingstatus='enable' then 1 else 0 END)) unfinished  ,"+
+                "Sum(case when swingcard.amount*ratetb.rate/100>ratetb.MAXFEE and ratetb.maxfee>0 then "+
+                "ratetb.maxfee else swingcard.amount*ratetb.rate/100  end)  paycharge "+
+                "from  swingcard,billtb,ratetb,postb where swingcard.billuuid = billtb.uuid and   postb.uuid = swingcard.posuuid "+
+                "and postb.rateuuid = ratetb.uuid group by billtb.uuid) swingcardtotal,"+
+                "(select  billtb.uuid billuuid,count(repaytb.id) repaycount,"+
+                "sum(CASE WHEN repaytb.tradestatus='enable' then 1 else 0 END) repayedcount,"+
+                "sum(CASE WHEN repaytb.tradestatus='enable' then repaytb.trademoney else 0 END) repayamount "+
+                "from  repaytb,billtb  where repaytb.billuuid = billtb.uuid  group by billtb.uuid  ) repaytbtotal,userinfo,  banktb \n"+
+                "where userinfo.uid = cardtb.salemanuuid and cardtb.cardno = billtb.cardno and billtb.uuid=swingcardtotal.billuuid \n" +
+                "and banktb.uuid = billtb.bankuuid and repaytbtotal.billuuid=billtb.uuid \n"+
                 whereSql +
-                "GROUP BY billtb.billdate, swingcard.cardno \n" +
+                "GROUP BY billtb.billdate, billtb.cardno \n" +
                 "ORDER BY billtb.billdate desc\n" +
                 limitSql);
     }
@@ -145,18 +141,18 @@ public class BillUI extends WebUI {
         if (resultMap.size()<=0) {
             return 0;
         }
-        return Integer.parseInt(resultMap.get(0).get("CNT").toString())/ WebUI.DEFAULTITEMPERPAGE + 1;
+        return (Integer.parseInt(resultMap.get(0).get("CNT").toString())+WebUI.DEFAULTITEMPERPAGE-1)/ WebUI.DEFAULTITEMPERPAGE ;
     }
 
     public int fetchSwingRepayPageCount() throws Exception {
         String whereSql = SQLUtils.BuildWhereCondition(uiConditions_);
         if (whereSql.isEmpty()) {
-            whereSql+= "  where 1=1 and " ;
+            whereSql+= "  where 1=1   " ;
         }
         else
             whereSql=" where 1=1 and " +whereSql;
         if (!UserUtils.isAdmin(userID_)) {
-            whereSql += " billtb.salemanuuid='"+userID_+"'";
+            whereSql += " and  billtb.salemanuuid='"+userID_+"'";
         }
         ArrayList<HashMap<String, Object>> resultMap =  PosDbManager.executeSql("select sum(CNT) CNT from (SELECT count(*) CNT\n" +
                 "FROM swingcard " +
@@ -172,20 +168,20 @@ public class BillUI extends WebUI {
         if (resultMap.size()<=0) {
             return 0;
         }
-        return Integer.parseInt(resultMap.get(0).get("CNT").toString())/ WebUI.DEFAULTITEMPERPAGE + 1;
+        return (Integer.parseInt(resultMap.get(0).get("CNT").toString())+WebUI.DEFAULTITEMPERPAGE-1)/ WebUI.DEFAULTITEMPERPAGE ;
     }
 
     private ArrayList<HashMap<String, Object>> fetchSwingRepaySummary(int pageIndex) throws Exception {
         String whereSql =SQLUtils.BuildWhereCondition(uiConditions_);
         if (whereSql.isEmpty()) {
-            whereSql = "  where 1=1 and  " ;
+            whereSql = "  where 1=1   " ;
         }
         else
             whereSql = " where 1=1 and "+whereSql ;
         String limitSql ="limit " + (pageIndex - 1) * DEFAULTITEMPERPAGE + "," + DEFAULTITEMPERPAGE;
 
         if (!UserUtils.isAdmin(userID_))
-            whereSql += "  (cardtb.salemanuuid in (select a.uid from salemantb a  where a.uid='"+userID_+"' )" +
+            whereSql += "  and (cardtb.salemanuuid in (select a.uid from salemantb a  where a.uid='"+userID_+"' )" +
                     " or cardtb.salemanuuid in(select salemanuuid from tellertb   where uid='"+userID_+"')) ";
 
         return PosDbManager.executeSql("select * from (SELECT \n" +

@@ -17,24 +17,17 @@
     </script>
 </head>
 <body   style="overflow: hidden;" scroll="no" >
-    <div class="panel panel-default" style="float: left;width: 49%;height:100%">
-    <iframe src="SwingCard!Init"  style="width: 100%;height:100%"></iframe>
+    <div class="panel panel-default" style="float: left;width: 54%;height:100%">
+    <iframe src="SwingCard!InitDetail"  style="width: 100%;height:100%"></iframe>
     </div>
-    <div class="panel panel-default" style="float: left;width: 49%;height:100%">
-        <iframe src="Repay!Init"  style="width: 100%;height:100%"></iframe>
+    <div class="panel panel-default" style="float: left;width: 45.5%;height:100%">
+        <iframe src="Repay!InitDetail"  style="width: 100%;height:100%"></iframe>
     </div>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/layer/1.9.3/layer.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.admin.js"></script>
 <script type="text/javascript" >
-    $().ready(
-            init2()
-    )
-    function init(){
-        $("#swinghtml").load("<%=request.getContextPath()%>/cardmanager/swingcardsummary.jsp");
-        $("#repayhtml").load("<%=request.getContextPath()%>/cardmanager/repaysummary.jsp");
-    }
 </script>
 </body>
 </html>

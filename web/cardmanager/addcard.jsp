@@ -17,6 +17,8 @@
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery/1.9.1/jquery.min.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/upload/ajaxupload.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/Validform_v5.3.2_min.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/js/My97DatePicker/WdatePicker.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/js/dateRangeUtil.js"></script>
     <script src="<%=request.getContextPath()%>/js/laypage/laypage.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/layer/1.9.3/layer.js"></script>
     <script type="text/javascript">
@@ -134,19 +136,19 @@
                     <td><s:text name="cardmanager.creditamount"/></td><td><input id=creditamount name=cardmanager.creditamount type="text" value="<s:property value="cardmanager.creditamount"/>" placeholder="<s:text name="cardmanager.creditamount"/>" class="input-text size-S required " datatype="n"></td>
                     <td><s:text name="cardmanager.tempamount"/></td><td><input id=tempamount name=cardmanager.tempamount type="text" value="<s:property value="cardmanager.tempamount"/>" placeholder="<s:text name="cardmanager.tempamount"/>" class="input-text size-S"></td>
                 </tr>
-                <tr class="text-c"><td><s:text name="cardmanager.templimitdate"/></td><td><input id=templimitdate name=cardmanager.templimitdate type="text" value="<s:property value="cardmanager.templimitdate"/>" placeholder="<s:text name="cardmanager.templimitdate"/>" class="input-text size-S"></td>
+                <tr class="text-c"><td><s:text name="cardmanager.templimitdate"/></td><td><select id=templimitdate name=cardmanager.templimitdate type="text" value="<s:property value="cardmanager.templimitdate"/>" placeholder="<s:text name="cardmanager.templimitdate"/>" class="input-text size-S"></select></td>
                     <td><s:text name="cardmanager.useamount"/></td><td><input id=useamount name=cardmanager.useamount type="text" value="<s:property value="cardmanager.useamount"/>" placeholder="<s:text name="cardmanager.useamount"/>" class="input-text size-S"></td>
-                    <td><s:text name="cardmanager.billdate"/></td><td><input id=billdate name=cardmanager.billdate type="text" value="<s:property value="cardmanager.billdate"/>" placeholder="<s:text name="cardmanager.billdate"/>" class="input-text size-S required "  datatype="n1-2"></td>
+                    <td><s:text name="cardmanager.billdate"/></td><td><input id=billdate name=cardmanager.billdate type="text" onfocus="showmanthday(this,1,31)"  value="<s:property value="cardmanager.billdate"/>" placeholder="<s:text name="cardmanager.billdate"/>"  class="input-text size-S required"  datatype="n1-2"></td>
                     <td><s:text name="cardmanager.pin"/></td><td><input id=pin name=cardmanager.pin type="text" value="<s:property value="cardmanager.pin"/>" placeholder="<s:text name="cardmanager.pin"/>" class="input-text size-S"></td>
                 </tr>
                 <tr class="text-c">
                     <td><s:text name="cardmanager.telpwd"/></td><td><input id=telpwd name=cardmanager.telpwd type="text" value="<s:property value="cardmanager.telpwd"/>" placeholder="<s:text name="cardmanager.telpwd"/>" class="input-text size-S"></td>
                     <td><s:text name="cardmanager.tradepwd"/></td><td><input id=tradepwd name=cardmanager.tradepwd type="text" value="<s:property value="cardmanager.tradepwd"/>" placeholder="<s:text name="cardmanager.tradepwd"/>" class="input-text size-S"></td>
                     <td><s:text name="cardmanager.enchashmentpwd"/></td><td><input id=enchashmentpwd name=cardmanager.enchashmentpwd type="text" value="<s:property value="cardmanager.enchashmentpwd"/>" placeholder="<s:text name="cardmanager.enchashmentpwd"/>" class="input-text size-S"></td>
-                    <td><s:text name="cardmanager.billafterdate"/></td><td><input id=billafterdate name=cardmanager.billafterdate type="text" value="<s:property value="cardmanager.billafterdate"/>"  placeholder="<s:text name="cardmanager.billafterdate"/>" class="input-text size-S required " datatype="n1-2"></td>
+                    <td><s:text name="cardmanager.billafterdate"/></td><td><input id=billafterdate name=cardmanager.billafterdate type="text" onfocus="showmanthday(this,10,30)"  value="<s:property value="cardmanager.billafterdate"/>"  placeholder="<s:text name="cardmanager.billafterdate"/>" class="input-text size-S required " datatype="n1-2"></td>
                 </tr>
                 <tr class="text-c">
-                    <td><s:text name="cardmanager.lastrepaymentdate"/></td><td><input id=lastrepaymentdate name=cardmanager.lastrepaymentdate value="<s:property value="cardmanager.lastrepaymentdate"/>" type="text" placeholder="<s:text name="cardmanager.lastrepaymentdate"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.lastrepaymentdate"/></td><td><input id=lastrepaymentdate name=cardmanager.lastrepaymentdate onfocus="showmanthday(this,1,31)" value="<s:property value="cardmanager.lastrepaymentdate"/>" type="text" placeholder="<s:text name="cardmanager.lastrepaymentdate"/>" class="input-text size-S"></td>
                     <td><s:text name="cardmanager.billemail"/></td><td><input id=billemail name=cardmanager.billemail type="text" value="<s:property value="cardmanager.billemail"/>" placeholder="<s:text name="cardmanager.billemail"/>" class="input-text size-S"></td>
                     <td><s:text name="global.status"/></td>
                     <td><select id=sfqy name=cardmanager.status style="width:100%" >
@@ -154,7 +156,7 @@
                         <option value="disable">禁用</option>
                         </select>
                     </td>
-                    <td><s:text name="cardmanager.commissioncharge"/></td><td><input id=commissioncharge name=cardmanager.commissioncharge type="text" value="<s:property value="cardmanager.commissioncharge"/>" placeholder="<s:text name="cardmanager.commissioncharge"/>" class="input-text size-S required " datatype="/^-?[1-9]+(\.\d+)?$|^-?0(\.\d+)?$|^-?[1-9]+[0-9]*(\.\d+)?$/"></td>
+                    <td><s:text name="cardmanager.commissioncharge"/></td><td><input id=commissioncharge name=cardmanager.commissioncharge type="number" max="2" min="0.4" step="0.1" style="width:100%" value="<s:property value="cardmanager.commissioncharge"/>" placeholder="<s:text name="cardmanager.commissioncharge"/>" class="input-text size-S required " datatype="/^-?[1-9]+(\.\d+)?$|^-?0(\.\d+)?$|^-?[1-9]+[0-9]*(\.\d+)?$/"></td>
                 </tr>
                 <tr class="text-c">
                     <td><s:text name="cardmanager.cardmaster"/></td><td><input id=cardmaster name=cardmanager.cardmaster type="text" value="<s:property value="cardmanager.cardmaster"/>" placeholder="<s:text name="cardmanager.cardmaster"/>" class="input-text size-S  required "datatype="*"></td>
@@ -164,10 +166,15 @@
                 </tr>
                 <tr class="text-c">
                     <td><s:text name="cardmanager.cmseccontact"/></td><td><input id=cmseccontact name=cardmanager.cmseccontact type="text" value="<s:property value="cardmanager.cmseccontact"/>" placeholder="<s:text name="cardmanager.cmseccontact"/>" class="input-text size-S "></td>
-                    <td><s:text name="cardmanager.repaylimit"/></td><td><input id=repaylimit name=cardmanager.repaylimit type="text" value="<s:property value="cardmanager.repaylimit"/>" placeholder="<s:text name="cardmanager.repaylimit"/>" class="input-text size-S required "datatype="*"></td>
-                    <td><s:text name="cardmanager.repaynum"/></td><td><input id=repaynum name=cardmanager.repaynum type="text" value="<s:property value="cardmanager.repaynum"/>" placeholder="<s:text name="cardmanager.repaynum"/>" class="input-text size-S required " datatype="*"></td>
-                    <td><s:text name="cardmanager.repayinterval"/></td><td><input id=repayinterval name=cardmanager.repayinterval type="text" value="<s:property value="cardmanager.repayinterval"/>" placeholder="<s:text name="cardmanager.repayinterval"/>" class="input-text size-S required "datatype="*"></td>
+                    <td><s:text name="cardmanager.repaylimit"/></td><td><input id=repaylimit name=cardmanager.repaylimit type="text" onfocus="showmanthday(this,0,5)" value="<s:property value="cardmanager.repaylimit"/>" placeholder="<s:text name="cardmanager.repaylimit"/>" class="input-text size-S required " datatype="n"></td>
+                    <td><s:text name="cardmanager.repaynum"/></td><td><input id=repaynum name=cardmanager.repaynum type="text" value="<s:property value="cardmanager.repaynum"/>" placeholder="<s:text name="cardmanager.repaynum"/>" class="input-text size-S required " datatype="n"></td>
+                    <td><s:text name="cardmanager.repayinterval"/></td><td><input id=repayinterval name=cardmanager.repayinterval type="text" onfocus="showmanthday(this,0,30)" value="<s:property value="cardmanager.repayinterval"/>" placeholder="<s:text name="cardmanager.repayinterval"/>" class="input-text size-S required "datatype="n"></td>
                 <tr class="text-c">
+                <tr class="text-c">
+                    <td><s:text name="cardmanager.maxposmean"/></td><td><input id=maxposmean name=cardmanager.maxposmean type="text" value="<s:property value="cardmanager.maxposmean"/>" placeholder="<s:text name="cardmanager.maxposmean"/>" class="input-text size-S required" datatype="/^-?[1-9]+(\.\d+)?$|^-?0(\.\d+)?$|^-?[1-9]+[0-9]*(\.\d+)?$/"></td>
+                    <td><s:text name="cardmanager.reservedswingcount"/></td><td><input id=reservedswingcount name=cardmanager.reservedswingcount type="text" onfocus="showmanthday(this,0,5)" value="<s:property value="cardmanager.reservedswingcount"/>" placeholder="<s:text name="cardmanager.reservedswingcount"/>" class="input-text size-S required " datatype="/^-?[1-9]+(\.\d+)?$|^-?0(\.\d+)?$|^-?[1-9]+[0-9]*(\.\d+)?$/"></td>
+                    <td><s:text name="cardmanager.reservedswingmoney"/></td><td><input id=reservedswingmoney name=cardmanager.reservedswingmoney type="text" value="<s:property value="cardmanager.reservedswingmoney"/>" placeholder="<s:text name="cardmanager.reservedswingmoney"/>" class="input-text size-S required " datatype="/^-?[1-9]+(\.\d+)?$|^-?0(\.\d+)?$|^-?[1-9]+[0-9]*(\.\d+)?$/"></td>
+                 <tr class="text-c">
                 <% if (request.getSession().getAttribute("roleId").equals("e664d6f3-85f8-4bd6-bcb8-c4e053732b29")){ %>
                 <td><s:text name="cardmanager.saleman"/></td>
                     <td><input id=saleman name=cardmanager.saleman type="text" value="<s:property value="cardmanager.saleman"/>"
@@ -281,4 +288,44 @@ param.top = Math.round((maxHeight - param.height) / 2);
 return param;
 }
 </script>
+<script>
+    var _mubiao;
+    function showmanthday(obj,lowint,upint)
+    {   _mubiao =obj;
+        $("#_div_monthday").html("");
+        for (var i=lowint;i<=upint;i++)
+        {
+            $("#_div_monthday").append("<input type='button' onclick='monthday(this)' value="+i+">");
+        }
+        $("#_div_monthday").append(" <input type='button' id='_btncancel' value='取消' style='width:70px' onclick='$(this).parent().hide()'>");
+       // $ (obj).on("blur",function(){setTimeout(function(){$("#_div_monthday").hide()},"1");});
+        var pt=getPosition(_mubiao);pt.y+=20;
+        $("#_div_monthday").css({"left":pt.x,"top":pt.y});
+        $("#_div_monthday").show();
+    }
+    function getPosition(e)
+    {
+        var t=e.offsetTop;
+        var l=e.offsetLeft;
+        while(e=e.offsetParent)
+        {
+            t+=e.offsetTop;
+            l+=e.offsetLeft;
+        }
+        var point = eval("({x:"+l+",y:"+t+"})");
+        return point;
+    }
+    function monthday(obj){
+        _mubiao.value=obj.value;
+        $("#_div_monthday").hide();
+    }
+</script>
+
+<style>
+    input {
+        width:25px
+    }
+</style>
+<div id="_div_monthday" style="position: absolute;display: none;	z-index: 5500;width:150px;height:auto;background-color:cornflowerblue ">
+</div>
 </html>

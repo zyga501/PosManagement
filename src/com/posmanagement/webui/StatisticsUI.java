@@ -56,7 +56,7 @@ public class StatisticsUI extends WebUI {
             return rt;
         }
         try {
-            rt[0] = Integer.parseInt(resultMap.get(0).get("CNT").toString()) / WebUI.DEFAULTITEMPERPAGE + 1;
+            rt[0] = (Integer.parseInt(resultMap.get(0).get("CNT").toString())+WebUI.DEFAULTITEMPERPAGE-1) / WebUI.DEFAULTITEMPERPAGE ;
             rt[1] = Integer.parseInt(resultMap.get(0).get("CNT").toString());
             rt[2] = Float.parseFloat(resultMap.get(0).get("AMOUNT").toString());
             rt[3] = Float.parseFloat(resultMap.get(0).get("CHARGE").toString());
@@ -110,7 +110,7 @@ public class StatisticsUI extends WebUI {
             return rt;
         }
         try {
-            rt[0] = Integer.parseInt(resultMap.get(0).get("CNT").toString()) / WebUI.DEFAULTITEMPERPAGE + 1;
+            rt[0] = (Integer.parseInt(resultMap.get(0).get("CNT").toString())+WebUI.DEFAULTITEMPERPAGE-1) / WebUI.DEFAULTITEMPERPAGE  ;
             rt[1] = Integer.parseInt(resultMap.get(0).get("CNT").toString());
             rt[2] = Float.parseFloat(resultMap.get(0).get("AMOUNT").toString());
             rt[3] = Float.parseFloat(resultMap.get(0).get("CHARGE").toString());
@@ -170,7 +170,7 @@ public class StatisticsUI extends WebUI {
                 _amount += Float.parseFloat(resultMap.get(i).get("AMOUNT").toString());
                 _string += resultMap.get(i).get("TYPE").toString() +"<b>"+ resultMap.get(i).get("AMOUNT").toString()+"</b>";;
             }
-            rt[0] = String.valueOf(_count / WebUI.DEFAULTITEMPERPAGE + 1);
+            rt[0] = String.valueOf((_count+WebUI.DEFAULTITEMPERPAGE-1) / WebUI.DEFAULTITEMPERPAGE );
             rt[1] ="共 <b>"+String.valueOf(_count)+"</b>条 " +_string+" 产生利润 <b>"+String.valueOf(_amount)+"</b>";
         }
         catch (Exception e){

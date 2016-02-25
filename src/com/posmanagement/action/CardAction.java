@@ -2,6 +2,7 @@ package com.posmanagement.action;
 
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.utils.Readconfig;
+import com.posmanagement.utils.StringUtils;
 import com.posmanagement.webui.CardUI;
 import com.posmanagement.webui.WebUI;
 
@@ -70,7 +71,7 @@ public class CardAction extends AjaxActionSupport {
 
     public String Init() throws Exception {
         cardList = new CardUI(super.getUserID()).generateCardTable("");
-        getRequest().setAttribute("pagecount", (cardList.split("<tr").length-1)/WebUI.DEFAULTITEMPERPAGE+1);
+        getRequest().setAttribute("pagecount", (cardList.split("<tr").length-1+WebUI.DEFAULTITEMPERPAGE-1)/WebUI.DEFAULTITEMPERPAGE);
         return CARDMANAGER;
     }
 
@@ -97,7 +98,7 @@ public class CardAction extends AjaxActionSupport {
                     wherestr);
             if (rect.size()<=0)
                 map.put("pagecount",0);
-            map.put("pagecount",Integer.parseInt(rect.get(0).get("CNT").toString())/ WebUI.DEFAULTITEMPERPAGE+1);
+            map.put("pagecount",(Integer.parseInt(rect.get(0).get("CNT").toString())+WebUI.DEFAULTITEMPERPAGE-1)/ WebUI.DEFAULTITEMPERPAGE);
             int curr = Integer.parseInt(null==getParameter("currpage")?"1":getParameter("currpage").toString());
             cardList = new CardUI(super.getUserID()).generateCardTable(wherestr+" limit "+String.valueOf((curr-1)*WebUI.DEFAULTITEMPERPAGE)+","+WebUI.DEFAULTITEMPERPAGE);
             map.put("cardList",cardList);
@@ -166,16 +167,18 @@ public class CardAction extends AjaxActionSupport {
                 String[] strary=(new String("cardno,bankname,creditamount,tempamount,templimitdate," +
                         "useamount,billdate,pin,telpwd,tradepwd,enchashmentpwd,billafterdate,lastrepaymentdate," +
                         "billemail,status,commissioncharge,cardmaster,identityno,cmaddress,cmtel,cmseccontact," +
-                        "memos,repaylimit,repaynum,repayinterval")).split(",");
+                        "memos,repaylimit,repaynum,repayinterval,maxposmean,reservedswingmoney,reservedswingcount")).split(",");
                 for (String key : strary) {
-                    System.out.print("'"+((String[])cardmanager.get(key))[0]+"',");
-                    para.put(i++,((String[])cardmanager.get(key))[0] );
+                    //System.out.print("'"+((String[]) cardmanager.get(key))[0]+"',");
+                    System.out.println(key+":"+ StringUtils.convertNullableString(getParameter("cardmanager."+key)));
+                    para.put(i++, StringUtils.convertNullableString(getParameter("cardmanager."+key)) );
                 }
                 para.put(i,newid);
                 if (!PosDbManager.executeUpdate("update cardtb set cardno=?,bankuuid=?,creditamount=?," +
                         "tempamount=?,templimitdate=?,useamount=?,billdate=?,pin=?,telpwd=?,tradepwd=?,enchashmentpwd=?," +
                         "billafterdate=?,lastrepaymentdate=?,billemail=?,status=?,commissioncharge=?,cardmaster=?,identityno=?,"+
-                        "cmaddress=?,cmtel=?,cmseccontact=?,memos=?,repaylimit=?,repaynum=?,repayinterval=?  where cardno=?",(HashMap<Integer, Object>)  para))
+                        "cmaddress=?,cmtel=?,cmseccontact=?,memos=?,repaylimit=?,repaynum=?,repayinterval=?," +
+                        "maxposmean=?,reservedswingmoney=?,reservedswingcount=?  where cardno=?",(HashMap<Integer, Object>)  para))
                     map.put("errorMessage", getText("addrate.rateFormatError"));
                 {
                     cardList = new CardUI(super.getUserID()).generateCardTable("");

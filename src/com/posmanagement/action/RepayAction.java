@@ -15,14 +15,14 @@ public class RepayAction extends AjaxActionSupport {
     private final static String REPAYDETAIL = "repayDetail";
 
     private String repayDetail;
-    private String cardNO;
+    private String cardno;
     private String billUUID;
 
     public String getRepayDetail() {
         return repayDetail;
     }
 
-    public String getCardNO() { return cardNO; }
+    public String getCardNO() { return cardno; }
 
     public String getBillUUID() {
         return billUUID;
@@ -63,11 +63,42 @@ public class RepayAction extends AjaxActionSupport {
     }
 
     public String InitDetail() throws Exception {
-        repayDetail = new RepayUI(super.getUserID()).generateDetail(getParameter("cardNO").toString(), getParameter("billUUID").toString());
-        cardNO = getParameter("cardNO").toString();
-        billUUID = getParameter("billUUID").toString();
+        if (StringUtils.convertNullableString(getParameter("cardno")).equals("")){
+            FetchDetail();
+        }else {
+            repayDetail = new RepayUI(super.getUserID()).generateDetail(StringUtils.convertNullableString(getParameter("cardno")),
+                    StringUtils.convertNullableString(getParameter("billUUID")));
+            cardno = StringUtils.convertNullableString(getParameter("cardno"));
+            billUUID = StringUtils.convertNullableString(getParameter("billUUID"));
+        }
         return REPAYDETAIL;
     }
+
+    public String FetchDetail() throws Exception {
+        ArrayList<SQLUtils.WhereCondition> uiConditions = new ArrayList<SQLUtils.WhereCondition>() {
+            {
+                if (!StringUtils.convertNullableString(getParameter("cardno"),"").equals(""))
+                    add(new SQLUtils.WhereCondition("cardtb.cardno", "like",
+                            SQLUtils.ConvertToSqlString("%" + getParameter("cardno") + "%"), !StringUtils.convertNullableString(getParameter("cardno")).trim().isEmpty()));
+                if (!StringUtils.convertNullableString(getParameter("cardmaster"),"").equals(""))
+                    add(new SQLUtils.WhereCondition("cardmaster", "like",
+                            SQLUtils.ConvertToSqlString("%" + getParameter("cardmaster") + "%"), !StringUtils.convertNullableString(getParameter("cardmaster")).trim().isEmpty()));
+                if (StringUtils.convertNullableString(getParameter("TRADESTATUS"),"").equals("finished"))
+                    add(new SQLUtils.WhereCondition("ifnull(tradestatus,'')", "=","'enable'"));
+                else if (StringUtils.convertNullableString(getParameter("TRADESTATUS"),"").equals("unfinished"))
+                    add(new SQLUtils.WhereCondition("ifnull(tradestatus,'')", "<>","'enable'"));
+            }
+        };
+        Map map = new HashMap();
+        RepayUI repayUI = new RepayUI(super.getUserID());
+        repayUI.setUiConditions(uiConditions);
+        map.put("pagecount", repayUI.fetchRepayDetailPageCount());
+        int curr = Integer.parseInt(null==getParameter("currpage")?"1":getParameter("currpage").toString());
+        map.put("repayDetail",repayUI.generateDetail(curr));
+
+        return AjaxActionComplete(map);
+    }
+
 
     public String EditDetail() throws Exception{
         Map map =new HashMap();
@@ -111,22 +142,22 @@ public class RepayAction extends AjaxActionSupport {
                         "SET balance= balance - (select trademoney - charge from repaytb where id=?)\n" +
                         "where salemanuuid=?", (HashMap<Integer, Object>)parameterMap)) {
                     map.put("successMessage", getText("global.actionSuccess"));
-                    map.put("repayDetail", new RepayUI(super.getUserID()).generateDetail(getParameter("cardNO").toString(), getParameter("billUUID").toString()));
+                    map.put("repayDetail", new RepayUI(super.getUserID()).generateDetail(getParameter("cardno").toString(), getParameter("billUUID").toString()));
                     parameterMap.clear();
                     parameterMap.put(1, getParameter("repayId"));
-                    ArrayList<HashMap<String, Object>> repayRet = PosDbManager.executeSql("SELECT trademoney, cardNO, charge from repaytb where id=?", (HashMap<Integer, Object>)parameterMap);
+                    ArrayList<HashMap<String, Object>> repayRet = PosDbManager.executeSql("SELECT trademoney, cardno, charge from repaytb where id=?", (HashMap<Integer, Object>)parameterMap);
                     parameterMap.clear();
                     parameterMap.put(1, super.getUserID());
                     assetRet = PosDbManager.executeSql("SELECT balance from assettb where salemanuuid=?", (HashMap<Integer, Object>)parameterMap);
                     if (repayRet.size() > 0 && assetRet.size() > 0) {
                         double repayAmount = -Double.parseDouble(repayRet.get(0).get("TRADEMONEY").toString());
                         double charge = Double.parseDouble(repayRet.get(0).get("CHARGE").toString());
-                        String cardNO = repayRet.get(0).get("CARDNO").toString();
+                        String cardno = repayRet.get(0).get("CARDNO").toString();
                         double balance = Double.parseDouble(assetRet.get(0).get("BALANCE").toString());
                         parameterMap.clear();
                         parameterMap.put(1, repayAmount);
                         parameterMap.put(2, balance - charge);
-                        parameterMap.put(3, cardNO);
+                        parameterMap.put(3, cardno);
                         parameterMap.put(4, salemanUUID);
                         PosDbManager.executeUpdate("insert into assetflowtb(time, type, amount, balance, remark, salemanuuid)\n" +
                                 "VALUES(NOW(), '还款',?, ?, CONCAT(?,'还款'), ?);\n"
@@ -134,7 +165,7 @@ public class RepayAction extends AjaxActionSupport {
                         parameterMap.clear();
                         parameterMap.put(1, charge);
                         parameterMap.put(2, balance);
-                        parameterMap.put(3, cardNO);
+                        parameterMap.put(3, cardno);
                         parameterMap.put(4, salemanUUID);
                         PosDbManager.executeUpdate("insert into assetflowtb(time, type, amount, balance, remark, salemanuuid)\n" +
                                 "VALUES(NOW(), '还款收费',?, ?, CONCAT(?,'还款收费'), ?);"

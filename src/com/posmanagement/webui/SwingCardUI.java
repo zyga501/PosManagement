@@ -53,24 +53,35 @@ public class SwingCardUI extends WebUI {
         ArrayList<HashMap<String, Object>> dbRet = fetchSwingCardDetail(cardNO, billUUID);
         if (dbRet.size() <= 0)
             return new String("");
+        return DetailHtml(dbRet);
+    }
 
+    public String generateDetail(int curint) throws Exception {
+        ArrayList<HashMap<String, Object>> dbRet = fetchSwingCardDetail(curint);
+        if (dbRet.size() <= 0)
+            return new String("");
+        return DetailHtml(dbRet);
+    }
+
+    private String DetailHtml(ArrayList<HashMap<String, Object>> dbRet){
         String htmlString = "";
         for (int index = 0; index < dbRet.size(); ++index) {
             htmlString += new UIContainer("tr")
                     .addAttribute("class", "text-c odd")
                     .addAttribute("role", "row")
-                    .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("BILLYEAR")) + "/" +
-                            StringUtils.convertNullableString(dbRet.get(index).get("BILLMONTH")))
+//                    .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("BILLYEAR")) + "/" +
+//                            StringUtils.convertNullableString(dbRet.get(index).get("BILLMONTH")))
                     .addElement("td" , StringUtils.formatCardNO(StringUtils.convertNullableString(dbRet.get(index).get("CARDNO"))))
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("CARDMASTER")))
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("AMOUNT")))
-                    .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("PAYCHARGE")))
+                    .addElement("td" , StringUtils.formatMoney(dbRet.get(index).get("PAYCHARGE").toString()))
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("SDATETM")))
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("POSNAME")))
-                    .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("UNICK")), "○")
-                    .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("REALSDATETM")), "○")
+//                    .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("UNICK")), "○")
+//                    .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("REALSDATETM")), "○")
                     .addElement(new UIContainer("td").addElement(new UIContainer("input")
-                            .addAttribute("class" ,StringUtils.convertNullableString(dbRet.get(index).get("SWINGSTATUS")).equals("enable")?"btn btn-success radius":"btn btn-danger radius")
+                            .addAttribute("class" ,StringUtils.convertNullableString(dbRet.get(index).get("SWINGSTATUS")).equals("enable")?
+                                    "btn btn-success radius size-s":"btn btn-danger radius size-s")
                             .addAttribute("type","button")
                             .addAttribute("title" ,StringUtils.convertNullableString(dbRet.get(index).get("SWINGSTATUS")).equals("enable")?"已刷":"未刷")
                             .addAttribute("datav", StringUtils.convertNullableString(dbRet.get(index).get("ID")))
@@ -103,7 +114,67 @@ public class SwingCardUI extends WebUI {
         if (resultMap.size()<=0) {
             return 0;
         }
-        return Integer.parseInt(resultMap.get(0).get("CNT").toString())/ WebUI.DEFAULTITEMPERPAGE + 1;
+        return (Integer.parseInt(resultMap.get(0).get("CNT").toString())+WebUI.DEFAULTITEMPERPAGE-1)/ WebUI.DEFAULTITEMPERPAGE  ;
+    }
+
+    public int fetchSwingDetailPageCount() throws Exception {
+        String whereSql = SQLUtils.BuildWhereCondition(uiConditions_);
+        if (!whereSql.isEmpty()) {
+            whereSql = " where " + whereSql;
+        }
+        if (!UserUtils.isAdmin(userID_))
+            whereSql += " and  (cardtb.salemanuuid in (select a.uid from salemantb a  where a.uid='"+userID_+"' )" +
+                    " or cardtb.salemanuuid in(select salemanuuid from tellertb   where uid='"+userID_+"')) ";
+
+        ArrayList<HashMap<String, Object>> resultMap = PosDbManager.executeSql("SELECT count(*) as cnt\n"  +
+                "FROM \n" +
+                "swingcard \n" +
+                "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno \n" +
+                "INNER JOIN postb ON postb.uuid = swingcard.posuuid \n" +
+                "INNER JOIN ratetb ON postb.rateuuid = ratetb.uuid \n" +
+                "INNER JOIN billtb ON swingcard.billuuid = billtb.uuid AND swingcard.cardno = billtb.cardno \n" +
+                "left JOIN userinfo ON userinfo.uid = swingcard.userid \n" +
+                whereSql +
+                "ORDER BY \n" +
+                " swingcard.sdatetm desc");
+        if (resultMap.size()<=0) {
+            return 0;
+        }
+        return (Integer.parseInt(resultMap.get(0).get("CNT").toString())+WebUI.DEFAULTITEMPERPAGE-1)/ (WebUI.DEFAULTITEMPERPAGE)  ;
+    }
+
+    private ArrayList<HashMap<String, Object>> fetchSwingCardDetail(int pageIndex) throws Exception {
+        String whereSql = SQLUtils.BuildWhereCondition(uiConditions_);
+        if (!whereSql.isEmpty()) {
+            whereSql = " where " + whereSql;
+        }
+        if (!UserUtils.isAdmin(userID_))
+            whereSql += " and  (cardtb.salemanuuid in (select a.uid from salemantb a  where a.uid='"+userID_+"' )" +
+                    " or cardtb.salemanuuid in(select salemanuuid from tellertb   where uid='"+userID_+"')) ";
+        String limitSql ="limit " + (pageIndex - 1) * DEFAULTITEMPERPAGE + "," + DEFAULTITEMPERPAGE;
+        return PosDbManager.executeSql("SELECT swingcard.id,\n" +
+                "SUBSTR(billtb.billdate,1,4) billyear, \n" +
+                "SUBSTR(billtb.billdate,6,2) billmonth, \n" +
+                "swingcard.cardno, \n" +
+                "cardtb.cardmaster, \n" +
+                "swingcard.amount, \n" +
+                "(case when swingcard.amount*ratetb.rate/100>ratetb.MAXFEE and ratetb.maxfee>0 then" +
+                " ratetb.maxfee else swingcard.amount*ratetb.rate/100  end)  paycharge, \n" +
+                "swingcard.sdatetm, \n" +
+                "postb.posname, \n" +
+                "userinfo.unick, \n" +
+                "swingcard.realsdatetm, \n" +
+                "swingcard.swingstatus \n" +
+                "FROM \n" +
+                "swingcard \n" +
+                "INNER JOIN cardtb ON cardtb.cardno = swingcard.cardno \n" +
+                "INNER JOIN postb ON postb.uuid = swingcard.posuuid \n" +
+                "INNER JOIN ratetb ON postb.rateuuid = ratetb.uuid \n" +
+                "INNER JOIN billtb ON swingcard.billuuid = billtb.uuid AND swingcard.cardno = billtb.cardno \n" +
+                "inner  JOIN userinfo ON userinfo.uid = cardtb.salemanuuid \n" +
+                whereSql +
+                "ORDER BY \n" +
+                " swingcard.sdatetm desc "+limitSql);
     }
 
     private ArrayList<HashMap<String, Object>> fetchSwingCardSummary(int pageIndex) throws Exception {
@@ -144,7 +215,7 @@ public class SwingCardUI extends WebUI {
     }
 
     private ArrayList<HashMap<String, Object>> fetchSwingCardDetail(String cardNO, String billUUID) throws Exception {
-        String whereSql = "where swingcard.cardno='" + cardNO + "' and billuuid='" + billUUID + "'";
+        String whereSql =cardNO.equals("")?"where 1=1 " :"where swingcard.cardno='" + cardNO + "' and billuuid='" + billUUID + "'";
         if (!UserUtils.isAdmin(userID_))
             whereSql += " and (cardtb.salemanuuid in (select a.uid from salemantb a  where a.uid='"+userID_+"' )" +
                     " or cardtb.salemanuuid in(select salemanuuid from tellertb   where uid='"+userID_+"')) ";
@@ -171,7 +242,7 @@ public class SwingCardUI extends WebUI {
                 "left JOIN userinfo ON userinfo.uid = swingcard.userid \n" +
                 whereSql +
                 "ORDER BY \n" +
-                "swingcard.realsdatetm, swingcard.sdatetm");
+                " swingcard.sdatetm desc");
     }
 
     private String userID_;

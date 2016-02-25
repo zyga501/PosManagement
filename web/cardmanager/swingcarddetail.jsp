@@ -25,12 +25,12 @@
                     $.ajax({
                         type: 'post',
                         url: 'SwingCard!EditDetail',
-                        data: {status:"enable" , swingId:swingid, cardNO:$('#cardNO').val(), billUUID:$('#billUUID').val()},
+                        data: {status:"enable" , swingId:swingid, cardno:$('#cardno').val(), billUUID:$('#billUUID').val()},
                         success: function (data) {
                             var json = eval("(" + data + ")");
                             if (json.successMessage) {
                                 button.value = "Y";
-                                button.setAttribute("class", "btn btn-success radius");
+                                button.setAttribute("class", "btn btn-success radius size-s");
                                 layer.msg(json.successMessage);
                                 $('#swingCardDetail').html(json.swingCardDetail);
                             }
@@ -47,7 +47,18 @@
 <body >
 <div align="center">
     <div class="panel panel-default" >
-        <div class="panel-header"><s:text name="swingcarddetail.paneltitle"/></div>
+        <div class="panel-header"><form id="searchform"><table id="searchtb" style="width: 80%"><tr>
+            <td><s:text name="swingcarddetail.paneltitle"/></td>
+            <td><input type="text" name="cardno" placeholder="<s:text name="swingcardsummary.cardno"/>" class="input-text radius size-s"></td>
+            <td><input type="text" name="cardmaster" placeholder="<s:text name="swingcardsummary.cardmaster"/>" class="input-text radius size-s"></td>
+            <td><select name="SWINGSTATUS" placeholder="<s:text name="swingcardsummary.status"/>" onchange="dosearch()">
+                <option value=""></option>
+                <option value="finished"><s:text name="swingcardsummary.swingfinished"/></option>
+                <option value="unfinished" selected><s:text name="swingcardsummary.swingunfinished"/></option>
+            </select></td>
+            <td><a href="javascript:void(0);" class="btn btn-primary  radius size-S " onclick="dosearch()">  <s:text name="global.search"/></a>
+            </td></tr></table></form></div>
+        <div id="navigatediv"></div>
         <div class="panel-body" id="parentIframe">
             <input type="hidden" id="cardNO" value="<s:property value="cardNO" escape="false"/>"/>
             <input type="hidden" id="billUUID" value="<s:property value="billUUID" escape="false"/>"/>
@@ -56,20 +67,17 @@
                     <table class="table table-border table-bordered table-bg table-hover table-sort">
                         <thead>
                         <tr class="text-c">
-                            <th><s:text name="swingcarddetail.thedate"/></th>
                             <th><s:text name="swingcarddetail.cardno"/></th>
                             <th><s:text name="swingcarddetail.cardmaster"/></th>
                             <th><s:text name="swingcarddetail.amount"/></th>
                             <th><s:text name="statistics.paymoney"/></th>
                             <th><s:text name="swingcarddetail.sdatetm"/></th>
-                            <th><s:text name="swingcarddetail.machinename"/></th>
-                            <th><s:text name="swingcarddetail.teller"/></th>
-                            <th><s:text name="swingcarddetail.realsdatetm"/></th>
-                            <th><s:text name="swingcarddetail.swingstatus"/></th>
+                            <th ><s:text name="swingcarddetail.machinename"/></th>
+                            <th><s:text name="global.operation"/></th>
                         </tr>
                         </thead>
                         <tbody id="swingCardDetail">
-                            <s:property value="swingCardDetail" escape="false"/>
+                        <s:property value="swingCardDetail" escape="false"/>
                         </tbody>
                     </table>
                 </div>
@@ -81,7 +89,53 @@
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/layer/1.9.3/layer.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.admin.js"></script>
-<script type="text/javascript">
+<script src="<%=request.getContextPath()%>/js/laypage/laypage.js"></script>
+<script>
+    $().ready(function() {
+                <s:if test="#request.swingCardDetail==null">
+                dosearch()
+                </s:if>
+            }
+    );
+    function dosearch() {
+        $.ajax({
+            type: 'post',
+            url: 'SwingCard!FetchDetail',
+            dataType:"json",
+            data:$("#searchform").serialize(),
+            success: function (data) {
+                var json = eval("(" + data + ")");
+                if (json.errorMessage != null) {
+                    layer.msg(json.errorMessage);
+                }
+                else {
+                }
+                laypage({
+                    cont: 'navigatediv',
+                    pages: json.pagecount,
+                    skip: true,
+                    skin: 'yahei',
+                    jump: function (obj) {
+                        $.ajax({
+                            type: 'post',
+                            url: 'SwingCard!FetchDetail?currpage='+obj.curr,
+                            dataType:"json",
+                            data:$("#searchform").serialize(),
+                            success: function (data) {
+                                var json = eval("(" + data + ")");
+                                if (json.errorMessage != null) {
+                                    layer.msg(json.errorMessage);
+                                }
+                                else {
+                                    $('#swingCardDetail').html(json.swingCardDetail);
+                                }
+                            }
+                        })
+                    }
+                })
+            }
+        })
+    }
 </script>
 </body>
 </html>

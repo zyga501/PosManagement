@@ -35,7 +35,7 @@ public class StringUtils {
 
     public static String formatMoney(String originStr) {
         try {
-            return (new DecimalFormat("##.00")).format(Float.parseFloat(originStr));
+            return (new DecimalFormat("#0.00")).format(Float.parseFloat(originStr));
         }
         catch(Exception e) {
             return originStr;

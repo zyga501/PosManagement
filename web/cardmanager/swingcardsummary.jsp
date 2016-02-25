@@ -27,7 +27,7 @@
                 title: "刷卡明细",
                 fix: true,
                 maxmin: false,
-                content: "SwingCard!InitDetail?cardNO=" + cardNo + "&billUUID=" + billUUID
+                content: "SwingCard!InitDetail?cardno=" + cardNo + "&billUUID=" + billUUID
             });
             layer.full(index);
         }
@@ -40,7 +40,7 @@
 <body style="overflow: hidden">
 <div align="center">
     <div class="panel panel-default" >
-        <div class="panel-header">刷卡<br><form id="searchform"><table id="searchtb" style="width: 80%"><tr>
+        <div class="panel-header"><form id="searchform"><table id="searchtb" style="width: 80%"><tr>
             <td><input type="text" name="thedate" placeholder="<s:text name="swingcardsummary.thedate"/>" class="input-text radius size-s"></td>
             <td><input type="text" name="cardno" placeholder="<s:text name="swingcardsummary.cardno"/>" class="input-text radius size-s"></td>
             <td><input type="text" name="bankname" placeholder="<s:text name="cardmanager.bankname"/>" class="input-text radius size-s"></td>
@@ -50,7 +50,7 @@
                 <option value="finished"><s:text name="swingcardsummary.swingfinished"/></option>
                 <option value="unfinished"><s:text name="swingcardsummary.swingunfinished"/></option>
             </select></td>
-            <td><a href="javascript:void(0);" class="btn btn-primary  radius size-S " onclick="dosearch()">  <s:text name="global.search"/></a>
+            <td><a href="javascript:void(0);" class="btn btn-primary  radius size-S " onclick="dosearch();alert(2);">  <s:text name="global.search"/></a>
             </td></tr></table></form></div></div>
     <div id="navigatediv"></div>
         <div class="panel-body" id="parentIframe">
@@ -82,7 +82,7 @@
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.admin.js"></script>
 <script src="<%=request.getContextPath()%>/js/laypage/laypage.js"></script>
-<script>
+<script type="text/javascript">
     $().ready
     (laypage({
         cont: 'navigatediv',

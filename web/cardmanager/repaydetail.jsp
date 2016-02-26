@@ -19,7 +19,7 @@
             var val = button.value;
             if (val == "N") {
                 layer.confirm('确定启用？', {
-                    btn: ['yes', 'no'] //按钮
+                    btn: ['是','否'] //按钮
                 }, function () {
                     layer.msg('你选择了YES', {icon: 1});
                     $.ajax({
@@ -52,7 +52,7 @@
             <td><input type="text" name="cardno" placeholder="<s:text name="swingcardsummary.cardno"/>" class="input-text radius size-s"></td>
             <td><input type="text" name="cardmaster" placeholder="<s:text name="swingcardsummary.cardmaster"/>" class="input-text radius size-s"></td>
             <td><select name="TRADESTATUS" placeholder="<s:text name="swingcardsummary.status"/>" onchange="dosearch()">
-                <option value=""></option>
+                <option value="all"><s:text name="global.alldata"/></option>
                 <option value="finished"><s:text name="swingcardsummary.swingfinished"/></option>
                 <option value="unfinished" selected><s:text name="swingcardsummary.swingunfinished"/></option>
             </select></td>

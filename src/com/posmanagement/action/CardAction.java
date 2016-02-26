@@ -167,7 +167,7 @@ public class CardAction extends AjaxActionSupport {
                 String[] strary=(new String("cardno,bankname,creditamount,tempamount,templimitdate," +
                         "useamount,billdate,pin,telpwd,tradepwd,enchashmentpwd,billafterdate,lastrepaymentdate," +
                         "billemail,status,commissioncharge,cardmaster,identityno,cmaddress,cmtel,cmseccontact," +
-                        "memos,repaylimit,repaynum,repayinterval,maxposmean,reservedswingmoney,reservedswingcount")).split(",");
+                        "memos,repaylimit,repaynum,repayinterval,maxposmean,reservedswingmoney,reservedswingcount,expirydates")).split(",");
                 for (String key : strary) {
                     //System.out.print("'"+((String[]) cardmanager.get(key))[0]+"',");
                     System.out.println(key+":"+ StringUtils.convertNullableString(getParameter("cardmanager."+key)));
@@ -178,7 +178,7 @@ public class CardAction extends AjaxActionSupport {
                         "tempamount=?,templimitdate=?,useamount=?,billdate=?,pin=?,telpwd=?,tradepwd=?,enchashmentpwd=?," +
                         "billafterdate=?,lastrepaymentdate=?,billemail=?,status=?,commissioncharge=?,cardmaster=?,identityno=?,"+
                         "cmaddress=?,cmtel=?,cmseccontact=?,memos=?,repaylimit=?,repaynum=?,repayinterval=?," +
-                        "maxposmean=?,reservedswingmoney=?,reservedswingcount=?  where cardno=?",(HashMap<Integer, Object>)  para))
+                        "maxposmean=?,reservedswingmoney=?,reservedswingcount=?,expirydates=?  where cardno=?",(HashMap<Integer, Object>)  para))
                     map.put("errorMessage", getText("addrate.rateFormatError"));
                 {
                     cardList = new CardUI(super.getUserID()).generateCardTable("");

@@ -50,7 +50,7 @@
                 <option value="finished"><s:text name="swingcardsummary.swingfinished"/></option>
                 <option value="unfinished"><s:text name="swingcardsummary.swingunfinished"/></option>
             </select></td>
-            <td><a href="javascript:void(0);" class="btn btn-primary  radius size-S " onclick="dosearch();alert(2);">  <s:text name="global.search"/></a>
+            <td><a href="javascript:void(0);" class="btn btn-primary  radius size-S " onclick="dosearch();">  <s:text name="global.search"/></a>
             </td></tr></table></form></div></div>
     <div id="navigatediv"></div>
         <div class="panel-body" id="parentIframe">

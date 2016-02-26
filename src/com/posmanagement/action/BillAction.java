@@ -205,7 +205,6 @@ public class BillAction extends AjaxActionSupport {
                 if (!StringUtils.convertNullableString(getParameter("billdate")).trim().equals(""))
                 add(new SQLUtils.WhereCondition("billtb.billdate", "like",
                         SQLUtils.ConvertToSqlString("%" + getParameter("billdate") + "%"), !StringUtils.convertNullableString(getParameter("billdate")).trim().isEmpty()));
-
                 if (StringUtils.convertNullableString(getParameter("billstatus")).trim().equals("finished")){
                     add(new  SQLUtils.WhereCondition("billtb.status", "=","'enable' "));
                 }else if (StringUtils.convertNullableString(getParameter("billstatus")).trim().equals("unfinished")) {

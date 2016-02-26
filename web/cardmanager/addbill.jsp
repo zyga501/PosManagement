@@ -29,7 +29,7 @@
                     success: function (data) {
                         var json = eval("(" + data + ")");
                         if (json.errorMessage != null) {
-                            $('#Message').html(json.errorMessage);
+                            layer.msg(json.errorMessage, {icon: 2});
                         }
                         else {
                             parent.layer.msg("<s:text name="global.dosuccess" />");
@@ -113,13 +113,7 @@
                            placeholder="<s:text name="assetmanager.assetMaster" />" class="input-text size-S">
                 </td>
             </tr>
-        </table>
-        <div class="row">
-            <div class="formControls col-8 col-offset-3">
-                <div id="Message" style="color:#ff0000;font-size: 12px;height: 12px">
-                </div>
-            </div>
-        </div>
+        </table> 
         <div class="row">
             <div class="formControls" align="center">
                 <input type="button" class="btn btn-success radius size-M"

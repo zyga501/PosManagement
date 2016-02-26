@@ -22,10 +22,11 @@ public class BillUI extends WebUI {
 
         String htmlString = "";
         for (int index = 0; index < dbRet.size(); ++index) {
-            double canUseMoney = ((long)(10 * (Double.valueOf(dbRet.get(index).get("CANUSEAMOUNT").toString()) +
-                    Double.valueOf(dbRet.get(index).get("REPAYAMOUNT").toString()) - Double.valueOf(dbRet.get(index).get("SWINGAMOUNT").toString())))) / 10.0;
-            double repayAmount = Double.valueOf(dbRet.get(index).get("REPAYAMOUNT").toString());
-            double remainAmount = Double.valueOf(dbRet.get(index).get("BILLAMOUNT").toString()) - repayAmount;
+            double canUseMoney = ((long)(10 * (Double.valueOf(StringUtils.convertNullableString(dbRet.get(index).get("CANUSEAMOUNT"),"0")) +
+                    Double.valueOf(StringUtils.convertNullableString(dbRet.get(index).get("REPAYAMOUNT"),"0")) -
+                    Double.valueOf(StringUtils.convertNullableString(dbRet.get(index).get("SWINGAMOUNT"),"0"))))) / 10.0;
+            double repayAmount = Double.valueOf(StringUtils.convertNullableString(dbRet.get(index).get("REPAYAMOUNT"),"0"));
+            double remainAmount = Double.valueOf(StringUtils.convertNullableString(dbRet.get(index).get("BILLAMOUNT"),"0")) - repayAmount;
             htmlString += new UIContainer("tr")
                     .addAttribute("class", "text-c odd")
                     .addAttribute("role", "row")
@@ -42,8 +43,10 @@ public class BillUI extends WebUI {
                     .addElement("td", String.valueOf(repayAmount))
                     .addElement("td", String.valueOf(Double.max(remainAmount, 0.0)))
                     .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("SALEMAN")))
-                    .addElement("td", dbRet.get(index).get("SWINGCOUNT").toString().compareTo(dbRet.get(index).get("SWUNGCOUNT").toString()) == 0 &&
-                            dbRet.get(index).get("REPAYCOUNT").toString().compareTo(dbRet.get(index).get("REPAYEDCOUNT").toString()) == 0 ?
+                    .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("SWINGCOUNT")).compareTo(StringUtils.convertNullableString(
+                            dbRet.get(index).get("SWUNGCOUNT"))) == 0 &&
+                            StringUtils.convertNullableString(dbRet.get(index).get("REPAYCOUNT")).compareTo(StringUtils.convertNullableString(
+                                    dbRet.get(index).get("REPAYEDCOUNT"))) == 0 ?
                             getText("bill.billfinished") : getText("bill.billunfinished"))
                     .addElement(new UIContainer("td").addElement(new UIContainer("input")
                             .addAttribute("class", dbRet.get(index).get("STATUS").equals("enable")?"btn btn-success radius":"btn btn-danger radius")
@@ -109,9 +112,12 @@ public class BillUI extends WebUI {
 
     private ArrayList<HashMap<String, Object>> fetchBillList(int pageIndex) throws Exception {
         String whereSql = SQLUtils.BuildWhereCondition(uiConditions_);
-        if (!whereSql.isEmpty()) {
-            whereSql = " and " + whereSql;
+        if (whereSql.isEmpty()) {
+            whereSql = " where 1=1  " + whereSql;
         }
+        else
+            whereSql = " where  " + whereSql;
+
         String limitSql ="limit " + (pageIndex - 1) * DEFAULTITEMPERPAGE + "," + DEFAULTITEMPERPAGE;
 
         if (!UserUtils.isAdmin(userID_))
@@ -119,21 +125,16 @@ public class BillUI extends WebUI {
                     " or cardtb.salemanuuid in(select salemanuuid from tellertb   where uid='"+userID_+"')) ";
 
         return PosDbManager.executeSql("SELECT  *,userinfo.unick SALEMAN,banktb.name bankname \n" +
-                "from billtb ,cardtb , (select billtb.uuid billuuid,sum(CASE WHEN swingcard.swingstatus='enable' then swingcard.amount else 0 END) swingamount,"+
-                "Sum(swingcard.amount) AS amount, " +
-                "count(1) swingcount," +
-                "sum(case when swingstatus='enable' then 1 else 0 END) swungcount,"+
-                "(count(1) - sum(case when swingstatus='enable' then 1 else 0 END)) unfinished  ,"+
-                "Sum(case when swingcard.amount*ratetb.rate/100>ratetb.MAXFEE and ratetb.maxfee>0 then "+
-                "ratetb.maxfee else swingcard.amount*ratetb.rate/100  end)  paycharge "+
-                "from  swingcard,billtb,ratetb,postb where swingcard.billuuid = billtb.uuid and   postb.uuid = swingcard.posuuid "+
-                "and postb.rateuuid = ratetb.uuid group by billtb.uuid) swingcardtotal,"+
-                "(select  billtb.uuid billuuid,count(repaytb.id) repaycount,"+
-                "sum(CASE WHEN repaytb.tradestatus='enable' then 1 else 0 END) repayedcount,"+
-                "sum(CASE WHEN repaytb.tradestatus='enable' then repaytb.trademoney else 0 END) repayamount "+
-                "from  repaytb,billtb  where repaytb.billuuid = billtb.uuid  group by billtb.uuid  ) repaytbtotal,userinfo,  banktb \n"+
-                "where userinfo.uid = cardtb.salemanuuid and cardtb.cardno = billtb.cardno and billtb.uuid=swingcardtotal.billuuid \n" +
-                "and banktb.uuid = billtb.bankuuid and repaytbtotal.billuuid=billtb.uuid \n"+
+                "from billtb inner join cardtb  on billtb.cardno=cardtb.cardno inner join userinfo on userinfo.uid = cardtb.salemanuuid \n" +
+                " inner join banktb on banktb.uuid = billtb.bankuuid LEFT JOIN\n" +
+                "(select billtb.uuid billuuid,sum(CASE WHEN swingcard.swingstatus='enable' then swingcard.amount else 0 END) swingamount,\n" +
+                "Sum(swingcard.amount) AS amount, count(1) swingcount,sum(case when swingstatus='enable' then 1 else 0 END) swungcount,(count(1) - sum(case when swingstatus='enable' then 1 else 0 END))\n" +
+                " unfinished  ,Sum(case when swingcard.amount*ratetb.rate/100>ratetb.MAXFEE and ratetb.maxfee>0 then ratetb.maxfee else swingcard.amount*ratetb.rate/100  end)  paycharge\n" +
+                " from  swingcard,billtb,ratetb,postb where swingcard.billuuid = billtb.uuid and   postb.uuid = swingcard.posuuid and postb.rateuuid = ratetb.uuid \n" +
+                "group by billtb.uuid) swingcardtotal on billtb.uuid=swingcardtotal.billuuid LEFT JOIN\n" +
+                "(select  billtb.uuid billuuid,count(repaytb.id) repaycount,sum(CASE WHEN repaytb.tradestatus='enable' then 1 else 0 END) repayedcount,\n" +
+                "sum(CASE WHEN repaytb.tradestatus='enable' then repaytb.trademoney else 0 END) repayamount from  repaytb,billtb  where repaytb.billuuid = billtb.uuid  group by billtb.uuid  ) repaytbtotal\n" +
+                " on repaytbtotal.billuuid=billtb.uuid \n"+
                 whereSql +
                 "GROUP BY billtb.billdate, billtb.cardno \n" +
                 "ORDER BY billtb.billdate desc\n" +

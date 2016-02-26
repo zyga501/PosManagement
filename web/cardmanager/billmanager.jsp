@@ -32,7 +32,7 @@
             var val = button.value;
             if (val == "N") {
                 layer.confirm('确定启用？', {
-                    btn: ['yes', 'no'] //按钮
+                    btn: ['是','否'] //按钮
                 }, function () {
                     $.ajax({
                         type: 'post',
@@ -183,6 +183,7 @@ $().ready( function(){
 )
 
     function  clickbtbill(obj){
+
         var name = prompt("输入新的金额",obj.innerHTML);
         if (name==null) return ;
         $.ajax({

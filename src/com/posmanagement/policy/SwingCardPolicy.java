@@ -7,10 +7,7 @@ import com.posmanagement.utils.UserUtils;
 
 import java.sql.Date;
 import java.sql.Time;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Random;
+import java.util.*;
 
 public class SwingCardPolicy {
     public static void main(String[] args) throws Exception {
@@ -41,15 +38,19 @@ public class SwingCardPolicy {
 
     private class RuleInfo extends PolicyInfo {
         public String ruleUUID;
-        public String bankUUID;
-        public String posServerUUID;
+        public String posUUID;
         public Time swingStartTime;
         public Time swingEndTime;
         public double minSwingMoney;
         public double maxSwingMoney;
+        public String posServerUUID;
         public String industryUUID;
         public String rateUUID;
         public String mccUUID;
+        public String posPosServerUUID;
+        public String posIndustryUUID;
+        public String posRateUUID;
+        public String posMccUUID;
         public int ruleUseFre;
         public double ruleUseInterval;
     }
@@ -59,6 +60,9 @@ public class SwingCardPolicy {
         public double creditAmount;
         public int repayNum;
         public int repayInterval;
+        public double maxPosMean;
+        public double reservedSwingMoney;
+        public double reservedSwingCount;
     }
 
     public class SwingCardInfo {
@@ -66,6 +70,7 @@ public class SwingCardPolicy {
         public double money;
         public Date swingDate;
         public Time swingTime;
+        public double posRate;
         public String posUUID;
     }
 
@@ -104,8 +109,7 @@ public class SwingCardPolicy {
         }
 
         try {
-            ruleList_ = fetchRuleList(billInfo_.bankUUID);
-            if (ruleList_.size() <= 0) {
+            if (fetchRuleList(billInfo_.bankUUID).size() <= 0) {
                 throw new NullPointerException();
             }
         }
@@ -125,6 +129,18 @@ public class SwingCardPolicy {
             return null;
         }
 
+        ArrayList<Double> posRateList = fetchPosRateList();
+        Collections.sort(posRateList);
+        if (posRateList.get(0) > cardInfo_.maxPosMean) {
+            lastError = "无法找到小于最大成本费率的Pos机";
+            return null;
+        }
+
+        ArrayList<Double> swingPosRateList = new ArrayList<>();
+        return generateSwingList(dateLimit, posRateList);
+    }
+
+    public SwingList generateSwingList(double dateLimit, ArrayList<Double> posRateList) throws Exception {
         ArrayList<RepayInfo> repayList = new ArrayList<RepayInfo>();
         // generate repay list
         while (true) {
@@ -158,32 +174,102 @@ public class SwingCardPolicy {
         }
 
         // generate swing card list
+        double reservedSwingMoney = 0.0;
         ArrayList<SwingCardInfo> swingCardList = new ArrayList<SwingCardInfo>();
-        double canUseAmount = 0.0;
-        double lastDate = 0.0;
-        initRuleInfo();
+        double usableMoney = 0.0;
         Iterator<RepayInfo> iterator = repayList.iterator();
         while (iterator.hasNext()) {
-            RuleInfo ruleInfo = nextRule();
-            if (ruleInfo == null) {
-                break;
-            }
-            updateRuleInfo(ruleInfo);
             RepayInfo repayInfo = iterator.next();
-            double nextDateLimit = repayInfo.repayDate.getTime() / ONEDAYMILLIONSECOND - lastDate;
-            lastDate = repayInfo.repayDate.getTime() / ONEDAYMILLIONSECOND;
-            canUseAmount += repayInfo.money;
-            SwingCardInfo swingCardInfo = generateSwingInfo(ruleInfo, repayInfo, canUseAmount, !iterator.hasNext());
-            if (null==swingCardInfo.posUUID || swingCardInfo.posUUID.isEmpty()) {
-                lastError = "没有刷卡机或刷卡机不满足规则要求";
-                return null;
+            usableMoney += repayInfo.money;
+            SwingCardInfo swingCardInfo = generateSwingMoney(repayInfo, usableMoney, !iterator.hasNext());
+            if (!iterator.hasNext()) {
+                if (swingCardInfo.money > cardInfo_.reservedSwingMoney) {
+                    swingCardInfo.money -= cardInfo_.reservedSwingMoney;
+                    reservedSwingMoney = cardInfo_.reservedSwingMoney;
+                }
+                else {
+                    reservedSwingMoney = swingCardInfo.money;
+                    continue;
+                }
             }
-            canUseAmount -= swingCardInfo.money;
+            usableMoney -= swingCardInfo.money;
             swingCardList.add(swingCardInfo);
-            updateRuleCoolingTime(nextDateLimit);
         }
 
-        return generateSwingList( swingCardList, repayList);
+        ArrayList<Double> swingPostRateList = new ArrayList<>();
+        do {
+            while (true) {
+                for (int index = 0; index < swingCardList.size(); ++index) {
+                    swingPostRateList.add(posRateList.get(random.nextInt(posRateList.size())));
+                }
+
+                double rateSum = 0;
+                for (int index = 0; index < swingPostRateList.size(); ++index) {
+                    rateSum += swingPostRateList.get(index);
+                }
+
+                rateSum /= swingPostRateList.size();
+                if (rateSum  < cardInfo_.maxPosMean) {
+                    break;
+                }
+            }
+        } while (!intelligentAssignPos(swingCardList, swingPostRateList));
+
+        return generateSwingList(swingCardList, repayList);
+    }
+
+    private boolean intelligentAssignPos(ArrayList<SwingCardInfo> swingCardList, ArrayList<Double> swingPostRateList) throws Exception {
+        Collections.sort(swingPostRateList);
+        Collections.sort(swingCardList, new Comparator<SwingCardInfo>() {
+            @Override
+            public int compare(SwingCardInfo o1, SwingCardInfo o2) {
+                return o1.money < o2.money ? 1 : -1;
+            }
+        });
+
+        for (int index = 0; index < swingCardList.size(); ++index) {
+            swingCardList.get(index).posRate = swingPostRateList.get(index);
+        }
+
+        Collections.sort(swingCardList, new Comparator<SwingCardInfo>() {
+            @Override
+            public int compare(SwingCardInfo o1, SwingCardInfo o2) {
+                return o1.swingDate.getTime() > o2.swingDate.getTime() ? 1 : -1;
+            }
+        });
+
+        ArrayList<Double> tempSwingPosList = new ArrayList<>();
+        for (int index = 0; index < swingPostRateList.size(); index++) {
+            if (!tempSwingPosList.contains(swingPostRateList.get(index))) {
+                tempSwingPosList.add(swingPostRateList.get(index));
+            }
+        }
+        swingPostRateList = tempSwingPosList;
+        for (int posRateIndex = 0; posRateIndex < swingPostRateList.size(); ++posRateIndex) {
+            ruleList_ = fetchRuleList(billInfo_.bankUUID, swingPostRateList.get(posRateIndex));
+            if (ruleList_ == null) {
+                return false;
+            }
+            double lastDate = 0.0;
+            initRuleInfo();
+            for (int index = 0; index < swingCardList.size(); ++index) {
+                if (swingCardList.get(index).posRate != swingPostRateList.get(posRateIndex)) {
+                    continue;
+                }
+
+                RuleInfo ruleInfo = nextRule();
+                if (ruleInfo == null) {
+                    return false;
+                }
+                updateRuleInfo(ruleInfo.ruleUUID);
+                updateSwingInfo(ruleInfo, swingCardList.get(index));
+                double nextDateLimit = swingCardList.get(index).swingDate.getTime() / ONEDAYMILLIONSECOND - lastDate;
+                lastDate = swingCardList.get(index).swingDate.getTime() / ONEDAYMILLIONSECOND;
+                updateRuleCoolingTime(nextDateLimit);
+            }
+        }
+
+        return true;
     }
 
     private void initRepayInfo() {
@@ -215,20 +301,21 @@ public class SwingCardPolicy {
         return swingList;
     }
 
-    private SwingCardInfo generateSwingInfo(RuleInfo ruleInfo, RepayInfo repayInfo, double canUseAmount, boolean isLastSwing) throws Exception {
+    private  SwingCardInfo generateSwingMoney(RepayInfo repayInfo, double usableMoney, boolean isLastSwing) throws Exception {
         SwingCardInfo swingCardInfo = new SwingCardInfo();
-        swingCardInfo.money = (long)(canUseAmount * (0.8 + random.nextDouble() * SWINGAMOUNTFIXEDLIMIT));
+        swingCardInfo.money = (long)(usableMoney * (0.8 + random.nextDouble() * SWINGAMOUNTFIXEDLIMIT));
         if (isLastSwing) {
-            swingCardInfo.money = canUseAmount - random.nextDouble() * LASTFIXEDSWINGCARDMONEY;
+            swingCardInfo.money = usableMoney - random.nextDouble() * LASTFIXEDSWINGCARDMONEY;
         }
         swingCardInfo.money = (long)(swingCardInfo.money / 10.0) * 10.0;
+        swingCardInfo.swingDate = repayInfo.repayDate;
+        return swingCardInfo;
+    }
+
+    private SwingCardInfo updateSwingInfo(RuleInfo ruleInfo, SwingCardInfo swingCardInfo) throws Exception {
         swingCardInfo.swingTime = new Time((long)(random.nextDouble() * ((ruleInfo.swingEndTime.getTime()) - ruleInfo.swingStartTime.getTime())  + ruleInfo.swingStartTime.getTime())) ;
         swingCardInfo.ruleUUID = ruleInfo.ruleUUID;
-        swingCardInfo.swingDate = repayInfo.repayDate;
-        ArrayList<HashMap<String, Object>> posList = fetchPosList(ruleInfo);
-        if (posList.size() > 0) {
-            swingCardInfo.posUUID = posList.get(random.nextInt(posList.size())).get("UUID").toString();
-        }
+        swingCardInfo.posUUID = ruleInfo.posUUID;
         return swingCardInfo;
     }
 
@@ -259,10 +346,15 @@ public class SwingCardPolicy {
         policyInfo.coolingTime = policyInfo.useInterval;
     }
 
-    private void updateRuleInfo(RuleInfo ruleInfo) {
-        PolicyInfo policyInfo = ruleInfo;
-        policyInfo.useNumber--;
-        policyInfo.coolingTime = policyInfo.useInterval;
+    private void updateRuleInfo(String ruleUUID) {
+        for (int index = 0; index < ruleList_.size(); ++index) {
+            if (ruleList_.get(index).ruleUUID != ruleUUID) {
+                continue;
+            }
+            PolicyInfo policyInfo = ruleList_.get(index);
+            policyInfo.useNumber--;
+            policyInfo.coolingTime = policyInfo.useInterval;
+        }
     }
 
     private void updateRepayCoolingTime(double nextDateLimit) {
@@ -285,6 +377,9 @@ public class SwingCardPolicy {
     private RuleInfo nextRule() {
         ArrayList<Integer> randomList = new ArrayList<Integer>();
         while (true) {
+            if (ruleList_.size() == 0) {
+                return null;
+            }
             int randomNum = random.nextInt(ruleList_.size());
             if (randomList.contains(randomNum)) {
                 if (randomList.size() == ruleList_.size()) {
@@ -326,35 +421,67 @@ public class SwingCardPolicy {
         return billInfo;
     }
 
-    private ArrayList<RuleInfo> fetchRuleList(String bankUUID) throws Exception {
+    private ArrayList<HashMap<String, Object>> fetchRuleList(String bankUUID) throws Exception {
         String whereSql = new String();
         if (!UserUtils.isAdmin(salemanID)) {
             whereSql += "and rulesaleman.salemanuuid='" + salemanID + "'";
         }
 
+        return PosDbManager.executeSql(
+                "SELECT\n" +
+                "ruletb.uuid\n" +
+                "FROM\n" +
+                "ruletb\n" +
+                "LEFT JOIN swingtimetb ON swingtimetb.uuid = ruletb.swingtimeuuid\n" +
+                "INNER JOIN rulebank ON rulebank.ruleuuid = ruletb.uuid\n" +
+                "INNER JOIN rulesaleman ON rulesaleman.ruleuuid = ruletb.uuid\n" +
+                "where rulebank.bankuuid='" + bankUUID + "' " +
+                whereSql
+        );
+    }
+
+    private ArrayList<RuleInfo> fetchRuleList(String bankUUID, Double posRate) throws Exception {
+        ArrayList<SQLUtils.WhereCondition> whereConditions = new ArrayList<SQLUtils.WhereCondition>() {
+            {
+                add(new SQLUtils.WhereCondition("rulebank.bankuuid", "=", SQLUtils.ConvertToSqlString(bankUUID)));
+                add(new SQLUtils.WhereCondition("rulesaleman.salemanuuid", "=", SQLUtils.ConvertToSqlString(salemanID), !UserUtils.isAdmin(salemanID)));
+                add(new SQLUtils.WhereCondition("ratetb.rate", "=", posRate.toString()));
+            }
+        };
+
+        String whereSql = SQLUtils.BuildWhereCondition(whereConditions);
+        if (!whereSql.isEmpty()) {
+            whereSql = " where " + whereSql;
+        }
+
         return convertRuleList((ArrayList<HashMap<String, Object>>)PosDbManager.executeSql(
                 "SELECT\n" +
-                        "ruletb.uuid,\n" +
-                        "swingtimetb.starttime,\n" +
-                        "swingtimetb.endtime,\n" +
-                        "ruletb.posserveruuid,\n" +
-                        "ruletb.minswingmoney,\n" +
-                        "ruletb.maxswingmoney,\n" +
-                        "ruletb.industryuuid,\n" +
-                        "ruletb.rateuuid,\n" +
-                        "ruletb.mccuuid,\n" +
-                        "ruletb.ruleusefre,\n" +
-                        "ruletb.ruleuseinterval,\n" +
-                        "rulebank.bankuuid,\n" +
-                        "rulesaleman.salemanuuid\n" +
-                        "FROM\n" +
-                        "ruletb\n" +
-                        "LEFT JOIN swingtimetb ON swingtimetb.uuid = ruletb.swingtimeuuid\n" +
-                        "INNER JOIN rulebank ON rulebank.ruleuuid = ruletb.uuid\n" +
-                        "INNER JOIN rulesaleman ON rulesaleman.ruleuuid = ruletb.uuid\n" +
-                        "where rulebank.bankuuid='" + bankUUID + "' " +
-                        whereSql
-                        ));
+                "ruletb.uuid,\n" +
+                "swingtimetb.starttime,\n" +
+                "swingtimetb.endtime,\n" +
+                "ruletb.minswingmoney,\n" +
+                "ruletb.maxswingmoney,\n" +
+                "ruletb.posserveruuid ruleposserveruuid,\n" +
+                "ruletb.industryuuid ruleindustryuuid,\n" +
+                "ruletb.rateuuid rulerateuuid,\n" +
+                "ruletb.mccuuid rulemccuuid,\n" +
+                "ruletb.ruleusefre,\n" +
+                "ruletb.ruleuseinterval,\n" +
+                "rulesaleman.salemanuuid,\n" +
+                "postb.uuid AS posuuid,\n" +
+                "postb.industryuuid posindustryuuid,\n" +
+                "postb.rateuuid posrateuuid,\n" +
+                "postb.mccuuid posmccuuid,\n" +
+                "postb.posserveruuid posposserveruuid\n" +
+                "FROM\n" +
+                "ruletb\n" +
+                "LEFT JOIN swingtimetb ON swingtimetb.uuid = ruletb.swingtimeuuid\n" +
+                "INNER JOIN rulebank ON rulebank.ruleuuid = ruletb.uuid\n" +
+                "INNER JOIN rulesaleman ON rulesaleman.ruleuuid = ruletb.uuid\n" +
+                "INNER JOIN postb\n" +
+                "INNER JOIN ratetb ON postb.rateuuid = ratetb.uuid" +
+                whereSql
+        ));
     }
 
     private ArrayList<RuleInfo> convertRuleList(ArrayList<HashMap<String, Object>> ruleList) {
@@ -365,17 +492,29 @@ public class SwingCardPolicy {
                 RuleInfo ruleInfo = new RuleInfo();
                 HashMap<String, Object> sqlRuleInfo = iterator.next();
                 ruleInfo.ruleUUID = sqlRuleInfo.get("UUID").toString();
-                ruleInfo.bankUUID = sqlRuleInfo.get("BANKUUID").toString();
-                ruleInfo.industryUUID = sqlRuleInfo.get("INDUSTRYUUID").toString();
-                ruleInfo.posServerUUID = sqlRuleInfo.get("POSSERVERUUID").toString();
+                ruleInfo.posUUID = sqlRuleInfo.get("POSUUID").toString();
                 ruleInfo.swingStartTime = StringUtils.convertNullableString(sqlRuleInfo.get("STARTTIME")).isEmpty() ? Time.valueOf("00:00:00") : Time.valueOf(sqlRuleInfo.get("STARTTIME").toString());
                 ruleInfo.swingEndTime = StringUtils.convertNullableString(sqlRuleInfo.get("ENDTIME")).isEmpty() ? Time.valueOf("23:59:59") : Time.valueOf(sqlRuleInfo.get("ENDTIME").toString());
                 ruleInfo.minSwingMoney = StringUtils.convertNullableString(sqlRuleInfo.get("MINSWINGMONEY")).isEmpty() ? 0.0 : Double.parseDouble(sqlRuleInfo.get("MINSWINGMONEY").toString());
                 ruleInfo.maxSwingMoney = StringUtils.convertNullableString(sqlRuleInfo.get("MAXSWINGMONEY")).isEmpty() ? Double.MAX_VALUE : Double.parseDouble(sqlRuleInfo.get("MAXSWINGMONEY").toString());
-                ruleInfo.rateUUID = sqlRuleInfo.get("RATEUUID").toString();
-                ruleInfo.mccUUID = sqlRuleInfo.get("MCCUUID").toString();
+                ruleInfo.industryUUID = sqlRuleInfo.get("RULEINDUSTRYUUID").toString();
+                ruleInfo.posServerUUID = sqlRuleInfo.get("RULEPOSSERVERUUID").toString();
+                ruleInfo.rateUUID = sqlRuleInfo.get("RULERATEUUID").toString();
+                ruleInfo.mccUUID = sqlRuleInfo.get("RULEMCCUUID").toString();
+                ruleInfo.posIndustryUUID = sqlRuleInfo.get("POSINDUSTRYUUID").toString();
+                ruleInfo.posPosServerUUID = sqlRuleInfo.get("POSPOSSERVERUUID").toString();
+                ruleInfo.posRateUUID = sqlRuleInfo.get("POSRATEUUID").toString();
+                ruleInfo.posMccUUID = sqlRuleInfo.get("POSMCCUUID").toString();
                 ruleInfo.ruleUseFre = StringUtils.convertNullableString(sqlRuleInfo.get("RULEUSEFRE")).isEmpty() ? Integer.MAX_VALUE : Integer.parseInt(sqlRuleInfo.get("RULEUSEFRE").toString());
                 ruleInfo.ruleUseInterval = StringUtils.convertNullableString(sqlRuleInfo.get("RULEUSEINTERVAL")).isEmpty() ? 0 : Double.parseDouble(sqlRuleInfo.get("RULEUSEINTERVAL").toString());
+                if (!ruleInfo.industryUUID.isEmpty() && ruleInfo.industryUUID.compareTo(ruleInfo.posIndustryUUID) != 0)
+                    continue;
+                if (!ruleInfo.posServerUUID.isEmpty() && ruleInfo.posServerUUID.compareTo(ruleInfo.posPosServerUUID) != 0)
+                    continue;
+                if (!ruleInfo.rateUUID.isEmpty() && ruleInfo.rateUUID.compareTo(ruleInfo.posRateUUID) != 0)
+                    continue;
+                if (!ruleInfo.mccUUID.isEmpty() && ruleInfo.mccUUID.compareTo(ruleInfo.posMccUUID) != 0)
+                    continue;
                 ruleInfoList.add(ruleInfo);
             }
         }
@@ -395,17 +534,16 @@ public class SwingCardPolicy {
         cardInfo.creditAmount = Double.parseDouble(sqlCardInfo.get(0).get("CREDITAMOUNT").toString());
         cardInfo.repayNum = Integer.parseInt(sqlCardInfo.get(0).get("REPAYNUM").toString());
         cardInfo.repayInterval = Integer.parseInt(sqlCardInfo.get(0).get("REPAYINTERVAL").toString());
+        cardInfo.maxPosMean = Double.parseDouble(sqlCardInfo.get(0).get("MAXPOSMEAN").toString());
+        cardInfo.reservedSwingMoney = Double.parseDouble(sqlCardInfo.get(0).get("RESERVEDSWINGMONEY").toString()) * cardInfo.creditAmount;
+        cardInfo.reservedSwingCount = Double.parseDouble(sqlCardInfo.get(0).get("RESERVEDSWINGCOUNT").toString());
         return cardInfo;
     }
 
-    private ArrayList<HashMap<String, Object>> fetchPosList(RuleInfo ruleInfo) throws Exception {
+    private ArrayList<Double> fetchPosRateList() throws Exception {
         ArrayList<SQLUtils.WhereCondition> whereConditions = new ArrayList<SQLUtils.WhereCondition>() {
             {
-                add(new SQLUtils.WhereCondition("industryuuid", "=", SQLUtils.ConvertToSqlString(ruleInfo.industryUUID), !ruleInfo.industryUUID.isEmpty()));
-                add(new SQLUtils.WhereCondition("posserveruuid", "=", SQLUtils.ConvertToSqlString(ruleInfo.posServerUUID), !ruleInfo.posServerUUID.isEmpty()));
-                add(new SQLUtils.WhereCondition("rateuuid", "=", SQLUtils.ConvertToSqlString(ruleInfo.rateUUID), !ruleInfo.rateUUID.isEmpty()));
-                add(new SQLUtils.WhereCondition("mccuuid", "=", SQLUtils.ConvertToSqlString(ruleInfo.mccUUID), !ruleInfo.mccUUID.isEmpty()));
-                add(new SQLUtils.WhereCondition("userinfo.uid", "=", SQLUtils.ConvertToSqlString(salemanID), !UserUtils.isAdmin(salemanID)));
+                add(new SQLUtils.WhereCondition("salemanuuid", "=", SQLUtils.ConvertToSqlString(salemanID), !UserUtils.isAdmin(salemanID)));
             }
         };
 
@@ -414,8 +552,27 @@ public class SwingCardPolicy {
             whereSql = " where " + whereSql;
         }
 
-        return (ArrayList<HashMap<String, Object>>)PosDbManager.executeSql("SELECT * FROM postb\n" +
-                "INNER JOIN userinfo ON userinfo.uid = postb.salemanuuid" + whereSql);
+        ArrayList<HashMap<String, Object>> posRateList = (ArrayList<HashMap<String, Object>>)PosDbManager.executeSql("SELECT DISTINCT\n" +
+                "ratetb.rate\n" +
+                "FROM\n" +
+                "postb\n" +
+                "INNER JOIN ratetb ON ratetb.uuid = postb.rateuuid" + whereSql);
+
+        return convertPosRateList(posRateList);
+    }
+
+    private ArrayList<Double> convertPosRateList(ArrayList<HashMap<String, Object>> sqlPosRateList) throws Exception {
+        if (sqlPosRateList == null || sqlPosRateList.size() <= 0)
+            return null;
+
+        ArrayList<Double> posRateList = new ArrayList<>();
+        Iterator<HashMap<String, Object>> iterator = sqlPosRateList.iterator();
+        while (iterator.hasNext()) {
+            HashMap<String, Object> posRate = iterator.next();
+            posRateList.add(Double.parseDouble(posRate.get("RATE").toString()));
+        }
+
+        return posRateList;
     }
 
     private String salemanID;
@@ -427,6 +584,6 @@ public class SwingCardPolicy {
     private final double REPAYDATEFIXEDLIMIT = 1.3;
     private final double SWINGAMOUNTFIXEDLIMIT = 0.1;
     private final long ONEDAYMILLIONSECOND = 24 * 60 * 60 * 1000;
-    private final double LASTFIXEDSWINGCARDMONEY = 10;
+    private final double LASTFIXEDSWINGCARDMONEY = 20;
     private String lastError;
 }

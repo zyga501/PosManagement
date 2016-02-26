@@ -120,6 +120,9 @@
                     beforeSubmit: function(curform) {addCard();return false; }
                 });
         })
+        function hintmsg(str,obj){
+            layer.tips(str,obj)
+        }
     </script>
 </head>
 <body scroll="no">
@@ -168,12 +171,14 @@
                     <td><s:text name="cardmanager.cmseccontact"/></td><td><input id=cmseccontact name=cardmanager.cmseccontact type="text" value="<s:property value="cardmanager.cmseccontact"/>" placeholder="<s:text name="cardmanager.cmseccontact"/>" class="input-text size-S "></td>
                     <td><s:text name="cardmanager.repaylimit"/></td><td><input id=repaylimit name=cardmanager.repaylimit type="text" onfocus="showmanthday(this,0,5)" value="<s:property value="cardmanager.repaylimit"/>" placeholder="<s:text name="cardmanager.repaylimit"/>" class="input-text size-S required " datatype="n"></td>
                     <td><s:text name="cardmanager.repaynum"/></td><td><input id=repaynum name=cardmanager.repaynum type="text" value="<s:property value="cardmanager.repaynum"/>" placeholder="<s:text name="cardmanager.repaynum"/>" class="input-text size-S required " datatype="n"></td>
-                    <td><s:text name="cardmanager.repayinterval"/></td><td><input id=repayinterval name=cardmanager.repayinterval type="text" onfocus="showmanthday(this,0,30)" value="<s:property value="cardmanager.repayinterval"/>" placeholder="<s:text name="cardmanager.repayinterval"/>" class="input-text size-S required "datatype="n"></td>
+                    <td><s:text name="cardmanager.repayinterval"/></td><td><input id=repayinterval name=cardmanager.repayinterval type="text" onfocus="showmanthday(this,0,5)"
+                            onmouseover="hintmsg('提示  0-2万，3-4次；2-4万，4-5笔；4-10万，5-6笔；10万以上，6次以上',this);"   value="<s:property value="cardmanager.repayinterval"/>" placeholder="<s:text name="cardmanager.repayinterval"/>" class="input-text size-S required "datatype="n"></td>
                 <tr class="text-c">
                 <tr class="text-c">
+                <td><s:text name="cardmanager.expirydates"/></td><td><input id=expirydates name=cardmanager.expirydates type="text" onfocus="WdatePicker({dateFmt:'yyyy-MM'})" value="<s:property value="cardmanager.expirydates"/>" placeholder="<s:text name="cardmanager.expirydates"/>" class="input-text Wdate required " datatype="*"></td>
                     <td><s:text name="cardmanager.maxposmean"/></td><td><input id=maxposmean name=cardmanager.maxposmean type="text" value="<s:property value="cardmanager.maxposmean"/>" placeholder="<s:text name="cardmanager.maxposmean"/>" class="input-text size-S required" datatype="/^-?[1-9]+(\.\d+)?$|^-?0(\.\d+)?$|^-?[1-9]+[0-9]*(\.\d+)?$/"></td>
                     <td><s:text name="cardmanager.reservedswingcount"/></td><td><input id=reservedswingcount name=cardmanager.reservedswingcount type="text" onfocus="showmanthday(this,0,5)" value="<s:property value="cardmanager.reservedswingcount"/>" placeholder="<s:text name="cardmanager.reservedswingcount"/>" class="input-text size-S required " datatype="/^-?[1-9]+(\.\d+)?$|^-?0(\.\d+)?$|^-?[1-9]+[0-9]*(\.\d+)?$/"></td>
-                    <td><s:text name="cardmanager.reservedswingmoney"/></td><td><input id=reservedswingmoney name=cardmanager.reservedswingmoney type="text" value="<s:property value="cardmanager.reservedswingmoney"/>" placeholder="<s:text name="cardmanager.reservedswingmoney"/>" class="input-text size-S required " datatype="/^-?[1-9]+(\.\d+)?$|^-?0(\.\d+)?$|^-?[1-9]+[0-9]*(\.\d+)?$/"></td>
+                <td><s:text name="cardmanager.reservedswingmoney"/></td><td><input id=reservedswingmoney name=cardmanager.reservedswingmoney type="number"  max="5" min="1" step="1" style="width:100%" onfocus="showmanthday(this,0,5)"  value="<s:property value="cardmanager.reservedswingmoney"/>" placeholder="<s:text name="cardmanager.reservedswingmoney"/>" class="input-text size-S required " datatype="/^-?[1-9]+(\.\d+)?$|^-?0(\.\d+)?$|^-?[1-9]+[0-9]*(\.\d+)?$/"></td>
                  <tr class="text-c">
                 <% if (request.getSession().getAttribute("roleId").equals("e664d6f3-85f8-4bd6-bcb8-c4e053732b29")){ %>
                 <td><s:text name="cardmanager.saleman"/></td>

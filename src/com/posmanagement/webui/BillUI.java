@@ -35,26 +35,45 @@ public class BillUI extends WebUI {
                     .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("LASTREPAYMENTDATE")))
                     .addElement(new UIContainer("td")
                             .addElement(new UIContainer("label",StringUtils.convertNullableString(dbRet.get(index).get("BILLAMOUNT")).equals("")?"0":dbRet.get(index).get("BILLAMOUNT").toString())
-                            .addAttribute("name","billamount")
-                            .addAttribute("datav",StringUtils.convertNullableString(dbRet.get(index).get("UUID")))
-                            .addAttribute("style","display:inline-block;")))
+                                    .addAttribute("name","billamount")
+                                    .addAttribute("datav",StringUtils.convertNullableString(dbRet.get(index).get("UUID")))
+                                    .addAttribute("style","display:inline-block;")))
                     .addElement("td", String.valueOf(canUseMoney))
                     .addElement("td", String.valueOf(repayAmount))
                     .addElement("td", String.valueOf(Double.max(remainAmount, 0.0)))
                     .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("SALEMAN")))
                     .addElement("td", dbRet.get(index).get("SWINGCOUNT").toString().compareTo(dbRet.get(index).get("SWUNGCOUNT").toString()) == 0 &&
-                                        dbRet.get(index).get("REPAYCOUNT").toString().compareTo(dbRet.get(index).get("REPAYEDCOUNT").toString()) == 0 ?
+                            dbRet.get(index).get("REPAYCOUNT").toString().compareTo(dbRet.get(index).get("REPAYEDCOUNT").toString()) == 0 ?
                             getText("bill.billfinished") : getText("bill.billunfinished"))
                     .addElement(new UIContainer("td").addElement(new UIContainer("input")
-                        .addAttribute("class", dbRet.get(index).get("STATUS").equals("enable")?"btn btn-success radius":"btn btn-danger radius")
-                        .addAttribute("type","button")
+                            .addAttribute("class", dbRet.get(index).get("STATUS").equals("enable")?"btn btn-success radius":"btn btn-danger radius")
+                            .addAttribute("type","button")
                             .addAttribute("title", dbRet.get(index).get("STATUS").equals("enable")?"已开启":"未开启")
                             .addAttribute("datav", StringUtils.convertNullableString(dbRet.get(index).get("UUID")))
-                                    .addAttribute("value", dbRet.get(index).get("STATUS").equals("enable")?"Y":"N")
+                            .addAttribute("value", dbRet.get(index).get("STATUS").equals("enable")?"Y":"N")
                             .addAttribute("onclick", "clickBill(this,'" + StringUtils.convertNullableString(dbRet.get(index).get("UUID")) + "')")));
         }
         return htmlString;
     }
+
+    public String generateTodayBillTable() throws Exception {
+        ArrayList<HashMap<String, Object>> dbRet = fetchBillList("curdate()");
+        if (dbRet.size() <= 0)
+            return new String("");
+
+        String htmlString = "";
+        for (int index = 0; index < dbRet.size(); ++index) {
+            htmlString += new UIContainer("tr")
+                    .addAttribute("class", "text-c odd")
+                    .addAttribute("role", "row")
+                    .addElement("td", String.valueOf(index+1))
+                    .addElement("td", StringUtils.formatCardNO(StringUtils.convertNullableString(dbRet.get(index).get("CARDMASTER"))))
+                    .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("BANKNAME")))
+                    .addElement("td", StringUtils.formatCardNO(StringUtils.convertNullableString(dbRet.get(index).get("CARDNO"))));
+        }
+        return htmlString;
+    }
+
     public String generateSwingRepay(int pageIndex) throws Exception {
             ArrayList<HashMap<String, Object>> dbRet = fetchSwingRepaySummary(pageIndex);
             if (dbRet.size() <= 0)
@@ -121,11 +140,23 @@ public class BillUI extends WebUI {
                 limitSql);
     }
 
+
+    private ArrayList<HashMap<String, Object>> fetchBillList( String datestr) throws Exception {
+        String whereSql="";
+        return PosDbManager.executeSql("SELECT  a.cardno,a.cardmaster,b.name bankname  \n" +
+                "from banktb b ,cardtb a "+
+                 "where a.status='enable' and a.salemanuuid='"+userID_+"' and a.bankuuid=b.uuid  and a.billdate=DAYOFMONTH("+datestr+") and  not exists " +
+                "(select 1 from billtb c where c.cardno=a.cardno and c.billdate="+datestr+")" +
+                "ORDER BY a.cardmaster desc\n"  );
+    }
+
     public int fetchBillPageCount() throws Exception {
         String whereSql = SQLUtils.BuildWhereCondition(uiConditions_);
-        if (!whereSql.isEmpty()) {
-            whereSql = " where " + whereSql;
+        if (whereSql.isEmpty()) {
+            whereSql+= "  where 1=1   " ;
         }
+        else
+            whereSql=" where 1=1 and " +whereSql;
         if (!UserUtils.isAdmin(userID_)) {
             whereSql += "and billtb.salemanuuid='"+userID_+"'";
         }

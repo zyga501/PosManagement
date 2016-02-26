@@ -167,7 +167,7 @@ public class BillAction extends AjaxActionSupport {
                     "(select 1 from billtb b where a.cardno=b.cardno and b.billdate='" + (new SimpleDateFormat("yyyy-MM-dd")).format(billd) + "')";
         }
         else {
-            Calendar cal = Calendar.getInstance(); //cal.getTime()
+            Calendar cal = Calendar.getInstance();
             int day = cal.get(Calendar.DATE);
             int month = cal.get(Calendar.MONTH)+1;
             int year = cal.get(Calendar.YEAR);
@@ -193,22 +193,26 @@ public class BillAction extends AjaxActionSupport {
     public String FetchBillList() throws Exception {
         ArrayList<SQLUtils.WhereCondition> uiConditions = new ArrayList<SQLUtils.WhereCondition>() {
             {
+                if (!StringUtils.convertNullableString(getParameter("cardno")).trim().equals(""))
                 add(new SQLUtils.WhereCondition("billtb.cardno", "like",
                         SQLUtils.ConvertToSqlString("%" + getParameter("cardno") + "%"), !StringUtils.convertNullableString(getParameter("cardno")).trim().isEmpty()));
+                if (!StringUtils.convertNullableString(getParameter("bankname")).trim().equals(""))
                 add(new SQLUtils.WhereCondition("banktb.name", "like",
                         SQLUtils.ConvertToSqlString("%" + getParameter("bankname") + "%"), !StringUtils.convertNullableString(getParameter("bankname")).trim().isEmpty()));
+                if (!StringUtils.convertNullableString(getParameter("saleman")).trim().equals(""))
                 add(new SQLUtils.WhereCondition("userinfo.unick", "like",
                         SQLUtils.ConvertToSqlString("%" + getParameter("saleman") + "%"), !StringUtils.convertNullableString(getParameter("saleman")).trim().isEmpty()));
+                if (!StringUtils.convertNullableString(getParameter("billdate")).trim().equals(""))
                 add(new SQLUtils.WhereCondition("billtb.billdate", "like",
                         SQLUtils.ConvertToSqlString("%" + getParameter("billdate") + "%"), !StringUtils.convertNullableString(getParameter("billdate")).trim().isEmpty()));
-//                if (StringUtils.convertNullableString(getParameter("billstatus")).trim().equals("finished")){
-//                    add(new  SQLUtils.WhereCondition("billtb.swingcount", "=","billtb.swungcount"));
-//                    add(new  SQLUtils.WhereCondition("billtb.repaycount", "=","billtb.repayedcount"));
-//                }else if (StringUtils.convertNullableString(getParameter("billstatus")).trim().equals("unfinished")) {
-//                    add(new  SQLUtils.WhereCondition("(billtb.swingcount = billtb.swungcount"," or","billtb.repaycount =billtb.repayedcount) "));
-//                }
-//                else {
-//                }
+
+                if (StringUtils.convertNullableString(getParameter("billstatus")).trim().equals("finished")){
+                    add(new  SQLUtils.WhereCondition("billtb.status", "=","'enable' "));
+                }else if (StringUtils.convertNullableString(getParameter("billstatus")).trim().equals("unfinished")) {
+                    add(new  SQLUtils.WhereCondition("billtb.status", "<>","'enable' "));
+                }
+                else {
+                }
             }
         };
 
@@ -219,6 +223,13 @@ public class BillAction extends AjaxActionSupport {
         int curr = Integer.parseInt(null==getParameter("currpage")?"1":getParameter("currpage").toString());
         map.put("billList",billUI.generateBillTable(curr));
 
+        return AjaxActionComplete(map);
+    }
+
+    public String FetchTodayBillList() throws Exception{
+        Map map = new HashMap();
+        BillUI billUI = new BillUI(super.getUserID());
+        map.put("billList",billUI.generateTodayBillTable());
         return AjaxActionComplete(map);
     }
 

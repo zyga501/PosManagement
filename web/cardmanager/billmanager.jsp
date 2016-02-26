@@ -71,10 +71,10 @@
             <td><input type="text" name="bankname" placeholder="<s:text name="cardmanager.bankname"/>" class="input-text radius size-s"></td>
             <% if (request.getSession().getAttribute("roleId").equals("e664d6f3-85f8-4bd6-bcb8-c4e053732b29")){ %>
             <td><input type="text" name="saleman" placeholder="<s:text name="billmanager.saleman"/>" class="input-text radius size-s"></td><%}%>
-            <td><select name="billstatus" placeholder="<s:text name="global.status"/>">
+            <td><select name="billstatus" placeholder="<s:text name="global.status"/>" onchange="dosearch()">
                 <option value="all"><s:text name="global.alldata"/></option>
-                <option value="finished"><s:text name="global.finished"/></option>
-                <option value="unfinished"><s:text name="global.unfinished"/></option>
+                <option value="finished"><s:text name="global.ok"/></option>
+                <option value="unfinished" selected><s:text name="global.no"/></option>
             </select></td>
             <td><a href="javascript:void(0);" class="btn btn-primary  radius size-S " onclick="dosearch()"><s:text name="global.search"/></a>
             </td>

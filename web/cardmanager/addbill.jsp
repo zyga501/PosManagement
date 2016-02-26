@@ -14,25 +14,30 @@
     <link href="<%=request.getContextPath()%>/css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css"/>
     <link href="<%=request.getContextPath()%>/skin/default/skin.css" rel="stylesheet" type="text/css" id="skin"/>
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/js/layer/1.9.3/layer.js"></script>
     <title></title>
     <script type="text/javascript">
         function addBill() {
-            $.ajax({
-                type: 'post',
-                url: 'Bill!makeBill',
-                dataType: "json",
-                data: $("form").serialize(),
-                success: function (data) {
-                    var json = eval("(" + data + ")");
-                    if (json.errorMessage != null) {
-                        $('#Message').html(json.errorMessage);
+            layer.confirm('确定生成？', {
+                btn: ['是', '不'] //按钮
+            }, function () {
+                $.ajax({
+                    type: 'post',
+                    url: 'Bill!makeBill',
+                    dataType: "json",
+                    data: $("form").serialize(),
+                    success: function (data) {
+                        var json = eval("(" + data + ")");
+                        if (json.errorMessage != null) {
+                            $('#Message').html(json.errorMessage);
+                        }
+                        else {
+                            parent.layer.msg("<s:text name="global.dosuccess" />");
+                            parent.refreshBillList(json.billList);
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        }
                     }
-                    else {
-                        parent.layer.msg("<s:text name="global.dosuccess" />");
-                        parent.refreshBillList(json.billList);
-                        parent.layer.close(parent.layer.getFrameIndex(window.name));
-                    }
-                }
+                })
             })
         }
 
@@ -59,7 +64,6 @@
                 success: function (data) {
                     var json = eval("(" + data + ")");
                     $("#bankName").html(json.bankList);
-                    $("#bankName").prepend("<option value=''></option>");
                 }
             });
         }
@@ -117,13 +121,45 @@
             </div>
         </div>
         <div class="row">
-            <div class="formControls col-8 col-offset-3" align="center">
+            <div class="formControls" align="center">
                 <input type="button" class="btn btn-success radius size-M"
                        value="<s:text name="billmanager.makebill" />" onclick="addBill()">
             </div>
         </div>
     </form>
+    <div style="height:auto; overflow:auto;">
+        <table class="table table-border table-bordered table-bg table-hover table-sort">
+            <thead>
+            <tr class="text-c">
+                <th><s:text name="global.sequence" /></th>
+                <th><s:text name="cardmanager.cardmaster" /></th>
+                <th><s:text name="billmanager.cardno" /></th>
+                <th><s:text name="billmanager.bankname" /></th>
+            </tr>
+            </thead>
+            <tbody id="billList">
+            </tbody>
+        </table>
+    </div>
 </div>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript">
+    $().ready(function(){
+        $.ajax({
+            type: 'post',
+            url: 'Bill!FetchTodayBillList',
+            dataType:"json",
+            success: function (data) {
+                var json = eval("(" + data + ")");
+                if (json.errorMessage != null) {
+                    layer.msg(json.errorMessage);
+                }
+                else {
+                    $("#billList").html(json.billList);
+                }
+            }
+        })
+    })
+</script>
 </body>
 </html>

@@ -134,21 +134,37 @@ public class SwingCardPolicy {
             return null;
         }
 
-        ArrayList<Double> swingPosRateList = new ArrayList<>();
         return generateSwingList(dateLimit, posRateList);
     }
 
     public SwingList generateSwingList(double dateLimit, ArrayList<Double> posRateList) throws Exception {
+        // remove invalid posRate
+        for (int index = 0; index < posRateList.size(); ) {
+            int ruleIndex = 0;
+            for (; ruleIndex < ruleList_.size(); ++ruleIndex) {
+                if (ruleList_.get(ruleIndex).posRate == posRateList.get(index)) {
+                    break;
+                }
+            }
+            if (ruleIndex == ruleList_.size()) {
+                posRateList.remove(index);
+            }
+            else {
+                ++index;
+            }
+        }
+
         ArrayList<RepayInfo> repayList = new ArrayList<RepayInfo>();
+        double currentDate = 0.0;
         // generate repay list
         while (true) {
             initRepayInfo();
             repayList.clear();
-            double curDate = nextDateLimit(dateLimit);
+            currentDate = nextDateLimit(dateLimit);
             double remainBillAmount = billInfo_.billAmount;
-            while (curDate < dateLimit && remainBillAmount > 0.0) {
+            while (currentDate < dateLimit && remainBillAmount > 0.0) {
                 try {
-                    RepayInfo repayInfo = generateRepayInfo(curDate);
+                    RepayInfo repayInfo = generateRepayInfo(currentDate);
                     if (repayInfo == null)
                         break;
                     if (remainBillAmount < repayInfo.money || cardInfo_.repayNum == 1) {
@@ -162,7 +178,7 @@ public class SwingCardPolicy {
                 finally {
                     double nextDateLimit = nextDateLimit(dateLimit);
                     updateRepayCoolingTime(nextDateLimit);
-                    curDate += nextDateLimit;
+                    currentDate += nextDateLimit;
                 }
             }
 
@@ -194,9 +210,37 @@ public class SwingCardPolicy {
             swingCardList.add(swingCardInfo);
         }
 
+        // generate reserved swing card list
+        ArrayList<SwingCardInfo> reservedSwingCardList = new ArrayList<SwingCardInfo>();
+        while (true) {
+                int index = 0;
+                for (;index < cardInfo_.reservedSwingCount && currentDate < 28; ++index) {
+                    double currentSpend = cardInfo_.reservedSwingMoney / cardInfo_.reservedSwingCount;
+                    if (index % 2 == 0) {
+                        currentSpend += random.nextDouble() * LASTFIXEDSWINGCARDMONEY;
+                    }
+                    else {
+                        currentSpend -= random.nextDouble() * LASTFIXEDSWINGCARDMONEY;
+                    }
+                    currentSpend = Math.min(currentSpend, reservedSwingMoney);
+                    reservedSwingMoney -= currentSpend;
+                    SwingCardInfo swingCardInfo = new SwingCardInfo();
+                    swingCardInfo.swingDate = new Date(billInfo_.billDate.getTime() + (long)currentDate * ONEDAYMILLIONSECOND);
+                    swingCardInfo.money = ((long)(currentSpend / 10)) * 10.0;
+                    reservedSwingCardList.add(swingCardInfo);
+                    currentDate += nextDateLimit(28 - dateLimit);
+                }
+                if (index == cardInfo_.reservedSwingCount && currentDate < 28) {
+                    break;
+            }
+        }
+
         ArrayList<Double> swingPostRateList = new ArrayList<>();
         do {
+            initRuleInfo();
+
             while (true) {
+                swingPostRateList.clear();
                 for (int index = 0; index < swingCardList.size(); ++index) {
                     swingPostRateList.add(posRateList.get(random.nextInt(posRateList.size())));
                 }
@@ -211,7 +255,46 @@ public class SwingCardPolicy {
                     break;
                 }
             }
-        } while (!intelligentAssignPos(swingCardList, swingPostRateList));
+
+            if (!intelligentAssignPos(swingCardList, swingPostRateList)) {
+                continue;
+            }
+
+            swingPostRateList.clear();
+            if (posRateList.get(posRateList.size() - 1) < cardInfo_.maxPosMean) {
+                for (int index = 0; index < cardInfo_.reservedSwingCount; ++index) {
+                    swingPostRateList.add(posRateList.get(random.nextInt(posRateList.size())));
+                }
+            }
+            else {
+                while (true) {
+                    swingPostRateList.clear();
+                    for (int index = 0; index < cardInfo_.reservedSwingCount; ++index) {
+                        swingPostRateList.add(posRateList.get(random.nextInt(posRateList.size())));
+                    }
+
+                    double rateSum = 0;
+                    for (int index = 0; index < swingPostRateList.size(); ++index) {
+                        rateSum += swingPostRateList.get(index);
+                    }
+
+                    rateSum /= swingPostRateList.size();
+                    if (rateSum  > cardInfo_.maxPosMean) {
+                        break;
+                    }
+                }
+            }
+
+            if (!intelligentAssignPos(reservedSwingCardList, swingPostRateList)) {
+                continue;
+            }
+
+            break;
+        } while (true);
+
+        for (int index = 0; index < reservedSwingCardList.size(); ++index) {
+            swingCardList.add(reservedSwingCardList.get(index));
+        }
 
         return generateSwingList(swingCardList, repayList);
     }
@@ -237,7 +320,6 @@ public class SwingCardPolicy {
         });
 
         double lastDate = 0.0;
-        initRuleInfo();
         for (int index = 0; index < swingCardList.size(); ++index) {
             RuleInfo ruleInfo = nextRule(swingCardList.get(index).posRate);
             if (ruleInfo == null) {
@@ -300,7 +382,7 @@ public class SwingCardPolicy {
         return swingCardInfo;
     }
 
-    private RepayInfo generateRepayInfo(double curDate) {
+    private RepayInfo generateRepayInfo(double currentDate) {
         PolicyInfo policyInfo = cardInfo_;
         if (policyInfo.useNumber <= 0 || policyInfo.coolingTime > 0.0) {
             return null;
@@ -317,7 +399,7 @@ public class SwingCardPolicy {
 
         RepayInfo repayInfo = new RepayInfo();
         repayInfo.money = ((long)(billInfo_.billAmount * rate / 10)) * 10.0;
-        repayInfo.repayDate = new Date(billInfo_.billDate.getTime() + (long)curDate * ONEDAYMILLIONSECOND);
+        repayInfo.repayDate = new Date(billInfo_.billDate.getTime() + (long)currentDate * ONEDAYMILLIONSECOND);
         return repayInfo;
     }
 

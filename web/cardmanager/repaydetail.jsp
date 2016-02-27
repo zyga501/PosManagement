@@ -15,24 +15,21 @@
     <link href="<%=request.getContextPath()%>/skin/default/skin.css" rel="stylesheet" type="text/css" id="skin"/>
     <title></title>
     <script type="text/javascript">
-        function clickrepay(button, repayid) {
+        function clickrepay(button, repayid,cardno,billuuid) {
             var val = button.value;
             if (val == "N") {
                 layer.confirm('确定启用？', {
                     btn: ['是','否'] //按钮
                 }, function () {
-                    layer.msg('你选择了YES', {icon: 1});
                     $.ajax({
                         type: 'post',
                         url: 'Repay!EditDetail',
-                        data: {status:"enable" , repayId:repayid, cardno:$('#cardNO').val(), billUUID:$('#billUUID').val()},
+                        data: {status:"enable" , repayId:repayid, cardno:cardno, billUUID:billuuid},
                         success: function (data) {
                             var json = eval("(" + data + ")");
                             if (json.successMessage) {
-                                button.value = "Y";
-                                button.setAttribute("class", "btn btn-success radius size-s");
                                 layer.msg(json.successMessage);
-                                $('#repayDetail').html(json.repayDetail);
+                                dosearch();
                             }
                             else if (json.errorMessage)
                                 layer.msg(json.errorMessage);

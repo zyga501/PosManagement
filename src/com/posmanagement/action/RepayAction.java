@@ -142,7 +142,7 @@ public class RepayAction extends AjaxActionSupport {
                         "SET balance= balance - (select trademoney - charge from repaytb where id=?)\n" +
                         "where salemanuuid=?", (HashMap<Integer, Object>)parameterMap)) {
                     map.put("successMessage", getText("global.actionSuccess"));
-                    map.put("repayDetail", new RepayUI(super.getUserID()).generateDetail(getParameter("cardno").toString(), getParameter("billUUID").toString()));
+                   // map.put("repayDetail", new RepayUI(super.getUserID()).generateDetail(getParameter("cardno").toString(), getParameter("billUUID").toString()));
                     parameterMap.clear();
                     parameterMap.put(1, getParameter("repayId"));
                     ArrayList<HashMap<String, Object>> repayRet = PosDbManager.executeSql("SELECT trademoney, cardno, charge from repaytb where id=?", (HashMap<Integer, Object>)parameterMap);

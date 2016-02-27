@@ -86,7 +86,9 @@ public class SwingCardUI extends WebUI {
                             .addAttribute("title" ,StringUtils.convertNullableString(dbRet.get(index).get("SWINGSTATUS")).equals("enable")?"已刷":"未刷")
                             .addAttribute("datav", StringUtils.convertNullableString(dbRet.get(index).get("ID")))
                             .addAttribute("value" ,StringUtils.convertNullableString(dbRet.get(index).get("SWINGSTATUS")).equals("enable")?"Y":"N")
-                            .addAttribute("onclick", "clickswing(this,'" + StringUtils.convertNullableString(dbRet.get(index).get("ID")) + "')")));
+                            .addAttribute("onclick", "clickswing(this,'" + StringUtils.convertNullableString(dbRet.get(index).get("ID")) + "','" +
+                                    StringUtils.convertNullableString(dbRet.get(index).get("CARDNO")) + "','" +
+                                    StringUtils.convertNullableString(dbRet.get(index).get("BILLUUID")) + "')")));
         }
         return htmlString;
     }
@@ -152,7 +154,7 @@ public class SwingCardUI extends WebUI {
             whereSql += " and  (cardtb.salemanuuid in (select a.uid from salemantb a  where a.uid='"+userID_+"' )" +
                     " or cardtb.salemanuuid in(select salemanuuid from tellertb   where uid='"+userID_+"')) ";
         String limitSql ="limit " + (pageIndex - 1) * DEFAULTITEMPERPAGE + "," + DEFAULTITEMPERPAGE;
-        return PosDbManager.executeSql("SELECT swingcard.id,\n" +
+        return PosDbManager.executeSql("SELECT swingcard.id,swingcard.billuuid,\n" +
                 "SUBSTR(billtb.billdate,1,4) billyear, \n" +
                 "SUBSTR(billtb.billdate,6,2) billmonth, \n" +
                 "swingcard.cardno, \n" +

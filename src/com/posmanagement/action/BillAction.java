@@ -90,6 +90,8 @@ public class BillAction extends AjaxActionSupport {
                 map.put("billList", new BillUI(super.getUserID()).generateBillTable(1));
                 map.put("successMessage", getText("global.actionSuccess"));
             }
+            else
+                map.put("errorMessage", getText("global.actionFailed"));
         }
         catch (Exception e) {
             map.put("errorMessage", getText("global.actionFailed"));

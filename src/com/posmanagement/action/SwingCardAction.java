@@ -129,7 +129,7 @@ public class SwingCardAction extends AjaxActionSupport {
                         ")\n" +
                         "where salemanuuid=?", (HashMap<Integer, Object>)parameterMap)) {
                     map.put("successMessage", getText("global.actionSuccess"));
-                    map.put("swingCardDetail", new SwingCardUI(super.getUserID()).generateDetail(getParameter("cardno").toString(), getParameter("billUUID").toString()));
+                   // map.put("swingCardDetail", new SwingCardUI(super.getUserID()).generateDetail(getParameter("cardno").toString(), getParameter("billUUID").toString()));
                     parameterMap.clear();
                     parameterMap.put(1, getParameter("swingId"));
                     ArrayList<HashMap<String, Object>> swingRet = PosDbManager.executeSql("SELECT amount, charge, postb.posname from swingcard LEFT JOIN postb on swingcard.posuuid = postb.uuid where id=?", (HashMap<Integer, Object>)parameterMap);

@@ -208,8 +208,8 @@ public class CardAction extends AjaxActionSupport {
                 para.put(i++, UUID.randomUUID().toString());
                 para.put(i++, super.getUserID());
                 for (String key : strary) {
-                    System.out.print("'"+((String[])cardmanager.get(key))[0]+"',");
-                    para.put(i++,((String[])cardmanager.get(key))[0] );
+                    System.out.println(key+":"+ StringUtils.convertNullableString(getParameter("cardmanager."+key)));
+                    para.put(i++, StringUtils.convertNullableString(getParameter("cardmanager."+key)) );
                 }
                 if (!PosDbManager.executeUpdate("insert into cardtb(uuid,salemanuuid,cardno,bankuuid,creditamount," +
                         "tempamount,templimitdate,useamount,billdate,pin,telpwd,tradepwd,enchashmentpwd," +

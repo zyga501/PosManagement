@@ -11,8 +11,8 @@ import java.util.*;
 
 public class SwingCardPolicy {
     public static void main(String[] args) throws Exception {
-        SwingCardPolicy policy = new SwingCardPolicy("3977725B-C162-4CF6-8FB9-48BC163B2549");
-        policy.generateSwingList("14829bb5-d55a-11e5-804b-0030487c8b4b");
+        SwingCardPolicy policy = new SwingCardPolicy("8D90AB43-92BA-467F-ADF9-233D29059276");
+        policy.generateSwingList("a1380098-ddde-11e5-804b-0030487c8b4b");
     }
 
     public class SwingList {
@@ -579,7 +579,7 @@ public class SwingCardPolicy {
         cardInfo.repayNum = Integer.parseInt(sqlCardInfo.get(0).get("REPAYNUM").toString());
         cardInfo.repayInterval = Integer.parseInt(sqlCardInfo.get(0).get("REPAYINTERVAL").toString());
         cardInfo.maxPosMean = Double.parseDouble(sqlCardInfo.get(0).get("MAXPOSMEAN").toString());
-        cardInfo.reservedSwingMoney = Double.parseDouble(sqlCardInfo.get(0).get("RESERVEDSWINGMONEY").toString()) * cardInfo.creditAmount;
+        cardInfo.reservedSwingMoney = Double.parseDouble(sqlCardInfo.get(0).get("RESERVEDSWINGMONEY").toString()) * cardInfo.creditAmount / 100.0;
         cardInfo.reservedSwingCount = Double.parseDouble(sqlCardInfo.get(0).get("RESERVEDSWINGCOUNT").toString());
         return cardInfo;
     }

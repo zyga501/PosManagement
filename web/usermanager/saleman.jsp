@@ -38,6 +38,25 @@
             });
         }
 
+        function payMoney(id){
+            var money = prompt("充值金额","100");
+            if (money==null || money=="") return ;
+            $.ajax({
+                type: 'post',
+                url: 'Saleman!Recharge',
+                data: {salemanID:id , rechargemoney:money},
+                success: function (data) {
+                    var json = eval("(" + data + ")");
+                    if (json.successMessage) {
+                        layer.msg(json.successMessage, {icon: 1});
+                        clickSaleman(id);
+                    }
+                    else if (json.errorMessage)
+                        layer.msg(json.errorMessage, {icon:2});
+                }
+            });
+        }
+
         function refreshUserList(userList){
             $("#salemanList").html(userList);
         }

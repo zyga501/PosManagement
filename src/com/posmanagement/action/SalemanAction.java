@@ -82,6 +82,8 @@ public class SalemanAction extends AjaxActionSupport {
             if (!PosDbManager.executeUpdate("update salemantb set  paymenttm=paymenttm+?  where uid=?",
                     (HashMap<Integer, Object>) parametMap))
                 map.put("ErrorMessage", getText("global.dofailed"));
+            else
+                map.put("successMessage", getText("global.dosuccess"));
         }
         catch (Exception e) {
             map.put("ErrorMessage", getText("global.dofailed"));

@@ -48,8 +48,8 @@
                 success: function (data) {
                     var json = eval("(" + data + ")");
                     if (json.successMessage) {
-                        layer.msg(json.successMessage, {icon: 1});
                         clickSaleman(id);
+                        layer.msg(json.successMessage, {icon: 1});
                     }
                     else if (json.errorMessage)
                         layer.msg(json.errorMessage, {icon:2});

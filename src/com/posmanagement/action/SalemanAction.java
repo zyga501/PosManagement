@@ -79,7 +79,7 @@ public class SalemanAction extends AjaxActionSupport {
         try{
             parametMap.put(1, getParameter("rechargemoney").toString().trim());
             parametMap.put(2, getParameter("salemanID"));
-            if (!PosDbManager.executeUpdate("update salemantb set  paymenttm=paymenttm+?  where uid=?",
+            if (!PosDbManager.executeUpdate("update salemantb set  feeqk=feeqk+?  where uid=?",
                     (HashMap<Integer, Object>) parametMap))
                 map.put("ErrorMessage", getText("global.dofailed"));
             else

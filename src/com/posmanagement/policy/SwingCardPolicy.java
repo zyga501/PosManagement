@@ -388,13 +388,13 @@ public class SwingCardPolicy {
             return null;
         }
 
-        double fixedLimit = random.nextDouble() * REPAYFIXEDLIMIT;
-        double rate = 1.0 / policyInfo.useNumber;
+        double fixedLimit = 1 / (cardInfo_.repayNum - 1.0) / policyInfo.useNumber * random.nextDouble();
+        double rate = 1.0 / cardInfo_.repayNum;
         if (random.nextDouble() > 0.5) {
-            rate += rate * fixedLimit;
+            rate += fixedLimit;
         }
         else {
-            rate -= rate * fixedLimit;
+            rate -= fixedLimit;
         }
 
         RepayInfo repayInfo = new RepayInfo();
@@ -651,7 +651,6 @@ public class SwingCardPolicy {
     private CardInfo cardInfo_;
     ArrayList<RuleInfo> ruleList_;
     private static Random random = new Random();
-    private final double REPAYFIXEDLIMIT = 0.3;
     private final double REPAYDATEFIXEDLIMIT = 1.3;
     private final double SWINGAMOUNTFIXEDLIMIT = 0.1;
     private final long ONEDAYMILLIONSECOND = 24 * 60 * 60 * 1000;

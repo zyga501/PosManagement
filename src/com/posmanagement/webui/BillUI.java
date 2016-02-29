@@ -46,7 +46,7 @@ public class BillUI extends WebUI {
                     .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("SWINGCOUNT")).compareTo(StringUtils.convertNullableString(
                             dbRet.get(index).get("SWUNGCOUNT"))) == 0 &&
                             StringUtils.convertNullableString(dbRet.get(index).get("REPAYCOUNT")).compareTo(StringUtils.convertNullableString(
-                                    dbRet.get(index).get("REPAYEDCOUNT"))) == 0 ?
+                                    dbRet.get(index).get("REPAYEDCOUNT"))) == 0 &&(!StringUtils.convertNullableString(dbRet.get(index).get("SWINGCOUNT")).equals("")) ?
                             getText("bill.billfinished") : getText("bill.billunfinished"))
                     .addElement(new UIContainer("td").addElement(new UIContainer("input")
                             .addAttribute("class", dbRet.get(index).get("STATUS").equals("enable")?"btn btn-success radius":"btn btn-danger radius")

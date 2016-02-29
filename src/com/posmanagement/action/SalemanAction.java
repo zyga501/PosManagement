@@ -72,6 +72,23 @@ public class SalemanAction extends AjaxActionSupport {
 
         return AjaxActionComplete(map);
     }
+
+    public String  Recharge(){
+        Map map = new HashMap();
+        Map parametMap = new HashMap<Integer, Object>();
+        try{
+            parametMap.put(1, getParameter("rechargemoney").toString().trim());
+            parametMap.put(2, getParameter("salemanID"));
+            if (!PosDbManager.executeUpdate("update salemantb set  paymenttm=paymenttm+?  where uid=?",
+                    (HashMap<Integer, Object>) parametMap))
+                map.put("ErrorMessage", getText("global.dofailed"));
+        }
+        catch (Exception e) {
+            map.put("ErrorMessage", getText("global.dofailed"));
+        }
+        return AjaxActionComplete(map);
+    }
+
     public String UpdateInfo() throws Exception {
         Map map = new HashMap();
         Map parametMap = new HashMap<Integer, Object>();

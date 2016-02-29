@@ -12,7 +12,7 @@ import java.util.*;
 public class SwingCardPolicy {
     public static void main(String[] args) throws Exception {
         SwingCardPolicy policy = new SwingCardPolicy("8D90AB43-92BA-467F-ADF9-233D29059276");
-        policy.generateSwingList("a1380098-ddde-11e5-804b-0030487c8b4b");
+        policy.generateSwingList("80d2db23-def1-11e5-804b-0030487c8b4b");
     }
 
     public class SwingList {
@@ -122,7 +122,7 @@ public class SwingCardPolicy {
         }
 
         double dateLimit = (billInfo_.lastRepayDate.getTime() - billInfo_.billDate.getTime()) / ONEDAYMILLIONSECOND;
-        if (dateLimit < 0) {
+        if (dateLimit < 0 || cardInfo_.repayInterval * cardInfo_.repayNum > dateLimit) {
             lastError = "最后还款日与账单日时间错误";
             return null;
         }
@@ -133,6 +133,8 @@ public class SwingCardPolicy {
             lastError = "无法找到小于最大成本费率的Pos机";
             return null;
         }
+
+        generaterRepayRateList();
 
         return generateSwingList(dateLimit, posRateList);
     }
@@ -185,6 +187,10 @@ public class SwingCardPolicy {
             if (remainBillAmount <= 0) {
                 break;
             }
+            else if (cardInfo_.useNumber == 0){
+                repayList.get(repayList.size() - 1).money += remainBillAmount;
+                break;
+            }
         }
 
         // random replay money
@@ -222,8 +228,11 @@ public class SwingCardPolicy {
 
         // generate reserved swing card list
         ArrayList<SwingCardInfo> reservedSwingCardList = new ArrayList<SwingCardInfo>();
+        double bakCurDate = currentDate;
         while (true) {
                 int index = 0;
+                currentDate = bakCurDate;
+                reservedSwingCardList.clear();
                 for (;index < cardInfo_.reservedSwingCount && currentDate < 28; ++index) {
                     double currentSpend = cardInfo_.reservedSwingMoney / cardInfo_.reservedSwingCount;
                     if (index % 2 == 0) {
@@ -238,7 +247,7 @@ public class SwingCardPolicy {
                     swingCardInfo.swingDate = new Date(billInfo_.billDate.getTime() + (long)currentDate * ONEDAYMILLIONSECOND);
                     swingCardInfo.money = ((long)(currentSpend / 10)) * 10.0;
                     reservedSwingCardList.add(swingCardInfo);
-                    currentDate += nextDateLimit(28 - dateLimit);
+                    currentDate += random.nextDouble() * (28 - dateLimit);
                 }
                 if (index == cardInfo_.reservedSwingCount && currentDate < 28) {
                     break;
@@ -398,17 +407,8 @@ public class SwingCardPolicy {
             return null;
         }
 
-        double fixedLimit = 1 / (cardInfo_.repayNum - 1.0) / policyInfo.useNumber * random.nextDouble();
-        double rate = 1.0 / cardInfo_.repayNum;
-        if (cardInfo_.useNumber % 2 == 0) {
-            rate += fixedLimit;
-        }
-        else {
-            rate -= fixedLimit;
-        }
-
         RepayInfo repayInfo = new RepayInfo();
-        repayInfo.money = ((long)(billInfo_.billAmount * rate / 10)) * 10.0;
+        repayInfo.money = ((long)(billInfo_.billAmount * repayRateList_.get(cardInfo_.repayNum - cardInfo_.useNumber) / 10)) * 10.0;
         repayInfo.repayDate = new Date(billInfo_.billDate.getTime() + (long)currentDate * ONEDAYMILLIONSECOND);
         return repayInfo;
     }
@@ -478,6 +478,20 @@ public class SwingCardPolicy {
 
     private double nextDateLimit(double dateLimit) {
         return (Double.max((long)(random.nextDouble() * dateLimit / cardInfo_.repayNum * REPAYDATEFIXEDLIMIT), cardInfo_.repayInterval) * 10) / 10.0;
+    }
+
+    private void generaterRepayRateList() {
+        repayRateList_ = new ArrayList<>();
+        double rateSum = 0.0;
+        for (int index = 0; index < cardInfo_.repayNum; ++index) {
+            double randomValue = random.nextDouble();
+            rateSum += randomValue;
+            repayRateList_.add(randomValue);
+        }
+
+        for (int index = 0; index < cardInfo_.repayNum; ++index) {
+            repayRateList_.set(index, repayRateList_.get(index) / rateSum);
+        }
     }
 
     private BillInfo fetchBillInfo(String billNumber) throws Exception {
@@ -660,6 +674,7 @@ public class SwingCardPolicy {
     private BillInfo billInfo_;
     private CardInfo cardInfo_;
     ArrayList<RuleInfo> ruleList_;
+    ArrayList<Double> repayRateList_;
     private static Random random = new Random();
     private final double REPAYDATEFIXEDLIMIT = 1.3;
     private final double SWINGAMOUNTFIXEDLIMIT = 0.1;

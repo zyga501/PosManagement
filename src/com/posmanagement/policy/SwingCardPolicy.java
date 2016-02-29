@@ -390,7 +390,7 @@ public class SwingCardPolicy {
 
         double fixedLimit = 1 / (cardInfo_.repayNum - 1.0) / policyInfo.useNumber * random.nextDouble();
         double rate = 1.0 / cardInfo_.repayNum;
-        if (random.nextDouble() > 0.5) {
+        if (cardInfo_.useNumber % 2 == 0) {
             rate += fixedLimit;
         }
         else {
@@ -579,7 +579,7 @@ public class SwingCardPolicy {
         cardInfo.repayNum = Integer.parseInt(sqlCardInfo.get(0).get("REPAYNUM").toString());
         cardInfo.repayInterval = Integer.parseInt(sqlCardInfo.get(0).get("REPAYINTERVAL").toString());
         cardInfo.maxPosMean = Double.parseDouble(sqlCardInfo.get(0).get("MAXPOSMEAN").toString());
-        cardInfo.reservedSwingMoney = Double.parseDouble(sqlCardInfo.get(0).get("RESERVEDSWINGMONEY").toString()) * cardInfo.creditAmount / 100.0;
+        cardInfo.reservedSwingMoney = Double.parseDouble(sqlCardInfo.get(0).get("RESERVEDSWINGMONEY").toString()) * billInfo_.billAmount / 100.0;
         cardInfo.reservedSwingCount = Double.parseDouble(sqlCardInfo.get(0).get("RESERVEDSWINGCOUNT").toString());
         return cardInfo;
     }

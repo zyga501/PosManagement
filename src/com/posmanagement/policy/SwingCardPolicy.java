@@ -187,6 +187,16 @@ public class SwingCardPolicy {
             }
         }
 
+        // random replay money
+        int randomCount = repayList.size();
+        while (randomCount-- > 0) {
+            RepayInfo srcReplyInfo = repayList.get(random.nextInt(repayList.size()));
+            RepayInfo destReplayInfo = repayList.get(random.nextInt(repayList.size()));
+            double money = srcReplyInfo.money;
+            srcReplyInfo.money = destReplayInfo.money;
+            destReplayInfo.money = money;
+        }
+
         // generate swing card list
         double reservedSwingMoney = 0.0;
         ArrayList<SwingCardInfo> swingCardList = new ArrayList<SwingCardInfo>();

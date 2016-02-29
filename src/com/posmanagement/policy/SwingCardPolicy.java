@@ -219,9 +219,11 @@ public class SwingCardPolicy {
         // generate reserved swing card list
         ArrayList<SwingCardInfo> reservedSwingCardList = new ArrayList<SwingCardInfo>();
         double bakCurDate = currentDate;
+        double bakReservedSwingMoney = reservedSwingMoney;
         while (true) {
                 int index = 0;
                 currentDate = bakCurDate;
+                reservedSwingMoney = bakReservedSwingMoney;
                 reservedSwingCardList.clear();
                 for (;index < cardInfo_.reservedSwingCount && currentDate < 28; ++index) {
                     double currentSpend = cardInfo_.reservedSwingMoney / cardInfo_.reservedSwingCount;

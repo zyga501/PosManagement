@@ -474,15 +474,17 @@ public class SwingCardPolicy {
 
     private void generaterRepayRateList() {
         repayRateList_ = new ArrayList<>();
+        double minValue = 1.0 / (cardInfo_.repayNum + 3);
+        double maxValue = 1.0 / (cardInfo_.repayNum - 1);
         double rateSum = 0.0;
         for (int index = 0; index < cardInfo_.repayNum; ++index) {
-            double randomValue = random.nextDouble();
+            double randomValue = random.nextDouble() * (maxValue - minValue) + minValue;
             rateSum += randomValue;
             repayRateList_.add(randomValue);
         }
 
         for (int index = 0; index < cardInfo_.repayNum; ++index) {
-            repayRateList_.set(index, repayRateList_.get(index) / rateSum);
+            repayRateList_.set(index,  repayRateList_.get(index) / rateSum);
         }
     }
 

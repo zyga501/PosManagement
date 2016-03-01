@@ -14,6 +14,7 @@
     <link href="<%=request.getContextPath()%>/css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
     <link href="<%=request.getContextPath()%>/skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/js/My97DatePicker/WdatePicker.js"></script>
     <script type="text/javascript">
         function registerUser(){
             var index = layer.open({
@@ -23,6 +24,16 @@
                 maxmin: false,
                 content: "./register.jsp?usertype=1"
             });}
+
+        function MoneyLog(id){
+                    var index = layer.open({
+                        type: 2,
+                        title: "<s:text name="saleman.moneylog" />",area: ['410px', '530px'],
+                        fix: false,
+                        maxmin: true,
+                        content: "./moneylog.jsp?id="+id
+                    });
+        }
 
         function clickSaleman(id) {
             $.ajax({

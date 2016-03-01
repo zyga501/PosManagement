@@ -80,6 +80,9 @@ public class SalemanFeePolicy {
         parametMap.put(1, salemanFeeInfo.status ? "enable" : "disable");
         parametMap.put(2, salemanFeeInfo.feeqk);
         parametMap.put(3, salemanFeeInfo.uuid);
+        PosDbManager.executeUpdate("insert into moneylogtb(time, type, amount, salemanuuid)\n" +
+                        "VALUES(NOW(), '扣款',?, , ?);\n"
+                , (HashMap<Integer, Object>)parametMap);
         return PosDbManager.executeUpdate("" +
                 "update salemantb\n" +
                 "set `status`=?,\n" +

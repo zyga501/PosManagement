@@ -60,6 +60,26 @@ public class SalemanUI extends WebUI {
         return uiContainer.generateUI();
     }
 
+    public String generateFeeInfoTable(String salemanID) throws Exception {
+        ArrayList<HashMap<String, Object>> dbRet = fetchFeeInfo(salemanID);
+        if (dbRet.size() < 1)
+            return new String("");
+
+        UIContainer UI=new UIContainer("table")
+                .addAttribute("class", "table table-border table-bordered table-hover")
+                .addElement(new UIContainer("tr")
+                .addElement(new UIContainer("th", "操作时间"))
+                .addElement(new UIContainer("th", "类型"))
+                .addElement(new UIContainer("th", "金额")));
+        for (int index = 0; index < dbRet.size(); ++index) {
+            UI.addElement(new UIContainer("tr")
+                                    .addElement(new UIContainer("td", StringUtils.convertNullableString(dbRet.get(index).get("TIME"))))
+                                    .addElement(new UIContainer("td", StringUtils.convertNullableString(dbRet.get(index).get("TYPE"))))
+                                    .addElement(new UIContainer("td", StringUtils.convertNullableString(dbRet.get(index).get("AMOUNT")))));
+        }
+        return UI.generateUI();
+    }
+
     public String generateInfoTable(String salemanID) throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchSalemanInfo(salemanID);
         if (dbRet.size() != 1)
@@ -97,20 +117,20 @@ public class SalemanUI extends WebUI {
                                                 .addAttribute("name", "saleStatus")
                                                 .addAttribute("checked", "checked", StringUtils.convertNullableString(dbRet.get(0).get("STATUS")).compareTo("enable") == 0))))
                         .addElement(new UIContainer("tr")
-                                .addElement("td", "支付情况")
+                                .addElement("td", "扣费时间")
                                 .addElement(new UIContainer("td")
                                         .addElement(new UIContainer("input")
                                                 .addAttribute("type", "text")
                                                 .addAttribute("name", "paymentTM")
-                                                .addAttribute("readonly", "readonly")
-                                                .addAttribute("class", "input-text radius")
+                                                .addAttribute("onfocus", "WdatePicker()")
+                                                .addAttribute("class", "input-text Wdate radius")
                                                 .addAttribute("style", "width:80%")
                                                 .addAttribute("value", StringUtils.convertNullableString(dbRet.get(0).get("PAYMENTTM"))))
                                         .addElement(new UIContainer("input")
                                                 .addAttribute("type", "button")
                                                 .addAttribute("onclick", "MoneyLog('"+StringUtils.convertNullableString(dbRet.get(0).get("UID"))+"')")
                                                 .addAttribute("class", "btn btn-primary radius size-S")
-                                                .addAttribute("value", "详细情况"))))
+                                                .addAttribute("value", "账户详细"))))
                         .addElement(new UIContainer("tr")
                                 .addElement("td", "余额")
                                 .addElement(new UIContainer("td")
@@ -127,6 +147,14 @@ public class SalemanUI extends WebUI {
                                         .addAttribute("class", "btn btn-primary radius size-S")
                                         .addAttribute("value", "充值"))))
                         .addElement(new UIContainer("tr")
+                                .addElement("td", "每日扣费")
+                                .addElement(new UIContainer("td")
+                                        .addElement(new UIContainer("input")
+                                                .addAttribute("type", "text")
+                                                .addAttribute("name", "feeper")
+                                                .addAttribute("class", "input-text radius")
+                                                .addAttribute("value", StringUtils.convertNullableString(dbRet.get(0).get("FEEPER"))))))
+                        .addElement(new UIContainer("tr")
                                 .addElement("td", "联系情况")
                                 .addElement(new UIContainer("td")
                                         .addElement(new UIContainer("input")
@@ -141,6 +169,13 @@ public class SalemanUI extends WebUI {
         Map parametMap = new HashMap<Integer, Object>();
         parametMap.put(1, salemanID);
         return PosDbManager.executeSql("select * from userinfo a,salemantb b where a.uid=b.uid and b.uid=?",
+                (HashMap<Integer, Object>) parametMap);
+    }
+
+    private ArrayList<HashMap<String, Object>> fetchFeeInfo(String salemanID) throws Exception {
+        Map parametMap = new HashMap<Integer, Object>();
+        parametMap.put(1, salemanID);
+        return PosDbManager.executeSql("select * from moneylogtb   where salemanuuid =? order by time  desc limit 10",
                 (HashMap<Integer, Object>) parametMap);
     }
 

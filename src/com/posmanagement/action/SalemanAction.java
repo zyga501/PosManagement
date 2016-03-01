@@ -82,8 +82,12 @@ public class SalemanAction extends AjaxActionSupport {
             if (!PosDbManager.executeUpdate("update salemantb set  feeqk=feeqk+?  where uid=?",
                     (HashMap<Integer, Object>) parametMap))
                 map.put("ErrorMessage", getText("global.dofailed"));
-            else
+            else {
                 map.put("successMessage", getText("global.dosuccess"));
+                PosDbManager.executeUpdate("insert into moneylogtb(time, type, amount, salemanuuid)\n" +
+                                "VALUES(NOW(), '充值',?, ?);\n"
+                        , (HashMap<Integer, Object>)parametMap);
+            }
         }
         catch (Exception e) {
             map.put("ErrorMessage", getText("global.dofailed"));
@@ -96,12 +100,12 @@ public class SalemanAction extends AjaxActionSupport {
         Map parametMap = new HashMap<Integer, Object>();
         try{
         parametMap.put(1, getParameter("cardID").toString().trim());
-        parametMap.put(2, getParameter("feeQK").toString().trim());
+        parametMap.put(2, getParameter("feeper").toString().trim());
         parametMap.put(3, getParameter("paymentTM").toString().trim());
         parametMap.put(4, getParameter("contact").toString().trim());
         parametMap.put(5, null==getParameter("saleStatus")?"disable":"enable");
         parametMap.put(6, salemanID);
-        if (!PosDbManager.executeUpdate("update salemantb set scardno=?,feeqk=?,paymenttm=?,contact=?,status=? where uid=?",
+        if (!PosDbManager.executeUpdate("update salemantb set scardno=?,feeper=?,paymenttm=?,contact=?,status=? where uid=?",
                 (HashMap<Integer, Object>) parametMap))
             map.put("ErrorMessage", getText("global.dofailed"));
         }
@@ -126,6 +130,11 @@ public class SalemanAction extends AjaxActionSupport {
             map.put("tellerList", new TellerUI().generateTable(salemanID, false));
         }
 
+        return AjaxActionComplete(map);
+    }
+    public String FetchFeeinfo()throws Exception {
+        Map map = new HashMap();
+        map.put("infostr", new SalemanUI().generateFeeInfoTable(salemanID));
         return AjaxActionComplete(map);
     }
 }

@@ -72,6 +72,7 @@ public class SwingCardUI extends WebUI {
 //                    .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("BILLYEAR")) + "/" +
 //                            StringUtils.convertNullableString(dbRet.get(index).get("BILLMONTH")))
                     .addElement("td" , StringUtils.formatCardNO(StringUtils.convertNullableString(dbRet.get(index).get("CARDNO"))))
+                    .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("BANKNAME")))
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("CARDMASTER")))
                     .addElement("td" ,StringUtils.convertNullableString(dbRet.get(index).get("AMOUNT")))
                     .addElement("td" , StringUtils.formatMoney(dbRet.get(index).get("PAYCHARGE").toString()))
@@ -159,6 +160,7 @@ public class SwingCardUI extends WebUI {
                 "SUBSTR(billtb.billdate,6,2) billmonth, \n" +
                 "swingcard.cardno, \n" +
                 "cardtb.cardmaster, \n" +
+                "banktb.name bankname, \n" +
                 "swingcard.amount, \n" +
                 "(case when swingcard.amount*ratetb.rate/100>ratetb.MAXFEE and ratetb.maxfee>0 then" +
                 " ratetb.maxfee else swingcard.amount*ratetb.rate/100  end)  paycharge, \n" +
@@ -174,6 +176,7 @@ public class SwingCardUI extends WebUI {
                 "INNER JOIN ratetb ON postb.rateuuid = ratetb.uuid \n" +
                 "INNER JOIN billtb ON swingcard.billuuid = billtb.uuid AND swingcard.cardno = billtb.cardno \n" +
                 "inner  JOIN userinfo ON userinfo.uid = cardtb.salemanuuid \n" +
+                "inner  JOIN banktb ON banktb.uuid = cardtb.bankuuid \n" +
                 whereSql +
                 "ORDER BY \n" +
                 " swingcard.sdatetm desc "+limitSql);

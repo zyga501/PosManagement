@@ -65,6 +65,7 @@
                         <thead>
                         <tr class="text-c">
                             <th><s:text name="swingcarddetail.cardno"/></th>
+                            <th><s:text name="cardmanager.bankname"/></th>
                             <th><s:text name="swingcarddetail.cardmaster"/></th>
                             <th><s:text name="swingcarddetail.amount"/></th>
                             <th><s:text name="statistics.paymoney"/></th>

@@ -474,15 +474,17 @@ public class SwingCardPolicy {
 
     private void generaterRepayRateList() {
         repayRateList_ = new ArrayList<>();
+        double minValue = 1.0 / (cardInfo_.repayNum + 3);
+        double maxValue = 1.0 / (cardInfo_.repayNum - 1);
         double rateSum = 0.0;
         for (int index = 0; index < cardInfo_.repayNum; ++index) {
-            double randomValue = random.nextDouble();
+            double randomValue = random.nextDouble() * (maxValue - minValue) + minValue;
             rateSum += randomValue;
             repayRateList_.add(randomValue);
         }
 
         for (int index = 0; index < cardInfo_.repayNum; ++index) {
-            repayRateList_.set(index, repayRateList_.get(index) / rateSum);
+            repayRateList_.set(index,  repayRateList_.get(index) / rateSum);
         }
     }
 
@@ -560,6 +562,14 @@ public class SwingCardPolicy {
                 Iterator<HashMap<String, Object>> posIterator = sqlPosList.iterator();
                 while (posIterator.hasNext()) {
                     HashMap<String, Object> posInfo = posIterator.next();
+                    if (!ruleInfo.mccUUID.isEmpty() && !posInfo.get("MCCUUID").toString().isEmpty() &&
+                            ruleInfo.mccUUID.compareTo(posInfo.get("MCCUUID").toString()) != 0) {
+                        continue;
+                    }
+                    if (!ruleInfo.posServerUUID.isEmpty() && !posInfo.get("POSSERVERUUID").toString().isEmpty() &&
+                            ruleInfo.posServerUUID.compareTo(posInfo.get("POSSERVERUUID").toString()) != 0) {
+                        continue;
+                    }
                     ruleInfo = new RuleInfo();
                     ruleInfo.ruleUUID = sqlRuleInfo.get("UUID").toString();
                     ruleInfo.posUUID = posInfo.get("UUID").toString();
@@ -639,9 +649,9 @@ public class SwingCardPolicy {
         ArrayList<SQLUtils.WhereCondition> whereConditions = new ArrayList<SQLUtils.WhereCondition>() {
             {
                 add(new SQLUtils.WhereCondition("industryuuid", "=", SQLUtils.ConvertToSqlString(ruleInfo.industryUUID), !ruleInfo.industryUUID.isEmpty()));
-                add(new SQLUtils.WhereCondition("posserveruuid", "=", SQLUtils.ConvertToSqlString(ruleInfo.posServerUUID), !ruleInfo.posServerUUID.isEmpty()));
+                //add(new SQLUtils.WhereCondition("posserveruuid", "=", SQLUtils.ConvertToSqlString(ruleInfo.posServerUUID), !ruleInfo.posServerUUID.isEmpty()));
                 add(new SQLUtils.WhereCondition("rateuuid", "=", SQLUtils.ConvertToSqlString(ruleInfo.rateUUID), !ruleInfo.rateUUID.isEmpty()));
-                add(new SQLUtils.WhereCondition("mccuuid", "=", SQLUtils.ConvertToSqlString(ruleInfo.mccUUID), !ruleInfo.mccUUID.isEmpty()));
+                //add(new SQLUtils.WhereCondition("mccuuid", "=", SQLUtils.ConvertToSqlString(ruleInfo.mccUUID), !ruleInfo.mccUUID.isEmpty()));
                 add(new SQLUtils.WhereCondition("userinfo.uid", "=", SQLUtils.ConvertToSqlString(salemanID), !UserUtils.isAdmin(salemanID)));
             }
         };
@@ -654,7 +664,7 @@ public class SwingCardPolicy {
         return (ArrayList<HashMap<String, Object>>)PosDbManager.executeSql(
                 "SELECT\n" +
                 "ratetb.rate,\n" +
-                "postb.uuid\n" +
+                "postb.*\n" +
                 "FROM\n" +
                 "postb\n" +
                 "INNER JOIN ratetb ON ratetb.uuid = postb.rateuuid\n" +

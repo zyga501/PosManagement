@@ -115,14 +115,20 @@ public class BillAction extends AjaxActionSupport {
                 map.put("errorMessage", "操作失败!资产信息不存在");
                 return AjaxActionComplete(map);
             }
-            if (null != status ){
-                para.put(1,status);
+            assetRet = PosDbManager.executeSql("select * from billtb where salemanuuid='"+getUserID()+"'");
+            if (StringUtils.convertNullableString(assetRet.get(0).get("STATUS")).equals("enable")){
+                map.put("errorMessage", "账单已经生成，请勿重复操作");
+                System.out.println("errorMessage 账单已经生成，请勿重复操作");
+                return AjaxActionComplete(map);
+            }
+
+            if (null != status && "enable".equals(status) ){
+                para.put(1,"enable");
                 sqlString="update billtb set status=? where UUID=?";
             }
             else {
                 return "";
             }
-
 
             if (!generateSwingCard()) {
                 map.put("errorMessage", getText("global.actionFailed") + swingcardErrorMessage);
@@ -175,7 +181,7 @@ public class BillAction extends AjaxActionSupport {
             int year = cal.get(Calendar.YEAR);
             sqlString = "insert into billtb (uuid,bankuuid,cardno,billdate,billamount,lastrepaymentdate,salemanuuid) " +
                     "select uuid(), bankuuid,cardno,concat('" + String.valueOf(year)+
-                    "','-','"+String.valueOf(month)+"','-',billdate),creditamount,date_add("+
+                    "','-','"+String.format("%02d",String.valueOf(month))+"','-',billdate),creditamount,date_add("+
             "concat('" + String.valueOf(year)+"','-','"+String.valueOf(month)+"','-',billdate),INTERVAL billafterdate DAY ),'"+getUserID()+"' from cardtb a " +
                     " where a.status='enable' and a.salemanuuid='"+getUserID()+"' " +  wherestr + " and  not exists " +
                     "(select 1 from billtb b where a.cardno=b.cardno and b.billdate=concat('" + String.valueOf(year)+"','-','"+String.valueOf(month)+"','-',billdate))";

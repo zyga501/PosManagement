@@ -36,7 +36,7 @@ public class SalemanUI extends WebUI {
         uiContainer.addElement(new UIContainer("option","")
                 .addAttribute("value", ""));
         for (int index = 0; index < dbRet.size(); ++index) {
-            if (dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0)
+            if (StringUtils.convertNullableString(dbRet.get(index).get("STATUS")).compareTo("enable") == 0)
             {
                 uiContainer.addElement(new UIContainer("option", dbRet.get(index).get("UNICK").toString())
                         .addAttribute("value", dbRet.get(index).get("UID").toString()));
@@ -52,7 +52,7 @@ public class SalemanUI extends WebUI {
 
                 UIContainer uiContainer = new UIContainer();
         for (int index = 0; index < dbRet.size(); ++index) {
-                if (dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0) {
+                if (StringUtils.convertNullableString(dbRet.get(index).get("STATUS")).compareTo("enable") == 0) {
                     uiContainer.addElement(new UIContainer("option", dbRet.get(index).get("UNICK").toString())
                    .addAttribute("value", dbRet.get(index).get("UID").toString()));
                 }

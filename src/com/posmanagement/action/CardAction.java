@@ -3,6 +3,7 @@ package com.posmanagement.action;
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.utils.Readconfig;
 import com.posmanagement.utils.StringUtils;
+import com.posmanagement.utils.UserUtils;
 import com.posmanagement.webui.CardUI;
 import com.posmanagement.webui.WebUI;
 
@@ -77,6 +78,8 @@ public class CardAction extends AjaxActionSupport {
 
     public String FetchCardList(){
         String wherestr = " where 1=1 ";
+        if ( !UserUtils.isAdmin(getUserID()))
+            wherestr = " and cardtb.salemanuuid='"+getUserID()+"'";
         Map map = new HashMap();
         int i = 0;
         if (null!=getParameter("cardno") && (!getParameter("cardno").toString().trim().equals(""))){

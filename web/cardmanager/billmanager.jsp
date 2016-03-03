@@ -28,17 +28,21 @@
                 content: "./cardmanager/addbill.jsp"
             });}
 
+        var billnov;
         function clickBill(button, billNO) {
+            if (billnov==billNO) return;
             var val = button.value;
             if (val == "N") {
                 layer.confirm('确定启用？', {
                     btn: ['是','否'] //按钮
                 }, function () {
+                    billnov = billNO;
                     $.ajax({
                         type: 'post',
                         url: 'Bill!editBill',
                         data: {status:"enable" , billNO:billNO},
                         success: function (data) {
+                            billnov =null;
                             var json = eval("(" + data + ")");
                             if (json.successMessage) {
                                 button.value = "Y";
@@ -51,6 +55,7 @@
                         }
                     });
                 }, function () {
+                    billnov =null;
                 });
             }
         }

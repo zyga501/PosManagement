@@ -68,11 +68,7 @@
                             <th><s:text name="posmanager.posname"/></th>
                             <th><s:text name="posmanager.industryname"/></th>
                             <th><s:text name="posmanager.rate"/></th>
-                            <th><s:text name="posmanager.posserver"/></th>
                             <th><s:text name="posmanager.mcc"/></th>
-                            <th><s:text name="posmanager.startdatetm"/></th>
-                            <th><s:text name="posmanager.usecount"/></th>
-                            <th><s:text name="posmanager.useamount"/></th>
                             <th><s:text name="global.status"/></th>
                         </tr>
                         </thead>

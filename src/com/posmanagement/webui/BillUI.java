@@ -27,8 +27,8 @@ public class BillUI extends WebUI {
                     Double.valueOf(StringUtils.convertNullableString(dbRet.get(index).get("SWINGAMOUNT"),"0"))))) / 10.0;
             double repayAmount = Double.valueOf(StringUtils.convertNullableString(dbRet.get(index).get("REPAYAMOUNT"),"0"));
             double remainAmount = Double.valueOf(StringUtils.convertNullableString(dbRet.get(index).get("BILLAMOUNT"),"0")) - repayAmount;
-            htmlString += new UIContainer("tr")
-                    .addAttribute("class", "text-c odd")
+            UIContainer UI =new UIContainer("tr");
+            htmlString += UI.addAttribute("class", "text-c odd")
                     .addAttribute("role", "row")
                     .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("BANKNAME")))
                     .addElement("td", StringUtils.formatCardNO(StringUtils.convertNullableString(dbRet.get(index).get("CARDNO"))))
@@ -38,12 +38,13 @@ public class BillUI extends WebUI {
                             .addElement(new UIContainer("label",StringUtils.convertNullableString(dbRet.get(index).get("BILLAMOUNT")).equals("")?"0":dbRet.get(index).get("BILLAMOUNT").toString())
                                     .addAttribute("name","billamount")
                                     .addAttribute("datav",StringUtils.convertNullableString(dbRet.get(index).get("UUID")))
-                                    .addAttribute("style","display:inline-block;")))
-                    .addElement("td", String.valueOf(canUseMoney))
-                    .addElement("td", String.valueOf(repayAmount))
-                    .addElement("td", String.valueOf(Double.max(remainAmount, 0.0)))
-                    .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("SALEMAN")))
-                    .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("SWINGCOUNT")).compareTo(StringUtils.convertNullableString(
+                                    .addAttribute("style","display:inline-block;")));
+//                    .addElement("td", String.valueOf(canUseMoney))
+//                    .addElement("td", String.valueOf(repayAmount))
+//                    .addElement("td", String.valueOf(Double.max(remainAmount, 0.0)))
+            if (UserUtils.isAdmin(userID_))
+                htmlString +=  UI.addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("SALEMAN")));
+            htmlString += UI.addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("SWINGCOUNT")).compareTo(StringUtils.convertNullableString(
                             dbRet.get(index).get("SWUNGCOUNT"))) == 0 &&
                             StringUtils.convertNullableString(dbRet.get(index).get("REPAYCOUNT")).compareTo(StringUtils.convertNullableString(
                                     dbRet.get(index).get("REPAYEDCOUNT"))) == 0 &&(!StringUtils.convertNullableString(dbRet.get(index).get("SWINGCOUNT")).equals("")) ?

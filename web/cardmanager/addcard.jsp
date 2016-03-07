@@ -13,7 +13,7 @@
     <link href="<%=request.getContextPath()%>/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
     <link href="<%=request.getContextPath()%>/css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
     <link href="<%=request.getContextPath()%>/skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
-    <link type="text/css" rel="stylesheet" href="<%=request.getContextPath()%>/js/laypage//skin/laypage.css" id="laypagecss">
+    <link type="text/css" rel="stylesheet" href="<%=request.getContextPath()%>/js/laypage/skin/laypage.css" id="laypagecss">
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery/1.9.1/jquery.min.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/upload/ajaxupload.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/Validform_v5.3.2_min.js"></script>
@@ -65,7 +65,7 @@
                 success: function (data) {
                     var json = eval("(" + data + ")");
                     if (json.errorMessage != null) {
-                        $('#Message').html(json.errorMessage);
+                        layer.msg(json.errorMessage,{icon:2});
                     }
                     else {
                         $('.input').val("");
@@ -136,51 +136,53 @@
                         <select id="bankName" name="cardmanager.bankname" style="width: 100%" datatype="*" class="required">
                         </select>
                     </td>
-                    <td><s:text name="cardmanager.creditamount"/></td><td><input id=creditamount name=cardmanager.creditamount type="text" value="<s:property value="cardmanager.creditamount"/>" placeholder="<s:text name="cardmanager.creditamount"/>" class="input-text size-S required " datatype="n"></td>
-                    <td><s:text name="cardmanager.tempamount"/></td><td><input id=tempamount name=cardmanager.tempamount type="text" value="<s:property value="cardmanager.tempamount"/>" placeholder="<s:text name="cardmanager.tempamount"/>" class="input-text size-S"></td>
-                </tr>
-                <tr class="text-c"><td><s:text name="cardmanager.templimitdate"/></td><td><select id=templimitdate name=cardmanager.templimitdate type="text" value="<s:property value="cardmanager.templimitdate"/>" placeholder="<s:text name="cardmanager.templimitdate"/>" class="input-text size-S"></select></td>
-                    <td><s:text name="cardmanager.useamount"/></td><td><input id=useamount name=cardmanager.useamount type="text" value="<s:property value="cardmanager.useamount"/>" placeholder="<s:text name="cardmanager.useamount"/>" class="input-text size-S"></td>
-                    <td><s:text name="cardmanager.billdate"/></td><td><input id=billdate name=cardmanager.billdate type="text" onfocus="showmanthday(this,1,31)"  value="<s:property value="cardmanager.billdate"/>" placeholder="<s:text name="cardmanager.billdate"/>"  class="input-text size-S required"  datatype="n1-2"></td>
-                    <td><s:text name="cardmanager.pin"/></td><td><input id=pin name=cardmanager.pin type="text" value="<s:property value="cardmanager.pin"/>" placeholder="<s:text name="cardmanager.pin"/>" class="input-text size-S"></td>
-                </tr>
-                <tr class="text-c">
-                    <td><s:text name="cardmanager.telpwd"/></td><td><input id=telpwd name=cardmanager.telpwd type="text" value="<s:property value="cardmanager.telpwd"/>" placeholder="<s:text name="cardmanager.telpwd"/>" class="input-text size-S"></td>
-                    <td><s:text name="cardmanager.tradepwd"/></td><td><input id=tradepwd name=cardmanager.tradepwd type="text" value="<s:property value="cardmanager.tradepwd"/>" placeholder="<s:text name="cardmanager.tradepwd"/>" class="input-text size-S"></td>
-                    <td><s:text name="cardmanager.enchashmentpwd"/></td><td><input id=enchashmentpwd name=cardmanager.enchashmentpwd type="text" value="<s:property value="cardmanager.enchashmentpwd"/>" placeholder="<s:text name="cardmanager.enchashmentpwd"/>" class="input-text size-S"></td>
-                    <td><s:text name="cardmanager.billafterdate"/></td><td><input id=billafterdate name=cardmanager.billafterdate type="text" onfocus="showmanthday(this,10,30)"  value="<s:property value="cardmanager.billafterdate"/>"  placeholder="<s:text name="cardmanager.billafterdate"/>" class="input-text size-S required " datatype="n1-2"></td>
-                </tr>
-                <tr class="text-c">
-                    <td><s:text name="cardmanager.lastrepaymentdate"/></td><td><input id=lastrepaymentdate name=cardmanager.lastrepaymentdate onfocus="showmanthday(this,1,31)" value="<s:property value="cardmanager.lastrepaymentdate"/>" type="text" placeholder="<s:text name="cardmanager.lastrepaymentdate"/>" class="input-text size-S"></td>
-                    <td><s:text name="cardmanager.billemail"/></td><td><input id=billemail name=cardmanager.billemail type="text" value="<s:property value="cardmanager.billemail"/>" placeholder="<s:text name="cardmanager.billemail"/>" class="input-text size-S"></td>
                     <td><s:text name="global.status"/></td>
                     <td><select id=sfqy name=cardmanager.status style="width:100%" >
                         <option value="enable">开启</option>
                         <option value="disable">禁用</option>
-                        </select>
+                    </select>
                     </td>
+                    <td><s:text name="cardmanager.creditamount"/></td><td><input id=creditamount name=cardmanager.creditamount type="text" value="<s:property value="cardmanager.creditamount"/>" placeholder="<s:text name="cardmanager.creditamount"/>" class="input-text size-S required " datatype="n"></td>
+                </tr>
+                <tr class="text-c">
+                    <td><s:text name="cardmanager.billdate"/></td><td><input id=billdate name=cardmanager.billdate type="text" onfocus="showmanthday(this,1,31)"  value="<s:property value="cardmanager.billdate"/>" placeholder="<s:text name="cardmanager.billdate"/>"  class="input-text size-S required"  datatype="n1-2"></td>
+                    <td><s:text name="cardmanager.billafterdate"/></td><td><input id=billafterdate name=cardmanager.billafterdate type="text" onfocus="showmanthday(this,10,30)"  value="<s:property value="cardmanager.billafterdate"/>"  placeholder="<s:text name="cardmanager.billafterdate"/>" class="input-text size-S required " datatype="n1-2"></td>
                     <td><s:text name="cardmanager.commissioncharge"/></td><td><input id=commissioncharge name=cardmanager.commissioncharge type="number" max="2" min="0.4" step="0.1" style="width:100%" value="<s:property value="cardmanager.commissioncharge"/>" placeholder="<s:text name="cardmanager.commissioncharge"/>" class="input-text size-S required " datatype="/^-?[1-9]+(\.\d+)?$|^-?0(\.\d+)?$|^-?[1-9]+[0-9]*(\.\d+)?$/"></td>
-                </tr>
-                <tr class="text-c">
                     <td><s:text name="cardmanager.cardmaster"/></td><td><input id=cardmaster name=cardmanager.cardmaster type="text" value="<s:property value="cardmanager.cardmaster"/>" placeholder="<s:text name="cardmanager.cardmaster"/>" class="input-text size-S  required "datatype="*"></td>
-                    <td><s:text name="cardmanager.identityno"/></td><td><input id=identityno name=cardmanager.identityno type="text" value="<s:property value="cardmanager.identityno"/>" placeholder="<s:text name="cardmanager.identityno"/>" class="input-text size-S"></td>
-                    <td><s:text name="cardmanager.cmaddress"/></td><td><input id=cmaddress name=cardmanager.cmaddress type="text" value="<s:property value="cardmanager.cmaddress"/>" placeholder="<s:text name="cardmanager.cmaddress"/>" class="input-text size-S"></td>
-                    <td><s:text name="cardmanager.cmtel"/></td><td><input id=cmtel name=cardmanager.cmtel type="text" value="<s:property value="cardmanager.cmtel"/>" placeholder="<s:text name="cardmanager.cmtel"/>" class="input-text size-S"></td>
                 </tr>
                 <tr class="text-c">
-                    <td><s:text name="cardmanager.cmseccontact"/></td><td><input id=cmseccontact name=cardmanager.cmseccontact type="text" value="<s:property value="cardmanager.cmseccontact"/>" placeholder="<s:text name="cardmanager.cmseccontact"/>" class="input-text size-S "></td>
                     <td><s:text name="cardmanager.repaylimit"/></td><td><input id=repaylimit name=cardmanager.repaylimit type="text" onfocus="showmanthday(this,0,5)" value="<s:property value="cardmanager.repaylimit"/>" placeholder="<s:text name="cardmanager.repaylimit"/>" class="input-text size-S required " datatype="n"></td>
                     <td><s:text name="cardmanager.repaynum"/></td><td><input id=repaynum name=cardmanager.repaynum type="text"
                                                                              onmouseover="hintmsg('提示  0-2万，3-4次；2-4万，4-5笔；4-10万，5-6笔；10万以上，6次以上',this);"  value="<s:property value="cardmanager.repaynum"/>" placeholder="<s:text name="cardmanager.repaynum"/>" class="input-text size-S required " datatype="n"></td>
                     <td><s:text name="cardmanager.repayinterval"/></td><td><input id=repayinterval name=cardmanager.repayinterval type="text" onfocus="showmanthday(this,0,5)"  value="<s:property value="cardmanager.repayinterval"/>" placeholder="<s:text name="cardmanager.repayinterval"/>" class="input-text size-S required "datatype="n"></td>
+                    <td><s:text name="cardmanager.expirydates"/></td><td><input id=expirydates name=cardmanager.expirydates type="text" onfocus="WdatePicker({dateFmt:'yyyy-MM'})" value="<s:property value="cardmanager.expirydates"/>" placeholder="<s:text name="cardmanager.expirydates"/>" class="input-text Wdate required " datatype="*"></td>
+                </tr>
                 <tr class="text-c">
-                <tr class="text-c">
-                <td><s:text name="cardmanager.expirydates"/></td><td><input id=expirydates name=cardmanager.expirydates type="text" onfocus="WdatePicker({dateFmt:'yyyy-MM'})" value="<s:property value="cardmanager.expirydates"/>" placeholder="<s:text name="cardmanager.expirydates"/>" class="input-text Wdate required " datatype="*"></td>
                     <td><s:text name="cardmanager.maxposmean"/></td><td><input id=maxposmean name=cardmanager.maxposmean type="number"  max="2" min="0.6" step="0.1" style="width:100%"  value="<s:property value="cardmanager.maxposmean"/>" placeholder="<s:text name="cardmanager.maxposmean"/>" class="input-text size-S required" datatype="/^-?[1-9]+(\.\d+)?$|^-?0(\.\d+)?$|^-?[1-9]+[0-9]*(\.\d+)?$/"></td>
                     <td><s:text name="cardmanager.reservedswingcount"/></td><td><input id=reservedswingcount name=cardmanager.reservedswingcount type="text" onfocus="showmanthday(this,1,3)" value="<s:property value="cardmanager.reservedswingcount"/>" placeholder="<s:text name="cardmanager.reservedswingcount"/>" class="input-text size-S required " datatype="/^-?[1-9]+(\.\d+)?$|^-?0(\.\d+)?$|^-?[1-9]+[0-9]*(\.\d+)?$/"></td>
-                <td><s:text name="cardmanager.reservedswingmoney"/></td><td><input id=reservedswingmoney name=cardmanager.reservedswingmoney type="number"  max="5" min="1" step="1" style="width:100%" onfocus="showmanthday(this,1,5)"  value="<s:property value="cardmanager.reservedswingmoney"/>" placeholder="<s:text name="cardmanager.reservedswingmoney"/>" class="input-text size-S required " datatype="/^-?[1-9]+(\.\d+)?$|^-?0(\.\d+)?$|^-?[1-9]+[0-9]*(\.\d+)?$/"></td>
-                 <tr class="text-c">
-                <% if (request.getSession().getAttribute("roleId").equals("e664d6f3-85f8-4bd6-bcb8-c4e053732b29")){ %>
+                    <td><s:text name="cardmanager.reservedswingmoney"/></td><td><input id=reservedswingmoney name=cardmanager.reservedswingmoney type="number"  max="5" min="1" step="1" style="width:100%" onfocus="showmanthday(this,1,5)"  value="<s:property value="cardmanager.reservedswingmoney"/>" placeholder="<s:text name="cardmanager.reservedswingmoney"/>" class="input-text size-S required " datatype="/^-?[1-9]+(\.\d+)?$|^-?0(\.\d+)?$|^-?[1-9]+[0-9]*(\.\d+)?$/"></td>
+                    <td><s:text name="cardmanager.tempamount"/></td><td><input id=tempamount name=cardmanager.tempamount type="text" value="<s:property value="cardmanager.tempamount"/>" placeholder="<s:text name="cardmanager.tempamount"/>" class="input-text size-S"></td>
+               </tr>
+                <tr class="text-c">
+                    <td><s:text name="cardmanager.templimitdate"/></td><td><input id=templimitdate name=cardmanager.templimitdate type="text" value="<s:property value="cardmanager.templimitdate"/>" placeholder="<s:text name="cardmanager.templimitdate"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.useamount"/></td><td><input id=useamount name=cardmanager.useamount type="text" value="<s:property value="cardmanager.useamount"/>" placeholder="<s:text name="cardmanager.useamount"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.pin"/></td><td><input id=pin name=cardmanager.pin type="text" value="<s:property value="cardmanager.pin"/>" placeholder="<s:text name="cardmanager.pin"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.telpwd"/></td><td><input id=telpwd name=cardmanager.telpwd type="text" value="<s:property value="cardmanager.telpwd"/>" placeholder="<s:text name="cardmanager.telpwd"/>" class="input-text size-S"></td>
+                </tr>
+                <tr class="text-c">
+                    <td><s:text name="cardmanager.tradepwd"/></td><td><input id=tradepwd name=cardmanager.tradepwd type="text" value="<s:property value="cardmanager.tradepwd"/>" placeholder="<s:text name="cardmanager.tradepwd"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.enchashmentpwd"/></td><td><input id=enchashmentpwd name=cardmanager.enchashmentpwd type="text" value="<s:property value="cardmanager.enchashmentpwd"/>" placeholder="<s:text name="cardmanager.enchashmentpwd"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.lastrepaymentdate"/></td><td><input id=lastrepaymentdate name=cardmanager.lastrepaymentdate onfocus="showmanthday(this,1,31)" value="<s:property value="cardmanager.lastrepaymentdate"/>" type="text" placeholder="<s:text name="cardmanager.lastrepaymentdate"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.billemail"/></td><td><input id=billemail name=cardmanager.billemail type="text" value="<s:property value="cardmanager.billemail"/>" placeholder="<s:text name="cardmanager.billemail"/>" class="input-text size-S"></td>
+                </tr>
+                <tr class="text-c">
+                    <td><s:text name="cardmanager.identityno"/></td><td><input id=identityno name=cardmanager.identityno type="text" value="<s:property value="cardmanager.identityno"/>" placeholder="<s:text name="cardmanager.identityno"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.cmaddress"/></td><td><input id=cmaddress name=cardmanager.cmaddress type="text" value="<s:property value="cardmanager.cmaddress"/>" placeholder="<s:text name="cardmanager.cmaddress"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.cmtel"/></td><td><input id=cmtel name=cardmanager.cmtel type="text" value="<s:property value="cardmanager.cmtel"/>" placeholder="<s:text name="cardmanager.cmtel"/>" class="input-text size-S"></td>
+                    <td><s:text name="cardmanager.cmseccontact"/></td><td><input id=cmseccontact name=cardmanager.cmseccontact type="text" value="<s:property value="cardmanager.cmseccontact"/>" placeholder="<s:text name="cardmanager.cmseccontact"/>" class="input-text size-S "></td>
+                </tr>
+                <tr class="text-c">
+                    <% if (request.getSession().getAttribute("roleId").equals("e664d6f3-85f8-4bd6-bcb8-c4e053732b29")){ %>
                 <td><s:text name="cardmanager.saleman"/></td>
                     <td><input id=saleman name=cardmanager.saleman type="text" value="<s:property value="cardmanager.saleman"/>"
                                placeholder="<s:text name="cardmanager.saleman"/>" class="input-text size-S">

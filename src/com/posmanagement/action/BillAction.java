@@ -8,6 +8,7 @@ import com.posmanagement.utils.UUIDUtils;
 import com.posmanagement.webui.BillUI;
 import com.posmanagement.webui.WebUI;
 
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -71,7 +72,7 @@ public class BillAction extends AjaxActionSupport {
         getRequest().setAttribute("pagecount", (new BillUI(super.getUserID()).fetchBillPageCount() + WebUI.DEFAULTITEMPERPAGE -1)/WebUI.DEFAULTITEMPERPAGE);
         return BILLMANAGER;
     }
-    
+
     public String modifyBill() {
         Map map = new HashMap();
         Map para = new HashMap();

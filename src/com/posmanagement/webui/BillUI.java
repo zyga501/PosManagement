@@ -28,7 +28,7 @@ public class BillUI extends WebUI {
             double repayAmount = Double.valueOf(StringUtils.convertNullableString(dbRet.get(index).get("REPAYAMOUNT"),"0"));
             double remainAmount = Double.valueOf(StringUtils.convertNullableString(dbRet.get(index).get("BILLAMOUNT"),"0")) - repayAmount;
             UIContainer UI =new UIContainer("tr");
-            htmlString += UI.addAttribute("class", "text-c odd")
+            UI.addAttribute("class", "text-c odd")
                     .addAttribute("role", "row")
                     .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("BANKNAME")))
                     .addElement("td", StringUtils.formatCardNO(StringUtils.convertNullableString(dbRet.get(index).get("CARDNO"))))
@@ -43,12 +43,12 @@ public class BillUI extends WebUI {
 //                    .addElement("td", String.valueOf(repayAmount))
 //                    .addElement("td", String.valueOf(Double.max(remainAmount, 0.0)))
             if (UserUtils.isAdmin(userID_))
-                htmlString +=  UI.addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("SALEMAN")));
-            htmlString += UI.addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("SWINGCOUNT")).compareTo(StringUtils.convertNullableString(
-                            dbRet.get(index).get("SWUNGCOUNT"))) == 0 &&
+                UI.addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("SALEMAN")));
+            UI.addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("SWINGCOUNT")).compareTo(StringUtils.convertNullableString(
+                    dbRet.get(index).get("SWUNGCOUNT"))) == 0 &&
                             StringUtils.convertNullableString(dbRet.get(index).get("REPAYCOUNT")).compareTo(StringUtils.convertNullableString(
                                     dbRet.get(index).get("REPAYEDCOUNT"))) == 0 &&(!StringUtils.convertNullableString(dbRet.get(index).get("SWINGCOUNT")).equals("")) ?
-                            getText("bill.billfinished") : getText("bill.billunfinished"))
+                                    getText("bill.billfinished") : getText("bill.billunfinished"))
                     .addElement(new UIContainer("td").addElement(new UIContainer("input")
                             .addAttribute("class", dbRet.get(index).get("STATUS").equals("enable")?"btn btn-success radius":"btn btn-danger radius")
                             .addAttribute("type","button")
@@ -56,6 +56,7 @@ public class BillUI extends WebUI {
                             .addAttribute("datav", StringUtils.convertNullableString(dbRet.get(index).get("UUID")))
                             .addAttribute("value", dbRet.get(index).get("STATUS").equals("enable")?"Y":"N")
                             .addAttribute("onclick", "clickBill(this,'" + StringUtils.convertNullableString(dbRet.get(index).get("UUID")) + "')")));
+            htmlString +=UI.generateUI();
         }
         return htmlString;
     }

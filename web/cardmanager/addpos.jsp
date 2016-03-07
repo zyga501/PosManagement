@@ -15,6 +15,7 @@
     <link href="<%=request.getContextPath()%>/skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery/1.9.1/jquery.min.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/upload/ajaxupload.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/js/Validform_v5.3.2_min.js"></script>
     <script type="text/javascript">
         function addPOS() {
             <%
@@ -120,46 +121,35 @@
                 }
             });
         }
-        function fetchPosServerList() {
-            $.ajax({
-                type: 'post',
-                url: 'PosServer!FetchPosServerList',
-                data: "uiMode=SELECTLIST",
-                dataType : "json",
-                success: function(data) {
-                    var json = eval("(" + data + ")");
-                    $("#posserver").html(json.posServerList);
-                    $("#posserver").val("<s:property value="posManager.posserveruuid"/>");
-                }
-            });
-        }
         $(function () {
             fetchBankList();
             fetchIndustryList();
             fetchRateList();
             fetchMCCList();
-            fetchPosServerList();
+            $("#vform").Validform({btnSubmit:"#submit_btn",
+                beforeSubmit: function(curform) {addPOS();return false; }
+            });
         })
     </script>
 </head>
 <body scroll="no">
-    <form class="form form-horizontal">
+    <form class="form form-horizontal" id="vform">
         <div style="height:auto; overflow:auto;">
             <table class="table table-border table-bordered table-bg table-hover table-sort">
                 <tr class="text-c">
-                    <td><s:text name="posmanager.posname"/></td><td><input name="posname"  type="text"  value="<s:property value="posManager.posname"/>" placeholder="<s:text name="posmanager.posname" />" class="input-text size-S"></td>
+                    <td><s:text name="posmanager.posname"/></td><td><input name="posname"  type="text"  value="<s:property value="posManager.posname"/>" placeholder="<s:text name="posmanager.posname" />" class="input-text size-S" datatype="*"></td>
                 </tr>
                 <tr class="text-c">
                     <td><s:text name="posmanager.industryname"/></td>
                     <td>
-                        <select id="industryname" name="industryname" style="width: 100%">
+                        <select id="industryname" name="industryname" style="width: 100%"  datatype="*">
                         </select>
                     </td>
                 </tr>
                 <tr class="text-c">
                     <td><s:text name="posmanager.rate"/></td>
                     <td>
-                    <select id="rate" name="rate" style="width: 100%">
+                    <select id="rate" name="rate" style="width: 100%"  datatype="*">
                     </select>
                     </td>
                 </tr>
@@ -172,21 +162,6 @@
                     <select id="mcc" name="mcc" style="width: 100%">
                     </select>
                     </td>
-                </tr>
-                <tr class="text-c">
-                    <td><s:text name="posmanager.posserver"/></td><td>
-                    <select id="posserver" name="posserver" style="width: 100%">
-                    </select>
-                </td>
-                </tr>
-                <tr class="text-c">
-                    <td><s:text name="posmanager.startdatetm"/></td><td><input name="startdatetm" type="text"  value="<s:property value="posManager.startdatetm"/>" placeholder="<s:text name="posmanager.startdatetm" />" class="input-text size-S"></td>
-                </tr>
-                <tr class="text-c">
-                    <td><s:text name="posmanager.usecount"/></td><td><input name="usecount" type="text"  value="<s:property value="posManager.usedcount"/>" placeholder="<s:text name="posmanager.usecount" />" class="input-text size-S"></td>
-                </tr>
-                <tr class="text-c">
-                    <td><s:text name="posmanager.useamount"/></td><td><input name="useamount" type="text"  value="<s:property value="posManager.usedsum"/>" placeholder="<s:text name="posmanager.useamount" />" class="input-text size-S"></td>
                 </tr>
                 <tr class="text-c">
                     <td><s:text name="global.status"/></td><td><input name="status" type="checkbox"  <s:if  test="posManager.status =='enable'">checked</s:if><s:else></s:else> > </td>
@@ -205,7 +180,7 @@
         </div>
         <div class="row">
             <div class="formControls" align="center">
-                <input type="button" class="btn btn-success radius size-M" value="<s:text name="addasset.submit" />" onclick="addPOS();">
+                <input type="button" class="btn btn-success radius size-M" id="submit_btn" value="<s:text name="addasset.submit" />">
             </div>
         </div>
         <input type="hidden" id="newid" name="newid" value="<s:property value="posManager.uuid"/>">

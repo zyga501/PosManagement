@@ -62,6 +62,8 @@ public class POSAction extends AjaxActionSupport {
 
     public String FetchPosList(){
         String wherestr = " where 1=1 ";
+        if ( !UserUtils.isAdmin(getUserID()))
+            wherestr = " and POSTB.salemanuuid='"+getUserID()+"'";
         Map map = new HashMap();
         int i = 0;
         if (null!=getParameter("posname") && (!getParameter("posname").toString().trim().equals(""))){
@@ -73,14 +75,14 @@ public class POSAction extends AjaxActionSupport {
         if (null!=getParameter("rate")&& (!getParameter("rate").toString().trim().equals(""))){
             wherestr += "and rate  = '"+getParameter("rate")+"'";
         }
-        if (null!=getParameter("posserver")&& (!getParameter("posserver").toString().trim().equals(""))) {
-            wherestr += "and posservertb.`name`   like '%"+getParameter("posserver")+"%'";
-        }
+//        if (null!=getParameter("posserver")&& (!getParameter("posserver").toString().trim().equals(""))) {
+//            wherestr += "and posservertb.`name`   like '%"+getParameter("posserver")+"%'";
+//        }
 
         try {
             ArrayList<HashMap<String, Object>> rect = PosDbManager.executeSql("select count(*) as cnt   FROM   " +
                     " POSTB   " +
-                    " INNER JOIN posservertb ON posservertb.uuid = POSTB.posserveruuid   " +
+                    //" INNER JOIN posservertb ON posservertb.uuid = POSTB.posserveruuid   " +
                     " INNER JOIN industrytb ON POSTB.industryuuid = industrytb.uuid   " +
                     " INNER JOIN ratetb ON POSTB.rateuuid = ratetb.uuid  " +
                     " INNER JOIN userinfo ON POSTB.salemanuuid = userinfo.uid   " +
@@ -144,12 +146,11 @@ public class POSAction extends AjaxActionSupport {
                 parametMap.put(i++, (String) getParameter("rate"));
                 parametMap.put(i++, (String) getParameter("corporation"));
                 parametMap.put(i++, (String) getParameter("mcc"));
-                parametMap.put(i++, (String) getParameter("posserver"));
                 parametMap.put(i++,StringUtils.convertNullableString( getParameter("status")).equals("on")?"enable":"disable");
                 parametMap.put(i++, (String) getParameter("newid"));
 
                     if (!PosDbManager.executeUpdate("update postb set  posname=?,industryuuid=?,rateuuid=?,corporation=?,mccuuid=?," +
-                            "posserveruuid=?,status=?,startdatetm=now() where uuid=?", (HashMap<Integer, Object>)parametMap)) {
+                            "status=?,startdatetm=now() where uuid=?", (HashMap<Integer, Object>)parametMap)) {
                         map.put("errorMessage","error");
                     }
             }
@@ -173,14 +174,13 @@ public class POSAction extends AjaxActionSupport {
             parametMap.put(i++, (String) getParameter("rate"));
             parametMap.put(i++, (String) getParameter("corporation"));
             parametMap.put(i++, (String) getParameter("mcc"));
-            parametMap.put(i++, (String) getParameter("posserver"));
             parametMap.put(i++, StringUtils.convertNullableString(getParameter("status")).equals("on") ? "enable" : "disable");
             parametMap.put(i++, getUserID());
 
             try {
                 if (PosDbManager.executeUpdate("insert into postb(uuid,posname,industryuuid,rateuuid,corporation,mccuuid," +
-                        "posserveruuid,status,salemanuuid)" +
-                        "values(?,?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>) parametMap)) {
+                        "status,salemanuuid)" +
+                        "values(?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>) parametMap)) {
                     map.put("posList", new PosUI(super.getUserID()).generateSelect());
                 }
             } catch (Exception e) {

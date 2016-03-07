@@ -49,11 +49,7 @@ public class PosUI extends WebUI {
                     .addElement("td", dbRet.get(index).get("POSNAME").toString())
                     .addElement("td", StringUtils.convertNullableString( dbRet.get(index).get("INDUSTRYNAME")))
                     .addElement("td",  StringUtils.convertNullableString(dbRet.get(index).get("RATE"))+"|"+StringUtils.convertNullableString(dbRet.get(index).get("MAXFEE")))
-                    .addElement("td",  StringUtils.convertNullableString(dbRet.get(index).get("POSSERVERNAME")))
                     .addElement("td",  StringUtils.convertNullableString(dbRet.get(index).get("MCC")))
-                    .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("STARTDATETM")))
-                    .addElement("td", usevalue[0])
-                    .addElement("td", usevalue[1])
                     .addElement("td", getText(dbRet.get(index).get("STATUS").toString().compareTo("enable") == 0 ? "global.enable" : "global.disable")
                     );
         }

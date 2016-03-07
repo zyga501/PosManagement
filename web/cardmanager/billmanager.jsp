@@ -97,10 +97,8 @@
                             <th><s:text name="billmanager.billdate" /></th>
                             <th><s:text name="billmanager.lastrepaymentdate" /></th>
                             <th><s:text name="billmanager.billamount" /></th>
-                            <th><s:text name="billmanager.canuseamount" /></th>
-                            <th><s:text name="billmanager.billhadpay" /></th>
-                            <th><s:text name="billmanager.billnopay" /></th>
-                            <th><s:text name="billmanager.saleman" /></th>
+                            <% if (request.getSession().getAttribute("roleId").equals("e664d6f3-85f8-4bd6-bcb8-c4e053732b29")){ %>
+                            <th><s:text name="billmanager.saleman" /></th><%}%>
                             <th><s:text name="billmanager.expired" /></th>
                             <th><s:text name="global.status" /></th>
                         </tr>

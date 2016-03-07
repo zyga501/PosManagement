@@ -59,7 +59,7 @@
                 <% if (request.getSession().getAttribute("roleId").equals("e664d6f3-85f8-4bd6-bcb8-c4e053732b29")){ %>
                 <td><input type="text" name="saleman" placeholder="<s:text name="cardmanager.saleman"/>" class="input-text radius size-s"></td><%}%>
                 <td><a href="javascript:void(0);" class="btn btn-primary  radius size-S " onclick="dosearch()">
-                    <s:text name="global.search"/></a><span style="float:right;"> <a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="
+                    <s:text name="global.search"/></a><span style="float:right;"> <a  href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="
             addcard();"><s:text name="global.add"/></a></span></td></tr></table></form></div></div>
         <div id="navigatediv"></div>
         <div class="panel-body" id="parentIframe" >

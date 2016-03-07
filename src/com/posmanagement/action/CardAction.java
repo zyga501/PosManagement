@@ -131,6 +131,7 @@ public class CardAction extends AjaxActionSupport {
         }
         return FETCHCARD;
     }
+
     public String UpdateZsf() throws Exception {
         Map map = new HashMap();
         if(newid.equals("")) {
@@ -154,11 +155,35 @@ public class CardAction extends AjaxActionSupport {
         return AjaxActionComplete(map);
     }
 
+    public boolean checkBill(String cardno){
+        Map para = new HashMap();
+        para.put(1,cardno);
+        try {
+            ArrayList<HashMap<String, Object>> Ret = PosDbManager.executeSql("select count(*) cnt from swingcard a,billtb b " +
+                    ",cardtb c where a.billuuid=b.uuid and ifnull(a.swingstatus,'')<>'enable' and b.cardno=c.cardno  and ifnull(b.status,'')='enable' and c.cardno=?",(HashMap<Integer, Object>)para);
+            if ( null != Ret && Integer.parseInt(Ret.get(0).get("CNT").toString())>0)
+                return false;
+            Ret = PosDbManager.executeSql("select count(*) cnt from repaytb a,billtb b,cardtb c where a.billuuid=b.uuid and ifnull(a.tradestatus,'')<>'enable' " +
+                    " and b.cardno=c.cardno  and ifnull(b.status,'')='enable' and c.cardno=?",(HashMap<Integer, Object>)para);
+            if ( null != Ret && Integer.parseInt(Ret.get(0).get("CNT").toString())>0)
+                return false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
     public String editCard() throws Exception {
         Map map = new HashMap();
         if (null==newid)
         {
             map.put("errorMessage", getText("addrate.rateFormatError"));
+            return AjaxActionComplete(map);
+        }
+        if (!checkBill(StringUtils.convertNullableString(getParameter("cardmanager.cardno")))){
+            map.put("errorMessage", getText("cardmanager.cannotmodify"));
             return AjaxActionComplete(map);
         }
         if (cardmanager.size() == 0) {

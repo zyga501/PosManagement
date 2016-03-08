@@ -479,7 +479,7 @@ public class SwingCardPolicy {
     }
 
     private double nextDateLimit(double dateLimit) {
-        return (Double.max((long)(Math.max(random.nextDouble() * dateLimit / cardInfo_.repayNum * REPAYDATEFIXEDLIMIT, 1.0)), cardInfo_.repayInterval) * 10) / 10.0;
+        return (Double.max((long)(random.nextDouble() * dateLimit / cardInfo_.repayNum * REPAYDATEFIXEDLIMIT), cardInfo_.repayInterval) * 10) / 10.0;
     }
 
     private void generaterRepayRateList() {
@@ -616,7 +616,7 @@ public class SwingCardPolicy {
         cardInfo.cardNO = sqlCardInfo.get(0).get("CARDNO").toString();
         cardInfo.creditAmount = Double.parseDouble(sqlCardInfo.get(0).get("CREDITAMOUNT").toString());
         cardInfo.repayNum = Integer.parseInt(sqlCardInfo.get(0).get("REPAYNUM").toString());
-        cardInfo.repayInterval = Integer.parseInt(sqlCardInfo.get(0).get("REPAYINTERVAL").toString());
+        cardInfo.repayInterval = Math.max(Integer.parseInt(sqlCardInfo.get(0).get("REPAYINTERVAL").toString()), 1);
         cardInfo.maxPosMean = Double.parseDouble(sqlCardInfo.get(0).get("MAXPOSMEAN").toString());
         cardInfo.reservedSwingMoney = Double.parseDouble(sqlCardInfo.get(0).get("RESERVEDSWINGMONEY").toString()) * billInfo_.billAmount / 100.0;
         cardInfo.reservedSwingCount = Double.parseDouble(sqlCardInfo.get(0).get("RESERVEDSWINGCOUNT").toString());

@@ -479,7 +479,7 @@ public class SwingCardPolicy {
     }
 
     private double nextDateLimit(double dateLimit) {
-        return (Double.max((long)(random.nextDouble() * dateLimit / cardInfo_.repayNum * REPAYDATEFIXEDLIMIT), cardInfo_.repayInterval) * 10) / 10.0;
+        return (Double.max((long)(Math.max(random.nextDouble() * dateLimit / cardInfo_.repayNum * REPAYDATEFIXEDLIMIT, 1.0)), cardInfo_.repayInterval) * 10) / 10.0;
     }
 
     private void generaterRepayRateList() {

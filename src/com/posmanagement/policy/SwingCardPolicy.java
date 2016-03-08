@@ -506,12 +506,16 @@ public class SwingCardPolicy {
         if (sqlBillInfo == null || sqlBillInfo.size() != 1)
             return null;
 
+        ArrayList<HashMap<String, Object>> sqlRepayedMoney = PosDbManager.executeSql("select sum(trademoney) repayedMoney from repaytb where billuuid='" + sqlBillInfo.get(0).get("UUID").toString() + "' and tradestatus='enable'");
         BillInfo billInfo = new BillInfo();
         billInfo.bankUUID = sqlBillInfo.get(0).get("BANKUUID").toString();
         billInfo.cardNO = sqlBillInfo.get(0).get("CARDNO").toString();
         billInfo.billDate = Date.valueOf(sqlBillInfo.get(0).get("BILLDATE").toString());
         billInfo.lastRepayDate = Date.valueOf(sqlBillInfo.get(0).get("LASTREPAYMENTDATE").toString());
         billInfo.billAmount = Double.parseDouble(sqlBillInfo.get(0).get("BILLAMOUNT").toString());
+        if (sqlRepayedMoney.get(0).get("REPAYEDMONEY") != null) {
+            billInfo.billAmount -= Double.parseDouble(sqlRepayedMoney.get(0).get("REPAYEDMONEY").toString());
+        }
         billInfo.canUseAmount = Double.parseDouble(sqlBillInfo.get(0).get("CANUSEAMOUNT").toString());
         return billInfo;
     }

@@ -28,7 +28,13 @@ public class AssetUI {
                             .addElement("td", dbRet.get(index).get("EBANKSIGNPWD").toString())
                             .addElement("td", dbRet.get(index).get("EBANKCASHPWD").toString())
                             .addElement("td", dbRet.get(index).get("EBANKTRANSFERPWD").toString())
-                            .addElement("td", dbRet.get(index).get("ATMCASHPWD").toString());
+                            .addElement("td", dbRet.get(index).get("ATMCASHPWD").toString())
+                            .addElement(new UIContainer("td").addElement(
+                                            new UIContainer("input")
+                                                    .addAttribute("type", "button")
+                                                    .addAttribute("value", "对冲")
+                                                    .addAttribute("class", "btn radius")
+                                                    .addAttribute("onclick", "hedgeAsset('" + dbRet.get(index).get("UUID") + "')")));
         }
         return htmlString;
     }
@@ -40,6 +46,7 @@ public class AssetUI {
         }
 
         return PosDbManager.executeSql("SELECT\n" +
+                "assettb.uuid,\n" +
                 "assettb.cardno,\n" +
                 "assettb.balance,\n" +
                 "assettb.ebanksignpwd,\n" +

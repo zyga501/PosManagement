@@ -83,6 +83,7 @@
         <action name="Asset!*" class="com.posmanagement.action.AssetAction" method="{1}">
             <result name="assetManager">./cardmanager/assetmanager.jsp</result>
             <result name="addasset">./cardmanager/addasset.jsp</result>
+            <result name="assetHedge">./cardmanager/hedgeasset.jsp</result>
         </action>
         <action name="PosServer!*" class="com.posmanagement.action.PosServerAction" method="{1}">
             <result name="posServerManager">./systemmanager/posservermanager.jsp</result>

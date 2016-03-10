@@ -20,6 +20,7 @@ public class POSAction extends AjaxActionSupport {
     private String status;
     private String newid;
     private Map posManager;
+    private String uiMode;
 
     public Map getPosManager() {
         return posManager;
@@ -53,12 +54,27 @@ public class POSAction extends AjaxActionSupport {
         this.status = status;
     }
 
+    public void setUiMode(String _uiMode) {
+        uiMode = _uiMode;
+    }
+
     public String Init() throws Exception {
         posList = new PosUI(super.getUserID()).generateTable("");
         getRequest().setAttribute("pagecount", (posList.split("<tr").length-1+WebUI.DEFAULTITEMPERPAGE-1)/WebUI.DEFAULTITEMPERPAGE);
         return POSMANAGER;
     }
 
+    public String FetchPosListEx() throws Exception {
+        Map map = new HashMap();
+        if (uiMode != null && uiMode.compareTo("SELECTLIST") == 0) {
+            map.put("posList", new PosUI(super.getUserID()).generateSelect());
+        }
+        else {
+            map.put("posList", new PosUI(super.getUserID()).generateTable(""));
+        }
+
+        return AjaxActionComplete(map);
+    }
 
     public String FetchPosList(){
         String wherestr = " where 1=1 ";
@@ -75,14 +91,10 @@ public class POSAction extends AjaxActionSupport {
         if (null!=getParameter("rate")&& (!getParameter("rate").toString().trim().equals(""))){
             wherestr += "and rate  = '"+getParameter("rate")+"'";
         }
-//        if (null!=getParameter("posserver")&& (!getParameter("posserver").toString().trim().equals(""))) {
-//            wherestr += "and posservertb.`name`   like '%"+getParameter("posserver")+"%'";
-//        }
 
         try {
             ArrayList<HashMap<String, Object>> rect = PosDbManager.executeSql("select count(*) as cnt   FROM   " +
                     " POSTB   " +
-                    //" INNER JOIN posservertb ON posservertb.uuid = POSTB.posserveruuid   " +
                     " INNER JOIN industrytb ON POSTB.industryuuid = industrytb.uuid   " +
                     " INNER JOIN ratetb ON POSTB.rateuuid = ratetb.uuid  " +
                     " INNER JOIN userinfo ON POSTB.salemanuuid = userinfo.uid   " +
@@ -131,6 +143,7 @@ public class POSAction extends AjaxActionSupport {
         }
         return FETCHPOS;
     }
+
     public String editPos(){
         Map map = new HashMap();
         if (null==newid)

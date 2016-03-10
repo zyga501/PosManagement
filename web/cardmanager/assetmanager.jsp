@@ -25,7 +25,7 @@
         function refreshAssetList(assetList) {
             $('#assetList').html(assetList);
         }
-        function  hedgeAsset(uuid) {
+        function hedgeAsset(uuid) {
             layer.open({
                 type: 2,
                 title: "对冲资产",area: ['310px', '170px'],

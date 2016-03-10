@@ -66,20 +66,6 @@
             <% } %>
         }
 
-        function fetchBankList() {
-            $.ajax({
-                type: 'post',
-                url: 'Bank!FetchBankList',
-                data: "uiMode=SELECTLIST",
-                dataType: "json",
-                success: function (data) {
-                    var json = eval("(" + data + ")");
-                    $("#bankName").html(json.bankList);
-                    $("#bankName").val("<s:property value="posManager.bankuuid"/>");
-                }
-            });
-        }
-
         function fetchIndustryList() {
             $.ajax({
                 type: 'post',
@@ -122,7 +108,6 @@
             });
         }
         $(function () {
-            fetchBankList();
             fetchIndustryList();
             fetchRateList();
             fetchMCCList();

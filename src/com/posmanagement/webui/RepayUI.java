@@ -60,6 +60,7 @@ public class RepayUI extends WebUI {
             return new String("");
         return DetailHtml(dbRet);
     }
+
     private String DetailHtml(ArrayList<HashMap<String, Object>> dbRet){
         String htmlString = "";
         for (int index = 0; index < dbRet.size(); ++index) {

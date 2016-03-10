@@ -40,18 +40,28 @@
 <body style="overflow: hidden">
 <div align="center">
     <div class="panel panel-default" >
-        <div class="panel-header"><form id="searchform"><table id="searchtb" style="width: 80%"><tr>
-            <td><input type="text" name="thedate" placeholder="<s:text name="swingcardsummary.thedate"/>" class="input-text radius size-s"></td>
-            <td><input type="text" name="cardno" placeholder="<s:text name="swingcardsummary.cardno"/>" class="input-text radius size-s"></td>
-            <td><input type="text" name="bankname" placeholder="<s:text name="cardmanager.bankname"/>" class="input-text radius size-s"></td>
-            <td><input type="text" name="cardmaster" placeholder="<s:text name="swingcardsummary.cardmaster"/>" class="input-text radius size-s"></td>
-            <td><select name="SWINGSTATUS" placeholder="<s:text name="swingcardsummary.status"/>">
-                <option value=""></option>
-                <option value="finished"><s:text name="swingcardsummary.swingfinished"/></option>
-                <option value="unfinished"><s:text name="swingcardsummary.swingunfinished"/></option>
-            </select></td>
-            <td><a href="javascript:void(0);" class="btn btn-primary  radius size-S " onclick="dosearch();">  <s:text name="global.search"/></a>
-            </td></tr></table></form></div></div>
+        <div class="panel-header">
+            <form id="searchform">
+                <table id="searchtb" style="width: 80%">
+                    <tr>
+                        <td><input type="text" name="thedate" placeholder="<s:text name="swingcardsummary.thedate"/>" class="input-text radius size-s"></td>
+                        <td><input type="text" name="cardno" placeholder="<s:text name="swingcardsummary.cardno"/>" class="input-text radius size-s"></td>
+                        <td><input type="text" name="bankname" placeholder="<s:text name="cardmanager.bankname"/>" class="input-text radius size-s"></td>
+                        <td><input type="text" name="cardmaster" placeholder="<s:text name="swingcardsummary.cardmaster"/>" class="input-text radius size-s"></td>
+                        <td><select name="SWINGSTATUS" placeholder="<s:text name="swingcardsummary.status"/>">
+                            <option value=""></option>
+                            <option value="finished"><s:text name="swingcardsummary.swingfinished"/></option>
+                            <option value="unfinished"><s:text name="swingcardsummary.swingunfinished"/></option>
+                        </select></td>
+                        <td>
+                            <a href="javascript:void(0);" class="btn btn-primary  radius size-S " onclick="dosearch();">  <s:text name="global.search"/></a>
+                        </td>
+                        <td>
+                            <a href="javascript:void(0);" class="btn btn-primary  radius size-S " onclick="swingcardDirectly();">  <s:text name="global.swingcarddirectly"/></a>
+                        </td>
+                </tr>
+            </table>
+        </form></div></div>
     <div id="navigatediv"></div>
         <div class="panel-body" id="parentIframe">
             <form>
@@ -146,6 +156,15 @@
                 })
             }
         })
+    }
+
+    function swingcardDirectly(){
+        layer.open({
+            type: 2,
+            title: "直接刷卡",area: ['310px', '200px'],
+            fix: false,
+            content: "./cardmanager/swingcarddirectly.jsp"
+        });
     }
 </script>
 </body>

@@ -2,8 +2,10 @@ package com.posmanagement.action;
 
 import com.posmanagement.utils.PosDbManager;
 import com.posmanagement.utils.UUIDUtils;
+import com.posmanagement.utils.UserUtils;
 import com.posmanagement.webui.AssetUI;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -11,11 +13,21 @@ import java.util.regex.Pattern;
 
 public class AssetAction extends AjaxActionSupport {
     public final static String ASSETMANAGER = "assetManager";
+    public final static String ASSETHEDGE = "assetHedge";
 
     private String assetList;
+    private String assetUUID;
 
     public String getAssetList() {
         return assetList;
+    }
+
+    public String getAssetUUID() {
+        return assetUUID;
+    }
+
+    public void setAssetUUID(String _assetUUID) {
+        assetUUID = _assetUUID;
     }
 
     public String Init() throws Exception {
@@ -49,6 +61,48 @@ public class AssetAction extends AjaxActionSupport {
             map.put("errorMessage", getText("AssetAction.InfoError"));
         }
 
+        return AjaxActionComplete(map);
+    }
+
+    public String HedgeAsset() {
+        return ASSETHEDGE;
+    }
+
+    public String hedgeAsset() {
+        Map map = new HashMap();
+        try {
+            Double hedgeMoney = Double.parseDouble(getParameter("hedgeMoney").toString());
+            Map parametMap = new HashMap();
+            parametMap.put(1, hedgeMoney);
+            parametMap.put(2, getParameter("assetUUID"));
+            PosDbManager.executeUpdate("update assettb set balance=balance+? where uuid=?", (HashMap<Integer, Object>)parametMap);
+            String salemanUUID = super.getUserID();
+            if (!UserUtils.issaleman(salemanUUID)) {
+                parametMap.clear();
+                parametMap.put(1, salemanUUID);
+                ArrayList<HashMap<String, Object>> salemanRet = PosDbManager.executeSql("select salemanuuid from tellertb where uid=?", (HashMap<Integer, Object>)parametMap);
+                if (salemanRet.size() > 0) {
+                    salemanUUID = salemanRet.get(0).get("SALEMANUUID").toString();
+                }
+            }
+            parametMap.clear();
+            parametMap.clear();
+            parametMap.put(1, getParameter("assetUUID"));
+            ArrayList<HashMap<String, Object>> assetRet = PosDbManager.executeSql("select * from assettb where uuid=?", (HashMap<Integer, Object>)parametMap);
+            double balance = Double.parseDouble(assetRet.get(0).get("BALANCE").toString());
+            String cardno = assetRet.get(0).get("CARDNO").toString();
+            parametMap.put(1, hedgeMoney);
+            parametMap.put(2, balance);
+            parametMap.put(3, cardno);
+            parametMap.put(4, salemanUUID);
+            PosDbManager.executeUpdate("insert into assetflowtb(time, type, amount, balance, remark, salemanuuid)\n" +
+                            "VALUES(NOW(), '资产对冲',?, ?, CONCAT(?,'对冲'), ?);\n"
+                    , (HashMap<Integer, Object>)parametMap);
+            map.put("assetList", new AssetUI(getUserID()).generateAssetTable());
+        }
+        catch (Exception exception) {
+            map.put("errorMessage", exception.getMessage());
+        }
         return AjaxActionComplete(map);
     }
 }

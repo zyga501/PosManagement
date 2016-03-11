@@ -134,7 +134,7 @@ public class SwingCardAction extends AjaxActionSupport {
                     parameterMap.put(1, getParameter("swingId"));
                     ArrayList<HashMap<String, Object>> swingRet = PosDbManager.executeSql("SELECT amount, charge, postb.posname from swingcard LEFT JOIN postb on swingcard.posuuid = postb.uuid where id=?", (HashMap<Integer, Object>)parameterMap);
                     parameterMap.clear();
-                    parameterMap.put(1, super.getUserID());
+                    parameterMap.put(1, salemanUUID);
                     assetRet = PosDbManager.executeSql("SELECT balance from assettb where salemanuuid=?", (HashMap<Integer, Object>)parameterMap);
                     if (swingRet.size() > 0 && assetRet.size() > 0) {
                         double swingAmount = Double.parseDouble(swingRet.get(0).get("AMOUNT").toString());
@@ -189,6 +189,51 @@ public class SwingCardAction extends AjaxActionSupport {
         int curr = Integer.parseInt(null==getParameter("currpage")?"1":getParameter("currpage").toString());
         map.put("swingCardSummary",swingCardUI.generateSummary(curr));
 
+        return AjaxActionComplete(map);
+    }
+
+    public String SwingCardDirectly() {
+        Map map = new HashMap();
+        try {
+            Double swingMoney = Double.parseDouble(getParameter("swingMoney").toString());
+            if (swingMoney < 0) {
+                throw new IllegalArgumentException();
+            }
+            Map parametMap = new HashMap();
+            String salemanUUID = super.getUserID();
+            if (!UserUtils.issaleman(salemanUUID)) {
+                parametMap.clear();
+                parametMap.put(1, salemanUUID);
+                ArrayList<HashMap<String, Object>> salemanRet = PosDbManager.executeSql("select salemanuuid from tellertb where uid=?", (HashMap<Integer, Object>)parametMap);
+                if (salemanRet.size() > 0) {
+                    salemanUUID = salemanRet.get(0).get("SALEMANUUID").toString();
+                }
+            }
+            parametMap.clear();
+            parametMap.put(1, swingMoney);
+            parametMap.put(2, getParameter("posUUID"));
+            parametMap.put(3, salemanUUID);
+            PosDbManager.executeUpdate("insert into swingcard(amount,realsdatetm,posuuid,userid,swingstatus) " +
+                            "values(?,NOW(),?,?,'enable')",
+                    (HashMap<Integer, Object>)parametMap);
+            parametMap.clear();
+            parametMap.put(1, swingMoney);
+            parametMap.put(2, salemanUUID);
+            PosDbManager.executeUpdate("update assettb set balance=balance-? where uuid=?", (HashMap<Integer, Object>)parametMap);
+            parametMap.clear();
+            parametMap.put(1, salemanUUID);
+            ArrayList<HashMap<String, Object>> assetRet = PosDbManager.executeSql("SELECT balance from assettb where salemanuuid=?", (HashMap<Integer, Object>)parametMap);
+            double balance = Double.parseDouble(assetRet.get(0).get("BALANCE").toString());
+            parametMap.put(1, swingMoney);
+            parametMap.put(2, balance);
+            parametMap.put(3, salemanUUID);
+            PosDbManager.executeUpdate("insert into assetflowtb(time, type, amount, balance, remark, salemanuuid)\n" +
+                            "VALUES(NOW(), '结算到账',?, ?, '直接刷卡', ?);\n"
+                    , (HashMap<Integer, Object>)parametMap);
+        }
+        catch (Exception exception) {
+            map.put("errorMessage", exception.getMessage());
+        }
         return AjaxActionComplete(map);
     }
 }

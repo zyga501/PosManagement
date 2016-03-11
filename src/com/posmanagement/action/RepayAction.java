@@ -147,7 +147,7 @@ public class RepayAction extends AjaxActionSupport {
                     parameterMap.put(1, getParameter("repayId"));
                     ArrayList<HashMap<String, Object>> repayRet = PosDbManager.executeSql("SELECT trademoney, cardno, charge from repaytb where id=?", (HashMap<Integer, Object>)parameterMap);
                     parameterMap.clear();
-                    parameterMap.put(1, super.getUserID());
+                    parameterMap.put(1, salemanUUID);
                     assetRet = PosDbManager.executeSql("SELECT balance from assettb where salemanuuid=?", (HashMap<Integer, Object>)parameterMap);
                     if (repayRet.size() > 0 && assetRet.size() > 0) {
                         double repayAmount = -Double.parseDouble(repayRet.get(0).get("TRADEMONEY").toString());

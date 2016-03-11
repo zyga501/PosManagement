@@ -15,21 +15,37 @@
     <title><s:text name="assetmanager.title" /></title>
     <script type="text/javascript">
         function addAsset(){
-            var index = layer.open({
+            layer.open({
                 type: 2,
                 title: "添加资产",area: ['310px', '500px'],
                 fix: false,
                 content: "./cardmanager/addasset.jsp"
-            });}
+            });
+        }
         function refreshAssetList(assetList) {
             $('#assetList').html(assetList);
+        }
+        function hedgeAsset(uuid) {
+            layer.open({
+                type: 2,
+                title: "对冲资产",area: ['310px', '170px'],
+                fix: false,
+                content: "Asset!HedgeAsset?assetUUID=" + uuid
+            });
         }
     </script>
 </head>
 <body>
 <div align="center">
     <div class="panel panel-default"  >
-        <div class="panel-header"><s:text name="assetmanager.paneltitle" /><span style="float:right;" ><a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addAsset()"><s:text name="assetmanager.add" /></a></span></div>
+        <div class="panel-header">
+            <s:text name="assetmanager.paneltitle" />
+            <span style="float:right;" >
+                <a href="javascript:void(0);" class="btn btn-primary radius size-S " onclick="addAsset()">
+                    <s:text name="assetmanager.add" />
+                </a>
+            </span>
+        </div>
         <div class="panel-body" id="parentIframe">
             <form>
                 <div style="height:80%; overflow:auto;">
@@ -44,6 +60,7 @@
                             <th><s:text name="assetmanager.cashpwd" /></th>
                             <th><s:text name="assetmanager.transferpwd" /></th>
                             <th><s:text name="assetmanager.atmcashpwd" /></th>
+                            <th><s:text name="global.operation"/></th>
                         </tr>
                         </thead>
                         <tbody id="assetList">

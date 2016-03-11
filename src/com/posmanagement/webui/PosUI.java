@@ -29,7 +29,6 @@ public class PosUI extends WebUI {
         return uiContainer.generateUI();
     }
 
-
     public String generateTable(String wherestr) throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchPosList(wherestr);
         if (dbRet.size() <= 0)
@@ -54,14 +53,6 @@ public class PosUI extends WebUI {
                     );
         }
         return htmlString;
-    }
-
-    public String generatePosList(String posuuid) throws Exception {
-        ArrayList<HashMap<String, Object>> dbRet =  PosDbManager.executeSql("select posname from postb where uuid='"+posuuid+"'");
-        if (dbRet.size() > 0)
-            return dbRet.get(0).get("POSNAME").toString();
-        else
-            return "Not exists this POS!";
     }
 
     private ArrayList<HashMap<String, Object>> fetchPosList(String wherestr) throws Exception {
@@ -108,5 +99,5 @@ public class PosUI extends WebUI {
                 " where POSTB.salemanuuid= '"+userID_+"'"+ wherestr.replaceAll("where","").replaceAll("1=1",""));
 
     }
-    private String userID_; // TODO for role
+    private String userID_;
 }

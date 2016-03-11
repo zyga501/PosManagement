@@ -25,7 +25,7 @@ public class NucleonEventProcessor extends HttpServlet {
     private void start() {
         Calendar date = Calendar.getInstance();
         date.set(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DATE), 0, 0, 0);
-        long daySpan = 10 * 1000;
+        long daySpan = 24 * 60 * 60 * 1000;
         Timer t = new Timer();
         t.schedule(new TimerTask() {
             public void run() {

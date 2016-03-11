@@ -1,3 +1,5 @@
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.util.Date" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="s" uri="/struts-tags"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -20,6 +22,7 @@
             padding:7px 10px;background-color:#eee;cursor:pointer;padding-right:30px}
         .Huifold .item h4 b{position:absolute;display:block;cursor:pointer;right:10px;top:7px;width:16px;height:16px;text-align:center;color:#666}
         .Huifold .item .info{display:none;padding:10px}
+        .Huifold i{color: forestgreen;}
         fn {
             color: #ab1e1e;
         }
@@ -29,6 +32,7 @@
         repay {
             color: #00cc00;
         }
+        .table td{padding:2px}
         u {
             color: #0000FF;
         }
@@ -38,9 +42,65 @@
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.js"></script>
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.admin.js"></script>
     <script type="text/javascript" >
-        $(function(){
-            $.Huifold("#Huifold1 .item h4","#Huifold1 .item .info","fast",2,"click");
-        });
+        function bindexp(){
+            $("#Huifold1 .item").append("<div class='info' id='info'>"+
+                    "<table class='table table-border table-bordered table-bg table-hover table-sort'>"+
+                    "<thead>"+
+                    "<tr class='text-c' >"+
+                    "<th style='width: 50px;font-size: 180%;font-weight: bolder;color: #00CC00'><repay>还</repay></th>"+
+                    "<th><s:text name='repaydetail.amount'/></th>"+
+                    "<th><s:text name='repaysummary.charge'/></th>"+
+                    "<th><s:text name='repaydetail.sdatetm'/></th>"+
+                    "<th><s:text name='global.operation'/></th>"+
+                    "</tr>"+
+                    "</thead>"+
+                    "<tbody id='repaydetail'>"+
+                    "</tbody>"+
+                    "</table> "+
+                    "<table class='table table-border table-bordered table-bg table-hover table-sort'>"+
+                    "<thead>"+
+                    "<tr class='text-c'>"+
+                    "<th style='width: 50px;font-size: 180%;font-weight: bolder;color: #ab1e1e'><swing>刷</swing></th>"+
+                    "<th><s:text name="swingcarddetail.amount"/></th>"+
+                    "<th><s:text name="statistics.paymoney"/></th>"+
+                    "<th ><s:text name="swingcarddetail.machinename"/></th>"+
+                    "<th><s:text name="swingcarddetail.sdatetm"/></th>"+
+                    "<th><s:text name="global.operation"/></th>"+
+                    "</tr>"+
+                    "</thead>"+
+                    "<tbody id='swingdetail'>"+
+                    "</tbody>"+
+                    "</table> "+
+                    "</div>")
+            $.Huifold("#Huifold1 .item h4","#Huifold1 .item .info","fast",1,"click");
+        };
+
+        function expandbill(obj,v){
+            //var _text = $(obj).children(".info").children("table tbody").html();
+            //if (null==_text || _text==""||_text==undefined)
+            {
+                $.ajax({
+                    type: 'post',
+                    url: 'Bill!FetchbillDetail',
+                    dataType: "json",
+                    data: {billuuid:v,startdate:_sdate,enddate:_edate,status:_status},
+                    success: function (data) {
+                        var json = eval("(" + data + ")");
+                        if (json.errorMessage != null) {
+                            layer.msg(json.errorMessage);
+                        }
+                        else if (json.removeitem != null){
+                            $(obj).remove();
+                        }
+                        else{
+                            _billuuid = v;
+                            $(obj).find("#repaydetail").html(json.repaydetail);
+                            $(obj).find("#swingdetail").html(json.swingdetail);
+                        }
+                    }
+                });
+            }
+        }
     </script>
 </head>
 <body >
@@ -81,97 +141,49 @@
             </td>
             <td><input type="text" name="cardno" placeholder="<s:text name="swingcardsummary.cardno"/>" class="input-text radius size-s"></td>
             <td><input type="text" name="cardmaster" placeholder="<s:text name="swingcardsummary.cardmaster"/>" class="input-text radius size-s"></td>
-            <td><select name="SWINGSTATUS" placeholder="<s:text name="swingcardsummary.status"/>" class="input-text radius size-s">
-                <option value="" ><s:text name="global.alldata"/></option>
+            <td><select name="status" id="status" placeholder="<s:text name="swingcardsummary.status"/>" class="input-text radius size-s">
+                <option value="all"><s:text name="global.alldata"/></option>
                 <option value="finished"><s:text name="swingcardsummary.swingfinished"/></option>
-                <option value="unfinished"><s:text name="swingcardsummary.swingunfinished"/></option>
+                <option value="unfinished" selected><s:text name="swingcardsummary.swingunfinished"/></option>
             </select></td>
             <td><a href="javascript:void(0);" class="btn btn-primary  radius size-S " onclick="dosearch();">  <s:text name="global.search"/></a>
             </td></tr></table></form></div></div>
     <div id="navigatediv"></div>
 <ul id="Huifold1" class="Huifold">
-    <li class="item">
-        <h4><i class="icon Hui-iconfont" style="color: forestgreen;">&#xe6bf;</i><fn>林晓燕1</fn> 民生银行 69595959494939022 <repay>还</repay>￥<u>9961.15</u> <swing>刷</swing>￥<u>9214.56</u> 2016-03-08<b>+</b></h4>
-        <div class="info">
-            <div style="height:auto; overflow:auto;">
-            <table class="table table-border table-bordered table-bg table-hover table-sort">
-                <thead>
-                <tr class="text-c">
-                    <th style="width: 50px;font-size: 180%;font-weight: bolder;color: #00CC00"><repay>还</repay></th>
-                    <th><s:text name="repaydetail.amount"/></th>
-                    <th><s:text name="repaysummary.charge"/></th>
-                    <th><s:text name="repaydetail.sdatetm"/></th>
-                    <th><s:text name="global.operation"/></th>
-                </tr>
-                </thead>
-                <tbody id="repayDetail">
-                <s:property value="repayDetail" escape="false"/>
-                </tbody>
-            </table>
-        </div>
-            <div style="height:auto; overflow:auto;">
-                <table class="table table-border table-bordered table-bg table-hover table-sort">
-                    <thead>
-                    <tr class="text-c">
-                        <th style="width: 50px;font-size: 180%;font-weight: bolder;color: #ab1e1e"><swing>刷</swing></th>
-                        <th><s:text name="swingcarddetail.amount"/></th>
-                        <th><s:text name="statistics.paymoney"/></th>
-                        <th ><s:text name="swingcarddetail.machinename"/></th>
-                        <th><s:text name="swingcarddetail.sdatetm"/></th>
-                        <th><s:text name="global.operation"/></th>
-                    </tr>
-                    </thead>
-                    <tbody id="swingCardDetail">
-                    <s:property value="swingCardDetail" escape="false"/>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </li>
-    <li class="item">
-        <h4><i class="icon Hui-iconfont" style="color: forestgreen;">&#xe6bf;</i><fn>林晓燕1</fn> 民生银行 69595959494939022 <repay>还</repay>￥<u>9961.15</u> <swing>刷</swing>￥<u>9214.56</u> 2016-03-08<b>+</b></h4>
-        <div class="info"><table class="table table-border table-bordered table-bg table-hover table-sort">
-            <thead>
-            <tr class="text-c">
-                <th style="width: 50px;font-size: 180%;font-weight: bolder;color: #00CC00"><repay>还</repay></th>
-                <th><s:text name="billmanager.bankname" /></th>
-                <th><s:text name="billmanager.bankname" /></th>
-                <th><s:text name="billmanager.bankname" /></th>
-                <th><s:text name="billmanager.bankname" /></th>
-            </tr></thead>
-            <tbody><tr><td>1</td><td>代表银行</td><td>1123123123123123</td><td>1985.65</td><td>2016-03-26 15：32：42</td></tr>
-            <tr><td>2</td><td>代表银行</td><td>1123123123123123</td><td>1985.65</td><td>2016-03-26 15：32：42</td></tr></tbody>
-        </table>
-            <table class="table table-border table-bordered table-bg table-hover table-sort">
-            <thead>
-            <tr class="text-c">
-                <th style="width: 50px;font-size: 180%;font-weight: bolder;color: #ab1e1e"><swing>刷</swing></th>
-                <th><s:text name="billmanager.bankname" /></th>
-                <th><s:text name="billmanager.bankname" /></th>
-                <th><s:text name="billmanager.bankname" /></th>
-                <th><s:text name="billmanager.bankname" /></th>
-            </tr></thead>
-            <tbody><tr><td>1</td><td>代表银行</td><td>1123123123123123</td><td>1985.65</td><td>2016-03-26 15：32：42</td></tr>
-            <tr><td>2</td><td>代表银行</td><td>1123123123123123</td><td>1985.65</td><td>2016-03-26 15：32：42</td></tr></tbody>
-        </table></div>
-    </li>
 </ul>
 <script src="<%=request.getContextPath()%>/js/laypage/laypage.js"></script>
 <script>
+    var _sdate;
+    var _edate;
+    var _status;
+    var _billuuid;
+    $().ready(function(){
+        <%
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String date= format.format(new Date());
+        %>
+        $("#sdate").val("<%=date%>");
+        $("#edate").val("<%=date%>");
+        dosearch();
+    });
+
     function dosearch() {
         $.ajax({
             type: 'post',
-            url: 'Bill!FetchbillDetail',
+            url: 'Bill!FetchbillDetailList',
             dataType:"json",
             data:$("#searchform").serialize(),
             success: function (data) {
+                _sdate = $("#sdate").val();
+                _edate = $("#edate").val();
+                _status = $("#status").val();
                 var json = eval("(" + data + ")");
                 if (json.errorMessage != null) {
                     layer.msg(json.errorMessage);
                 }
                 else {
-                    setval(json.assetGeneral);
-                    $('#msgstring').html(json.msgstring);
+                    $('#Huifold1').html(json.htmlstring);
+                    bindexp();
                 }
                 laypage({
                     cont: 'navigatediv',
@@ -181,7 +193,7 @@
                     jump: function (obj) {
                         $.ajax({
                             type: 'post',
-                            url: 'Bill!FetchbillDetail?currpage='+obj.curr,
+                            url: 'Bill!FetchbillDetailList?currpage='+obj.curr,
                             dataType:"json",
                             data:$("#searchform").serialize(),
                             success: function (data) {
@@ -190,7 +202,8 @@
                                     layer.msg(json.errorMessage);
                                 }
                                 else {
-                                    setval(json.assetGeneral);
+                                    $('#Huifold1').html(json.htmlstring);
+                                    bindexp();
                                 }
                             }
                         })
@@ -199,6 +212,58 @@
             }
         })
     }
+
+    function clickSwingDetail(obj, swingid) {
+        var _obj = $(obj).parent().parent().parent().parent().parent().parent();
+        var val = obj.value;
+        if (val == "N") {
+            layer.confirm('确定启用？', {
+                btn: ['是','否'] //按钮
+            }, function () {
+                $.ajax({
+                    type: 'post',
+                    url: 'SwingCard!EditDetail',
+                    data: {status:"enable" , swingId:swingid, billUUID:_billuuid},
+                    success: function (data) {
+                        var json = eval("(" + data + ")");
+                        if (json.successMessage) {
+                            layer.msg(json.successMessage);
+                            expandbill(_obj,_billuuid);
+                        }
+                        else if (json.errorMessage)
+                            layer.msg(json.errorMessage);
+                    }
+                });
+            }, function () {
+            });
+        }
+    }
+
+    function clickRepayDetail(obj, repayid) {
+        var val = obj.value;
+        if (val == "N") {
+            layer.confirm('确定启用？', {
+                btn: ['是','否'] //按钮
+            }, function () {
+                $.ajax({
+                    type: 'post',
+                    url: 'Repay!EditDetail',
+                    data: {status:"enable" , repayId:repayid, billUUID:_billuuid},
+                    success: function (data) {
+                        var json = eval("(" + data + ")");
+                        if (json.successMessage) {
+                            layer.msg(json.successMessage);
+                            expandbill($(obj).parent().parent().parent().parent().parent().parent(),_billuuid);
+                        }
+                        else if (json.errorMessage)
+                            layer.msg(json.errorMessage);
+                    }
+                });
+            }, function () {
+            });
+        }
+    }
+
 </script>
 </body>
 </html>

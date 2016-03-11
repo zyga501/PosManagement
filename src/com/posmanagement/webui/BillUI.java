@@ -9,6 +9,8 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class BillUI extends WebUI {
     public BillUI(String userID) {
@@ -78,6 +80,35 @@ public class BillUI extends WebUI {
         }
         return htmlString;
     }
+
+    public String generateBillDetailList(int pageIndex) throws Exception {
+        ArrayList<HashMap<String, Object>> dbRet = fetchBillDetailList(pageIndex);
+        if (dbRet.size() <= 0)
+            return new String("");
+
+        String htmlString = "";
+        for (int index = 0; index < dbRet.size(); ++index) {
+            if (!(StringUtils.convertNullableString(dbRet.get(index).get("TRADEAMOUNT"),"0").equals("0")&&
+                StringUtils.convertNullableString(dbRet.get(index).get("AMOUNT"),"0").equals("0")))
+            htmlString += new UIContainer("li")
+                    .addAttribute("class", "item")
+                    .addAttribute("onclick","expandbill(this,'"+dbRet.get(index).get("BILLUUID")+"')")
+                    .addElement(new UIContainer("h4")
+                    .addElement(new UIContainer("i","&#xe6bf;")
+                            .addAttribute("class","icon Hui-iconfont"))
+                    .addElement(new UIContainer("fn",dbRet.get(index).get("CARDMASTER").toString()))
+                    .addElement(new UIContainer("span","&nbsp;&nbsp;&nbsp;&nbsp;"))
+                    .addElement(new UIContainer("card",dbRet.get(index).get("BANKNAME").toString()+" "+dbRet.get(index).get("CARDNO").toString()))
+                    .addElement(new UIContainer("span","&nbsp;&nbsp;&nbsp;&nbsp;"))
+                    .addElement(new UIContainer("repay","还"))
+                    .addElement(new UIContainer("u",StringUtils.convertNullableString(dbRet.get(index).get("TRADEAMOUNT"),"0")))
+                    .addElement(new UIContainer("swing","刷"))
+                    .addElement(new UIContainer("u",StringUtils.convertNullableString(dbRet.get(index).get("AMOUNT"),"0")))
+                    .addElement(new UIContainer("b","+")));
+        }
+        return htmlString;
+    }
+
 
     public String generateSwingRepay(int pageIndex) throws Exception {
             ArrayList<HashMap<String, Object>> dbRet = fetchSwingRepaySummary(pageIndex);
@@ -178,6 +209,65 @@ public class BillUI extends WebUI {
         return (Integer.parseInt(resultMap.get(0).get("CNT").toString())+WebUI.DEFAULTITEMPERPAGE-1)/ WebUI.DEFAULTITEMPERPAGE ;
     }
 
+    public int fetchBillDetailPageCount() throws Exception {
+        String whereSql = SQLUtils.BuildWhereCondition(uiConditions_);
+        if (whereSql.isEmpty()) {
+            whereSql+= "  where 1=1   " ;
+        }
+        else
+            whereSql=" where 1=1 and " +whereSql;
+        if (!UserUtils.isAdmin(userID_)) {
+            whereSql += "and billtb.salemanuuid='"+userID_+"'";
+        }
+
+        ArrayList<HashMap<String, Object>> resultMap =  PosDbManager.executeSql("SELECT count( distinct billtb.uuid) CNT\n" +
+                "FROM\n" +
+                "billtb\n" +
+                "INNER JOIN banktb ON banktb.uuid = billtb.bankuuid\n" +
+                "INNER JOIN swingcard ON swingcard.billuuid = billtb.uuid\n" +
+                "INNER JOIN repaytb ON repaytb.billuuid = billtb.uuid\n" +
+                "LEFT JOIN cardtb ON cardtb.cardno = billtb.cardno\n" +
+                whereSql +
+                " ORDER BY\n" +
+                " billtb.billdate DESC ");
+        if (resultMap.size()<=0) {
+            return 0;
+        }
+        return (Integer.parseInt(resultMap.get(0).get("CNT").toString())+WebUI.DEFAULTITEMPERPAGE-1)/ WebUI.DEFAULTITEMPERPAGE ;
+    }
+
+
+    public String wheresql1="";
+    public String wheresql2="";
+    private ArrayList<HashMap<String, Object>> fetchBillDetailList(int pageIndex) throws Exception {
+        String whereSql =SQLUtils.BuildWhereCondition(uiConditions_);
+        if (whereSql.isEmpty()) {
+            whereSql = "  where 1=1   " ;
+        }
+        else
+            whereSql = " where 1=1 and "+whereSql ;
+        String limitSql ="limit " + (pageIndex - 1) * DEFAULTITEMPERPAGE + "," + DEFAULTITEMPERPAGE;
+
+        if (!UserUtils.isAdmin(userID_))
+            whereSql += "  and (cardtb.salemanuuid in (select a.uid from salemantb a  where a.uid='"+userID_+"' )" +
+                    " or cardtb.salemanuuid in(select salemanuuid from tellertb   where uid='"+userID_+"')) ";
+
+        return PosDbManager.executeSql("SELECT \n" +
+                "billtb.cardno, \n" +
+                "banktb.name bankname, \n" +
+                "billtb.uuid billuuid, \n" +
+                "(select Sum(swingcard.amount) from swingcard WHERE swingcard.billuuid=billtb.uuid "+wheresql1+")AS amount,\n"+
+                "cardtb.cardmaster,\n"+
+                "(select Sum(repaytb.trademoney) from repaytb WHERE repaytb.billuuid=billtb.uuid "+wheresql2+") AS tradeamount \n"+
+                "FROM \n" +
+                "cardtb  \n" +
+                "INNER JOIN billtb ON   cardtb.cardno = billtb.cardno \n" +
+                "INNER JOIN banktb ON   banktb.uuid = cardtb.bankuuid \n" +
+                whereSql +
+                "GROUP BY billtb.billdate, billtb.cardno \n"
+                + limitSql);
+    }
+
     public int fetchSwingRepayPageCount() throws Exception {
         String whereSql = SQLUtils.BuildWhereCondition(uiConditions_);
         if (whereSql.isEmpty()) {
@@ -261,5 +351,79 @@ public class BillUI extends WebUI {
                 + limitSql);
     }
 
+    public String generateBillRepayDetail(String billuuid,String startdate,String enddate,String status) throws Exception {
+        Map para = new HashMap();
+        ArrayList<HashMap<String, Object>> dbRet ;
+        int i = 1;
+        para.put(i++,billuuid);
+        if ((startdate.equals("")||enddate.equals("")))
+            dbRet = PosDbManager.executeSql("SELECT trademoney,cardtb.commissioncharge * repaytb.trademoney/100 as charge," +
+                    " thedate,tradestatus,id from repaytb,cardtb  where repaytb.cardno=cardtb.cardno and"+
+                     " billuuid=? "+status,(HashMap<Integer, Object>) para);
+        else {
+            para.put(i++,startdate);
+            para.put(i++,enddate+" 23:59:59");
+            dbRet = PosDbManager.executeSql("SELECT trademoney,cardtb.commissioncharge * repaytb.trademoney/100 as charge," +
+                    " thedate,tradestatus,id from repaytb,cardtb  where repaytb.cardno=cardtb.cardno and  billuuid=? " +
+                    "and thedate between ? and ?"+status, (HashMap<Integer, Object>) para);
+        }
+        if (dbRet.size() <= 0)
+            return new String("");
+        String htmlString = "";
+        for (int index = 0; index < dbRet.size(); ++index) {
+            htmlString += new UIContainer("tr")
+                    .addAttribute("class", "text-c odd")
+                    .addAttribute("role", "row")
+                    .addElement("td", String.valueOf(index+1))
+                    .addElement("td", dbRet.get(index).get("TRADEMONEY").toString())
+                    .addElement("td", StringUtils.formatMoney(dbRet.get(index).get("CHARGE").toString()))
+                    .addElement("td", StringUtils.formatMoney(dbRet.get(index).get("THEDATE").toString()))
+                    .addElement(new UIContainer("td").addElement(new UIContainer("input")
+                            .addAttribute("class", StringUtils.convertNullableString(dbRet.get(index).get("TRADESTATUS")).equals("enable")?"btn btn-success radius size-MINI":"btn btn-danger radius size-MINI")
+                            .addAttribute("type","button")
+                            .addAttribute("title",  StringUtils.convertNullableString(dbRet.get(index).get("TRADESTATUS")).equals("enable")?"已开启":"未开启")
+                            .addAttribute("datav", StringUtils.convertNullableString(dbRet.get(index).get("UUID")))
+                            .addAttribute("value",  StringUtils.convertNullableString(dbRet.get(index).get("TRADESTATUS")).equals("enable")?"Y":"N")
+                            .addAttribute("onclick", "clickRepayDetail(this,'" + StringUtils.convertNullableString(dbRet.get(index).get("ID")) + "')")));
+        }
+        return htmlString;
+    }
+
+    public String generateBillSwingDetail(String billuuid,String startdate,String enddate,String status) throws Exception {
+        Map para = new HashMap();
+        ArrayList<HashMap<String, Object>> dbRet ;
+        int i =1;
+        para.put(i++,billuuid);
+        if ((startdate.equals("")||enddate.equals("")))
+            dbRet = PosDbManager.executeSql("SELECT amount,swingcard.amount * rate * 0.01 as charge, sdatetm,posname,swingstatus,id from swingcard" +
+                    ",postb,ratetb where ratetb.uuid=postb.rateuuid and postb.uuid=swingcard.posuuid  and  billuuid=? "+status,(HashMap<Integer, Object>) para);
+        else {
+            para.put(i++, startdate);
+            para.put(i++, enddate+" 23:59:59");
+            dbRet = PosDbManager.executeSql("SELECT  amount,swingcard.amount * rate * 0.01 as charge, sdatetm,posname,swingstatus,id from swingcard " +
+                    " ,postb,ratetb where ratetb.uuid=postb.rateuuid and postb.uuid=swingcard.posuuid  and billuuid=? and sdatetm between ? and ?"+status, (HashMap<Integer, Object>) para);
+        }
+            if (dbRet.size() <= 0)
+            return new String("");
+        String htmlString = "";
+        for (int index = 0; index < dbRet.size(); ++index) {
+            htmlString += new UIContainer("tr")
+                    .addAttribute("class", "text-c odd")
+                    .addAttribute("role", "row")
+                    .addElement("td", String.valueOf(index+1))
+                    .addElement("td", dbRet.get(index).get("AMOUNT").toString())
+                    .addElement("td", StringUtils.formatMoney(dbRet.get(index).get("CHARGE").toString()))
+                    .addElement("td", StringUtils.formatMoney(dbRet.get(index).get("SDATETM").toString()))
+                    .addElement("td", StringUtils.formatMoney(dbRet.get(index).get("POSNAME").toString()))
+                    .addElement(new UIContainer("td").addElement(new UIContainer("input")
+                            .addAttribute("class", StringUtils.convertNullableString(dbRet.get(index).get("SWINGSTATUS")).equals("enable")?"btn btn-success radius size-MINI":"btn btn-danger radius size-MINI")
+                            .addAttribute("type","button")
+                            .addAttribute("title",  StringUtils.convertNullableString(dbRet.get(index).get("SWINGSTATUS")).equals("enable")?"已开启":"未开启")
+                            .addAttribute("datav", StringUtils.convertNullableString(dbRet.get(index).get("UUID")))
+                            .addAttribute("value",  StringUtils.convertNullableString(dbRet.get(index).get("SWINGSTATUS")).equals("enable")?"Y":"N")
+                            .addAttribute("onclick", "clickSwingDetail(this,'" + StringUtils.convertNullableString(dbRet.get(index).get("ID")) + "')")));
+        }
+        return htmlString;
+    }
     private String userID_;
 }

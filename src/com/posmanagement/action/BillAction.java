@@ -323,4 +323,71 @@ public class BillAction extends AjaxActionSupport {
         }
        return AjaxActionComplete(map);
     }
+
+    public String billDetailInit(){
+        try {
+            getRequest().setAttribute("pagecount", (new BillUI(super.getUserID()).fetchBillDetailPageCount()+WebUI.DEFAULTITEMPERPAGE-1)/WebUI.DEFAULTITEMPERPAGE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return SWINGREPAYPAGE;
+    }
+
+    public String FetchbillDetailList(){
+        ArrayList<SQLUtils.WhereCondition> uiConditions = new ArrayList<SQLUtils.WhereCondition>() {
+            {
+                if (!StringUtils.convertNullableString(getParameter("cardno")).trim().isEmpty())
+                add(new SQLUtils.WhereCondition("cardtb.cardno", "like",
+                        SQLUtils.ConvertToSqlString("%" + getParameter("cardno") + "%"), !StringUtils.convertNullableString(getParameter("cardno")).trim().isEmpty()));
+                if (!StringUtils.convertNullableString(getParameter("cardmaster")).trim().isEmpty())
+                add(new SQLUtils.WhereCondition("cardmaster", "like",
+                        SQLUtils.ConvertToSqlString("%" + getParameter("cardmaster") + "%"), !StringUtils.convertNullableString(getParameter("cardmaster")).trim().isEmpty()));
+
+            }
+        };
+        Map map = new HashMap();
+        BillUI billUI = new BillUI(super.getUserID());
+        billUI.setUiConditions(uiConditions);
+        try {   if (!StringUtils.convertNullableString(getParameter("sdate")).trim().isEmpty()){
+            billUI.wheresql1 += " and swingcard.sdatetm between '"+
+                    getParameter("sdate").toString()+"' and '"+
+                    getParameter("edate").toString()+" 23:59:59'"+
+                    (StringUtils.convertNullableString(getParameter("status")).equals("finished")?" and swingstatus='enable'":
+                    (StringUtils.convertNullableString(getParameter("status")).equals("unfinished")?" and ifnull(swingstatus,'')<>'enable'":"")) ;
+
+            billUI.wheresql2 += " and repaytb.thedate between '"+
+                    getParameter("sdate").toString()+"' and '"+
+                    getParameter("edate").toString()+" 23:59:59'"+
+                    (StringUtils.convertNullableString(getParameter("status")).equals("finished")?" and tradestatus='enable'":
+                    (StringUtils.convertNullableString(getParameter("status")).equals("unfinished")?" and ifnull(tradestatus,'')<>'enable'":""));}
+            map.put("pagecount",(new BillUI(super.getUserID()).fetchBillDetailPageCount()+WebUI.DEFAULTITEMPERPAGE-1)/WebUI.DEFAULTITEMPERPAGE);
+            int curr = Integer.parseInt(null==getParameter("currpage")?"1":getParameter("currpage").toString());
+            map.put("htmlstring",billUI.generateBillDetailList(curr));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return AjaxActionComplete(map);
+    }
+
+    public String FetchbillDetail(){
+        Map map = new HashMap();
+        BillUI billUI = new BillUI(super.getUserID());
+        try {
+            if (!StringUtils.convertNullableString(getParameter("billuuid")).trim().isEmpty()){
+                String _startdate = StringUtils.convertNullableString(getParameter("startdate"),"");
+                String _enddate = StringUtils.convertNullableString(getParameter("enddate"),"");
+            map.put("repaydetail",billUI.generateBillRepayDetail(getParameter("billuuid").toString(),_startdate,_enddate,
+                    (StringUtils.convertNullableString(getParameter("status")).equals("finished")?" and tradestatus='enable'":
+                    (StringUtils.convertNullableString(getParameter("status")).equals("unfinished")?" and ifnull(tradestatus,'')<>'enable'":""))));
+            map.put("swingdetail",billUI.generateBillSwingDetail(getParameter("billuuid").toString(),_startdate,_enddate,
+                    StringUtils.convertNullableString(getParameter("status")).equals("finished")?" and swingstatus='enable'":
+                    (StringUtils.convertNullableString(getParameter("status")).equals("unfinished")?" and ifnull(swingstatus,'')<>'enable'":"")));
+            if (map.get("repaydetail").equals("") && map.get("swingdetail").equals(""))
+                map.put("removeitem","1");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return AjaxActionComplete(map);
+    }
 }

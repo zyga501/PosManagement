@@ -7,9 +7,7 @@ import com.posmanagement.utils.StringUtils;
 import com.posmanagement.utils.UUIDUtils;
 import com.posmanagement.webui.BillUI;
 import com.posmanagement.webui.WebUI;
-import javafx.geometry.Pos;
 
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -136,7 +134,7 @@ public class BillAction extends AjaxActionSupport {
 
             para.put(2,billNO);
             if (PosDbManager.executeUpdate(sqlString,(HashMap<Integer, Object>)para)) {
-                if (!generateSwingCard()) {
+                if (!generateSwingCard(billNO)) {
                     para.clear();
                     para.put(1,billNO);
                     PosDbManager.executeUpdate("update billtb set status=null where UUID=?",(HashMap<Integer, Object>)para);
@@ -248,7 +246,7 @@ public class BillAction extends AjaxActionSupport {
         return AjaxActionComplete(map);
     }
 
-    private boolean generateSwingCard() throws Exception {
+    private boolean generateSwingCard(String billNO) throws Exception {
         Map map = new HashMap();
         if (billNO == null || billNO.length() <= 0) {
             return false;
@@ -439,7 +437,6 @@ public class BillAction extends AjaxActionSupport {
 
     public String RebuildBill(){
         Map map = new HashMap();
-        BillUI billUI = new BillUI(super.getUserID());
         try {
             if (!StringUtils.convertNullableString(getParameter("billuuid")).trim().isEmpty()){
                 Map para = new HashMap();
@@ -449,7 +446,7 @@ public class BillAction extends AjaxActionSupport {
                         " uuid=?", (HashMap<Integer, Object>) para)){
                     PosDbManager.executeUpdate("delete from swingcard where ifnull(swingstatus,'')<>'enable' and billuuid='"+getParameter("billuuid").toString()+"'");
                     PosDbManager.executeUpdate("delete from  repaytb where ifnull(tradestatus,'')<>'enable' and billuuid='"+getParameter("billuuid").toString()+"'");
-                    generateSwingCard();
+                    generateSwingCard(getParameter("billuuid").toString());
                     map.put("successMsg","重新生成账单成功！");
                     }else {
                     map.put("errorMessage","操作失败");

@@ -7,6 +7,7 @@ import com.posmanagement.utils.StringUtils;
 import com.posmanagement.utils.UUIDUtils;
 import com.posmanagement.webui.BillUI;
 import com.posmanagement.webui.WebUI;
+import javafx.geometry.Pos;
 
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -389,5 +390,79 @@ public class BillAction extends AjaxActionSupport {
             e.printStackTrace();
         }
         return AjaxActionComplete(map);
+    }
+
+    public String DelBill(){
+        Map map = new HashMap();
+        BillUI billUI = new BillUI(super.getUserID());
+        try {
+            if (!StringUtils.convertNullableString(getParameter("billuuid")).trim().isEmpty()){
+                Map para = new HashMap();
+                para.put(1,getParameter("billuuid").toString());
+                ArrayList<HashMap<String, Object>> rt =   PosDbManager.executeSql("select  count(1) cnt from swingcard where swingstatus='enable'" +
+                        " and billuuid=?", (HashMap<Integer, Object>) para);
+                if (rt.size()>0 & (!rt.get(0).get("CNT").toString().equals("0"))){
+                    map.put("errorMessage","已经刷卡过，无法删除账单！");
+                }
+                else {
+//                    rt =   PosDbManager.executeSql("select  count(1) cnt from repaytb where tradestatus='enable'" +
+//                            " and billuuid=?", (HashMap<Integer, Object>) para);
+//                    if (rt.size()>0 & (!rt.get(0).get("CNT").toString().equals("0"))){
+//                        map.put("errorMessage","已经还款过，无法删除账单！");
+//                    }
+                    // PosDbManager.executeSql("start transaction;");
+                    if (!PosDbManager.executeUpdate("delete from billtb where uuid=?",(HashMap<Integer, Object>) para)){
+                        map.put("errorMessage","操作失败");
+                        //PosDbManager.executeSql("rollback;");
+                    }
+                    else if (!PosDbManager.executeUpdate("delete from swingcard where billuuid=?",(HashMap<Integer, Object>) para)){
+                        map.put("errorMessage","操作失败");
+                    }
+                    else if (!PosDbManager.executeUpdate("delete from repaytb where billuuid=?",(HashMap<Integer, Object>) para)){
+                        map.put("errorMessage","操作失败");
+                    }else {
+                        map.put("successMsg","撤销账单成功！");
+                    };
+                }
+            }
+            else {
+                map.put("errorMessage","操作失败");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            return AjaxActionComplete(map);
+        }
+    }
+
+
+    public String RebuildBill(){
+        Map map = new HashMap();
+        BillUI billUI = new BillUI(super.getUserID());
+        try {
+            if (!StringUtils.convertNullableString(getParameter("billuuid")).trim().isEmpty()){
+                Map para = new HashMap();
+                para.put(1,getParameter("billamount").toString());
+                para.put(2,getParameter("billuuid").toString());
+                if (PosDbManager.executeUpdate("update billtb set billamount=? where  " +
+                        " uuid=?", (HashMap<Integer, Object>) para)){
+                    PosDbManager.executeUpdate("delete from swingcard where ifnull(swingstatus,'')<>'enable' and billuuid='"+getParameter("billuuid").toString()+"'");
+                    PosDbManager.executeUpdate("delete from  repaytb where ifnull(tradestatus,'')<>'enable' and billuuid='"+getParameter("billuuid").toString()+"'");
+                    generateSwingCard();
+                    map.put("successMsg","重新生成账单成功！");
+                    }else {
+                    map.put("errorMessage","操作失败");
+                    };
+            }
+            else {
+                map.put("errorMessage","操作失败");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            return AjaxActionComplete(map);
+        }
     }
 }

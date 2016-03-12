@@ -12,7 +12,7 @@
     <link href="<%=request.getContextPath()%>/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
     <link href="<%=request.getContextPath()%>/css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
     <link href="<%=request.getContextPath()%>/skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
-    <link type="text/css" rel="stylesheet" href="<%=request.getContextPath()%>/js/laypage//skin/laypage.css" id="laypagecss">
+    <link type="text/css" rel="stylesheet" href="<%=request.getContextPath()%>/js/laypage/skin/laypage.css" id="laypagecss">
     <title></title>
     <style type="text/css" >
         #searchtb tr td {
@@ -60,9 +60,45 @@
             }
         }
 
+        function setdopanel(){
+            $(".billbtn").hover(function() {
+                $("#dopanel").removeAttr("billuuid");
+                $("#dopanel").attr("billuuid",$(this).attr("datav"));
+                $("#dopanel").css({
+                    "left" : parseInt($(this).offset().left) + "px",
+                    "top" : parseInt($(this).offset().top) + "px"
+                });
+                $("#dopanel").show();
+            }, function(){
+                   // $("#dopanel").hide();
+                });
+        }
+
+        function delbill(obj){
+            var billuuid = $(obj).parent().attr("billuuid");
+            if (billuuid == undefined) return ;
+            $.ajax({
+                type: 'post',
+                url: 'Bill!DelBill',
+                dataType:"json",
+                data:{billuuid:billuuid},
+                success: function (data) {
+                    var json = eval("(" + data + ")");
+                    if (json.errorMessage != null) {
+                        layer.msg(json.errorMessage);
+                    }
+                    else {
+                        layer.msg("账单已经删除");
+                        dosearch();
+                    }
+                }
+            })
+        }
+
         function refreshBillList(billList) {
             $('#billList').html(billList);
             $("label[name=billamount]").on("click", function() {clickbtbill(this)});
+            setdopanel();
         }
 
     </script>
@@ -111,6 +147,9 @@
         </div>
     </div>
 </div>
+<div id="dopanel" style="position: absolute;display: none;z-index: 5500;">
+    <input class="btn btn-warning radius size-mini" onclick="delbill(this)" type="button" value="删除" title="删除账单"/><br>
+    <input class="btn btn-warning radius size-mini" onclick="rebuild(this);" type="button" value="重生" title="重生账单"/></div>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/layer/1.9.3/layer.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/H-ui.js"></script>
@@ -204,6 +243,33 @@ $().ready( function(){
             }
         });
     }
+
+
+    function rebuild(obj){
+        var pass = prompt("输入账单金额","");
+            if (isNaN(pass)) {
+                alert('您输入的非法数字，请重新输入');
+            }
+            var billuuid = $(obj).parent().attr("billuuid");
+           // if (billuuid == undefined) return ;
+           $.ajax({
+           type: 'post',
+           url: 'Bill!RebuildBill',
+           dataType:"json",
+           data:{billuuid:billuuid,billamount:pass},
+           success: function (data) {
+           var json = eval("(" + data + ")");
+           if (json.errorMessage != null) {
+           layer.msg(json.errorMessage);
+           }
+           else {
+           layer.msg("账单已经重新生成");
+           dosearch();
+           }
+           }
+           });
+    }
+
 </script>
 </body>
 </html>

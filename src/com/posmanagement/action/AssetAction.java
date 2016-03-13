@@ -105,4 +105,16 @@ public class AssetAction extends AjaxActionSupport {
         }
         return AjaxActionComplete(map);
     }
+
+    public String FetchAssetList(){
+        Map map = new HashMap();
+        if (getParameter("uiMode") != null && getParameter("uiMode").toString().compareTo("SELECTLIST") == 0) {
+            try {
+                map.put("assetList", new AssetUI(getUserID()).generateAssetSelectList());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return AjaxActionComplete(map);
+    }
 }

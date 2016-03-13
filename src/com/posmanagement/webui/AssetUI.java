@@ -39,6 +39,20 @@ public class AssetUI {
         return htmlString;
     }
 
+    public String generateAssetSelectList() throws Exception {
+        ArrayList<HashMap<String, Object>> dbRet = fetchAssetList();
+        if (dbRet.size() <= 0)
+            return new String("");
+
+        UIContainer uiContainer = new UIContainer();
+        uiContainer.addElement(new UIContainer("option", "-").addAttribute("value", ""));
+        for (int index = 0; index < dbRet.size(); ++index) {
+            uiContainer.addElement(new UIContainer("option", dbRet.get(index).get("BANKNAME").toString()+dbRet.get(index).get("CARDNO").toString())
+                    .addAttribute("value", dbRet.get(index).get("UUID").toString()));
+        }
+
+        return uiContainer.generateUI();
+    }
     private ArrayList<HashMap<String, Object>> fetchAssetList() throws Exception {
         String whereSql = new String();
         if (!UserUtils.isAdmin(userID_)) {

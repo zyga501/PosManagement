@@ -137,7 +137,7 @@ public class BillAction extends AjaxActionSupport {
                 if (!generateSwingCard(billNO)) {
                     para.clear();
                     para.put(1,billNO);
-                    PosDbManager.executeUpdate("update billtb set status=null where UUID=?",(HashMap<Integer, Object>)para);
+                    PosDbManager.executeUpdate("update billtb set status='' where UUID=?",(HashMap<Integer, Object>)para);
                     map.put("errorMessage", getText("global.actionFailed") + swingcardErrorMessage);
                     return AjaxActionComplete(map);
                 } else
@@ -192,10 +192,9 @@ public class BillAction extends AjaxActionSupport {
                     " where a.status='enable' and a.salemanuuid='"+getUserID()+"' " +  wherestr + " and  not exists " +
                     "(select 1 from billtb b where a.cardno=b.cardno and b.billdate=concat('" + String.valueOf(year)+"','-','"+String.format("%02d",month)+"','-',a.billdate))";
         }
-        System.out.println(sqlString);
         try {
-            if (PosDbManager.executeUpdate(sqlString))
-                map.put("billList",  new BillUI(super.getUserID()).generateBillTable(1));
+             PosDbManager.executeUpdate(sqlString);
+//                map.put("billList",  new BillUI(super.getUserID()).generateBillTable(1));
         } catch (Exception e) {
             map.put("errorMessage", getText("AssetAction.InfoError"));
             e.printStackTrace();

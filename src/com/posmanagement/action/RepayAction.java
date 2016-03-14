@@ -99,6 +99,20 @@ public class RepayAction extends AjaxActionSupport {
         return AjaxActionComplete(map);
     }
 
+    public String FetchRepayInfo() throws Exception {
+        Map map = new HashMap();
+        Map para = new HashMap();
+        para.put(1,getParameter("repayid"));
+        ArrayList<HashMap<String, Object>> Ret = PosDbManager.executeSql("select * from repaytb,cardtb,banktb where banktb.uuid=cardtb.bankuuid and repaytb.cardno=cardtb.cardno and repaytb.id=?", (HashMap<Integer, Object>) para);
+        if (Ret.size()>0) {
+            map.put("trademoney", Ret.get(0).get("TRADEMONEY"));
+            map.put("bankname", Ret.get(0).get("NAME"));
+            map.put("cardno", Ret.get(0).get("CARDNO"));
+            map.put("cardmaster", Ret.get(0).get("CARDMASTER"));
+            map.put("thedate", Ret.get(0).get("THEDATE"));
+        }
+        return AjaxActionComplete(map);
+    }
 
     public String EditDetail() throws Exception{
         Map map =new HashMap();
@@ -143,6 +157,7 @@ public class RepayAction extends AjaxActionSupport {
                         "SET balance= balance - (select trademoney - charge from repaytb where id=?)\n" +
                         "where salemanuuid=? and uuid=?", (HashMap<Integer, Object>)parameterMap)) {
                     map.put("successMessage", getText("global.actionSuccess"));
+                }
                    // map.put("repayDetail", new RepayUI(super.getUserID()).generateDetail(getParameter("cardno").toString(), getParameter("billUUID").toString()));
                     parameterMap.clear();
                     parameterMap.put(1, getParameter("repayId"));
@@ -160,8 +175,9 @@ public class RepayAction extends AjaxActionSupport {
                         parameterMap.put(2, balance - charge);
                         parameterMap.put(3, cardno);
                         parameterMap.put(4, salemanUUID);
-                        PosDbManager.executeUpdate("insert into assetflowtb(time, type, amount, balance, remark, salemanuuid)\n" +
-                                "VALUES(NOW(), '还款',?, ?, CONCAT(?,'还款'), ?);\n"
+                        parameterMap.put(5, getParameter("assetuuid").toString());
+                        PosDbManager.executeUpdate("insert into assetflowtb(time, type, amount, balance, remark, salemanuuid,assetuuid)\n" +
+                                "VALUES(NOW(), '还款',?, ?, CONCAT(?,'还款'), ?,?);\n"
                                 , (HashMap<Integer, Object>)parameterMap);
                         parameterMap.clear();
                         parameterMap.put(1, charge);
@@ -172,7 +188,6 @@ public class RepayAction extends AjaxActionSupport {
                                 "VALUES(NOW(), '还款收费',?, ?, CONCAT(?,'还款收费'), ?);"
                                 , (HashMap<Integer, Object>)parameterMap);
                     }
-                }
             }
         }
         return AjaxActionComplete(map);

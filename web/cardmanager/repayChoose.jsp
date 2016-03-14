@@ -14,7 +14,14 @@
     <link href="<%=request.getContextPath()%>/skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery/1.9.1/jquery.min.js"></script>
     <script type="text/javascript">
-
+        (function($){
+            $.getUrlParam = function(name)
+            {
+                var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                if (r!=null) return unescape(r[2]); return null;
+            }
+        })(jQuery);
         function fetchAssetList() {
             $.ajax({
                 type: 'post',
@@ -49,8 +56,28 @@
             });
         }
 
+        function initrepayinfo(){
+            var _repayid=$.getUrlParam('repayid');
+            $.ajax({
+                type: 'post',
+                url: 'Repay!FetchRepayInfo',
+                data: {repayid:_repayid},
+                dataType : "json",
+                success: function(data) {
+                    var json = eval("(" + data + ")");
+                    if (json.cardno!=null){
+                        $("#cardno").val(json.cardno);
+                        $("#cardmaster").val(json.cardmaster);
+                        $("#bankname").val(json.bankname);
+                        $("#trademoney").val(json.trademoney);
+                        $("#thedate").val(json.thedate);
+                    }
+                }
+            });
+        }
         $(function () {
             fetchAssetList();
+            initrepayinfo();
         })
     </script>
 </head>
@@ -58,9 +85,27 @@
     <form class="form form-horizontal">
         <table class="table table-border table-bordered table-bg table-hover table-sort">
             <tr class="text-c odd" role="row">
-                <td><s:text name="posmanager.assetcard"/></td>
+                <td><s:text name="cardmanager.cardmaster"/></td>
+                <td><input id=cardmaster type="text" readonly="readonly"  class="input-text"></td>
+            </tr>
+            <tr class="text-c odd" role="row">
+                <td><s:text name="cardmanager.bankname"/></td>
+                <td><input id=bankname type="text" readonly="readonly" class="input-text"></td>
+            </tr>
+            <tr class="text-c odd" role="row">
+                <td><s:text name="cardmanager.cardno"/></td>
+                <td><input id=cardno type="text" readonly="readonly" class="input-text"></td>
+            </tr>
+            <tr class="text-c odd" role="row">
+                <td><s:text name="repaydetail.amount"/></td>
+                <td><input id=trademoney type="text"  class="input-text"></td>
+            </tr>
+            <tr class="text-c odd" role="row">
+                <td><s:text name="repaydetail.sdatetm"/></td>
+                <td><input id=thedate type="text" readonly="readonly" class="input-text"></td>
             </tr>
             <tr class="text-c">
+                <td><s:text name="posmanager.assetcard"/></td>
                 <td>
                     <select id="assetuuid" name="assetuuid" style="width: 100%">
                     </select>

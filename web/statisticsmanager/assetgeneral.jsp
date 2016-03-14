@@ -97,6 +97,7 @@
                 <thead>
                 <tr class="text-c">
                     <th><s:text name="repaydetail.thedate"/></th>
+                    <th><s:text name="assetmanager.cardCode"/></th>
                     <th><s:text name="statistics.type"/></th>
                     <th><s:text name="swingcardsummary.amount"/></th>
                     <th><s:text name="statistics.balance"/></th>

@@ -251,7 +251,6 @@ $().ready( function(){
                 alert('您输入的非法数字，请重新输入');
                 return;
             };
-        alert("333");
             var billuuid = $(obj).parent().attr("billuuid");
            // if (billuuid == undefined) return ;
            $.ajax({

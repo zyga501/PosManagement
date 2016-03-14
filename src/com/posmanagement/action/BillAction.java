@@ -441,7 +441,13 @@ public class BillAction extends AjaxActionSupport {
                 Map para = new HashMap();
                 para.put(1,getParameter("billamount").toString());
                 para.put(2,getParameter("billuuid").toString());
-                if (PosDbManager.executeUpdate("update billtb set billamount=? where  " +
+
+                ArrayList<HashMap<String, Object>> rt =   PosDbManager.executeSql("select  sum(amount)-? as amount   from swingcard where swingstatus='enable'" +
+                        " and billuuid=?", (HashMap<Integer, Object>) para);
+                if ((rt.size()>0) && Float.parseFloat(rt.get(0).get("AMOUNT").toString())>0){
+                    map.put("errorMessage","账单金额小于已刷金额！");
+                }
+                else if (PosDbManager.executeUpdate("update billtb set billamount=? where  " +
                         " uuid=?", (HashMap<Integer, Object>) para)){
                     PosDbManager.executeUpdate("delete from swingcard where ifnull(swingstatus,'')<>'enable' and billuuid='"+getParameter("billuuid").toString()+"'");
                     PosDbManager.executeUpdate("delete from  repaytb where ifnull(tradestatus,'')<>'enable' and billuuid='"+getParameter("billuuid").toString()+"'");

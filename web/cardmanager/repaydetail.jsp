@@ -18,27 +18,41 @@
         function clickrepay(button, repayid,cardno,billuuid) {
             var val = button.value;
             if (val == "N") {
-                layer.confirm('确定启用？', {
-                    btn: ['是','否'] //按钮
-                }, function () {
-                    $.ajax({
-                        type: 'post',
-                        url: 'Repay!EditDetail',
-                        data: {status:"enable" , repayId:repayid, cardno:cardno, billUUID:billuuid},
-                        success: function (data) {
-                            var json = eval("(" + data + ")");
-                            if (json.successMessage) {
-                                layer.msg(json.successMessage);
-                                dosearch();
-                            }
-                            else if (json.errorMessage)
-                                layer.msg(json.errorMessage);
-                        }
-                    });
-                }, function () {
+
+                layer.open({
+                    type: 2,
+                    title: "选择资产卡", area: ['310px', '250px'],
+                    fix: false,
+                    content: "<%=request.getContextPath()%>/cardmanager/repayChoose.jsp",
+                    btn: ['确定', '关闭'],
+                    yes: function (index) {
+                        var res = window["layui-layer-iframe" + index].saveFunc();
+                        layer.close(index);
+
+                        layer.confirm('确定还款？', {
+                            btn: ['是', '否'] //按钮
+                        }, function () {
+                            $.ajax({
+                                type: 'post',
+                                url: 'Repay!EditDetail',
+                                data: {status: "enable", repayId: repayid, cardno: cardno, billUUID: billuuid},
+                                success: function (data) {
+                                    var json = eval("(" + data + ")");
+                                    if (json.successMessage) {
+                                        layer.msg(json.successMessage);
+                                        dosearch();
+                                    }
+                                    else if (json.errorMessage)
+                                        layer.msg(json.errorMessage);
+                                }
+                            });
+                        }, function () {
+                        });
+                    }
                 });
             }
         }
+
     </script>
 </head>
 <body style="overflow: hidden">

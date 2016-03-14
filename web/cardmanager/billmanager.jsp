@@ -227,7 +227,7 @@ $().ready( function(){
     function  clickbtbill(obj){
 
         var name = prompt("输入新的金额",obj.innerHTML);
-        if (name==null) return ;
+        if (name==undefined) return ;
         $.ajax({
             type: 'post',
             url: 'Bill!modifyBill',
@@ -247,9 +247,11 @@ $().ready( function(){
 
     function rebuild(obj){
         var pass = prompt("输入账单金额","");
-            if (isNaN(pass)) {
+            if (isNaN(pass)||(pass=="")) {
                 alert('您输入的非法数字，请重新输入');
-            }
+                return;
+            };
+        alert("333");
             var billuuid = $(obj).parent().attr("billuuid");
            // if (billuuid == undefined) return ;
            $.ajax({

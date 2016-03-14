@@ -160,10 +160,11 @@ public class POSAction extends AjaxActionSupport {
                 parametMap.put(i++, (String) getParameter("corporation"));
                 parametMap.put(i++, (String) getParameter("mcc"));
                 parametMap.put(i++,StringUtils.convertNullableString( getParameter("status")).equals("on")?"enable":"disable");
+                parametMap.put(i++, (String) getParameter("assetuuid"));
                 parametMap.put(i++, (String) getParameter("newid"));
 
                     if (!PosDbManager.executeUpdate("update postb set  posname=?,industryuuid=?,rateuuid=?,corporation=?,mccuuid=?," +
-                            "status=?,startdatetm=now() where uuid=?", (HashMap<Integer, Object>)parametMap)) {
+                            "status=?,assetuuid=?,startdatetm=now() where uuid=?", (HashMap<Integer, Object>)parametMap)) {
                         map.put("errorMessage","error");
                     }
             }
@@ -187,13 +188,14 @@ public class POSAction extends AjaxActionSupport {
             parametMap.put(i++, (String) getParameter("rate"));
             parametMap.put(i++, (String) getParameter("corporation"));
             parametMap.put(i++, (String) getParameter("mcc"));
+            parametMap.put(i++, (String) getParameter("assetuuid"));
             parametMap.put(i++, StringUtils.convertNullableString(getParameter("status")).equals("on") ? "enable" : "disable");
             parametMap.put(i++, getUserID());
 
             try {
                 if (PosDbManager.executeUpdate("insert into postb(uuid,posname,industryuuid,rateuuid,corporation,mccuuid," +
-                        "status,salemanuuid)" +
-                        "values(?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>) parametMap)) {
+                        "assetuuid,status,salemanuuid)" +
+                        "values(?,?,?,?,?,?,?,?,?)", (HashMap<Integer, Object>) parametMap)) {
                     map.put("posList", new PosUI(super.getUserID()).generateSelect());
                 }
             } catch (Exception e) {

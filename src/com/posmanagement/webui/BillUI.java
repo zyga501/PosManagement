@@ -51,11 +51,11 @@ public class BillUI extends WebUI {
                             .addAttribute("class","billbtn")
                             .addAttribute("datav", StringUtils.convertNullableString(dbRet.get(index).get("UUID")))
                             .addElement(new UIContainer("input")
-                            .addAttribute("class", (dbRet.get(index).get("STATUS").equals("enable") ? "btn btn-success radius" : "btn btn-danger radius"))
+                            .addAttribute("class", (StringUtils.convertNullableString(dbRet.get(index).get("STATUS")).equals("enable") ? "btn btn-success radius" : "btn btn-danger radius"))
                             .addAttribute("type", "button")
-                            .addAttribute("title", dbRet.get(index).get("STATUS").equals("enable") ? "已开启" : "未开启")
-                            .addAttribute("datav", StringUtils.convertNullableString(dbRet.get(index).get("UUID")))
-                            .addAttribute("value", dbRet.get(index).get("STATUS").equals("enable") ? "Y" : "N")
+                            .addAttribute("title", (StringUtils.convertNullableString(dbRet.get(index).get("STATUS")).equals("enable")) ? "已开启" : "未开启")
+                            .addAttribute("datav", StringUtils.convertNullableString(StringUtils.convertNullableString(dbRet.get(index).get("UUID"))))
+                            .addAttribute("value", StringUtils.convertNullableString(dbRet.get(index).get("STATUS")).equals("enable") ? "Y" : "N")
                             .addAttribute("onclick", "clickBill(this,'" + StringUtils.convertNullableString(dbRet.get(index).get("UUID")) + "')")));
             htmlString += UI.generateUI();
         }

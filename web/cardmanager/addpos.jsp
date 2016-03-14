@@ -107,10 +107,25 @@
                 }
             });
         }
+
+        function fetchAssetList() {
+            $.ajax({
+                type: 'post',
+                url: 'Asset!FetchAssetList',
+                data: "uiMode=SELECTLIST",
+                dataType : "json",
+                success: function(data) {
+                    var json = eval("(" + data + ")");
+                    $("#assetuuid").html(json.assetList);
+                    $("#assetuuid").val("<s:property value="posManager.assetuuid"/>");
+                }
+            });
+        }
         $(function () {
             fetchIndustryList();
             fetchRateList();
             fetchMCCList();
+            fetchAssetList();
             $("#vform").Validform({btnSubmit:"#submit_btn",
                 beforeSubmit: function(curform) {addPOS();return false; }
             });
@@ -134,8 +149,15 @@
                 <tr class="text-c">
                     <td><s:text name="posmanager.rate"/></td>
                     <td>
-                    <select id="rate" name="rate" style="width: 100%"  datatype="*">
-                    </select>
+                        <select id="rate" name="rate" style="width: 100%"  datatype="*">
+                        </select>
+                    </td>
+                </tr>
+                <tr class="text-c">
+                    <td><s:text name="posmanager.assetcard"/></td>
+                    <td>
+                        <select id="assetuuid" name="assetuuid" style="width: 100%"  datatype="*">
+                        </select>
                     </td>
                 </tr>
                 <tr class="text-c">

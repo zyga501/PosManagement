@@ -77,7 +77,7 @@
 
         function expandbill(obj,v){
             //var _text = $(obj).children(".info").children("table tbody").html();
-            //if (null==_text || _text==""||_text==undefined)
+            //if (null==_text || _text==""||_text==undefined) 
             {
                 $.ajax({
                     type: 'post',
@@ -240,26 +240,37 @@
     }
 
     function clickRepayDetail(obj, repayid) {
+        var newobj = $(obj).parent().parent().parent().parent().parent().parent();
         var val = obj.value;
         if (val == "N") {
-            layer.confirm('确定启用？', {
-                btn: ['是','否'] //按钮
-            }, function () {
-                $.ajax({
-                    type: 'post',
-                    url: 'Repay!EditDetail',
-                    data: {status:"enable" , repayId:repayid, billUUID:_billuuid},
-                    success: function (data) {
-                        var json = eval("(" + data + ")");
-                        if (json.successMessage) {
-                            layer.msg(json.successMessage);
-                            expandbill($(obj).parent().parent().parent().parent().parent().parent(),_billuuid);
-                        }
-                        else if (json.errorMessage)
-                            layer.msg(json.errorMessage);
-                    }
-                });
-            }, function () {
+            layer.open({
+                type: 2,
+                title: "选择资产卡",area: ['310px', '250px'],
+                fix: false,
+                content: "<%=request.getContextPath()%>/cardmanager/assetChoose.jsp",
+                btn: ['确定','关闭'],
+                yes:function(index){
+                var res = window["layui-layer-iframe" + index].saveFunc();
+                    layer.close(index);
+                        layer.confirm('确定还款？', {
+                            btn: ['是','否'] //按钮
+                        }, function () {
+                            $.ajax({
+                                type: 'post',
+                                url: 'Repay!EditDetail',
+                                data: {status:"enable" , repayId:repayid, billUUID:_billuuid,assetuuid:res},
+                                success: function (data) {
+                                    var json = eval("(" + data + ")");
+                                    if (json.successMessage) {
+                                        layer.msg(json.successMessage);
+                                        expandbill($(newobj),_billuuid);
+                                    }
+                                    else if (json.errorMessage)
+                                        layer.msg(json.errorMessage);
+                                }
+                            });
+                        });
+                }
             });
         }
     }

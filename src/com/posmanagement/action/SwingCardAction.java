@@ -128,7 +128,7 @@ public class SwingCardAction extends AjaxActionSupport {
 
                 parameterMap.clear();
                 parameterMap.put(1, getParameter("swingId"));
-                parameterMap.put(2, salemanUUID);
+                parameterMap.put(2, getParameter("posUUID"));
                 if (PosDbManager.executeUpdate("update assettb\n" +
                         "set balance=balance +\n" +
                         "(SELECT swingcard.amount - swingcard.charge\n" +
@@ -136,15 +136,15 @@ public class SwingCardAction extends AjaxActionSupport {
                         "swingcard\n" +
                         "where id = ?\n" +
                         ")\n" +
-                        "where salemanuuid=?", (HashMap<Integer, Object>)parameterMap)) {
+                        "where uuid in (select assetuuid from postb where uuid=?) ", (HashMap<Integer, Object>)parameterMap)) {
                     map.put("successMessage", getText("global.actionSuccess"));
                    // map.put("swingCardDetail", new SwingCardUI(super.getUserID()).generateDetail(getParameter("cardno").toString(), getParameter("billUUID").toString()));
                     parameterMap.clear();
                     parameterMap.put(1, getParameter("swingId"));
                     ArrayList<HashMap<String, Object>> swingRet = PosDbManager.executeSql("SELECT amount, charge, postb.posname from swingcard LEFT JOIN postb on swingcard.posuuid = postb.uuid where id=?", (HashMap<Integer, Object>)parameterMap);
                     parameterMap.clear();
-                    parameterMap.put(1, salemanUUID);
-                    assetRet = PosDbManager.executeSql("SELECT balance from assettb where salemanuuid=?", (HashMap<Integer, Object>)parameterMap);
+                    parameterMap.put(1,  getParameter("posUUID"));
+                    assetRet = PosDbManager.executeSql("SELECT balance from assettb where  uuid in (select assetuuid from postb where uuid=?)", (HashMap<Integer, Object>)parameterMap);
                     if (swingRet.size() > 0 && assetRet.size() > 0) {
                         double swingAmount = Double.parseDouble(swingRet.get(0).get("AMOUNT").toString());
                         double charge = Double.parseDouble(swingRet.get(0).get("CHARGE").toString());
@@ -247,17 +247,18 @@ public class SwingCardAction extends AjaxActionSupport {
                     (HashMap<Integer, Object>)parametMap);
             parametMap.clear();
             parametMap.put(1, swingMoney);
-            parametMap.put(2, salemanUUID);
-            PosDbManager.executeUpdate("update assettb set balance=balance-? where uuid=?", (HashMap<Integer, Object>)parametMap);
+            parametMap.put(2, getParameter("posUUID"));
+            PosDbManager.executeUpdate("update assettb set balance=balance-? where uuid in (select assetuuid from postb where uuid=?)", (HashMap<Integer, Object>)parametMap);
             parametMap.clear();
-            parametMap.put(1, salemanUUID);
-            ArrayList<HashMap<String, Object>> assetRet = PosDbManager.executeSql("SELECT balance from assettb where salemanuuid=?", (HashMap<Integer, Object>)parametMap);
+            parametMap.put(1, getParameter("posUUID"));
+            ArrayList<HashMap<String, Object>> assetRet = PosDbManager.executeSql("SELECT balance from assettb where uuid in (select assetuuid from postb where uuid=?)", (HashMap<Integer, Object>)parametMap);
             double balance = Double.parseDouble(assetRet.get(0).get("BALANCE").toString());
             parametMap.put(1, swingMoney);
             parametMap.put(2, balance);
             parametMap.put(3, salemanUUID);
-            PosDbManager.executeUpdate("insert into assetflowtb(time, type, amount, balance, remark, salemanuuid)\n" +
-                            "VALUES(NOW(), '结算到账',?, ?, '直接刷卡', ?);\n"
+            parametMap.put(4, assetRet.get(0).get("ASSETUUID").toString());
+            PosDbManager.executeUpdate("insert into assetflowtb(time, type, amount, balance, remark, salemanuuid,assetuuid)\n" +
+                            "VALUES(NOW(), '结算到账',?, ?, '直接刷卡', ?,?);\n"
                     , (HashMap<Integer, Object>)parametMap);
         }
         catch (Exception exception) {

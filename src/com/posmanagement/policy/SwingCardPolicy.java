@@ -162,7 +162,7 @@ public class SwingCardPolicy {
         while (true) {
             initRepayInfo();
             repayList.clear();
-            currentDate = nextDateLimit(dateLimit);
+            currentDate = nextDateLimitForRepay(dateLimit);
             double remainBillAmount = billInfo_.billAmount;
             while (currentDate <= dateLimit && remainBillAmount > 0.0) {
                 try {
@@ -178,7 +178,7 @@ public class SwingCardPolicy {
                     repayList.add(repayInfo);
                 }
                 finally {
-                    double nextDateLimit = nextDateLimit(dateLimit);
+                    double nextDateLimit = nextDateLimitForRepay(dateLimit);
                     updateRepayCoolingTime(nextDateLimit);
                     currentDate += nextDateLimit;
                 }
@@ -218,14 +218,13 @@ public class SwingCardPolicy {
 
         // generate reserved swing card list
         ArrayList<SwingCardInfo> reservedSwingCardList = new ArrayList<SwingCardInfo>();
-        double bakCurDate = currentDate;
         double bakReservedSwingMoney = reservedSwingMoney;
         while (true) {
                 int index = 0;
-                currentDate = bakCurDate;
+                currentDate = nextDateLimitForReservedSwing(dateLimit);
                 reservedSwingMoney = bakReservedSwingMoney;
                 reservedSwingCardList.clear();
-                for (;index < cardInfo_.reservedSwingCount && currentDate < 28; ++index) {
+                for (;index < cardInfo_.reservedSwingCount && currentDate < dateLimit; ++index) {
                     double currentSpend = cardInfo_.reservedSwingMoney / cardInfo_.reservedSwingCount;
                     if (index % 2 == 0) {
                         currentSpend += random.nextDouble() * LASTFIXEDSWINGCARDMONEY;
@@ -236,12 +235,13 @@ public class SwingCardPolicy {
                     currentSpend = Math.min(currentSpend, reservedSwingMoney);
                     reservedSwingMoney -= currentSpend;
                     SwingCardInfo swingCardInfo = new SwingCardInfo();
-                    swingCardInfo.swingDate = new Date(billInfo_.billDate.getTime() + (long)currentDate * ONEDAYMILLIONSECOND);
+                    swingCardInfo.swingDate = new Date(swingCardList.get(0).swingDate.getTime() + (long)currentDate * ONEDAYMILLIONSECOND);
+                    currentDate += nextDateLimitForReservedSwing(dateLimit);
                     swingCardInfo.money = ((long)(currentSpend / 10)) * 10.0;
                     reservedSwingCardList.add(swingCardInfo);
                     currentDate += random.nextDouble() * (28 - dateLimit);
                 }
-                if (index == cardInfo_.reservedSwingCount && currentDate < 28) {
+                if (index == cardInfo_.reservedSwingCount && reservedSwingMoney <= 0.0) {
                     break;
             }
         }
@@ -306,6 +306,21 @@ public class SwingCardPolicy {
         for (int index = 0; index < reservedSwingCardList.size(); ++index) {
             swingCardList.add(reservedSwingCardList.get(index));
         }
+
+        Collections.sort(swingCardList, new Comparator<SwingCardInfo>() {
+            @Override
+            public int compare(SwingCardInfo o1, SwingCardInfo o2) {
+                if (o1.swingDate.getTime() > o2.swingDate.getTime()) {
+                    return 1;
+                }
+                else if (o1.swingDate.getTime() < o2.swingDate.getTime()) {
+                    return -1;
+                }
+                else {
+                    return o1.swingTime.getTime() >o2.swingTime.getTime() ? 1 : -1;
+                }
+            }
+        });
 
         return generateSwingList(swingCardList, repayList);
     }
@@ -478,8 +493,12 @@ public class SwingCardPolicy {
         }
     }
 
-    private double nextDateLimit(double dateLimit) {
+    private double nextDateLimitForRepay(double dateLimit) {
         return (long)((random.nextDouble() * (dateLimit / cardInfo_.repayNum - cardInfo_.repayInterval) + cardInfo_.repayInterval) * 10.0) / 10.0;
+    }
+
+    private double nextDateLimitForReservedSwing(double dateLimit) {
+        return (long)((random.nextDouble() * (dateLimit / cardInfo_.reservedSwingCount) + 1.0) * 10.0) / 10.0;
     }
 
     private void generaterRepayRateList() {

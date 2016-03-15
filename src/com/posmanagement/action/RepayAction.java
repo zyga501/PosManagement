@@ -103,13 +103,16 @@ public class RepayAction extends AjaxActionSupport {
         Map map = new HashMap();
         Map para = new HashMap();
         para.put(1,getParameter("repayid"));
-        ArrayList<HashMap<String, Object>> Ret = PosDbManager.executeSql("select * from repaytb,cardtb,banktb where banktb.uuid=cardtb.bankuuid and repaytb.cardno=cardtb.cardno and repaytb.id=?", (HashMap<Integer, Object>) para);
+        ArrayList<HashMap<String, Object>> Ret = PosDbManager.executeSql("select repaytb.trademoney,repaytb.thedate," +
+                "cardtb.cardno,cardtb.cardmaster,banktb.name,cardtb.commissioncharge*repaytb.trademoney/100 as charge from repaytb,cardtb,banktb " +
+                "where banktb.uuid=cardtb.bankuuid and repaytb.cardno=cardtb.cardno and repaytb.id=?", (HashMap<Integer, Object>) para);
         if (Ret.size()>0) {
             map.put("trademoney", Ret.get(0).get("TRADEMONEY"));
             map.put("bankname", Ret.get(0).get("NAME"));
             map.put("cardno", Ret.get(0).get("CARDNO"));
             map.put("cardmaster", Ret.get(0).get("CARDMASTER"));
             map.put("thedate", Ret.get(0).get("THEDATE"));
+            map.put("charge", Ret.get(0).get("CHARGE"));
         }
         return AjaxActionComplete(map);
     }
@@ -139,14 +142,17 @@ public class RepayAction extends AjaxActionSupport {
             }
 
             parameterMap.put(1,super.getUserID());
-            parameterMap.put(2,getParameter("repayId"));
+            parameterMap.put(2, getParameter("charge"));
+            parameterMap.put(3, getParameter("trademoney"));
+            parameterMap.put(4,getParameter("repayId"));
             if (PosDbManager.executeUpdate("update repaytb\n" +
                     "INNER JOIN cardtb on cardtb.cardno=repaytb.cardno\n" +
                     "set \n" +
                     "tradestatus='enable',\n" +
                     "userid=?,\n" +
                     "tradetime=now(),\n" +
-                    "charge=cardtb.commissioncharge * repaytb.trademoney/100 \n" +
+                    "charge=?,\n"+//cardtb.commissioncharge * repaytb.trademoney/100 \n" +
+                    "trademoney=? \n"+
                     "where repaytb.id=?",(HashMap<Integer, Object>)parameterMap)) {
                 parameterMap.clear();
                 parameterMap.put(1, getParameter("repayId"));

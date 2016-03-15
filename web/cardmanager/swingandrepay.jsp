@@ -94,6 +94,7 @@
                         }
                         else{
                             _billuuid = v;
+                            $(obj).find("h4").html(json.htmlstring);
                             $(obj).find("#repaydetail").html(json.repaydetail);
                             $(obj).find("#swingdetail").html(json.swingdetail);
                         }
@@ -219,11 +220,12 @@
         if (val == "N") {
             layer.open({
                 type: 2,
-                title: "还款信息", area: ['310px', '380px'],
+                title: "刷卡信息", area: ['310px', '420px'],
                 fix: false,
                 content: "<%=request.getContextPath()%>/cardmanager/swingChoose.jsp?swingid=" + swingid,
                 btn: ['确定', '关闭'],
                 yes: function (index) {
+                    var res = window["layui-layer-iframe" + index].saveFunc();
                     layer.close(index);
                     layer.confirm('确定刷卡？', {
                         btn: ['是', '否'] //按钮
@@ -231,7 +233,7 @@
                         $.ajax({
                             type: 'post',
                             url: 'SwingCard!EditDetail',
-                            data: {status: "enable", swingId: swingid, billUUID: _billuuid},
+                            data: {status: "enable", swingId: swingid, billUUID: _billuuid,amount:res.amount,posUUID:res.posUUID},
                             success: function (data) {
                                 var json = eval("(" + data + ")");
                                 if (json.successMessage) {
@@ -255,7 +257,7 @@
         if (val == "N") {
             layer.open({
                 type: 2,
-                title: "还款信息",area: ['310px', '380px'],
+                title: "还款信息",area: ['310px', '420px'],
                 fix: false,
                 content: "<%=request.getContextPath()%>/cardmanager/repayChoose.jsp?repayid="+repayid,
                 btn: ['确定','关闭'],
@@ -268,7 +270,7 @@
                             $.ajax({
                                 type: 'post',
                                 url: 'Repay!EditDetail',
-                                data: {status:"enable" , repayId:repayid, billUUID:_billuuid,assetuuid:res},
+                                data: {status:"enable" , repayId:repayid, billUUID:_billuuid,assetuuid:res.assetuuid,trademoney:res.trademoney,charge:res.charge},
                                 success: function (data) {
                                     var json = eval("(" + data + ")");
                                     if (json.successMessage) {

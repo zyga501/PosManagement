@@ -108,6 +108,30 @@ public class BillUI extends WebUI {
         return htmlString;
     }
 
+    public String generateBillDetailHead(int pageIndex) throws Exception {
+        ArrayList<HashMap<String, Object>> dbRet = fetchBillDetailList(pageIndex);
+        if (dbRet.size() <= 0)
+            return new String("");
+
+        String htmlString = "";
+        for (int index = 0; index < dbRet.size(); ++index) {
+            if (!(StringUtils.convertNullableString(dbRet.get(index).get("TRADEAMOUNT"), "0").equals("0") &&
+                    StringUtils.convertNullableString(dbRet.get(index).get("AMOUNT"), "0").equals("0")))
+                htmlString += new UIContainer()
+                        .addElement(new UIContainer("i", "&#xe6bf;")
+                        .addAttribute("class", "icon Hui-iconfont"))
+                        .addElement(new UIContainer("fn", dbRet.get(index).get("CARDMASTER").toString()))
+                        .addElement(new UIContainer("span", "&nbsp;&nbsp;&nbsp;&nbsp;"))
+                        .addElement(new UIContainer("card", dbRet.get(index).get("BANKNAME").toString() + " " + dbRet.get(index).get("CARDNO").toString()))
+                        .addElement(new UIContainer("span", "&nbsp;&nbsp;&nbsp;&nbsp;"))
+                        .addElement(new UIContainer("repay", "还"))
+                        .addElement(new UIContainer("u", StringUtils.convertNullableString(dbRet.get(index).get("TRADEAMOUNT"), "0")))
+                        .addElement(new UIContainer("swing", "刷"))
+                        .addElement(new UIContainer("u", StringUtils.convertNullableString(dbRet.get(index).get("AMOUNT"), "0")))
+                        .addElement(new UIContainer("b", "+"));
+        }
+        return htmlString;
+    }
 
     public String generateSwingRepay(int pageIndex) throws Exception {
         ArrayList<HashMap<String, Object>> dbRet = fetchSwingRepaySummary(pageIndex);
@@ -351,13 +375,13 @@ public class BillUI extends WebUI {
         int i = 1;
         para.put(i++, billuuid);
         if ((startdate.equals("") || enddate.equals("")))
-            dbRet = PosDbManager.executeSql("SELECT trademoney,cardtb.commissioncharge * repaytb.trademoney/100 as charge," +
+            dbRet = PosDbManager.executeSql("SELECT trademoney,case when tradestatus='enable' then repaytb.charge else cardtb.commissioncharge * repaytb.trademoney/100 end as charge," +
                     " thedate,tradestatus,id from repaytb,cardtb  where repaytb.cardno=cardtb.cardno and" +
                     " billuuid=? " + status, (HashMap<Integer, Object>) para);
         else {
             para.put(i++, startdate);
             para.put(i++, enddate + " 23:59:59");
-            dbRet = PosDbManager.executeSql("SELECT trademoney,cardtb.commissioncharge * repaytb.trademoney/100 as charge," +
+            dbRet = PosDbManager.executeSql("SELECT trademoney,case when tradestatus='enable' then repaytb.charge else cardtb.commissioncharge * repaytb.trademoney/100 end as charge," +
                     " thedate,tradestatus,id from repaytb,cardtb  where repaytb.cardno=cardtb.cardno and  billuuid=? " +
                     "and thedate between ? and ?" + status, (HashMap<Integer, Object>) para);
         }
@@ -389,12 +413,14 @@ public class BillUI extends WebUI {
         int i = 1;
         para.put(i++, billuuid);
         if ((startdate.equals("") || enddate.equals("")))
-            dbRet = PosDbManager.executeSql("SELECT amount,swingcard.amount * rate * 0.01 as charge, sdatetm,posname,swingstatus,id from swingcard" +
+            dbRet = PosDbManager.executeSql("SELECT amount,case when swingstatus='enable' then swingcard.charge else  swingcard.amount * rate * 0.01 end as charge," +
+                    " sdatetm,posname,swingstatus,id from swingcard" +
                     ",postb,ratetb where ratetb.uuid=postb.rateuuid and postb.uuid=swingcard.posuuid  and  billuuid=? " + status, (HashMap<Integer, Object>) para);
         else {
             para.put(i++, startdate);
             para.put(i++, enddate + " 23:59:59");
-            dbRet = PosDbManager.executeSql("SELECT  amount,swingcard.amount * rate * 0.01 as charge, sdatetm,posname,swingstatus,id from swingcard " +
+            dbRet = PosDbManager.executeSql("SELECT  amount,case when swingstatus='enable' then swingcard.charge else swingcard.amount * rate * 0.01 end  as charge," +
+                    " sdatetm,posname,swingstatus,id from swingcard " +
                     " ,postb,ratetb where ratetb.uuid=postb.rateuuid and postb.uuid=swingcard.posuuid  and billuuid=? and sdatetm between ? and ?" + status, (HashMap<Integer, Object>) para);
         }
         if (dbRet.size() <= 0)

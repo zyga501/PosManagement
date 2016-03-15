@@ -71,6 +71,13 @@
                     </select>
                 </td>
             </tr>
+            <tr class="text-c">
+                <td><s:text name="cardmanager.memos"/></td>
+                <td>
+                    <select id="memo" name="memo" style="width: 100%"  datatype="*">
+                    </select>
+                </td>
+            </tr>
         </table>
         <div class="row">
             <div class="formControls col-8 col-offset-3">

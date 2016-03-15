@@ -148,7 +148,7 @@
                 <option value="unfinished" selected><s:text name="swingcardsummary.swingunfinished"/></option>
             </select></td>
             <td><a href="javascript:void(0);" class="btn btn-primary  radius size-S " onclick="dosearch();">  <s:text name="global.search"/></a>
-            </td></tr></table></form></div></div>
+            </td></tr><tr><td><a href="javascript:void(0);" class="btn btn-primary  radius size-S " onclick="swingcardDirectly();">  <s:text name="global.swingcarddirectly"/></a></td></tr></table></form></div></div>
     <div id="navigatediv"></div>
 <ul id="Huifold1" class="Huifold">
 </ul>
@@ -286,7 +286,14 @@
             });
         }
     }
-
+    function swingcardDirectly(){
+        layer.open({
+            type: 2,
+            title: "直接刷卡",area: ['310px', '250px'],
+            fix: false,
+            content: "./cardmanager/swingcarddirectly.jsp"
+        });
+    }
 </script>
 </body>
 </html>

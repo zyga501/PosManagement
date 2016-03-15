@@ -12,7 +12,7 @@ import java.util.*;
 public class SwingCardPolicy {
     public static void main(String[] args) throws Exception {
         SwingCardPolicy policy = new SwingCardPolicy("8D90AB43-92BA-467F-ADF9-233D29059276");
-        policy.generateSwingList("80d2db23-def1-11e5-804b-0030487c8b4b");
+        policy.generateSwingList("3160e0e7-ea7a-11e5-804b-0030487c8b4b");
     }
 
     public class SwingList {
@@ -122,7 +122,7 @@ public class SwingCardPolicy {
         }
 
         double dateLimit = (billInfo_.lastRepayDate.getTime() - billInfo_.billDate.getTime()) / ONEDAYMILLIONSECOND;
-        if (dateLimit < 0 || cardInfo_.repayInterval * cardInfo_.repayNum > dateLimit) {
+        if (dateLimit < 0  || cardInfo_.repayInterval * cardInfo_.repayNum > dateLimit) {
             lastError = "最后还款日与账单日时间错误";
             return null;
         }
@@ -164,7 +164,7 @@ public class SwingCardPolicy {
             repayList.clear();
             currentDate = nextDateLimit(dateLimit);
             double remainBillAmount = billInfo_.billAmount;
-            while (currentDate < dateLimit && remainBillAmount > 0.0) {
+            while (currentDate <= dateLimit && remainBillAmount > 0.0) {
                 try {
                     RepayInfo repayInfo = generateRepayInfo(currentDate);
                     if (repayInfo == null)
@@ -479,7 +479,7 @@ public class SwingCardPolicy {
     }
 
     private double nextDateLimit(double dateLimit) {
-        return (Double.max((long)(random.nextDouble() * dateLimit / cardInfo_.repayNum * REPAYDATEFIXEDLIMIT), cardInfo_.repayInterval) * 10) / 10.0;
+        return (long)((random.nextDouble() * (dateLimit / cardInfo_.repayNum - cardInfo_.repayInterval) + cardInfo_.repayInterval) * 10.0) / 10.0;
     }
 
     private void generaterRepayRateList() {

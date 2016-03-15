@@ -131,7 +131,9 @@
                onclick="$('#sdate').val(  DateUtil.Format(dateRangeUtil.getPreviousMonth()[0]).toString());$('#edate').val( DateUtil.Format(dateRangeUtil.getPreviousMonth()[1]));"
                value="上月">
     </div>
-        <td class="panel-header"><form id="searchform"><table id="searchtb" style="width: 80%"><tr> <td>
+        <td class="panel-header"><form id="searchform">
+    <table id="searchtb" style="width: 80%">
+        <tr> <td>
             <input type="text" onfocus="WdatePicker()" id="sdate"
                    name="sdate" class="input-text Wdate" placeholder="开始日期"
                    AutoComplete="off" style="width:100%;">
@@ -148,7 +150,7 @@
                 <option value="unfinished" selected><s:text name="swingcardsummary.swingunfinished"/></option>
             </select></td>
             <td><a href="javascript:void(0);" class="btn btn-primary  radius size-S " onclick="dosearch();">  <s:text name="global.search"/></a>
-            </td></tr><tr><td><a href="javascript:void(0);" class="btn btn-primary  radius size-S " onclick="swingcardDirectly();">  <s:text name="global.swingcarddirectly"/></a></td></tr></table></form></div></div>
+            </td><td><a href="javascript:void(0);" class="btn btn-primary  radius size-S " onclick="swingcardDirectly();">  <s:text name="global.swingcarddirectly"/></a></td></tr></table></form></div></div>
     <div id="navigatediv"></div>
 <ul id="Huifold1" class="Huifold">
 </ul>

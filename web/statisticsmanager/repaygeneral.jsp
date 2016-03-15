@@ -105,6 +105,7 @@
                     <th><s:text name="cardmanager.cardno"/></th>
                     <th><s:text name="cardmanager.cardmaster"/></th>
                     <th><s:text name="cardmanager.commissioncharge"/></th>
+                    <th><s:text name="assetmanager.cardCode"/></th>
                     <th><s:text name="swingcardsummary.amount"/></th>
                     <th><s:text name="statistics.income"/></th>
                 </tr>

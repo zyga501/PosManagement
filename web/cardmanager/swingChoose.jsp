@@ -24,13 +24,14 @@
         })(jQuery);
 
         function saveFunc(){
-            var rt = $("#assetuuid").val();
+            var rt = {
+            "posUUID": $("#posUUID").val(),
+            "amount":$("#amount").val()}
             return rt;
         }
-
         function fetchPosList() {
             $.ajax({
-                type: 'post',
+                type: 'post',async: false,
                 url: 'POS!FetchPosListEx',
                 data: "uiMode=SELECTLIST",
                 dataType : "json",
@@ -43,10 +44,11 @@
 
         function initswinginfo(){
             var _swingid=$.getUrlParam('swingid');
+            $("#swingId").val(_swingid);
             $.ajax({
                 type: 'post',
-                url: 'Swing!FetchRepayInfo',
-                data: {repayid:_swingid},
+                url: 'SwingCard!FetchSwingInfo',
+                data: {swingid:_swingid},
                 dataType : "json",
                 success: function(data) {
                     var json = eval("(" + data + ")");
@@ -56,6 +58,7 @@
                         $("#bankname").val(json.bankname);
                         $("#amount").val(json.amount);
                         $("#thedate").val(json.thedate);
+                        $("#posUUID").val(json.posuuid);
                     }
                 }
             });
@@ -66,8 +69,10 @@
         })
     </script>
 </head>
-<body scroll="no">
+<body  >
     <form class="form form-horizontal">
+        <input type="hidden" id="swingId" name="swingId" value=""/>
+        <input type="hidden" id="status" name="status" value="enable"/>
         <table class="table table-border table-bordered table-bg table-hover table-sort">
             <tr class="text-c odd" role="row">
                 <td><s:text name="cardmanager.cardmaster"/></td>
@@ -82,11 +87,15 @@
                 <td><input id=cardno type="text" readonly="readonly" class="input-text"></td>
             </tr>
             <tr class="text-c odd" role="row">
-                <td><s:text name="repaydetail.amount"/></td>
-                <td><input id=amount type="text"  class="input-text"></td>
+                <td class="col-4"><s:text name="repaydetail.amount"/></td>
+                <td><input id=amount name="amount" type="text"  class="input-text"></td>
             </tr>
+            <!--tr class="text-c odd" role="row">
+                <td><s :text name="swinggengral.charge"/></td>
+                <td><input id=charge type="text" readonly="readonly"  class="input-text"></td>
+            </tr-->
             <tr class="text-c odd" role="row">
-                <td><s:text name="repaydetail.sdatetm"/></td>
+                <td><s:text name="swingcarddetail.sdatetm"/></td>
                 <td><input id=thedate type="text" readonly="readonly" class="input-text"></td>
             </tr>
             <tr class="text-c">

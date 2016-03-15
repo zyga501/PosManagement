@@ -79,7 +79,7 @@ public class POSAction extends AjaxActionSupport {
     public String FetchPosList(){
         String wherestr = " where 1=1 ";
         if ( !UserUtils.isAdmin(getUserID()))
-            wherestr = " and POSTB.salemanuuid='"+getUserID()+"'";
+            wherestr += " and POSTB.salemanuuid='"+getUserID()+"'";
         Map map = new HashMap();
         int i = 0;
         if (null!=getParameter("posname") && (!getParameter("posname").toString().trim().equals(""))){
@@ -98,7 +98,7 @@ public class POSAction extends AjaxActionSupport {
                     " INNER JOIN industrytb ON POSTB.industryuuid = industrytb.uuid   " +
                     " INNER JOIN ratetb ON POSTB.rateuuid = ratetb.uuid  " +
                     " INNER JOIN userinfo ON POSTB.salemanuuid = userinfo.uid   " +
-                    " INNER JOIN mcctb ON mcctb.uuid = POSTB.mccuuid " +
+                    " left JOIN mcctb ON mcctb.uuid = POSTB.mccuuid " +
                     wherestr);
             if (rect.size()<=0)
                 map.put("pagecount",0);

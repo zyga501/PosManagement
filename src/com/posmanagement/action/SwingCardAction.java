@@ -92,6 +92,15 @@ public class SwingCardAction extends AjaxActionSupport {
                 return AjaxActionComplete(map);
             }
 
+            if ((null!=getParameter("swingId"))&&(null!=getParameter("posUUID"))){
+                parameterMap.clear();
+                parameterMap.put(1, getParameter("amount"));
+                parameterMap.put(2, getParameter("posUUID"));
+                parameterMap.put(3, getParameter("swingId"));
+                PosDbManager.executeUpdate("update swingcard set amount=? , posuuid=? where id=?",(HashMap<Integer, Object>)parameterMap);
+            }
+
+            parameterMap.clear();
             parameterMap.put(1,super.getUserID());
             parameterMap.put(2,getParameter("swingId"));
             if (PosDbManager.executeUpdate("update swingcard\n" +
@@ -160,6 +169,26 @@ public class SwingCardAction extends AjaxActionSupport {
                     }
                 }
             }
+        }
+        return AjaxActionComplete(map);
+    }
+
+    public String FetchSwingInfo() throws Exception {
+        Map map = new HashMap();
+        Map para = new HashMap();
+        para.put(1,getParameter("swingid"));
+        ArrayList<HashMap<String, Object>> Ret = PosDbManager.executeSql("select banktb.name,cardtb.cardno,cardtb.cardmaster,swingcard.sdatetm,swingcard.amount," +
+                "swingcard.posuuid,swingcard.amount*ratetb.rate/100 as charge from swingcard,cardtb,banktb,postb,ratetb where " +
+                " postb.rateuuid=ratetb.uuid and postb.uuid=swingcard.posuuid and banktb.uuid=cardtb.bankuuid" +
+                " and swingcard.cardno=cardtb.cardno and swingcard.id=?", (HashMap<Integer, Object>) para);
+        if (Ret.size()>0) {
+            map.put("bankname", Ret.get(0).get("NAME"));
+            map.put("cardno", Ret.get(0).get("CARDNO"));
+            map.put("cardmaster", Ret.get(0).get("CARDMASTER"));
+            map.put("thedate", Ret.get(0).get("SDATETM"));
+            map.put("amount", Ret.get(0).get("AMOUNT"));
+            map.put("charge", Ret.get(0).get("CHARGE"));
+            map.put("posuuid", Ret.get(0).get("POSUUID"));
         }
         return AjaxActionComplete(map);
     }

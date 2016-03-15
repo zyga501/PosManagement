@@ -37,7 +37,10 @@
         }
 
         function saveFunc(){
-            var rt = $("#assetuuid").val();
+            var rt = {
+                "assetuuid": $("#assetuuid").val(),
+                "charge": $("#charge").val(),
+                "trademoney":$("#trademoney").val()}
             return rt;
         }
 
@@ -71,6 +74,7 @@
                         $("#bankname").val(json.bankname);
                         $("#trademoney").val(json.trademoney);
                         $("#thedate").val(json.thedate);
+                        $("#charge").val(json.charge);
                     }
                 }
             });
@@ -98,7 +102,11 @@
             </tr>
             <tr class="text-c odd" role="row">
                 <td><s:text name="repaydetail.amount"/></td>
-                <td><input id=trademoney type="text"  class="input-text"></td>
+                <td><input id=trademoney name="trademoney" type="text"  class="input-text"></td>
+            </tr>
+            <tr class="text-c odd" role="row">
+                <td><s:text name="repaysummary.charge"/></td>
+                <td><input id=charge nam="charge" type="text"  class="input-text"></td>
             </tr>
             <tr class="text-c odd" role="row">
                 <td><s:text name="repaydetail.sdatetm"/></td>

@@ -94,6 +94,7 @@
                         }
                         else{
                             _billuuid = v;
+                            $(obj).find("h4").html(json.htmlstring);
                             $(obj).find("#repaydetail").html(json.repaydetail);
                             $(obj).find("#swingdetail").html(json.swingdetail);
                         }
@@ -130,7 +131,9 @@
                onclick="$('#sdate').val(  DateUtil.Format(dateRangeUtil.getPreviousMonth()[0]).toString());$('#edate').val( DateUtil.Format(dateRangeUtil.getPreviousMonth()[1]));"
                value="上月">
     </div>
-        <td class="panel-header"><form id="searchform"><table id="searchtb" style="width: 80%"><tr> <td>
+        <td class="panel-header"><form id="searchform">
+    <table id="searchtb" style="width: 80%">
+        <tr> <td>
             <input type="text" onfocus="WdatePicker()" id="sdate"
                    name="sdate" class="input-text Wdate" placeholder="开始日期"
                    AutoComplete="off" style="width:100%;">
@@ -147,7 +150,7 @@
                 <option value="unfinished" selected><s:text name="swingcardsummary.swingunfinished"/></option>
             </select></td>
             <td><a href="javascript:void(0);" class="btn btn-primary  radius size-S " onclick="dosearch();">  <s:text name="global.search"/></a>
-            </td></tr></table></form></div></div>
+            </td><td><a href="javascript:void(0);" class="btn btn-primary  radius size-S " onclick="swingcardDirectly();">  <s:text name="global.swingcarddirectly"/></a></td></tr></table></form></div></div>
     <div id="navigatediv"></div>
 <ul id="Huifold1" class="Huifold">
 </ul>
@@ -219,11 +222,12 @@
         if (val == "N") {
             layer.open({
                 type: 2,
-                title: "还款信息", area: ['310px', '380px'],
+                title: "刷卡信息", area: ['310px', '420px'],
                 fix: false,
                 content: "<%=request.getContextPath()%>/cardmanager/swingChoose.jsp?swingid=" + swingid,
                 btn: ['确定', '关闭'],
                 yes: function (index) {
+                    var res = window["layui-layer-iframe" + index].saveFunc();
                     layer.close(index);
                     layer.confirm('确定刷卡？', {
                         btn: ['是', '否'] //按钮
@@ -231,7 +235,7 @@
                         $.ajax({
                             type: 'post',
                             url: 'SwingCard!EditDetail',
-                            data: {status: "enable", swingId: swingid, billUUID: _billuuid},
+                            data: {status: "enable", swingId: swingid, billUUID: _billuuid,amount:res.amount,posUUID:res.posUUID},
                             success: function (data) {
                                 var json = eval("(" + data + ")");
                                 if (json.successMessage) {
@@ -255,7 +259,7 @@
         if (val == "N") {
             layer.open({
                 type: 2,
-                title: "还款信息",area: ['310px', '380px'],
+                title: "还款信息",area: ['310px', '420px'],
                 fix: false,
                 content: "<%=request.getContextPath()%>/cardmanager/repayChoose.jsp?repayid="+repayid,
                 btn: ['确定','关闭'],
@@ -268,7 +272,7 @@
                             $.ajax({
                                 type: 'post',
                                 url: 'Repay!EditDetail',
-                                data: {status:"enable" , repayId:repayid, billUUID:_billuuid,assetuuid:res},
+                                data: {status:"enable" , repayId:repayid, billUUID:_billuuid,assetuuid:res.assetuuid,trademoney:res.trademoney,charge:res.charge},
                                 success: function (data) {
                                     var json = eval("(" + data + ")");
                                     if (json.successMessage) {
@@ -284,7 +288,14 @@
             });
         }
     }
-
+    function swingcardDirectly(){
+        layer.open({
+            type: 2,
+            title: "直接刷卡",area: ['310px', '250px'],
+            fix: false,
+            content: "./cardmanager/swingcarddirectly.jsp"
+        });
+    }
 </script>
 </body>
 </html>

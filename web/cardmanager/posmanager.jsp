@@ -87,29 +87,7 @@
 <script src="<%=request.getContextPath()%>/js/laypage/laypage.js"></script>
 <script>
     $().ready
-    (laypage({
-        cont: 'navigatediv',
-        pages: ${pagecount},
-        skip: true,
-        skin: 'yahei',
-        jump: function (obj) {
-            $.ajax({
-                type: 'post',
-                url: 'POS!FetchPosList?currpage='+obj.curr,
-                dataType:"json",
-                data:$("#searchform").serialize(),
-                success: function (data) {
-                    var json = eval("(" + data + ")");
-                    if (json.errorMessage != null) {
-                        layer.msg(json.errorMessage);
-                    }
-                    else {
-                        refreshposList(json.posList);
-                    }
-                }
-            })
-        }
-    }) );
+    (dosearch() );
 
     function init(){
         $("tr").click(function() {

@@ -26,6 +26,8 @@ public class StatisticsUI extends WebUI {
                     .addElement("td", dbRet.get(index).get("REALSDATETM").toString())
                     .addElement("td", dbRet.get(index).get("POSNAME").toString())
                     .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("RATE")))
+                    .addElement("td", dbRet.get(index).get("CARDNO").toString())
+                    .addElement("td", dbRet.get(index).get("CARDMASTER").toString())
                     .addElement("td", dbRet.get(index).get("AMOUNT").toString())
                     .addElement("td", dbRet.get(index).get("CHARGE").toString()) ;
         }
@@ -82,6 +84,7 @@ public class StatisticsUI extends WebUI {
                     .addElement("td", dbRet.get(index).get("CARDNO").toString())
                     .addElement("td", dbRet.get(index).get("CARDMASTER").toString())
                     .addElement("td", dbRet.get(index).get("COMMISSIONCHARGE").toString())
+                    .addElement("td", dbRet.get(index).get("ASSETCARDNO").toString())
                     .addElement("td", dbRet.get(index).get("TRADEMONEY").toString())
                     .addElement("td", dbRet.get(index).get("CHARGE").toString()) ;
         }
@@ -195,12 +198,13 @@ public class StatisticsUI extends WebUI {
                 whereSql += " and  (salemantb.uid='"+userID_+"' " +
                         " or userinfo.uid ='"+userID_+"') ";
         return PosDbManager.executeSql("SELECT   swingcard.*,postb.*,AMOUNT-charge INBANK,salemantb.unick as saleman," +
-                "userinfo.unick as doer,ratetb.rate  " +
+                "userinfo.unick as doer,ratetb.rate,cardtb.cardmaster  " +
                 "FROM\n" +
                 "swingcard\n" +
                 "INNER JOIN userinfo ON swingcard.userid = userinfo.uid \n" +
                 "INNER JOIN postb on postb.uuid=swingcard.posuuid  \n" +
                 "INNER JOIN userinfo salemantb on postb.salemanuuid=salemantb.uid  \n" +
+                "INNER JOIN cardtb on swingcard.cardno=cardtb.cardno  \n" +
                 "left JOIN ratetb on ratetb.uuid=postb.rateuuid  \n" +
                 whereSql +limitSql);
     }
@@ -215,12 +219,13 @@ public class StatisticsUI extends WebUI {
         if (!UserUtils.isAdmin(userID_))
             whereSql += " and  (repaytb.userid='"+userID_+"' " +
                     " or userinfo.uid ='"+userID_+"') ";
-        return PosDbManager.executeSql("SELECT   repaytb.*,cardtb.cardmaster,cardtb.commissioncharge," +
+        return PosDbManager.executeSql("SELECT   '' assetcardno,repaytb.*,cardtb.cardmaster,cardtb.commissioncharge," +
                 "userinfo.unick as doer " +
                 "FROM\n" +
                 "repaytb \n" +
                 "INNER JOIN userinfo ON repaytb.userid = userinfo.uid \n" +
                 "INNER JOIN cardtb on cardtb.cardno=repaytb.cardno  \n" +
+                //"left JOIN assettb on assettb.uuid=repaytb.assetuuid  \n" +
                 whereSql +limitSql);
     }
 

@@ -104,6 +104,8 @@
                     <th><s:text name="repaydetail.thedate"/></th>
                     <th><s:text name="posmanager.posname"/></th>
                     <th><s:text name="posmanager.rate"/></th>
+                    <th><s:text name="repaydetail.cardno"/></th>
+                    <th><s:text name="cardmanager.cardmaster"/></th>
                     <th><s:text name="swingcardsummary.amount"/></th>
                     <th><s:text name="swinggengral.charge"/></th>
                 </tr>

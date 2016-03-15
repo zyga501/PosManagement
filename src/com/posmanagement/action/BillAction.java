@@ -383,6 +383,28 @@ public class BillAction extends AjaxActionSupport {
             if (map.get("repaydetail").equals("") && map.get("swingdetail").equals(""))
                 map.put("removeitem","1");
             }
+
+            ArrayList<SQLUtils.WhereCondition> uiConditions = new ArrayList<SQLUtils.WhereCondition>() {
+                {
+                    if (!StringUtils.convertNullableString(getParameter("billuuid")).trim().isEmpty())
+                        add(new SQLUtils.WhereCondition("billtb.uuid", "=",
+                                SQLUtils.ConvertToSqlString(getParameter("billuuid").toString())));
+                }
+            };
+            billUI.setUiConditions(uiConditions);
+            if (!StringUtils.convertNullableString(getParameter("startdate")).trim().isEmpty()){
+                billUI.wheresql1 += " and swingcard.sdatetm between '"+
+                        getParameter("startdate").toString()+"' and '"+
+                        getParameter("enddate").toString()+" 23:59:59'"+
+                        (StringUtils.convertNullableString(getParameter("status")).equals("finished")?" and swingstatus='enable'":
+                                (StringUtils.convertNullableString(getParameter("status")).equals("unfinished")?" and ifnull(swingstatus,'')<>'enable'":"")) ;
+
+                billUI.wheresql2 += " and repaytb.thedate between '"+
+                        getParameter("startdate").toString()+"' and '"+
+                        getParameter("enddate").toString()+" 23:59:59'"+
+                        (StringUtils.convertNullableString(getParameter("status")).equals("finished")?" and tradestatus='enable'":
+                                (StringUtils.convertNullableString(getParameter("status")).equals("unfinished")?" and ifnull(tradestatus,'')<>'enable'":""));}
+            map.put("htmlstring",billUI.generateBillDetailHead(1));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -442,7 +464,7 @@ public class BillAction extends AjaxActionSupport {
                 para.put(1,getParameter("billamount").toString());
                 para.put(2,getParameter("billuuid").toString());
 
-                ArrayList<HashMap<String, Object>> rt =   PosDbManager.executeSql("select  sum(amount)-? as amount   from swingcard where swingstatus='enable'" +
+                ArrayList<HashMap<String, Object>> rt =   PosDbManager.executeSql("select  ifnull(sum(ifnull(amount,0)),0)-? as amount   from swingcard where swingstatus='enable'" +
                         " and billuuid=?", (HashMap<Integer, Object>) para);
                 if ((rt.size()>0) && Float.parseFloat(rt.get(0).get("AMOUNT").toString())>0){
                     map.put("errorMessage","账单金额小于已刷金额！");

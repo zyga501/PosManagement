@@ -132,6 +132,7 @@ public class StatisticsUI extends WebUI {
                     .addAttribute("class", "text-c odd")
                     .addAttribute("role", "row")
                     .addElement("td", dbRet.get(index).get("TIME").toString())
+                    .addElement("td", StringUtils.convertNullableString(dbRet.get(index).get("CARDNO")))
                     .addElement("td", dbRet.get(index).get("TYPE").toString())
                     .addElement("td", dbRet.get(index).get("AMOUNT").toString())
                     .addElement("td", dbRet.get(index).get("BALANCE").toString())
@@ -231,11 +232,11 @@ public class StatisticsUI extends WebUI {
         String limitSql ="limit " + (pageIndex - 1) * DEFAULTITEMPERPAGE + "," + DEFAULTITEMPERPAGE;
 
         if (!UserUtils.isAdmin(userID_))
-            whereSql += " and  (assetflowtb.salemanuuid='"+userID_+"' ) ";
+            whereSql += " and  (a.salemanuuid='"+userID_+"' ) ";
         return PosDbManager.executeSql("SELECT  * " +
                 "FROM\n" +
-                "assetflowtb\n" +
-                "INNER JOIN userinfo ON assetflowtb.salemanuuid = userinfo.uid \n" +
+                "assetflowtb a left join assettb b on a.assetuuid=b.uuid \n" +
+                "INNER JOIN userinfo ON a.salemanuuid = userinfo.uid \n" +
                 whereSql +limitSql);
     }
     private String userID_;

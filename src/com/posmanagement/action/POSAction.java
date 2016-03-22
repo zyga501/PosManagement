@@ -79,7 +79,7 @@ public class POSAction extends AjaxActionSupport {
     public String FetchPosList(){
         String wherestr = " where 1=1 ";
         if ( !UserUtils.isAdmin(getUserID()))
-            wherestr += " and POSTB.salemanuuid='"+getUserID()+"'";
+            wherestr += " and POSTB.salemanuuid='"+UserUtils.getsalemanid(getUserID())+"'";
         Map map = new HashMap();
         int i = 0;
         if (null!=getParameter("posname") && (!getParameter("posname").toString().trim().equals(""))){

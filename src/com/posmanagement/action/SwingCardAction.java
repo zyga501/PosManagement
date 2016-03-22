@@ -230,20 +230,26 @@ public class SwingCardAction extends AjaxActionSupport {
             }
             Map parametMap = new HashMap();
             String salemanUUID = super.getUserID();
-            if (!UserUtils.issaleman(salemanUUID)) {
+            if (!UserUtils.issaleman(super.getUserID())) {
                 parametMap.clear();
-                parametMap.put(1, salemanUUID);
+                parametMap.put(1, getUserID());
                 ArrayList<HashMap<String, Object>> salemanRet = PosDbManager.executeSql("select salemanuuid from tellertb where uid=?", (HashMap<Integer, Object>)parametMap);
                 if (salemanRet.size() > 0) {
                     salemanUUID = salemanRet.get(0).get("SALEMANUUID").toString();
                 }
             }
+            int i =1;
             parametMap.clear();
-            parametMap.put(1, swingMoney);
-            parametMap.put(2, getParameter("posUUID"));
-            parametMap.put(3, salemanUUID);
-            PosDbManager.executeUpdate("insert into swingcard(amount,realsdatetm,posuuid,userid,swingstatus) " +
-                            "values(?,NOW(),?,?,'enable')",
+            parametMap.put(i++, swingMoney);
+            parametMap.put(i++, getParameter("realdate"));
+            parametMap.put(i++, getParameter("posUUID"));
+            parametMap.put(i++, getUserID());
+            parametMap.put(i++, getParameter("cardmaster"));
+            parametMap.put(i++, getParameter("charge"));
+            parametMap.put(i++, getParameter("cardno"));
+            parametMap.put(i++, getParameter("bank"));
+            PosDbManager.executeUpdate("insert into directswing (amount,realdate,posuuid,userid,cardmaster,charge,cardno,bank) " +
+                            "values(?,?,?,?,?,?,?,?)",
                     (HashMap<Integer, Object>)parametMap);
             parametMap.clear();
             parametMap.put(1, swingMoney);

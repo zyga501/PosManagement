@@ -14,8 +14,15 @@
     <link href="<%=request.getContextPath()%>/css/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css"/>
     <link href="<%=request.getContextPath()%>/skin/default/skin.css" rel="stylesheet" type="text/css" id="skin"/>
     <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/js/My97DatePicker/WdatePicker.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath()%>/js/Validform_v5.3.2_min.js"></script>
     <title><s:text name="swingcarddirectly.title"/></title>
     <script type="text/javascript">
+        $(function () {
+            $("#vform").Validform({btnSubmit:"#submit_btn",
+                beforeSubmit: function(curform) {swingDirectly();return false; }
+            });
+        })
         function swingDirectly() {
             $.ajax({
                 type: 'post',
@@ -56,13 +63,13 @@
 </head>
 <body scroll="no">
 <div>
-    <form class="form form-horizontal">
+    <form class="form form-horizontal" id="vform">
         <input type="hidden" id="assetUUID" value="<s:property value="assetUUID" escape="false"/>"/>
         <table class="table table-border table-bordered table-bg table-hover table-sort">
             <tr class="text-c odd" role="row">
                 <td><s:text name="swingcarddirectly.money"/></td>
                 <td>
-                    <input id="swingMoney" name="swingMoney" type="text"
+                    <input id="swingMoney" name="swingMoney" type="text" datatype="/^-?[1-9]+(\.\d+)?$|^-?0(\.\d+)?$|^-?[1-9]+[0-9]*(\.\d+)?$/"
                            placeholder="<s:text name="swingcarddirectly.money" />" class="input-text size-S">
                 </td>
             </tr>
@@ -74,16 +81,39 @@
                 </td>
             </tr>
             <tr class="text-c">
-                <td><s:text name="cardmanager.memos"/></td>
+                <td><s:text name="cardmanager.cardno"/></td>
                 <td>
-                    <input id="memo" name="memo" type="text" class="input-text size-S">
+                    <input id="cardno" name="cardno" type="text" class="input-text size-S" datatype="*">
+                </td>
+            </tr>
+            <tr class="text-c">
+                <td><s:text name="cardmanager.cardmaster"/></td>
+                <td>
+                    <input id="cardmaster" name="cardmaster" type="text" class="input-text size-S" datatype="*">
+                </td>
+            </tr>
+            <tr class="text-c">
+                <td><s:text name="cardmanager.bankname"/></td>
+                <td>
+                    <input id="bank" name="bank" type="text" class="input-text size-S" datatype="*">
+                </td>
+            </tr>
+            <tr class="text-c">
+                <td><s:text name="swinggengral.charge"/></td>
+                <td>
+                    <input id="charge" name="charge" type="text" class="input-text size-S" datatype="/^-?[1-9]+(\.\d+)?$|^-?0(\.\d+)?$|^-?[1-9]+[0-9]*(\.\d+)?$/">
+                </td>
+            </tr>
+            <tr class="text-c">
+                <td><s:text name="swingcarddetail.sdatetm"/></td>
+                <td>
+                    <input id="realdate" name="realdate" type="text" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})"  class="input-text size-S" datatype="*">
                 </td>
             </tr>
         </table>
         <div class="row">
             <div class="formControls col-8 col-offset-3" align="center">
-                <input type="button" class="btn btn-success radius size-M" value="<s:text name="global.submit" />"
-                       onclick="swingDirectly()">
+                <input type="button" id="submit_btn" class="btn btn-success radius size-M" value="<s:text name="global.submit" />">
             </div>
         </div>
     </form>

@@ -434,12 +434,9 @@ public class BillAction extends AjaxActionSupport {
                         map.put("errorMessage","操作失败");
                         //PosDbManager.executeSql("rollback;");
                     }
-                    else if (!PosDbManager.executeUpdate("delete from swingcard where billuuid=?",(HashMap<Integer, Object>) para)){
-                        map.put("errorMessage","操作失败");
-                    }
-                    else if (!PosDbManager.executeUpdate("delete from repaytb where billuuid=?",(HashMap<Integer, Object>) para)){
-                        map.put("errorMessage","操作失败");
-                    }else {
+                    else{
+                        PosDbManager.executeUpdate("delete from swingcard where billuuid=?",(HashMap<Integer, Object>) para);
+                        PosDbManager.executeUpdate("delete from repaytb where billuuid=?",(HashMap<Integer, Object>) para);
                         map.put("successMsg","撤销账单成功！");
                     };
                 }

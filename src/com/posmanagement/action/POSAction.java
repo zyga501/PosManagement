@@ -67,10 +67,10 @@ public class POSAction extends AjaxActionSupport {
     public String FetchPosListEx() throws Exception {
         Map map = new HashMap();
         if (uiMode != null && uiMode.compareTo("SELECTLIST") == 0) {
-            map.put("posList", new PosUI(super.getUserID()).generateSelect());
+            map.put("posList", new PosUI(UserUtils.getsalemanid(getUserID())).generateSelect());
         }
         else {
-            map.put("posList", new PosUI(super.getUserID()).generateTable(""));
+            map.put("posList", new PosUI(UserUtils.getsalemanid(getUserID())).generateTable(""));
         }
 
         return AjaxActionComplete(map);

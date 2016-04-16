@@ -291,7 +291,7 @@
     function swingcardDirectly(){
         layer.open({
             type: 2,
-            title: "直接刷卡",area: ['310px', '250px'],
+            title: "直接刷卡",area: ['310px', '450px'],
             fix: false,
             content: "./cardmanager/swingcarddirectly.jsp"
         });

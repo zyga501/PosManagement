@@ -67,10 +67,10 @@ public class POSAction extends AjaxActionSupport {
     public String FetchPosListEx() throws Exception {
         Map map = new HashMap();
         if (uiMode != null && uiMode.compareTo("SELECTLIST") == 0) {
-            map.put("posList", new PosUI(super.getUserID()).generateSelect());
+            map.put("posList", new PosUI(UserUtils.getsalemanid(getUserID())).generateSelect());
         }
         else {
-            map.put("posList", new PosUI(super.getUserID()).generateTable(""));
+            map.put("posList", new PosUI(UserUtils.getsalemanid(getUserID())).generateTable(""));
         }
 
         return AjaxActionComplete(map);
@@ -79,7 +79,7 @@ public class POSAction extends AjaxActionSupport {
     public String FetchPosList(){
         String wherestr = " where 1=1 ";
         if ( !UserUtils.isAdmin(getUserID()))
-            wherestr += " and POSTB.salemanuuid='"+getUserID()+"'";
+            wherestr += " and POSTB.salemanuuid='"+UserUtils.getsalemanid(getUserID())+"'";
         Map map = new HashMap();
         int i = 0;
         if (null!=getParameter("posname") && (!getParameter("posname").toString().trim().equals(""))){

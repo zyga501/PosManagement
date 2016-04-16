@@ -110,7 +110,7 @@ public class AssetAction extends AjaxActionSupport {
         Map map = new HashMap();
         if (getParameter("uiMode") != null && getParameter("uiMode").toString().compareTo("SELECTLIST") == 0) {
             try {
-                map.put("assetList", new AssetUI(getUserID()).generateAssetSelectList());
+                map.put("assetList", new AssetUI(UserUtils.getsalemanid(getUserID())).generateAssetSelectList());
             } catch (Exception e) {
                 e.printStackTrace();
             }

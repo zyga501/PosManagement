@@ -68,7 +68,7 @@ public class BillAction extends AjaxActionSupport {
     }
 
     public String Init() throws Exception {
-        getRequest().setAttribute("pagecount", (new BillUI(super.getUserID()).fetchBillPageCount() + WebUI.DEFAULTITEMPERPAGE -1)/WebUI.DEFAULTITEMPERPAGE);
+        getRequest().setAttribute("pagecount", (new BillUI(super.getUserID()).fetchBillPageCount()));
         return BILLMANAGER;
     }
 
@@ -289,7 +289,7 @@ public class BillAction extends AjaxActionSupport {
 
     public String SwingRepay(){
         try {
-            getRequest().setAttribute("pagecount", (new BillUI(super.getUserID()).fetchSwingRepayPageCount()+WebUI.DEFAULTITEMPERPAGE-1)/WebUI.DEFAULTITEMPERPAGE);
+            getRequest().setAttribute("pagecount", (new BillUI(super.getUserID()).fetchSwingRepayPageCount()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -324,7 +324,7 @@ public class BillAction extends AjaxActionSupport {
 
     public String billDetailInit(){
         try {
-            getRequest().setAttribute("pagecount", (new BillUI(super.getUserID()).fetchBillDetailPageCount()+WebUI.DEFAULTITEMPERPAGE-1)/WebUI.DEFAULTITEMPERPAGE);
+            getRequest().setAttribute("pagecount", (new BillUI(super.getUserID()).fetchBillDetailPageCount()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -340,7 +340,12 @@ public class BillAction extends AjaxActionSupport {
                 if (!StringUtils.convertNullableString(getParameter("cardmaster")).trim().isEmpty())
                 add(new SQLUtils.WhereCondition("cardmaster", "like",
                         SQLUtils.ConvertToSqlString("%" + getParameter("cardmaster") + "%"), !StringUtils.convertNullableString(getParameter("cardmaster")).trim().isEmpty()));
-
+                if (!StringUtils.convertNullableString(getParameter("sdate")).trim().isEmpty()) {
+                    add(new SQLUtils.WhereCondition("billtb.billdate", ">=",
+                            SQLUtils.ConvertToSqlString(getParameter("sdate").toString()), !StringUtils.convertNullableString(getParameter("sdate")).trim().isEmpty()));
+                    add(new SQLUtils.WhereCondition("billtb.billdate", "<=",
+                            SQLUtils.ConvertToSqlString(getParameter("edate").toString()+" 23:59:59"), !StringUtils.convertNullableString(getParameter("edate")).trim().isEmpty()));
+                }
             }
         };
         Map map = new HashMap();
@@ -358,7 +363,7 @@ public class BillAction extends AjaxActionSupport {
                     getParameter("edate").toString()+" 23:59:59'"+
                     (StringUtils.convertNullableString(getParameter("status")).equals("finished")?" and tradestatus='enable'":
                     (StringUtils.convertNullableString(getParameter("status")).equals("unfinished")?" and ifnull(tradestatus,'')<>'enable'":""));}
-            map.put("pagecount",(new BillUI(super.getUserID()).fetchBillDetailPageCount()+WebUI.DEFAULTITEMPERPAGE-1)/WebUI.DEFAULTITEMPERPAGE);
+            map.put("pagecount",billUI.fetchBillDetailPageCount());
             int curr = Integer.parseInt(null==getParameter("currpage")?"1":getParameter("currpage").toString());
             map.put("htmlstring",billUI.generateBillDetailList(curr));
         } catch (Exception e) {

@@ -28,7 +28,7 @@ public class SwingCardAction extends AjaxActionSupport {
     public String getBillUUID() { return billUUID; }
 
     public String Init() throws Exception {
-        getRequest().setAttribute("pagecount", (new SwingCardUI(super.getUserID()).fetchSwingCardPageCount()+WebUI.DEFAULTITEMPERPAGE-1)/WebUI.DEFAULTITEMPERPAGE);
+        getRequest().setAttribute("pagecount", (new SwingCardUI(super.getUserID()).fetchSwingCardPageCount()));
         return SWINGCARDMANAGER;
     }
 
